@@ -4,11 +4,13 @@ In VS Code install Eslint and Prettier extension. Use prettier to format all you
 ## SETUP ENV
 Create a local an environment file at the root of the repo. Name it `.env.local`. This file will be ignored by git (it's listed in `.gitignore`) and will not be part of the repository. Never push this file to github because we don't want our API keys going public!
 
-In this file insert and restart server \
-`REACT_APP_CARTO_DEV_API_KEY=<DEV_API_KEY_FROM_CARTO> \
-REACT_APP_CARTO_USERNAME=<USERNAME>`
+In this file insert and restart server 
+```
+REACT_APP_CARTO_DEV_API_KEY=<DEV_API_KEY_FROM_CARTO>
+REACT_APP_CARTO_USERNAME=<USERNAME>
+```
 
-Then followed by \
+Then followed by: \
 Do this first time only. This installs all the dependencies. \
 `yarn install`
 
