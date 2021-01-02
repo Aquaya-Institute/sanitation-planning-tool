@@ -10,41 +10,24 @@ const initialState = {
     ghana: {
       name: "Ghana",
       mapID: "ghana",
+      view: "8.059229627200192, -1.0546875000000002",
       /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
       */
       layers: [
         {
-          name: "Community Classification",
-          carto_tableName: "gha_class_topo",
-          carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([dn], (#4cd7d7, #1d5e96, #9b38a6), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
-          visible: true,
-          /* 
-          we don't use order yet to order(re) the layers 
-          For now the first layer object is the bottom most rendered layer
-          */
-          order: 2,
-          filters: [
-            {
-              /* 
-              a categorical filter, such as this one is not implemented. 
-              It might be a good one to implement
-             */
-              type: "categorical",
-              column_name: "dn",
-              column_values: [1, 2, 3],
-            },
-          ],
-        },
-        {
           name: "Communities",
           carto_tableName: "gha_comms_point_topo",
           carto_layer: null,
-          carto_style: `#layer {marker-width: 5;marker-fill: #EE4D5A;marker-fill-opacity: 0.9;marker-allow-overlap: true;marker-line-width: 0;marker-line-color: #FFFFFF;marker-line-opacity: 1;}`,
-          visible: true,
-          order: 1,
+          carto_style: `#layer {marker-width: 5;marker-fill: ramp([pop_est], (#ede5cf, #daaf91, #c1766f, #95455a, #541f3f), quantiles);
+            marker-fill-opacity: 1;
+            marker-allow-overlap: true;
+            marker-line-width: 0.5;
+            marker-line-color: #000000;
+            marker-line-opacity: 1;}`,
+          visible: false,
+          order: 5,
           /* These are all range filters and are implemented */
           filters: [
             {
@@ -56,12 +39,37 @@ const initialState = {
               value: [0, 6033969],
             },
             {
+              name: "Community Classification",
+              type: "categorical",
+              column_name: "classes",
+              values: [1,2,3],
+            },
+            {
               name: "Open Defecation (%)",
               type: "range",
               column_name: "od",
               min: 0,
               max: 100,
               value: [0, 100],
+              subcategory: "wash",
+            },
+            {
+              name: "Reliance on Unimproved Sanitation (%)",
+              type: "range",
+              column_name: "s_unimp",
+              min: 0,
+              max: 100,
+              value: [0, 100],
+              subcategory: "wash",
+            },
+            {
+              name: "Reliance on Unimproved Drinking Water (%)",
+              type: "range",
+              column_name: "w_unimp",
+              min: 0,
+              max: 100,
+              value: [0, 100],
+              subcategory: "wash",
             },
             {
               name: "Time To Cities",
@@ -70,6 +78,130 @@ const initialState = {
               min: 17,
               max: 197,
               value: [0, 197],
+              subcategory: "accessibility",
+            },
+            {
+              name: "Distance to Roads",
+              type: "range",
+              column_name: "dr",
+              min: 26,
+              max: 36648,
+              value: [26, 36648],
+              subcategory: "accessibility",
+            },
+            {
+              name: "Distance to Towns",
+              type: "range",
+              column_name: "dt",
+              min: 0,
+              max: 91421,
+              value: [0, 91421],
+              subcategory: "accessibility",
+            },
+            {
+              name: "Diahrrea Prevalence in Children <5 Years",
+              type: "range",
+              column_name: "dia",
+              min: 0,
+              max: 37514,
+              value: [0, 37514],
+              subcategory: "health",
+            },
+            {
+              name: "Cholera Risk",
+              type: "range",
+              column_name: "cholera",
+              min: 0.1,
+              max: 108.7,
+              value: [0.1, 108.7],
+              subcategory: "health",
+            },
+            {
+              name: "Mortality in Children <5 Years",
+              type: "range",
+              column_name: "u5m",
+              min: 0.045,
+              max: 0.074,
+              value: [0.045, 0.074],
+              subcategory: "health",
+            },
+          ],
+        },
+        // {
+        //   name: "Community Classification",
+        //   carto_tableName: "gha_class_topo",
+        //   carto_layer: null /* we will insert carto's layer object here */,
+        //   carto_style: `#layer {polygon-fill: ramp([dn], (#0d882b, #200ab7, #ad1719), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
+        //   visible: true,
+        //   /* 
+        //   we don't use order yet to order(re) the layers 
+        //   For now the first layer object is the bottom most rendered layer
+        //   */
+        //   order: 4,
+        //   filters: [
+        //     {
+        //       /* 
+        //       a categorical filter, such as this one is not implemented. 
+        //       It might be a good one to implement
+        //      */
+        //       type: "categorical",
+        //       column_name: "dn",
+        //       column_values: [1, 2, 3],
+        //       value_labels: ['Rural remote','Rural on-road','Rural mixed']
+        //     },
+        //   ],
+        // },
+        {
+          name: "Reliance on Open Defecation (%)",
+          carto_tableName: "gha_od_topo",
+          carto_layer: null /* we will insert carto's layer object here */,
+          carto_style: `#layer {polygon-fill: ramp([val], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
+            #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
+          visible: true,
+          order: 3,
+          filters: [
+            {
+              type: "range",
+              column_name: "val",
+              min: 0,
+              max: 100,
+              value: [0, 100],
+            },
+          ],
+        },
+        {
+          name: "Women's Education (yrs.)",
+          carto_tableName: "gha_edw_topo",
+          carto_layer: null /* we will insert carto's layer object here */,
+          carto_style: `#layer {polygon-fill: ramp([val], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
+            #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
+          visible: false,
+          order: 2,
+          filters: [
+            {
+              type: "range",
+              column_name: "val",
+              min: 2,
+              max: 11,
+              value: [2, 11],
+            },
+          ],
+        },
+        {
+          name: "Time to Cities (min.)",
+          carto_tableName: "gha_timecities_topo",
+          carto_layer: null /* we will insert carto's layer object here */,
+          carto_style: `#layer {polygon-fill: ramp([val], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
+            #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
+          visible: false,
+          order: 1,
+          filters: [
+            {
+              type: "range",
+              column_name: "val",
+              min: 0,
+              max: 610,
+              value: [0, 610],
             },
           ],
         },
@@ -79,6 +211,7 @@ const initialState = {
     cambodia: {
       name: "Cambodia",
       mapID: "cambodia",
+      view: "15.059229627200192, -1.0546875000000002",
       /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
@@ -158,6 +291,8 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         console.log("set current map to", action.mapID);
         draft.currentMapID = action.mapID;
+        // draft.view=draft.maps[action.mapID].view;
+        // map.setView(new L.LatLng(draft.maps[action.mapID].view));
       });
 
     case "map.addCartoClient":
@@ -194,19 +329,38 @@ const reducer = (state, action) => {
         ] = action.filter;
         //TODO: based on the type of filter (range, categorical)
         //use Switch statement to apply appropriate filters
-
-        //this is how you get the filter out of the carto layer
-        const filter = draft.maps[action.mapID].layers[
-          action.layerIndex
-        ].carto_layer
-          .getSource()
-          .getFilters()[0] //since this is a filtercollection
-          .getFilters()[action.filterIndex];
-        //this is how you set the filter. this is specific to range filter
-        filter.setFilters({
-          gte: action.filter.value[0],
-          lte: action.filter.value[1],
-        });
+        switch (draft.maps[action.mapID].layers[action.layerIndex].filters[action.filterIndex].type){
+          case "range":
+              //this is how you get the filter out of the carto layer
+              const filter = draft.maps[action.mapID].layers[
+                action.layerIndex
+              ].carto_layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()[action.filterIndex];
+              //this is how you set the filter. this is specific to range filter
+              filter.setFilters({
+                gte: action.filter.value[0],
+                lte: action.filter.value[1],
+              });
+              break;
+          case "categorical":
+          //   return null;
+            const filter_c = draft.maps[action.mapID].layers[
+              action.layerIndex
+            ].carto_layer
+              .getSource()
+              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[action.filterIndex];
+            //this is how you set the filter. this is specific to range filter
+            // filter_c.setFilters({
+            //   // column: action.filter.column_name,
+            //   in: action.filter.column_values,
+            // });
+            break;
+          default:
+            return null;
+        }
       });
 
     //when a new carto layer is added

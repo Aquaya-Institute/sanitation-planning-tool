@@ -1,0 +1,36 @@
+#legend {
+    position: absolute;
+    bottom: 12px;
+    left: 50px;
+    height: auto;
+    width: auto;
+    padding: 20px 14px;
+    background: white;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    opacity: 0.9;
+    z-index: 1;
+    display: block;
+    list-style-type: none;
+  }
+  #legend h1 {
+    font: 800 12px/16px 'Montserrat';
+    color: #2D3C43;
+  }
+  #legend h2 {
+    font: 600 12px/16px 'Open Sans';
+    color: #2D3C43;
+    margin-bottom: 12px;
+  }
+  #legend li {
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+    margin-bottom: 6px;
+  }
+  #legend-content span {
+    display: inline-block;
+    font: 500 12px/16px 'Open Sans';
+    color: #2D3C43;
+    margin-bottom: 6px;
+  }

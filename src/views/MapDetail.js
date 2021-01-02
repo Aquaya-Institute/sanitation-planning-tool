@@ -2,7 +2,6 @@ import * as React from "react";
 import { MapContext } from "../state/MapState";
 import { MapLayers } from "../components/MapLayers";
 import { Map } from "../components/Map";
-
 import { Grid } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 
