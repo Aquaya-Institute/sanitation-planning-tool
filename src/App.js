@@ -7,6 +7,7 @@ import DefaultLayout from "./layouts/default"
 import Home from "./views/Home";
 import MapDetail from "./views/MapDetail";
 import About from "./views/About";
+import "./App.css";
 
 function App() {
   return (
