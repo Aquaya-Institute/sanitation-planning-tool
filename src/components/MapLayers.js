@@ -156,17 +156,16 @@ export const MapLayers = () => {
 
   return (
     <div className={classes.root}>
-      <Container
-        anchor="left"
-        style={{background: '#ffffff', width:'100%'}}
-      >
+      <Container anchor="left" style={{ background: "#ffffff", width: "100%" }}>
         <Box>
           {/* needs rework to work with routers */}
           {/* <MapSelector /> */}
         </Box>
 
-        
-        <Paper style={{maxHeight: '91vh', overflow: 'auto', width:'100%'}} elevation={0}>
+        <Paper
+          style={{ maxHeight: "91vh", overflow: "auto", width: "100%" }}
+          elevation={0}
+        >
           <Box mt={3}>
             {mapID && (
               <Typography variant="h5" color="secondary">
@@ -176,133 +175,195 @@ export const MapLayers = () => {
           </Box>
           <Divider />
           {maps[mapID].layers.map((layer, layerIndex) => (
-            <List disablePadding >
-              <ListItem >
-                <ListItemIcon>{
-                  <ToggleButton
-                    value={layer.visible}
-                    selected={layer.visible}
-                    onClick={() => toggleLayerVisibility(layerIndex)}
-                    size="small"
-                    classes={{
-                      root: classes.root,
-                      selected: classes.selected,
-                      sizeSmall: classes.sizeSmall,
-                    }}
-                  >
-                    <VisibilityIcon />
-                  </ToggleButton>
-                }</ListItemIcon>
-                <ListItemText primary={layer.name} />
-                {layerIndex === selectedLayer ? <ExpandLess key={layerIndex} onClick={() => handleClick(layerIndex)} className={classes.icon}/> : <ExpandMore key={layerIndex} onClick={() => handleClick(layerIndex)} className={classes.icon}/>}
-              </ListItem>
-              <Collapse in={layerIndex === selectedLayer} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                {layer.filters.map((filter, filterIndex, filter_c) => {
-                  switch (filter.type) {
-                    /* you can implement category filter UI here */
-                    case "categorical":
-                      return (
-                        <ListItem button className={classes.nested}>
-                          <FormGroup key={filterIndex}>
-                            <FormControlLabel
-                              control={<Checkbox 
-                                checked={true} 
-                                onChange={(e, newval) => {
-                                  updateFilter({
-                                    layerIndex: layerIndex,
-                                    filterIndex: filterIndex,
-                                    filterStateObject: filter_c,
-                                  });
-                                }}
-                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                name="1" />}
-                              label={<Typography variant="body2">Rural remote</Typography>}
-                              size="small"
-                            />
-                            <FormControlLabel
-                              control={<Checkbox 
-                                checked={false} 
-                                onChange={(e, newval) => {
-                                  updateFilter({
-                                    layerIndex: layerIndex,
-                                    filterIndex: filterIndex,
-                                    filterStateObject: filter_c,
-                                  });
-                                }}
-                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                name="2" />}
-                              label={<Typography variant="body2">Rural on-road</Typography>}
-                            />
-                            <FormControlLabel
-                              control={<Checkbox 
-                                checked={true} 
-                                onChange={(e, newval) => {
-                                  updateFilter({
-                                    layerIndex: layerIndex,
-                                    filterIndex: filterIndex,
-                                    filterStateObject: filter_c,
-                                  });
-                                }}
-                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                name="3" />}
-                              label={<Typography variant="body2">Rural mixed</Typography>}
-                            />
-                          </FormGroup>
-                        </ListItem>
-                      );
-                    /* range filter UI implementation */
-                    case "range":
-                      return (
-                        <ListItem button className={classes.nested}>
-                          <Grid item xs={12} key={filterIndex}>
-                            <Typography variant="subtitle2">
-                              {filter.name}
-                            </Typography>
-                          <Grid item xs={12}>
-                            <Slider
-                              id={filterIndex}
-                              value={[
-                                Number(filter.value[0]),
-                                Number(filter.value[1]),
-                              ]}
-                              min={filter.min}
-                              max={filter.max}
-                              aria-labelledby="range-slider"
-                              valueLabelDisplay="auto"
-                              marks={createMarks([
-                                Number(filter.min),
-                                Number(filter.max),
-                              ])}
-                              onChange={(e, newval) => {
-                                updateFilter({
-                                  layerIndex: layerIndex,
-                                  filterIndex: filterIndex,
-                                  newValue: newval,
-                                  filterStateObject: filter,
-                                });
-                              }}
-                              // step={x => log10(x)}
-                              // scale={x => log10(x)}
-                              // getAriaValueText={valueLabelFormat}
-                              // valueLabelFormat={valueLabelFormat}
-                            />
-                            <Button
-                              onClick={(e)=>  {
-                                // filter[filterIndex].resetFilters();
-                              }}>RESET</Button>
-                          </Grid>
-                          </Grid>
-                        </ListItem>
-                      );
-                    default:
-                      return null;
+            <List key={layerIndex} disablePadding>
+              <ListItem>
+                <ListItemIcon>
+                  {
+                    <ToggleButton
+                      value={layer.visible}
+                      selected={layer.visible}
+                      onClick={() => toggleLayerVisibility(layerIndex)}
+                      size="small"
+                      classes={{
+                        root: classes.root,
+                        selected: classes.selected,
+                        sizeSmall: classes.sizeSmall,
+                      }}
+                    >
+                      <VisibilityIcon />
+                    </ToggleButton>
                   }
-                })}
-              </List>
+                </ListItemIcon>
+                <ListItemText primary={layer.name} />
+                {layerIndex === selectedLayer ? (
+                  <ExpandLess
+                    
+                    onClick={() => handleClick(layerIndex)}
+                    className={classes.icon}
+                  />
+                ) : (
+                  <ExpandMore
+                    
+                    onClick={() => handleClick(layerIndex)}
+                    className={classes.icon}
+                  />
+                )}
+              </ListItem>
+              <Collapse
+                in={layerIndex === selectedLayer}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List key={layerIndex}  component="div" disablePadding>
+                  {layer.filters.map((filter, filterIndex, filter_c) => {
+                    switch (filter.type) {
+                      /* you can implement category filter UI here */
+                      case "categorical":
+                        return (
+                          <ListItem
+                            key={filterIndex}
+                            button
+                            className={classes.nested}
+                          >
+                            <FormGroup>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={true}
+                                    onChange={(e, newval) => {
+                                      updateFilter({
+                                        layerIndex: layerIndex,
+                                        filterIndex: filterIndex,
+                                        filterStateObject: filter_c,
+                                      });
+                                    }}
+                                    icon={
+                                      <CheckBoxOutlineBlankIcon fontSize="small" />
+                                    }
+                                    checkedIcon={
+                                      <CheckBoxIcon fontSize="small" />
+                                    }
+                                    name="1"
+                                  />
+                                }
+                                label={
+                                  <Typography variant="body2">
+                                    Rural remote
+                                  </Typography>
+                                }
+                                size="small"
+                              />
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={false}
+                                    onChange={(e, newval) => {
+                                      updateFilter({
+                                        layerIndex: layerIndex,
+                                        filterIndex: filterIndex,
+                                        filterStateObject: filter_c,
+                                      });
+                                    }}
+                                    icon={
+                                      <CheckBoxOutlineBlankIcon fontSize="small" />
+                                    }
+                                    checkedIcon={
+                                      <CheckBoxIcon fontSize="small" />
+                                    }
+                                    name="2"
+                                  />
+                                }
+                                label={
+                                  <Typography variant="body2">
+                                    Rural on-road
+                                  </Typography>
+                                }
+                              />
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={true}
+                                    onChange={(e, newval) => {
+                                      updateFilter({
+                                        layerIndex: layerIndex,
+                                        filterIndex: filterIndex,
+                                        filterStateObject: filter_c,
+                                      });
+                                    }}
+                                    icon={
+                                      <CheckBoxOutlineBlankIcon fontSize="small" />
+                                    }
+                                    checkedIcon={
+                                      <CheckBoxIcon fontSize="small" />
+                                    }
+                                    name="3"
+                                  />
+                                }
+                                label={
+                                  <Typography variant="body2">
+                                    Rural mixed
+                                  </Typography>
+                                }
+                              />
+                            </FormGroup>
+                          </ListItem>
+                        );
+                      /* range filter UI implementation */
+                      case "range":
+                        return (
+                          <ListItem
+                            key={filterIndex}
+                            button
+                            className={classes.nested}
+                          >
+                            <Grid item xs={12} key={filterIndex}>
+                              <Typography variant="subtitle2">
+                                {filter.name}
+                              </Typography>
+                              <Grid item xs={12}>
+                                <Slider
+                                  id={filterIndex}
+                                  value={[
+                                    Number(filter.value[0]),
+                                    Number(filter.value[1]),
+                                  ]}
+                                  min={filter.min}
+                                  max={filter.max}
+                                  aria-labelledby="range-slider"
+                                  valueLabelDisplay="auto"
+                                  marks={createMarks([
+                                    Number(filter.min),
+                                    Number(filter.max),
+                                  ])}
+                                  onChange={(e, newval) => {
+                                    updateFilter({
+                                      layerIndex: layerIndex,
+                                      filterIndex: filterIndex,
+                                      newValue: newval,
+                                      filterStateObject: filter,
+                                    });
+                                  }}
+                                  // step={x => log10(x)}
+                                  // scale={x => log10(x)}
+                                  // getAriaValueText={valueLabelFormat}
+                                  // valueLabelFormat={valueLabelFormat}
+                                />
+                                <Button
+                                  onClick={(e) => {
+                                    // filter[filterIndex].resetFilters();
+                                  }}
+                                >
+                                  RESET
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          </ListItem>
+                        );
+                      default:
+                        return null;
+                    }
+                  })}
+                </List>
               </Collapse>
             </List>
           ))}
