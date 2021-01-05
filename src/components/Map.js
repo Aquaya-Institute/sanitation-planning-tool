@@ -3,7 +3,7 @@ import { MapContext } from "../state/MapState";
 import Carto from "@carto/carto.js";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Box, Typography, Link, Grid } from "@material-ui/core";
+import { Box, Typography, Link, Grid, Divider, Button } from "@material-ui/core";
 import Popover from '@material-ui/core/Popover';
 import Popper from '@material-ui/core/Popper';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
@@ -18,24 +18,25 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { positions } from '@material-ui/system';
 import theme from '../theme/theme'
+import CloseIcon from '@material-ui/icons/Close';
+import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  grid: {
+    height: 40,
+    width: 40,
+  },
+  gridlabel: {
+    height: 10,
+    width: 100,
+  },
   paper: {
     border: '1px solid',
     padding: theme.spacing(1),
     backgroundColor: theme.palette.background.paper,
-  },
-  legend: {
-    // position: 'absolute',
-    // bottom: '12px',
-    // left: '50px',
-    // height: 'auto',
-    // width: 'auto',
-    // // padding: '20px' '14px',
-    // background: 'white',
-    // // box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
-    // // border-radius: '4px',
-    // opacity: 0.9,
   },
   table: {
     width: '20px',
@@ -46,19 +47,25 @@ const useStyles = makeStyles((theme) => ({
     left: '50px',
     // marginbottom: '6px',
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 function transformArray(array) {
   var obj,
       i,
-      key, value;
-  var returnedTarget={}
+      variable, value, cat;
+  var returnedTarget=[]
   for (i = 0; i < array.length; i ++) {
     obj = {}
-    key = array[i][0];
+    variable = array[i][0];
     value = array[i][1];
-    obj[key] = value;
-    returnedTarget = Object.assign(returnedTarget, obj);
+    cat = array[i][2];
+    obj['Name'] = variable;
+    obj['Value'] = value;
+    obj['Category'] = cat;
+    returnedTarget.push(obj);
   }
   return returnedTarget;
 }
@@ -89,7 +96,10 @@ export const Map = () => {
   const legend = $("#legend-content");
   const legend_title = $("#legend-title");
   const buckets = []
+  const mapRef = useRef()
+  const [latLng,setLatLng]=useState([31, 55]);
 
+//click outside
   useEffect(() => {
     const handleClickOutside = event => {
       if (clickRef.current && !clickRef.current.contains(event.target)) {
@@ -102,16 +112,15 @@ export const Map = () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, []);
-
+//set mapID
   useEffect(() => {
     console.log("currentMapID", currentMapID);
     if (currentMapID) {
       setMapID(currentMapID);
     }
   }, [currentMapID]);
-
+//clean up
   useEffect(()=>{
-    //clean up
     if(mapID) {
       return function cleanup() {
         dispatch({
@@ -141,6 +150,7 @@ export const Map = () => {
 
     const map = L.map("map").setView(
       // maps[mapID].view ?? "[8.059229627200192, -1.0546875000000002], 7"
+      // latLng,7
       [8.059229627200192, -1.0546875000000002], 7
     );
     L.tileLayer(
@@ -200,7 +210,9 @@ export const Map = () => {
       console.log("Creating Carto Layers");
       const _mapID = currentMapState.mapID;
       // map.setView(new L.LatLng(34.5333, 69.1333),7);
-      // gotocountry()
+      // setLatLng(currentMapState.view)
+      // mapRef.current.setView(latLng,7)
+      // mapRef.current.setView(new L.latLng(currentMapState.view),7)
 
       currentMapState.layers.forEach((layer, index) => {
         const _source = new Carto.source.SQL(
@@ -285,14 +297,25 @@ export const Map = () => {
               maxs.push(buckets[0][i].max.toFixed(2));
               colors.push(buckets[0][i].value);
             }
-            
+            const defgrid = function (colors) {
+              var grid = "<Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>";
+              for (var j = 0; j < colors.length; j++) {
+                grid+="<Grid item><Paper className={classes.grid} style={{backgroundColor: '"+colors[j]+"'}} elevation={0}></Paper></Grid>";
+              }
+              grid+="<Grid container justify='center' spacing={0}>";
+              grid+="<Grid item><Paper className={classes.gridlabel} elevation={0}>"+mins[0]+"</Paper></Grid>";
+              grid+="<Grid item><Paper className={classes.gridlabel} elevation={0}>"+maxs[maxs.length-1]+"</Paper></Grid>";
+              grid+="</Grid></Grid></Grid></Grid>";
+              return grid;
+            };
+            var grid=defgrid(colors)
             // append colors and ranges to the legend
             $(colors).each(function(i, e) {
               legend.append(`
               <TableContainer component={Paper}>
                 <Table className={classes.table}>
                   <TableRow>
-                    <TableCell ><Paper variant="outlined" square style="background-color: ${colors[i]}"/>...</TableCell>
+                    <TableCell ><Paper className={classes.grid} style="background-color: ${colors[i]}"/>...</TableCell>
                     <TableCell>${mins[i]} - ${maxs[i]}</TableCell>
                   </TableRow>
                 </Table>
@@ -308,20 +331,16 @@ export const Map = () => {
           mapID: _mapID,
           layerID: index,
           cartoLayer: _layer,
-          // legend: legend
         });
-
-        // add legend elements
-        
       });
     }
   }, [currentMapState, cartoClient, dispatch]);
 
   if (popup){
     var dat=[];
-    maps[mapID].layers[layerID].filters.forEach(function (element) {
-      dat.push([element.column_name, element.name]);
-    });
+      maps[mapID].layers[layerID].filters.forEach(function (element) {
+        dat.push([element.column_name, element.name, element.subcategory]);
+      });
     dat.sort()
     var dat_loc=[];
     Object.entries(popup.data).slice(1).map((keyName, i) => {
@@ -332,11 +351,28 @@ export const Map = () => {
     for (let i=0; i < dat.length; i++) {
       for (let j = 0; j < dat_loc.length; j++) {
         if (dat[i][0]===dat_loc[j][0]){
-          dat_popup.push([dat[i][1],dat_loc[j][1]])
+          dat_popup.push([dat[i][1],dat_loc[j][1],dat[i][2]])
         }
       }
     }
     dat_popup=transformArray(dat_popup);
+    $(document).ready(function () {
+      var cat = ['accessibility','wash','health','socioeconomic']
+      var html = "<table>";
+      for (var i = 0; i < cat.length; i++) {
+        html+="<tr class='subheader'><td><strong>"+cat[i].toUpperCase()+"</strong></td></tr>";
+        for (var j = 0; j < dat_popup.length; j++) {
+          if (dat_popup[j].Category === cat[i]) {
+            html+="<tr>";
+            html+="<td>"+dat_popup[j].Name+"</td>";
+            html+="<td>"+dat_popup[j].Value+"</td>";
+            html+="</tr>";
+          }
+        }
+      }
+      html+="</table>";
+      $("#popover-content").html(html);
+    });
   }
   
   return (
@@ -344,126 +380,117 @@ export const Map = () => {
       
       <div id="map" style={{ height: "91vh"}} className={classes.content}>
       
-      {popup && popup.data && (
-          <Popper ref={clickRef}
-            id={idPopper} open={openPopper}
-            // placement="left-end"
-            disablePortal={true}
-            // anchorEl={popup}
-            modifiers={{
-              flip: {
-                enabled: true,
-              },
-              preventOverflow: {
-                enabled: true,
-                boundariesElement: 'scrollParent',
-              },
-              arrow: {
-                enabled: true,
-                // element: arrowRef,
-              },
-            }}
-            style={{
-              position: "absolute",
-              left: popup.position.x,
-              top: popup.position.y,
-              zIndex: "2000",
-              backgroundColor: "#fff",
-              width: "200px",
-            }}
-          >
-            {/* <Link
-              href=""
-              onClick={(e) => {
-                e.preventDefault();
-                setPopup(null);
+        {popup && popup.data && (
+            <Popper ref={clickRef}
+              id={idPopper} open={openPopper}
+              // placement="left-end"
+              disablePortal={true}
+              // anchorEl={popup}
+              modifiers={{
+                flip: {
+                  enabled: true,
+                },
+                preventOverflow: {
+                  enabled: true,
+                  boundariesElement: 'scrollParent',
+                },
+                arrow: {
+                  enabled: true,
+                  // element: arrowRef,
+                },
+              }}
+              style={{
+                position: "absolute",
+                left: popup.position.x,
+                top: popup.position.y,
+                zIndex: "2000",
+                backgroundColor: "#fff",
+                width: "200px",
               }}
             >
-              Close
-            </Link> */}
-            <div className={classes.paper}>
               
-              <span><strong>Population Estimate:</strong> {dat_popup['Population Estimate']}</span><br></br>
-              <span><strong>Community Classification:</strong> {dat_popup['Community Classification']}</span><br></br>
-              <Link 
-                component="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setAnchorEl(e.currentTarget);
-                  // setPopup(null);
-                }}
-              >
-                SEE MORE
-              </Link>
-            </div>
-          
-          <Popover ref={clickRef}
-            id={idPopover}
-            open={openPopover}
-            anchorEl={idPopper}
-            onClose={() => {
-              setAnchorEl(null);
-              setPopup(null);}}
-            anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'center',
-            }}
-            transformOrigin={{
-              vertical: 'center',
-              horizontal: 'center',
-            }}
-          >
-            <table>
-              <thead>
-                  <tr>
-                    <th>Factor</th>
-                    <th>Value</th>
-                  </tr>
-              </thead>
-              <tbody>
-                {Object.entries(dat_popup).map((keyName, i) => (
-                  <tr key={i}>
-                    <td>{keyName[0]}:</td>
-                    <td><font color='#0067B9'>{keyName[1]}</font></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <center><Link 
-              component="button"
-              onClick={(e) => {
+              <div className={classes.paper}>
+                
+                <span><strong>Population Estimate:</strong> {dat_popup[5].Value}</span><br></br>
+                <span><strong>Community Classification:</strong> {dat_popup['Community Classification']}</span><br></br>
+                <Link 
+                  component="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setAnchorEl(e.currentTarget);
+                    // setPopup(null);
+                  }}
+                >
+                  SEE MORE
+                </Link>
+              </div>
+            
+            <Popover ref={clickRef}
+              id={idPopover}
+              open={openPopover}
+              anchorEl={idPopper}
+              onClose={() => {
+                setAnchorEl(null);
+                setPopup(null);}}
+              anchorOrigin={{
+                vertical: 'center',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'center',
+                horizontal: 'center',
               }}
             >
-              DOWNLOAD TABLE
-            </Link></center>
-          </Popover>
-        </Popper>
-      )}
-      {/* <Popper 
-      open={true}
-      elevation={3}
-      // anchorEl={anchorEl}
-      style={{
-        position: 'absolute',
-        bottom: '10px', right: '10px', top: 'unset', left: 'unset',
-        height: 'auto',
-        width: 'auto',
-        zIndex: "1000",
-        backgroundColor: "#fff",
-        padding: "5px",
-      }} */}
-      <Paper style={{padding: theme.spacing(1),
-        position: 'absolute',
-        bottom: '10px', right: '10px', top: 'unset', left: 'unset',
-        height: 'auto',
-        width: 'auto',
-        zIndex: "1000",
-        backgroundColor: "#fff",}}>
-        <div id="legend-title"></div>
-        <div className={classes.legend}>
+              <Grid container justify="flex-end" pt={2}>
+                <CloseIcon  
+                  fontSize="small"
+                  color="disabled"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setAnchorEl(null);
+                    setPopup(null)
+                  }}
+                />
+              </Grid>
+              
+              <div id="popover-content"></div>
+              <Divider />
+              <Grid container justify="center">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  DOWNLOAD TABLE
+                </Button>
+              </Grid>
+            </Popover>
+          </Popper>
+        )}
+        <Paper style={{padding: theme.spacing(1),
+          position: 'absolute',
+          bottom: '10px', right: '10px', top: 'unset', left: 'unset',
+          height: 'auto',
+          width: 'auto',
+          zIndex: "1000",
+          backgroundColor: "#fff",}}>
+          <div id="legend-title"></div>
+          <div>
+            {/* <Grid container className={classes.root} spacing={0}><Grid item ><Grid container justify='center' spacing={0}>
+              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#ede5cf'}} elevation={0}></Paper></Grid>
+              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#daaf91'}} elevation={0}></Paper></Grid>
+              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#c1766f'}} elevation={0}></Paper></Grid>
+              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#95455a'}} elevation={0}></Paper></Grid>
+              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#541f3f'}} elevation={0}></Paper></Grid>
+              <Grid container justify='center' spacing={0}>
+              <Grid item><Paper align="left" className={classes.gridlabel} elevation={0}>0</Paper></Grid>
+              <Grid item><Paper align="right" className={classes.gridlabel} elevation={0}>4250939</Paper></Grid>
+            </Grid></Grid></Grid></Grid> */}
+          </div>
           <div id="legend-content"></div>
-        </div></Paper>
-      {/* </Popper> */}
+        </Paper>
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
+import Button from '@material-ui/core/Button';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -69,6 +70,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function createMarks(array) {
+  var obj,
+      i,
+      value, label;
+  var returnedTarget=[]
+  for (i = 0; i < array.length; i ++) {
+    obj = {}
+    value = array[i];
+    label = array[i].toString();
+    obj['value'] = value;
+    obj['label'] = label;
+    returnedTarget.push(obj);
+  }
+  return returnedTarget;
+}
+function log10(x) {
+  return Math.log(x) / Math.log(10);
+}
+
+function pow10(x) {
+  return Math.pow(10, x);
+}
+
+function valueLabelFormat(x) {
+  const [coefficient, exponent] = x
+    .toExponential()
+    .split('e')
+    .map(item => Number(item));
+  return `${Math.round(coefficient)}e^${exponent}`;
+}
 export const MapLayers = () => {
   //pick specific states (and dispatcher) we need from mapstate
   const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
@@ -233,6 +264,7 @@ export const MapLayers = () => {
                             </Typography>
                           <Grid item xs={12}>
                             <Slider
+                              id={filterIndex}
                               value={[
                                 Number(filter.value[0]),
                                 Number(filter.value[1]),
@@ -240,6 +272,11 @@ export const MapLayers = () => {
                               min={filter.min}
                               max={filter.max}
                               aria-labelledby="range-slider"
+                              valueLabelDisplay="auto"
+                              marks={createMarks([
+                                Number(filter.min),
+                                Number(filter.max),
+                              ])}
                               onChange={(e, newval) => {
                                 updateFilter({
                                   layerIndex: layerIndex,
@@ -248,7 +285,15 @@ export const MapLayers = () => {
                                   filterStateObject: filter,
                                 });
                               }}
+                              // step={x => log10(x)}
+                              // scale={x => log10(x)}
+                              // getAriaValueText={valueLabelFormat}
+                              // valueLabelFormat={valueLabelFormat}
                             />
+                            <Button
+                              onClick={(e)=>  {
+                                // filter[filterIndex].resetFilters();
+                              }}>RESET</Button>
                           </Grid>
                           </Grid>
                         </ListItem>
