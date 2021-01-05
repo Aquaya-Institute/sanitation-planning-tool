@@ -98,6 +98,7 @@ export const Map = () => {
   const buckets = []
   const mapRef = useRef()
   const [latLng,setLatLng]=useState([31, 55]);
+  
 
 //click outside
   useEffect(() => {
@@ -336,6 +337,13 @@ export const Map = () => {
     }
   }, [currentMapState, cartoClient, dispatch]);
 
+  useEffect(()=>{
+    console.log("updated popup", popup);
+    //check if it is undefined if not then do this 
+    //process the popup data to assign labels and create a dat_popup(is also part of local state)
+  }, [popup]);
+
+
   if (popup){
     var dat=[];
       maps[mapID].layers[layerID].filters.forEach(function (element) {
@@ -377,82 +385,90 @@ export const Map = () => {
   
   return (
     <div>
-      
-      <div id="map" style={{ height: "91vh"}} className={classes.content}>
-      
+      <div id="map" style={{ height: "91vh" }} className={classes.content}>
         {popup && popup.data && (
-            <Popper ref={clickRef}
-              id={idPopper} open={openPopper}
-              // placement="left-end"
-              disablePortal={true}
-              // anchorEl={popup}
-              modifiers={{
-                flip: {
-                  enabled: true,
-                },
-                preventOverflow: {
-                  enabled: true,
-                  boundariesElement: 'scrollParent',
-                },
-                arrow: {
-                  enabled: true,
-                  // element: arrowRef,
-                },
-              }}
-              style={{
-                position: "absolute",
-                left: popup.position.x,
-                top: popup.position.y,
-                zIndex: "2000",
-                backgroundColor: "#fff",
-                width: "200px",
-              }}
-            >
-              
-              <div className={classes.paper}>
-                
-                <span><strong>Population Estimate:</strong> {dat_popup[5].Value}</span><br></br>
-                <span><strong>Community Classification:</strong> {dat_popup['Community Classification']}</span><br></br>
-                <Link 
-                  component="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setAnchorEl(e.currentTarget);
-                    // setPopup(null);
-                  }}
-                >
-                  SEE MORE
-                </Link>
-              </div>
-            
-            <Popover ref={clickRef}
+          <Popper
+            ref={clickRef}
+            id={idPopper}
+            open={openPopper}
+            // placement="left-end"
+            disablePortal={true}
+            // anchorEl={popup}
+            modifiers={{
+              flip: {
+                enabled: true,
+              },
+              preventOverflow: {
+                enabled: true,
+                boundariesElement: "scrollParent",
+              },
+              arrow: {
+                enabled: true,
+                // element: arrowRef,
+              },
+            }}
+            style={{
+              position: "absolute",
+              left: popup.position.x,
+              top: popup.position.y,
+              zIndex: "2000",
+              backgroundColor: "#fff",
+              width: "200px",
+            }}
+          >
+            <div className={classes.paper}>
+              <span>
+                <strong>Population Estimate:</strong> {dat_popup[5].Value}
+              </span>
+              <br></br>
+              <span>
+                <strong>Community Classification:</strong>{" "}
+                {dat_popup["Community Classification"]}
+              </span>
+              <br></br>
+              <Link
+                component="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setAnchorEl(e.currentTarget);
+                  // setPopup(null);
+                  //showPopupTable(true);
+                }}
+              >
+                SEE MORE
+              </Link>
+            </div>
+
+            <Popover
+              ref={clickRef}
               id={idPopover}
               open={openPopover}
               anchorEl={idPopper}
               onClose={() => {
                 setAnchorEl(null);
-                setPopup(null);}}
+                setPopup(null);
+              }}
               anchorOrigin={{
-                vertical: 'center',
-                horizontal: 'center',
+                vertical: "center",
+                horizontal: "center",
               }}
               transformOrigin={{
-                vertical: 'center',
-                horizontal: 'center',
+                vertical: "center",
+                horizontal: "center",
               }}
             >
               <Grid container justify="flex-end" pt={2}>
-                <CloseIcon  
+                <CloseIcon
                   fontSize="small"
                   color="disabled"
                   onClick={(e) => {
                     e.preventDefault();
                     setAnchorEl(null);
-                    setPopup(null)
+                    setPopup(null);
                   }}
                 />
               </Grid>
-              
+
               <div id="popover-content"></div>
               <Divider />
               <Grid container justify="center">
@@ -469,13 +485,20 @@ export const Map = () => {
             </Popover>
           </Popper>
         )}
-        <Paper style={{padding: theme.spacing(1),
-          position: 'absolute',
-          bottom: '10px', right: '10px', top: 'unset', left: 'unset',
-          height: 'auto',
-          width: 'auto',
-          zIndex: "1000",
-          backgroundColor: "#fff",}}>
+        <Paper
+          style={{
+            padding: theme.spacing(1),
+            position: "absolute",
+            bottom: "10px",
+            right: "10px",
+            top: "unset",
+            left: "unset",
+            height: "auto",
+            width: "auto",
+            zIndex: "1000",
+            backgroundColor: "#fff",
+          }}
+        >
           <div id="legend-title"></div>
           <div>
             {/* <Grid container className={classes.root} spacing={0}><Grid item ><Grid container justify='center' spacing={0}>
@@ -489,6 +512,48 @@ export const Map = () => {
               <Grid item><Paper align="right" className={classes.gridlabel} elevation={0}>4250939</Paper></Grid>
             </Grid></Grid></Grid></Grid> */}
           </div>
+
+          {/* render table here 
+          based on showPopupTable render the table
+          
+          <th>
+            here run the loop dat_popup (should be stored as state object - useState)
+            get access all the columns
+            dat_popup.
+            {JSON.stringify(data_popup)}
+
+
+          </th>
+          
+          
+          
+          */}
+
+          {/* 
+          
+          legend markup is here
+
+          show multiple legends arrays [ legend ]
+          and lengeng makru loops over an array (this array is update each time a layer is toggled on) that contains all the classes
+          example object 
+          legend = [{
+            value
+            color
+          },
+          {
+            value
+            color
+          },
+          {
+            value
+            color
+          }]
+          legend.map(grid
+            <div backgroundcolor=grid.color></div>
+            <p>grid.value</p>
+          )
+          
+          */}
           <div id="legend-content"></div>
         </Paper>
       </div>
