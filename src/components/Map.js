@@ -295,11 +295,8 @@ export const Map = () => {
             legend_title.empty();
             console.log(event);
 
-            // get buckets
-            var buckets_list = [];
-            buckets_list.push(event.styles[0]._buckets);
-            setBuckets(buckets_list);
-            console.log("buckets", buckets);
+            // get/set buckets
+            setBuckets(event.styles[0]._buckets);
           });
         }
 
@@ -365,14 +362,9 @@ export const Map = () => {
             <Typography>
               <strong>{currentMapState.layers[layerID].name}</strong>
             </Typography>
-            {buckets.map((obj, i) => {
-              return (
-                // <Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>
-                //   <Grid item><Paper className={classes.grid} style={{backgroundColor: obj[i].value}} elevation={0}></Paper></Grid>
-                // <Grid container justify='center' spacing={0}>
-                //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj[i].min}</Paper></Grid>
-                //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj[i].max}</Paper></Grid>
-                // </Grid></Grid></Grid></Grid>
+            {buckets.map((obj, i) => 
+              (
+                
                 <Grid
                   container
                   direction="row"
@@ -382,12 +374,12 @@ export const Map = () => {
                 >
                   <div
                     className={classes.dot}
-                    style={{ backgroundColor: obj[i].value }}
+                    style={{ backgroundColor: obj.value }}
                   ></div>
-                  {obj[i].min}-{obj[i].max}
+                  {obj.min}-{obj.max}
                 </Grid>
-              );
-            })}
+              )
+            )}
           </Paper>
         )}
         {popup &&
