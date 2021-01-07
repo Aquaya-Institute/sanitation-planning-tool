@@ -16,31 +16,31 @@ const initialState = {
       do maintain the same structure for all. 
       */
       layers: [
-        // {
-        //   name: "Community Classification",
-        //   carto_tableName: "gha_class_topo",
-        //   carto_layer: null /* we will insert carto's layer object here */,
-        //   carto_style: `#layer {polygon-fill: ramp([dn], (#0d882b, #200ab7, #ad1719), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
-        //   visible: true,
-        //   /* 
-        //   we don't use order yet to order(re) the layers 
-        //   For now the first layer object is the bottom most rendered layer
-        //   */
-        //   order: 4,
-        //   filters: [
-        //     {
-        //       /* 
-        //       a categorical filter, such as this one is not implemented. 
-        //       It might be a good one to implement
-        //      */
-        //       name: "Community Classification",
-        //       type: "categorical",
-        //       column_name: "dn",
-        //       column_values: [1, 2, 3],
-        //       value_labels: ['Rural remote','Rural on-road','Rural mixed']
-        //     },
-        //   ],
-        // },
+        {
+          name: "Community Classification",
+          carto_tableName: "gha_class_topo",
+          carto_layer: null /* we will insert carto's layer object here */,
+          carto_style: `#layer {polygon-fill: ramp([dn], (#0d882b, #200ab7, #ad1719), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
+          visible: false,
+          /* 
+          we don't use order yet to order(re) the layers 
+          For now the first layer object is the bottom most rendered layer
+          */
+          order: 4,
+          filters: [
+            {
+              /* 
+              a categorical filter, such as this one is not implemented. 
+              It might be a good one to implement
+             */
+              name: "Community Classification",
+              type: "categorical",
+              column_name: "dn",
+              column_values: [1, 2, 3],
+              value_labels: ['Rural remote','Rural on-road','Rural mixed']
+            },
+          ],
+        },
         {
           name: "Reliance on Open Defecation (%)",
           carto_tableName: "gha_od_topo",

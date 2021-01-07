@@ -3,24 +3,32 @@ import { MapContext } from "../state/MapState";
 import Carto from "@carto/carto.js";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Box, Typography, Link, Grid, Divider, Button } from "@material-ui/core";
-import Popover from '@material-ui/core/Popover';
-import Popper from '@material-ui/core/Popper';
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import $ from 'jquery';
+import {
+  Box,
+  Typography,
+  Link,
+  Grid,
+  Divider,
+  Button,
+} from "@material-ui/core";
+import Popover from "@material-ui/core/Popover";
+import Popper from "@material-ui/core/Popper";
+import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import $ from "jquery";
 import "../App.css";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import { positions } from '@material-ui/system';
-import theme from '../theme/theme'
-import CloseIcon from '@material-ui/icons/Close';
-import SaveIcon from '@material-ui/icons/Save';
-
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import { positions } from "@material-ui/system";
+import theme from "../theme/theme";
+import CloseIcon from "@material-ui/icons/Close";
+import SaveIcon from "@material-ui/icons/Save";
+// import { AggregationTypes } from '@carto/react/widgets';
+// import { FormulaWidget } from '@carto/react/widgets';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -34,48 +42,53 @@ const useStyles = makeStyles((theme) => ({
     width: 100,
   },
   paper: {
-    border: '1px solid',
     padding: theme.spacing(1),
     backgroundColor: theme.palette.background.paper,
   },
   table: {
-    width: '20px',
-    height: '20px',
+    width: "20px",
+    height: "20px",
     opacity: 1,
-    position: 'absolute',
-    bottom: '12px',
-    left: '50px',
+    position: "absolute",
+    bottom: "12px",
+    left: "50px",
     // marginbottom: '6px',
   },
   button: {
     margin: theme.spacing(1),
   },
+  element: {
+    ...theme.typography.overline,
+    textTransform: "none",
+    color: theme.palette.text.secondary,
+    padding: theme.spacing(0.25, 0),
+  },
+  dot: {
+    flex: "0 0 auto",
+    width: 8,
+    height: 8,
+    marginRight: theme.spacing(1),
+  },
+  popover: {
+    width: 400,
+  },
 }));
 
 function transformArray(array) {
-  var obj,
-      i,
-      variable, value, cat;
-  var returnedTarget=[]
-  for (i = 0; i < array.length; i ++) {
-    obj = {}
+  var obj, i, variable, value, cat;
+  var returnedTarget = [];
+  for (i = 0; i < array.length; i++) {
+    obj = {};
     variable = array[i][0];
     value = array[i][1];
     cat = array[i][2];
-    obj['Name'] = variable;
-    obj['Value'] = value;
-    obj['Category'] = cat;
+    obj["Name"] = variable;
+    obj["Value"] = value;
+    obj["Category"] = cat;
     returnedTarget.push(obj);
   }
   return returnedTarget;
 }
-
-var gotocountry = function(){
-   map.setView(new L.LatLng(34.5333, 69.1333), 6);
-  return;
-  
-  
-};
 
 export const Map = () => {
   const [{ currentMapID, maps }, dispatch] = useContext(MapContext);
@@ -85,26 +98,28 @@ export const Map = () => {
   const [leaflet, setLeaflet] = useState();
   const [cartoClient, setCartoClient] = useState();
   const [popup, setPopup] = useState();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [popupData, setPopupData] = useState([]);
+  const [popover, setPopover] = useState(null);
+  const [buckets, setBuckets] = useState(null);
   const openPopper = Boolean(popup);
-  const openPopover = Boolean(anchorEl);
-  const idPopper = openPopper ? 'simple-popover' : undefined;
-  const idPopover = openPopover ? 'transitions-popper' : undefined;
-  const arrowRef = useRef()
+  const openPopover = Boolean(popover);
+  const idPopper = openPopper ? "transitions-popper" : undefined;
+  const idPopover = openPopover ? "simple-popover" : undefined;
+  const arrowRef = useRef();
   const classes = useStyles();
   const clickRef = useRef(null);
   const legend = $("#legend-content");
   const legend_title = $("#legend-title");
-  const buckets = []
-  const mapRef = useRef()
-  const [latLng,setLatLng]=useState([31, 55]);
-
-//click outside
+  const mapRef = useRef();
+  const [latLng, setLatLng] = useState([31, 55]);
+  const cat = ["accessibility", "wash", "health", "socioeconomic"];
+  var dat_popup = [];
+  //click outside
   useEffect(() => {
-    const handleClickOutside = event => {
+    const handleClickOutside = (event) => {
       if (clickRef.current && !clickRef.current.contains(event.target)) {
         setPopup(null);
-        console.log("clicked outside")
+        console.log("clicked outside");
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -112,27 +127,27 @@ export const Map = () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, []);
-//set mapID
+  //set mapID
   useEffect(() => {
     console.log("currentMapID", currentMapID);
     if (currentMapID) {
       setMapID(currentMapID);
     }
   }, [currentMapID]);
-//clean up
-  useEffect(()=>{
-    if(mapID) {
+  //clean up
+  useEffect(() => {
+    if (mapID) {
       return function cleanup() {
         dispatch({
           type: "map.select",
-          mapID: null
+          mapID: null,
         });
         dispatch({
           type: "layer.removeCartoLayers",
         });
       };
     }
-  }, [mapID])
+  }, [mapID]);
 
   useEffect(() => {
     console.log("load");
@@ -151,7 +166,8 @@ export const Map = () => {
     const map = L.map("map").setView(
       // maps[mapID].view ?? "[8.059229627200192, -1.0546875000000002], 7"
       // latLng,7
-      [8.059229627200192, -1.0546875000000002], 7
+      [8.059229627200192, -1.0546875000000002],
+      7
     );
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
@@ -194,7 +210,6 @@ export const Map = () => {
       });
     }
   }, [maps, mapID, cartoClient]);
-
 
   /* 
   When map state is updated run this effect.
@@ -252,17 +267,15 @@ export const Map = () => {
         const _layer = new Carto.layer.Layer(_source, _style, {
           featureClickColumns: _columns,
         });
-        
 
         //setup feature clicks on relevant layers
         if (_columns.length > 0) {
           _layer.on("featureClicked", (featureEvent) => {
             console.log("clicked a feature", featureEvent);
             setPopup(featureEvent);
-          }); 
-          
+            console.log("popup", popup);
+          });
         }
-        
 
         //set default visibility as set in map state
         if (layer.visible) {
@@ -275,56 +288,21 @@ export const Map = () => {
         cartoClient.addLayer(_layer);
         setlayerID(index);
 
-        const mins = [], maxs = [], colors = [];
-        
         // change legend when data classification method changes
-        if (layer.visible){
-          _layer.on('metadataChanged', function(event){
-
-            colors.length = 0;
-            maxs.length = 0;
-            mins.length = 0;
+        if (layer.visible) {
+          _layer.on("metadataChanged", function (event) {
             legend.empty();
             legend_title.empty();
             console.log(event);
 
             // get buckets
-            buckets.push(event.styles[0]._buckets);
-            legend_title.append(`<Typography><strong>${layer.name}</strong></Typography>`)
-            // populate mins, maxs and colors array
-            for (let i=0; i < buckets[0].length; i++) {
-              mins.push(buckets[0][i].min.toFixed(2));
-              maxs.push(buckets[0][i].max.toFixed(2));
-              colors.push(buckets[0][i].value);
-            }
-            const defgrid = function (colors) {
-              var grid = "<Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>";
-              for (var j = 0; j < colors.length; j++) {
-                grid+="<Grid item><Paper className={classes.grid} style={{backgroundColor: '"+colors[j]+"'}} elevation={0}></Paper></Grid>";
-              }
-              grid+="<Grid container justify='center' spacing={0}>";
-              grid+="<Grid item><Paper className={classes.gridlabel} elevation={0}>"+mins[0]+"</Paper></Grid>";
-              grid+="<Grid item><Paper className={classes.gridlabel} elevation={0}>"+maxs[maxs.length-1]+"</Paper></Grid>";
-              grid+="</Grid></Grid></Grid></Grid>";
-              return grid;
-            };
-            var grid=defgrid(colors)
-            // append colors and ranges to the legend
-            $(colors).each(function(i, e) {
-              legend.append(`
-              <TableContainer component={Paper}>
-                <Table className={classes.table}>
-                  <TableRow>
-                    <TableCell ><Paper className={classes.grid} style="background-color: ${colors[i]}"/>...</TableCell>
-                    <TableCell>${mins[i]} - ${maxs[i]}</TableCell>
-                  </TableRow>
-                </Table>
-              </TableContainer>
-              `)
-            });
-          
+            var buckets_list = [];
+            buckets_list.push(event.styles[0]._buckets);
+            setBuckets(buckets_list);
+            console.log("buckets", buckets);
           });
         }
+
         //add the carto layer to global state
         dispatch({
           type: "layer.addCartoLayer",
@@ -336,63 +314,97 @@ export const Map = () => {
     }
   }, [currentMapState, cartoClient, dispatch]);
 
-  if (popup){
-    var dat=[];
-      maps[mapID].layers[layerID].filters.forEach(function (element) {
+  useEffect(() => {
+    console.log("updated popup", popup);
+    if (popup) {
+      var dat = [];
+      currentMapState.layers[layerID].filters.forEach(function (element) {
         dat.push([element.column_name, element.name, element.subcategory]);
       });
-    dat.sort()
-    var dat_loc=[];
-    Object.entries(popup.data).slice(1).map((keyName, i) => {
-      return dat_loc.push([keyName[0],keyName[1]])
-    });
-    dat_loc.sort()
-    var dat_popup=[];
-    for (let i=0; i < dat.length; i++) {
-      for (let j = 0; j < dat_loc.length; j++) {
-        if (dat[i][0]===dat_loc[j][0]){
-          dat_popup.push([dat[i][1],dat_loc[j][1],dat[i][2]])
-        }
-      }
-    }
-    dat_popup=transformArray(dat_popup);
-    $(document).ready(function () {
-      var cat = ['accessibility','wash','health','socioeconomic']
-      var html = "<table>";
-      for (var i = 0; i < cat.length; i++) {
-        html+="<tr class='subheader'><td><strong>"+cat[i].toUpperCase()+"</strong></td></tr>";
-        for (var j = 0; j < dat_popup.length; j++) {
-          if (dat_popup[j].Category === cat[i]) {
-            html+="<tr>";
-            html+="<td>"+dat_popup[j].Name+"</td>";
-            html+="<td>"+dat_popup[j].Value+"</td>";
-            html+="</tr>";
+      dat.sort();
+      var dat_loc = [];
+      Object.entries(popup.data)
+        .slice(1)
+        .map((keyName, i) => {
+          return dat_loc.push([keyName[0], keyName[1]]);
+        });
+      dat_loc.sort();
+
+      for (let i = 0; i < dat.length; i++) {
+        for (let j = 0; j < dat_loc.length; j++) {
+          if (dat[i][0] === dat_loc[j][0]) {
+            dat_popup.push([dat[i][1], dat_loc[j][1], dat[i][2]]);
           }
         }
       }
-      html+="</table>";
-      $("#popover-content").html(html);
-    });
-  }
-  
+      dat_popup = transformArray(dat_popup);
+      setPopupData(dat_popup);
+      console.log("updated dat_popup", dat_popup);
+      console.log("updated popupData", popupData);
+    }
+  }, [popup]);
+
   return (
     <div>
-      
-      <div id="map" style={{ height: "91vh"}} className={classes.content}>
-      
-        {popup && popup.data && (
-            <Popper ref={clickRef}
-              id={idPopper} open={openPopper}
-              // placement="left-end"
+      <div id="map" style={{ height: "91vh" }} className={classes.content}>
+        {buckets && (
+          <Paper
+            style={{
+              padding: theme.spacing(1),
+              position: "absolute",
+              bottom: "10px",
+              right: "10px",
+              top: "unset",
+              left: "unset",
+              height: "auto",
+              width: "auto",
+              zIndex: "1000",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Typography>
+              <strong>{currentMapState.layers[layerID].name}</strong>
+            </Typography>
+            {buckets.map((obj, i) => {
+              return (
+                // <Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>
+                //   <Grid item><Paper className={classes.grid} style={{backgroundColor: obj[i].value}} elevation={0}></Paper></Grid>
+                // <Grid container justify='center' spacing={0}>
+                //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj[i].min}</Paper></Grid>
+                //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj[i].max}</Paper></Grid>
+                // </Grid></Grid></Grid></Grid>
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  className={classes.element}
+                  key={i}
+                >
+                  <div
+                    className={classes.dot}
+                    style={{ backgroundColor: obj[i].value }}
+                  ></div>
+                  {obj[i].min}-{obj[i].max}
+                </Grid>
+              );
+            })}
+          </Paper>
+        )}
+        {popup &&
+          popup.data &&
+          (currentMapState.layers[layerID].name === "Communities" ? (
+            <Popper
+              ref={clickRef}
+              id={idPopper}
+              open={openPopper}
               disablePortal={true}
-              // anchorEl={popup}
               modifiers={{
                 flip: {
                   enabled: true,
                 },
                 preventOverflow: {
                   enabled: true,
-                  boundariesElement: 'scrollParent',
+                  boundariesElement: "scrollParent",
                 },
                 arrow: {
                   enabled: true,
@@ -403,94 +415,147 @@ export const Map = () => {
                 position: "absolute",
                 left: popup.position.x,
                 top: popup.position.y,
-                zIndex: "2000",
+                zIndex: "1300",
                 backgroundColor: "#fff",
                 width: "200px",
               }}
+              elevation={3}
             >
-              
-              <div className={classes.paper}>
-                
-                <span><strong>Population Estimate:</strong> {dat_popup[5].Value}</span><br></br>
-                <span><strong>Community Classification:</strong> {dat_popup['Community Classification']}</span><br></br>
-                <Link 
+              <div className={classes.paper} elevation={3}>
+                <span>
+                  <strong>Population Estimate:</strong> {popup.data.pop_est}
+                </span>
+                <br></br>
+                <span>
+                  <strong>Community Classification:</strong> Rural Remote
+                </span>
+                <br></br>
+                <Link
                   component="button"
                   onClick={(e) => {
-                    e.preventDefault();
-                    setAnchorEl(e.currentTarget);
-                    // setPopup(null);
+                    // e.preventDefault();
+                    setPopover(e.currentTarget);
+                    // setPopper(null);
                   }}
                 >
                   SEE MORE
                 </Link>
               </div>
-            
-            <Popover ref={clickRef}
-              id={idPopover}
-              open={openPopover}
-              anchorEl={idPopper}
-              onClose={() => {
-                setAnchorEl(null);
-                setPopup(null);}}
-              anchorOrigin={{
-                vertical: 'center',
-                horizontal: 'center',
+
+              <Popover
+                ref={clickRef}
+                id={idPopover}
+                open={openPopover}
+                anchorReference="anchorPosition"
+                anchorPosition={{ top: 400, left: 800 }}
+                onClose={() => {
+                  setPopover(null);
+                }}
+                anchorOrigin={{
+                  vertical: "center",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "center",
+                  horizontal: "center",
+                }}
+              >
+                <Grid container justify="flex-end" pt={2}>
+                  <CloseIcon
+                    fontSize="small"
+                    color="disabled"
+                    onClick={(e) => {
+                      // e.preventDefault();
+                      setPopover(null);
+                      // openPopper(null)
+                    }}
+                  />
+                </Grid>
+                {cat.map((category) => {
+                  return (
+                    <Table className={classes.popover}>
+                      <TableHead>
+                        <br></br>
+                        <strong>{category.toUpperCase()}</strong>
+                      </TableHead>
+                      <TableBody>
+                        {popupData.map((anObjectMapped) => {
+                          if (anObjectMapped.Category === category) {
+                            return (
+                              <TableRow>
+                                <TableCell style={{ width: "70%" }}>
+                                  {anObjectMapped.Name}
+                                </TableCell>
+                                <TableCell
+                                  style={{ width: "30%" }}
+                                  align="center"
+                                >
+                                  {anObjectMapped.Value}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </TableBody>
+                    </Table>
+                  );
+                })}
+                <Divider />
+                <Grid container justify="center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    className={classes.button}
+                    startIcon={<SaveIcon />}
+                  >
+                    DOWNLOAD TABLE
+                  </Button>
+                </Grid>
+              </Popover>
+            </Popper>
+          ) : (
+            <Popper
+              ref={clickRef}
+              id={idPopper}
+              open={openPopper}
+              // placement="left-end"
+              disablePortal={true}
+              // anchorEl={popup}
+              modifiers={{
+                flip: {
+                  enabled: true,
+                },
+                preventOverflow: {
+                  enabled: true,
+                  boundariesElement: "scrollParent",
+                },
+                arrow: {
+                  enabled: true,
+                  // element: arrowRef,
+                },
               }}
-              transformOrigin={{
-                vertical: 'center',
-                horizontal: 'center',
+              style={{
+                position: "absolute",
+                left: popup.position.x,
+                top: popup.position.y,
+                zIndex: "1300",
+                backgroundColor: "#fff",
+                width: "200px",
               }}
             >
-              <Grid container justify="flex-end" pt={2}>
-                <CloseIcon  
-                  fontSize="small"
-                  color="disabled"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setAnchorEl(null);
-                    setPopup(null)
-                  }}
-                />
-              </Grid>
-              
-              <div id="popover-content"></div>
-              <Divider />
-              <Grid container justify="center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                >
-                  DOWNLOAD TABLE
-                </Button>
-              </Grid>
-            </Popover>
-          </Popper>
+              <div className={classes.paper}>
+                <span>
+                  <strong>{currentMapState.layers[layerID].name}:</strong>{" "}
+                  {popup.data.val}
+                </span>
+                <br></br>
+              </div>
+            </Popper>
+          ))}
         )}
-        <Paper style={{padding: theme.spacing(1),
-          position: 'absolute',
-          bottom: '10px', right: '10px', top: 'unset', left: 'unset',
-          height: 'auto',
-          width: 'auto',
-          zIndex: "1000",
-          backgroundColor: "#fff",}}>
-          <div id="legend-title"></div>
-          <div>
-            {/* <Grid container className={classes.root} spacing={0}><Grid item ><Grid container justify='center' spacing={0}>
-              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#ede5cf'}} elevation={0}></Paper></Grid>
-              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#daaf91'}} elevation={0}></Paper></Grid>
-              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#c1766f'}} elevation={0}></Paper></Grid>
-              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#95455a'}} elevation={0}></Paper></Grid>
-              <Grid item><Paper className={classes.grid} style={{backgroundColor: '#541f3f'}} elevation={0}></Paper></Grid>
-              <Grid container justify='center' spacing={0}>
-              <Grid item><Paper align="left" className={classes.gridlabel} elevation={0}>0</Paper></Grid>
-              <Grid item><Paper align="right" className={classes.gridlabel} elevation={0}>4250939</Paper></Grid>
-            </Grid></Grid></Grid></Grid> */}
-          </div>
-          <div id="legend-content"></div>
-        </Paper>
       </div>
     </div>
   );
