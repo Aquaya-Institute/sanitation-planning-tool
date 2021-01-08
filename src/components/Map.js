@@ -4,7 +4,6 @@ import Carto from "@carto/carto.js";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
-  Box,
   Typography,
   Link,
   Grid,
@@ -13,17 +12,17 @@ import {
 } from "@material-ui/core";
 import Popover from "@material-ui/core/Popover";
 import Popper from "@material-ui/core/Popper";
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import $ from "jquery";
 import "../App.css";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
+// import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { positions } from "@material-ui/system";
+// import { positions } from "@material-ui/system";
 import theme from "../theme/theme";
 import CloseIcon from "@material-ui/icons/Close";
 import SaveIcon from "@material-ui/icons/Save";
@@ -58,15 +57,15 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   element: {
-    ...theme.typography.overline,
+    // ...theme.typography.overline,
     textTransform: "none",
     color: theme.palette.text.secondary,
-    padding: theme.spacing(0.25, 0),
+    // padding: theme.spacing(0.25, 0),
   },
   dot: {
     flex: "0 0 auto",
-    width: 8,
-    height: 8,
+    width: 20,
+    height: 20,
     marginRight: theme.spacing(1),
   },
   popover: {
@@ -94,6 +93,7 @@ export const Map = () => {
   const [{ currentMapID, maps }, dispatch] = useContext(MapContext);
   const [mapID, setMapID] = useState();
   const [layerID, setlayerID] = useState();
+  const [visibleLayers, setVisibleLayers] = useState();
   const [currentMapState, setCurrentMapState] = useState();
   const [leaflet, setLeaflet] = useState();
   const [cartoClient, setCartoClient] = useState();
@@ -101,19 +101,22 @@ export const Map = () => {
   const [popupData, setPopupData] = useState([]);
   const [popover, setPopover] = useState(null);
   const [buckets, setBuckets] = useState(null);
+  const [legend, setLegend] = useState(null);
   const openPopper = Boolean(popup);
   const openPopover = Boolean(popover);
   const idPopper = openPopper ? "transitions-popper" : undefined;
   const idPopover = openPopover ? "simple-popover" : undefined;
-  const arrowRef = useRef();
+  // const arrowRef = useRef();
   const classes = useStyles();
   const clickRef = useRef(null);
-  const legend = $("#legend-content");
-  const legend_title = $("#legend-title");
-  const mapRef = useRef();
-  const [latLng, setLatLng] = useState([31, 55]);
+  // const legend = $("#legend-content");
+  // const legend_title = $("#legend-title");
+  // const mapRef = useRef();
+  // const [latLng, setLatLng] = useState([31, 55]);
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = [];
+  var buckets_list = [];	
+  var visibleLayer_list=[]
   //click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -289,20 +292,33 @@ export const Map = () => {
         setlayerID(index);
 
         // change legend when data classification method changes
-        if (layer.visible) {
-          _layer.on("metadataChanged", function (event) {
-            legend.empty();
-            legend_title.empty();
-            console.log(event);
 
-            // get buckets
-            var buckets_list = [];
-            buckets_list.push(event.styles[0]._buckets);
-            setBuckets(buckets_list);
+        _layer.on("metadataChanged", function (event) {
+          // legend.empty();
+          // legend_title.empty();
+          console.log(event);
+
+          var obj = {};
+          // get buckets
+          if(event.styles[0]._buckets===undefined) {
+            obj['variable']=layer.name
+            obj['legend']=event.styles[0]._categories
+            buckets_list.push(obj);
+            setBuckets(...buckets, obj);
             console.log("buckets", buckets);
-          });
-        }
-
+          } else {
+            obj['variable']=layer.name
+            obj['legend']=event.styles[0]._buckets
+            buckets_list.push(obj);	
+            setBuckets(...buckets, obj);
+            console.log("buckets", buckets);
+          }
+          console.log("bucket list", buckets_list);
+          
+          
+        });
+        // setBuckets(buckets_list);
+        
         //add the carto layer to global state
         dispatch({
           type: "layer.addCartoLayer",
@@ -344,10 +360,40 @@ export const Map = () => {
     }
   }, [popup]);
 
+  useEffect(()=>{
+    if (maps[mapID]) {
+      visibleLayer_list=[]
+      maps[mapID].layers.forEach((layer, index) => {
+        if (layer.visible) {
+          visibleLayer_list.push(layer.name)
+        }
+      })
+      setVisibleLayers(visibleLayer_list)
+    }
+    console.log('visible layers',visibleLayers)
+    console.log(visibleLayer_list)
+  },[maps])
+
+  // useEffect(()=>{
+  //   if (buckets_list>0 && visibleLayer_list>0) {
+  //     visibleLayer_list.map((vis) => {
+  //       return (
+  //         buckets_list.map((bucket,i) => {
+  //           if (vis === bucket[i].variable) {
+  //             return (
+  //               setLegend(bucket[i])
+  //             )
+  //           }
+  //         })
+  //       )
+  //     })
+  //   }
+  // },[])
+
   return (
     <div>
       <div id="map" style={{ height: "91vh" }} className={classes.content}>
-        {buckets && (
+        {buckets_list>0 && visibleLayer_list>0 && (
           <Paper
             style={{
               padding: theme.spacing(1),
@@ -362,31 +408,43 @@ export const Map = () => {
               backgroundColor: "#fff",
             }}
           >
-            <Typography>
-              <strong>{currentMapState.layers[layerID].name}</strong>
-            </Typography>
-            {buckets.map((obj, i) => {
+            {visibleLayer_list.map((vis) => {
               return (
-                // <Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>
-                //   <Grid item><Paper className={classes.grid} style={{backgroundColor: obj[i].value}} elevation={0}></Paper></Grid>
-                // <Grid container justify='center' spacing={0}>
-                //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj[i].min}</Paper></Grid>
-                //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj[i].max}</Paper></Grid>
-                // </Grid></Grid></Grid></Grid>
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="center"
-                  className={classes.element}
-                  key={i}
-                >
-                  <div
-                    className={classes.dot}
-                    style={{ backgroundColor: obj[i].value }}
-                  ></div>
-                  {obj[i].min}-{obj[i].max}
-                </Grid>
-              );
+                <>
+                {buckets_list.map((bucket,i) => {
+                  if (vis === bucket[i].variable) {
+                    return (
+                      // <Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>
+                      //   <Grid item><Paper className={classes.grid} style={{backgroundColor: obj.value}} elevation={0}></Paper></Grid>
+                      // <Grid container justify='center' spacing={0}>
+                      //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.min}</Paper></Grid>
+                      //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.max}</Paper></Grid>
+                      // </Grid></Grid></Grid></Grid>
+                      <>
+                        <Typography>
+                          <strong>{vis}</strong>
+                        </Typography>
+                        <Grid
+                          container
+                          direction="row"
+                          alignItems="center"
+                          className={classes.element}
+                          key={i}
+                        >
+                          <div
+                            className={classes.dot}
+                            style={{ backgroundColor: bucket[i].legend.value }}
+                          ></div>
+                          {bucket[i].legend.min}-{bucket[i].legend.max}
+                        </Grid>
+                      </>
+                    )
+                  } else {
+                    return null;
+                  }
+                })}
+                </>
+              )
             })}
           </Paper>
         )}
@@ -443,7 +501,6 @@ export const Map = () => {
               </div>
 
               <Popover
-                ref={clickRef}
                 id={idPopover}
                 open={openPopover}
                 anchorReference="anchorPosition"
@@ -556,6 +613,7 @@ export const Map = () => {
             </Popper>
           ))}
         )}
+
       </div>
     </div>
   );

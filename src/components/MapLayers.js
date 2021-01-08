@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MapContext } from "../state/MapState";
 import Slider from "@material-ui/core/Slider";
-import { MapSelector } from "./MapSelector";
+// import { MapSelector } from "./MapSelector";
 import { Container, Grid, Box, Typography } from "@material-ui/core";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -14,7 +14,7 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import FormGroup from '@material-ui/core/FormGroup';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import Drawer from '@material-ui/core/Drawer';
+// import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import Button from '@material-ui/core/Button';
@@ -22,10 +22,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import ListSubheader from '@material-ui/core/ListSubheader';
+// import ListSubheader from '@material-ui/core/ListSubheader';
 import Paper from '@material-ui/core/Paper';
 
-const drawerWidth = 200;
+// const drawerWidth = 200;
 /* Toggle button overrides */
 const useStyles = makeStyles((theme) => ({
   root: {
