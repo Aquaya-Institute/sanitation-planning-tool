@@ -100,7 +100,7 @@ export const Map = () => {
   const [popup, setPopup] = useState();
   const [popupData, setPopupData] = useState([]);
   const [popover, setPopover] = useState(null);
-  const [buckets, setBuckets] = useState(null);
+  const [buckets, setBuckets] = useState([]);
   const [legend, setLegend] = useState(null);
   const openPopper = Boolean(popup);
   const openPopover = Boolean(popover);
@@ -114,9 +114,7 @@ export const Map = () => {
   // const mapRef = useRef();
   // const [latLng, setLatLng] = useState([31, 55]);
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
-  var dat_popup = [];
-  var buckets_list = [];	
-  var visibleLayer_list=[]
+  var dat_popup = [];	
   //click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -231,6 +229,7 @@ export const Map = () => {
       // setLatLng(currentMapState.view)
       // mapRef.current.setView(latLng,7)
       // mapRef.current.setView(new L.latLng(currentMapState.view),7)
+      var buckets_list = [];
 
       currentMapState.layers.forEach((layer, index) => {
         const _source = new Carto.source.SQL(
@@ -304,20 +303,19 @@ export const Map = () => {
             obj['variable']=layer.name
             obj['legend']=event.styles[0]._categories
             buckets_list.push(obj);
-            setBuckets(...buckets, obj);
+            // setBuckets([...buckets, obj]);
             console.log("buckets", buckets);
           } else {
             obj['variable']=layer.name
             obj['legend']=event.styles[0]._buckets
             buckets_list.push(obj);	
-            setBuckets(...buckets, obj);
+            // setBuckets([...buckets, obj]);
             console.log("buckets", buckets);
           }
+
+          setBuckets(st => [...st, obj]);
           console.log("bucket list", buckets_list);
-          
-          
         });
-        // setBuckets(buckets_list);
         
         //add the carto layer to global state
         dispatch({
@@ -327,6 +325,7 @@ export const Map = () => {
           cartoLayer: _layer,
         });
       });
+      //setBuckets(buckets_list);
     }
   }, [currentMapState, cartoClient, dispatch]);
 
@@ -362,7 +361,7 @@ export const Map = () => {
 
   useEffect(()=>{
     if (maps[mapID]) {
-      visibleLayer_list=[]
+      let visibleLayer_list=[]
       maps[mapID].layers.forEach((layer, index) => {
         if (layer.visible) {
           visibleLayer_list.push(layer.name)
@@ -370,9 +369,8 @@ export const Map = () => {
       })
       setVisibleLayers(visibleLayer_list)
     }
-    console.log('visible layers',visibleLayers)
-    console.log(visibleLayer_list)
-  },[maps])
+ 
+  },[maps, mapID])
 
   // useEffect(()=>{
   //   if (buckets_list>0 && visibleLayer_list>0) {
@@ -393,7 +391,7 @@ export const Map = () => {
   return (
     <div>
       <div id="map" style={{ height: "91vh" }} className={classes.content}>
-        {buckets_list>0 && visibleLayer_list>0 && (
+        {buckets && visibleLayers && (
           <Paper
             style={{
               padding: theme.spacing(1),
@@ -408,44 +406,49 @@ export const Map = () => {
               backgroundColor: "#fff",
             }}
           >
-            {visibleLayer_list.map((vis) => {
+            
+            {JSON.stringify(buckets)}
+            
+            {/* {visibleLayers.map((vis) => {
               return (
                 <>
-                {buckets_list.map((bucket,i) => {
-                  if (vis === bucket[i].variable) {
-                    return (
-                      // <Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>
-                      //   <Grid item><Paper className={classes.grid} style={{backgroundColor: obj.value}} elevation={0}></Paper></Grid>
-                      // <Grid container justify='center' spacing={0}>
-                      //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.min}</Paper></Grid>
-                      //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.max}</Paper></Grid>
-                      // </Grid></Grid></Grid></Grid>
-                      <>
-                        <Typography>
-                          <strong>{vis}</strong>
-                        </Typography>
-                        <Grid
-                          container
-                          direction="row"
-                          alignItems="center"
-                          className={classes.element}
-                          key={i}
-                        >
-                          <div
-                            className={classes.dot}
-                            style={{ backgroundColor: bucket[i].legend.value }}
-                          ></div>
-                          {bucket[i].legend.min}-{bucket[i].legend.max}
-                        </Grid>
-                      </>
-                    )
-                  } else {
-                    return null;
-                  }
-                })}
+                  {buckets.map((bucket, i) => {
+                    if (vis === bucket[i].variable) {
+                      return (
+                        // <Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>
+                        //   <Grid item><Paper className={classes.grid} style={{backgroundColor: obj.value}} elevation={0}></Paper></Grid>
+                        // <Grid container justify='center' spacing={0}>
+                        //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.min}</Paper></Grid>
+                        //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.max}</Paper></Grid>
+                        // </Grid></Grid></Grid></Grid>
+                        <>
+                          <Typography>
+                            <strong>{vis}</strong>
+                          </Typography>
+                          <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            className={classes.element}
+                            key={i}
+                          >
+                            <div
+                              className={classes.dot}
+                              style={{
+                                backgroundColor: bucket[i].legend.value,
+                              }}
+                            ></div>
+                            {bucket[i].legend.min}-{bucket[i].legend.max}
+                          </Grid>
+                        </>
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
                 </>
-              )
-            })}
+              );
+            })} */}
           </Paper>
         )}
         {popup &&
@@ -613,7 +616,6 @@ export const Map = () => {
             </Popper>
           ))}
         )}
-
       </div>
     </div>
   );
