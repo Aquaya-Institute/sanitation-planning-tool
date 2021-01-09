@@ -234,7 +234,7 @@ const initialState = {
           name: "Communities",
           carto_tableName: "gha_comms_point_topo",
           carto_layer: null,
-          carto_style: `#layer {marker-width: 5;marker-fill: ramp([pop_est], (#ede5cf, #daaf91, #c1766f, #95455a, #541f3f), quantiles);
+          carto_style: `#layer {marker-width: 5;marker-fill: ramp([pop_est], (#f9ddda, #eda8bd, #ce78b3, #9955a8, #573b88), quantiles);
             marker-fill-opacity: 1;
             marker-allow-overlap: true;
             marker-line-width: 0.5;

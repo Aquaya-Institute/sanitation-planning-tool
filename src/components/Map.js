@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef, Fragment } from "react";
 import { MapContext } from "../state/MapState";
 import Carto from "@carto/carto.js";
 import L, { map } from "leaflet";
@@ -13,7 +13,6 @@ import {
 import Popover from "@material-ui/core/Popover";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles } from "@material-ui/core/styles";
-import $ from "jquery";
 import "../App.css";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -30,7 +29,7 @@ import SaveIcon from "@material-ui/icons/Save";
 // import { FormulaWidget } from '@carto/react/widgets';
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    // flexGrow: 1,
   },
   grid: {
     height: 40,
@@ -63,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     // padding: theme.spacing(0.25, 0),
   },
   dot: {
-    flex: "0 0 auto",
+    // flex: "0 0 auto",
     width: 20,
     height: 20,
     marginRight: theme.spacing(1),
@@ -291,31 +290,40 @@ export const Map = () => {
         setlayerID(index);
 
         // change legend when data classification method changes
-
+        var executed = false;
+        
         _layer.on("metadataChanged", function (event) {
-          // legend.empty();
-          // legend_title.empty();
-          console.log(event);
-
-          var obj = {};
-          // get buckets
-          if(event.styles[0]._buckets===undefined) {
-            obj['variable']=layer.name
-            obj['legend']=event.styles[0]._categories
-            buckets_list.push(obj);
-            // setBuckets([...buckets, obj]);
-            console.log("buckets", buckets);
-          } else {
-            obj['variable']=layer.name
-            obj['legend']=event.styles[0]._buckets
-            buckets_list.push(obj);	
-            // setBuckets([...buckets, obj]);
-            console.log("buckets", buckets);
+          if(!executed) {
+            executed = true;
+            console.log(event);
+            var obj = {};
+            // get buckets
+            if(event.styles[0]._buckets===undefined) {
+              obj['variable']=layer.name
+              obj['legend']=event.styles[0]._categories
+              for (var i in obj.legend) {
+                if (obj.legend[i].name === 1) {
+                  obj.legend[i].name = 'Rural remote';
+                } else if (obj.legend[i].name === 2) {
+                  obj.legend[i].name = 'Rural on-road';
+                } else {
+                  obj.legend[i].name = 'Rural mixed';
+                }
+              }
+              buckets_list.push(obj);
+              console.log("buckets", buckets);
+            } else {
+              obj['variable']=layer.name
+              obj['legend']=event.styles[0]._buckets
+              buckets_list.push(obj);	
+              console.log("buckets", buckets);
+            }
+            setBuckets(st => [...st, obj]);
+            console.log("bucket list", buckets_list);
           }
-
-          setBuckets(st => [...st, obj]);
-          console.log("bucket list", buckets_list);
         });
+        
+        
         
         //add the carto layer to global state
         dispatch({
@@ -325,7 +333,6 @@ export const Map = () => {
           cartoLayer: _layer,
         });
       });
-      //setBuckets(buckets_list);
     }
   }, [currentMapState, cartoClient, dispatch]);
 
@@ -340,7 +347,7 @@ export const Map = () => {
       var dat_loc = [];
       Object.entries(popup.data)
         .slice(1)
-        .map((keyName, i) => {
+        .map((keyName) => {
           return dat_loc.push([keyName[0], keyName[1]]);
         });
       dat_loc.sort();
@@ -369,7 +376,6 @@ export const Map = () => {
       })
       setVisibleLayers(visibleLayer_list)
     }
- 
   },[maps, mapID])
 
   // useEffect(()=>{
@@ -389,234 +395,247 @@ export const Map = () => {
   // },[])
 
   return (
-    <div>
-      <div id="map" style={{ height: "91vh" }} className={classes.content}>
-        {buckets && visibleLayers && (
-          <Paper
-            style={{
-              padding: theme.spacing(1),
-              position: "absolute",
-              bottom: "10px",
-              right: "10px",
-              top: "unset",
-              left: "unset",
-              height: "auto",
-              width: "auto",
-              zIndex: "1000",
-              backgroundColor: "#fff",
+    <div id="map" style={{ height: "91vh" }} className={classes.content}>
+      {buckets && visibleLayers && (
+        <Paper
+          key={"legendContainer"}
+          style={{
+            padding: theme.spacing(1),
+            position: "absolute",
+            bottom: "10px",
+            right: "10px",
+            top: "unset",
+            left: "unset",
+            height: "auto",
+            width: "auto",
+            zIndex: "1000",
+            backgroundColor: "#fff",
+          }}
+        >
+          
+          {/* {JSON.stringify(visibleLayers)} */}
+          
+          {visibleLayers.map((vis) => {
+            return (
+              <Fragment key={"legendContent"+vis}>
+                {buckets.map((bucket, i) => {
+                  if (vis === bucket.variable) {
+                    return (
+                      // <Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>
+                      //   <Grid item><Paper className={classes.grid} style={{backgroundColor: obj.value}} elevation={0}></Paper></Grid>
+                      // <Grid container justify='center' spacing={0}>
+                      //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.min}</Paper></Grid>
+                      //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.max}</Paper></Grid>
+                      // </Grid></Grid></Grid></Grid>
+                      <Fragment key={"legendContent"+bucket.variable}>
+                        <Typography key={"legendTitle"+bucket.variable}>
+                          <strong>{vis}</strong>
+                        </Typography>
+                        
+                        {bucket.legend.map((legend,j) => {
+                          return (
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="center"
+                              className={classes.element}
+                              key={"bucket"+j}
+                            >
+                              <div
+                                className={classes.dot}
+                                style={{
+                                  backgroundColor: legend.value,
+                                }}
+                                key={legend.value.toString()}
+                              ></div>
+                              {(legend.name===undefined ? (
+                                legend.min.toFixed(0).toString()+' - '+legend.max.toFixed(0).toString()
+                              ) : (
+                                legend.name
+                              ))}
+                            </Grid>
+                          )
+                        })}
+                      </ Fragment>
+                    );
+                  } else {
+                    return null;
+                  }
+                })}
+              </ Fragment>
+            );
+          })}
+        </Paper>
+      )}
+      {popup &&
+        popup.data &&
+        (currentMapState.layers[layerID].name === "Communities" ? (
+          <Popper
+            ref={clickRef}
+            id={idPopper}
+            key={idPopper}
+            open={openPopper}
+            disablePortal={true}
+            modifiers={{
+              flip: {
+                enabled: true,
+              },
+              preventOverflow: {
+                enabled: true,
+                boundariesElement: "scrollParent",
+              },
+              arrow: {
+                enabled: true,
+                // element: arrowRef,
+              },
             }}
+            style={{
+              position: "absolute",
+              left: popup.position.x,
+              top: popup.position.y,
+              zIndex: "1300",
+              backgroundColor: "#fff",
+              width: "200px",
+            }}
+            elevation={3}
           >
-            
-            {JSON.stringify(buckets)}
-            
-            {/* {visibleLayers.map((vis) => {
-              return (
-                <>
-                  {buckets.map((bucket, i) => {
-                    if (vis === bucket[i].variable) {
-                      return (
-                        // <Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>
-                        //   <Grid item><Paper className={classes.grid} style={{backgroundColor: obj.value}} elevation={0}></Paper></Grid>
-                        // <Grid container justify='center' spacing={0}>
-                        //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.min}</Paper></Grid>
-                        //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.max}</Paper></Grid>
-                        // </Grid></Grid></Grid></Grid>
-                        <>
-                          <Typography>
-                            <strong>{vis}</strong>
-                          </Typography>
-                          <Grid
-                            container
-                            direction="row"
-                            alignItems="center"
-                            className={classes.element}
-                            key={i}
-                          >
-                            <div
-                              className={classes.dot}
-                              style={{
-                                backgroundColor: bucket[i].legend.value,
-                              }}
-                            ></div>
-                            {bucket[i].legend.min}-{bucket[i].legend.max}
-                          </Grid>
-                        </>
-                      );
-                    } else {
-                      return null;
-                    }
-                  })}
-                </>
-              );
-            })} */}
-          </Paper>
-        )}
-        {popup &&
-          popup.data &&
-          (currentMapState.layers[layerID].name === "Communities" ? (
-            <Popper
-              ref={clickRef}
-              id={idPopper}
-              open={openPopper}
-              disablePortal={true}
-              modifiers={{
-                flip: {
-                  enabled: true,
-                },
-                preventOverflow: {
-                  enabled: true,
-                  boundariesElement: "scrollParent",
-                },
-                arrow: {
-                  enabled: true,
-                  // element: arrowRef,
-                },
-              }}
-              style={{
-                position: "absolute",
-                left: popup.position.x,
-                top: popup.position.y,
-                zIndex: "1300",
-                backgroundColor: "#fff",
-                width: "200px",
-              }}
-              elevation={3}
-            >
-              <div className={classes.paper} elevation={3}>
-                <span>
-                  <strong>Population Estimate:</strong> {popup.data.pop_est}
-                </span>
-                <br></br>
-                <span>
-                  <strong>Community Classification:</strong> Rural Remote
-                </span>
-                <br></br>
-                <Link
-                  component="button"
-                  onClick={(e) => {
-                    // e.preventDefault();
-                    setPopover(e.currentTarget);
-                    // setPopper(null);
-                  }}
-                >
-                  SEE MORE
-                </Link>
-              </div>
-
-              <Popover
-                id={idPopover}
-                open={openPopover}
-                anchorReference="anchorPosition"
-                anchorPosition={{ top: 400, left: 800 }}
-                onClose={() => {
-                  setPopover(null);
-                }}
-                anchorOrigin={{
-                  vertical: "center",
-                  horizontal: "center",
-                }}
-                transformOrigin={{
-                  vertical: "center",
-                  horizontal: "center",
+            <div className={classes.paper} elevation={3}>
+              <span>
+                <strong>Population Estimate:</strong> {popup.data.pop_est}
+              </span>
+              <br></br>
+              <span>
+                <strong>Community Classification:</strong> Rural Remote
+              </span>
+              <br></br>
+              <Link
+                key={"seeMore"}
+                component="button"
+                onClick={(e) => {
+                  // e.preventDefault();
+                  setPopover(e.currentTarget);
+                  // setPopper(null);
                 }}
               >
-                <Grid container justify="flex-end" pt={2}>
-                  <CloseIcon
-                    fontSize="small"
-                    color="disabled"
-                    onClick={(e) => {
-                      // e.preventDefault();
-                      setPopover(null);
-                      // openPopper(null)
-                    }}
-                  />
-                </Grid>
-                {cat.map((category) => {
-                  return (
-                    <Table className={classes.popover}>
-                      <TableHead>
-                        <br></br>
-                        <strong>{category.toUpperCase()}</strong>
-                      </TableHead>
-                      <TableBody>
-                        {popupData.map((anObjectMapped) => {
-                          if (anObjectMapped.Category === category) {
-                            return (
-                              <TableRow>
-                                <TableCell style={{ width: "70%" }}>
-                                  {anObjectMapped.Name}
-                                </TableCell>
-                                <TableCell
-                                  style={{ width: "30%" }}
-                                  align="center"
-                                >
-                                  {anObjectMapped.Value}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          } else {
-                            return null;
-                          }
-                        })}
-                      </TableBody>
-                    </Table>
-                  );
-                })}
-                <Divider />
-                <Grid container justify="center">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    className={classes.button}
-                    startIcon={<SaveIcon />}
-                  >
-                    DOWNLOAD TABLE
-                  </Button>
-                </Grid>
-              </Popover>
-            </Popper>
-          ) : (
-            <Popper
-              ref={clickRef}
-              id={idPopper}
-              open={openPopper}
-              // placement="left-end"
-              disablePortal={true}
-              // anchorEl={popup}
-              modifiers={{
-                flip: {
-                  enabled: true,
-                },
-                preventOverflow: {
-                  enabled: true,
-                  boundariesElement: "scrollParent",
-                },
-                arrow: {
-                  enabled: true,
-                  // element: arrowRef,
-                },
+                SEE MORE
+              </Link>
+            </div>
+
+            <Popover
+              id={idPopover}
+              key={idPopover}
+              open={openPopover}
+              anchorReference="anchorPosition"
+              anchorPosition={{ top: 400, left: 800 }}
+              onClose={() => {
+                setPopover(null);
               }}
-              style={{
-                position: "absolute",
-                left: popup.position.x,
-                top: popup.position.y,
-                zIndex: "1300",
-                backgroundColor: "#fff",
-                width: "200px",
+              anchorOrigin={{
+                vertical: "center",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "center",
+                horizontal: "center",
               }}
             >
-              <div className={classes.paper}>
-                <span>
-                  <strong>{currentMapState.layers[layerID].name}:</strong>{" "}
-                  {popup.data.val}
-                </span>
-                <br></br>
-              </div>
-            </Popper>
-          ))}
-        )}
-      </div>
+              <Grid container justify="flex-end" pt={2} key={"popoverHeader"}>
+                <CloseIcon
+                  key={"popoverClose"}
+                  fontSize="small"
+                  color="disabled"
+                  onClick={(e) => {
+                    // e.preventDefault();
+                    setPopover(null);
+                    // openPopper(null)
+                  }}
+                />
+              </Grid>
+              {cat.map((category,i) => {
+                return (
+                  <Table className={classes.popover} key={"popoverTable"+i}>
+                    <TableHead>
+                      <br></br>
+                      <strong>{category.toUpperCase()}</strong>
+                    </TableHead>
+                    <TableBody>
+                      {popupData.map((anObjectMapped,j) => {
+                        if (anObjectMapped.Category === category) {
+                          return (
+                            <TableRow key={"popoverTableRow"+j}>
+                              <TableCell style={{ width: "70%" }}>
+                                {anObjectMapped.Name}
+                              </TableCell>
+                              <TableCell
+                                style={{ width: "30%" }}
+                                align="center"
+                              >
+                                {anObjectMapped.Value}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                    </TableBody>
+                  </Table>
+                );
+              })}
+              <Divider />
+              <Grid container justify="center">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  DOWNLOAD TABLE
+                </Button>
+              </Grid>
+            </Popover>
+          </Popper>
+        ) : (
+          <Popper
+            ref={clickRef}
+            id={idPopper}
+            open={openPopper}
+            // placement="left-end"
+            disablePortal={true}
+            // anchorEl={popup}
+            modifiers={{
+              flip: {
+                enabled: true,
+              },
+              preventOverflow: {
+                enabled: true,
+                boundariesElement: "scrollParent",
+              },
+              arrow: {
+                enabled: true,
+                // element: arrowRef,
+              },
+            }}
+            style={{
+              position: "absolute",
+              left: popup.position.x,
+              top: popup.position.y,
+              zIndex: "1300",
+              backgroundColor: "#fff",
+              width: "200px",
+            }}
+          >
+            <div className={classes.paper}>
+              <span>
+                <strong>{currentMapState.layers[layerID].name}:</strong>{" "}
+                {popup.data.val}
+              </span>
+              <br></br>
+            </div>
+          </Popper>
+        ))}
+      )}
     </div>
   );
 };

@@ -85,21 +85,21 @@ function createMarks(array) {
   }
   return returnedTarget;
 }
-function log10(x) {
-  return Math.log(x) / Math.log(10);
-}
+// function log10(x) {
+//   return Math.log(x) / Math.log(10);
+// }
 
-function pow10(x) {
-  return Math.pow(10, x);
-}
+// function pow10(x) {
+//   return Math.pow(10, x);
+// }
 
-function valueLabelFormat(x) {
-  const [coefficient, exponent] = x
-    .toExponential()
-    .split('e')
-    .map(item => Number(item));
-  return `${Math.round(coefficient)}e^${exponent}`;
-}
+// function valueLabelFormat(x) {
+//   const [coefficient, exponent] = x
+//     .toExponential()
+//     .split('e')
+//     .map(item => Number(item));
+//   return `${Math.round(coefficient)}e^${exponent}`;
+// }
 export const MapLayers = () => {
   //pick specific states (and dispatcher) we need from mapstate
   const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
@@ -156,7 +156,7 @@ export const MapLayers = () => {
 
   return (
     <div className={classes.root}>
-      <Container anchor="left" style={{ background: "#ffffff", width: "100%" }}>
+      <Container anchor="left" style={{ background: "#ffffff", width: "100%" }} key={"drawerLeft"}>
         <Box>
           {/* needs rework to work with routers */}
           {/* <MapSelector /> */}
@@ -165,6 +165,7 @@ export const MapLayers = () => {
         <Paper
           style={{ maxHeight: "91vh", overflow: "auto", width: "100%" }}
           elevation={0}
+          key={"drawerPaper"}
         >
           <Box mt={3}>
             {mapID && (
@@ -175,9 +176,9 @@ export const MapLayers = () => {
           </Box>
           <Divider />
           {maps[mapID].layers.map((layer, layerIndex) => (
-            <List key={layerIndex} disablePadding>
-              <ListItem>
-                <ListItemIcon>
+            <List key={"collapseHeader"+layerIndex} disablePadding>
+              <ListItem key={"collapseItem"+layerIndex}>
+                <ListItemIcon key={"listItemIcon"}>
                   {
                     <ToggleButton
                       value={layer.visible}
@@ -214,14 +215,14 @@ export const MapLayers = () => {
                 timeout="auto"
                 unmountOnExit
               >
-                <List key={layerIndex}  component="div" disablePadding>
+                <List key={"collapseSubHeader"+layerIndex}  component="div" disablePadding>
                   {layer.filters.map((filter, filterIndex, filter_c) => {
                     switch (filter.type) {
                       /* you can implement category filter UI here */
                       case "categorical":
                         return (
                           <ListItem
-                            key={filterIndex}
+                            key={"cat"+filterIndex}
                             button
                             className={classes.nested}
                           >
@@ -312,17 +313,18 @@ export const MapLayers = () => {
                       case "range":
                         return (
                           <ListItem
-                            key={filterIndex}
+                            key={"range"+filterIndex}
                             button
                             className={classes.nested}
                           >
-                            <Grid item xs={12} key={filterIndex}>
+                            <Grid item xs={12} key={"rangeSubHeader"+filterIndex}>
                               <Typography variant="subtitle2">
                                 {filter.name}
                               </Typography>
-                              <Grid item xs={12}>
+                              <Grid item xs={12} key={"sliderGrid"+filterIndex}>
                                 <Slider
                                   id={filterIndex}
+                                  key={"slider"+filterIndex}
                                   value={[
                                     Number(filter.value[0]),
                                     Number(filter.value[1]),
@@ -348,13 +350,13 @@ export const MapLayers = () => {
                                   // getAriaValueText={valueLabelFormat}
                                   // valueLabelFormat={valueLabelFormat}
                                 />
-                                <Button
+                                {/* <Button
                                   onClick={(e) => {
                                     // filter[filterIndex].resetFilters();
                                   }}
                                 >
                                   RESET
-                                </Button>
+                                </Button> */}
                               </Grid>
                             </Grid>
                           </ListItem>
