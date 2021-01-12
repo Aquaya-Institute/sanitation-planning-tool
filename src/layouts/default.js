@@ -14,12 +14,12 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-    textAlign:'center'
+    textAlign: "center",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     // height: "55px",
-    margin:0,
+    margin: 0,
   },
 }));
 
@@ -27,19 +27,24 @@ export default function DefaultLayout(props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div
+      className={classes.root}
+      style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+    >
       <CssBaseline />
-      <AppBar position="sticky" className={classes.appBar} >
+      <AppBar position="sticky" className={classes.appBar}>
         <Toolbar>
-        <Link component={RouterLink} color="inherit" to="/">
-            <img src="/usaid-rect.png"
-            alt=""
-            style={{width:"135px", height:"50px"}}></img>
-           </Link>
+          <Link component={RouterLink} color="inherit" to="/">
+            <img
+              src="/usaid-rect.png"
+              alt=""
+              style={{ width: "135px", height: "50px" }}
+            ></img>
+          </Link>
           <Typography variant="h6" className={classes.title}>
             {/* Place the logo here instead and link to home */}
             {/* <Link component={RouterLink} color="inherit" to="/" style={{textDecoration: 'none'}}> */}
-              <strong>Sanitation Planning Tool</strong>
+            <strong>Sanitation Planning Tool</strong>
             {/* </Link> */}
           </Typography>
           <Box ml={3}>
@@ -55,7 +60,7 @@ export default function DefaultLayout(props) {
           </Box>
         </Toolbar>
       </AppBar>
-      <main>
+      <main style={{ flex: 1, display: "flex" }}>
         <Container maxWidth={false} disableGutters={true}>
           {props.children}
         </Container>
