@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef, Fragment } from "react";
 import { MapContext } from "../state/MapState";
-import Carto from "@carto/carto.js";
+import Carto, { isNull } from "@carto/carto.js";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
@@ -26,6 +26,9 @@ import Paper from "@material-ui/core/Paper";
 import theme from "../theme/theme";
 import CloseIcon from "@material-ui/icons/Close";
 import SaveIcon from "@material-ui/icons/Save";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
 // import { AggregationTypes } from '@carto/react/widgets';
 // import { FormulaWidget } from '@carto/react/widgets';
 const useStyles = makeStyles((theme) => ({
@@ -69,7 +72,15 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
   },
   popover: {
-    width: 400,
+    // width: 400,
+    // boxShadow: theme.shadows[5],
+    padding: theme.spacing(1, 2, 1),
+    backgroundColor: theme.palette.background.paper,
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 }));
 
@@ -98,7 +109,6 @@ export const Map = () => {
   const [leaflet, setLeaflet] = useState();
   const [cartoClient, setCartoClient] = useState();
   const [popup, setPopup] = useState();
-  const [multiPopup, setMultiPopup] = useState();
   const [popupData, setPopupData] = useState();
   const [popover, setPopover] = useState(null);
   const [buckets, setBuckets] = useState([]);
@@ -106,6 +116,8 @@ export const Map = () => {
   const openPopover = Boolean(popover);
   const idPopper = openPopper ? "transitions-popper" : undefined;
   const idPopover = openPopover ? "simple-popover" : undefined;
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
   // const arrowRef = useRef();
   const classes = useStyles();
   const clickRef = useRef(null);
@@ -239,6 +251,7 @@ export const Map = () => {
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
+        const _popupColumns = [];
         layer.filters.forEach((filter, filter_c) => {
           switch (filter.type) {
             case "range":
@@ -266,6 +279,7 @@ export const Map = () => {
             default:
               break;
           }
+          _popupColumns.push(filter.column_name);
         });
 
         //add filters to the source, if any
@@ -275,15 +289,15 @@ export const Map = () => {
 
         //create the carto layer and add feature clicks
         const _layer = new Carto.layer.Layer(_source, _style, {
-          featureClickColumns: _columns,
+          featureClickColumns: _popupColumns,
         });
 
         //setup feature clicks on relevant layers
-        if (_columns.length > 0) {
+        if (_popupColumns.length > 0) {
           _layer.on("featureClicked", (featureEvent) => {
             console.log("clicked a feature", featureEvent);
             setPopup(featureEvent);
-            setPopover(null);
+            setPopoverOpen(false);
             console.log("popup", popup);
           });
         }
@@ -308,7 +322,12 @@ export const Map = () => {
             console.log(event);
             var obj = {};
             // get buckets
-            if (event.styles[0]._buckets === undefined) {
+            if (event.styles.length === 0) {
+              obj["variable"] = "Districts";
+              obj["legend"] = [
+                { name: "District boundaries", value: "#826dba" },
+              ];
+            } else if (event.styles[0]._buckets === undefined) {
               obj["variable"] = layer.name;
               obj["legend"] = event.styles[0]._categories;
               for (var i in obj.legend) {
@@ -343,8 +362,6 @@ export const Map = () => {
 
   useEffect(() => {
     console.log("updated popup", popup);
-    // setMultiPopup([...multiPopup, popup])
-    // console.log("updated popupmulti", multiPopup);
     if (popup) {
       var dat = [];
       currentMapState.layers[layerID].filters.forEach(function (element) {
@@ -352,6 +369,15 @@ export const Map = () => {
       });
       dat.sort();
       var dat_loc = [];
+      if (popup.data.classes !== undefined) {
+        if (popup.data.classes === 1) {
+          popup.data.classes = "Rural remote";
+        } else if (popup.data.classes === 2) {
+          popup.data.classes = "Rural on-road";
+        } else {
+          popup.data.classes = "Rural mixed";
+        }
+      }
       Object.entries(popup.data)
         .slice(1)
         .map((keyName) => {
@@ -388,22 +414,6 @@ export const Map = () => {
     }
   }, [maps, mapID]);
 
-  // useEffect(()=>{
-  //   if (buckets_list>0 && visibleLayer_list>0) {
-  //     visibleLayer_list.map((vis) => {
-  //       return (
-  //         buckets_list.map((bucket,i) => {
-  //           if (vis === bucket[i].variable) {
-  //             return (
-  //               setLegend(bucket[i])
-  //             )
-  //           }
-  //         })
-  //       )
-  //     })
-  //   }
-  // },[])
-
   return (
     <div
       style={{ height: "100%", position: "relative" }}
@@ -426,24 +436,19 @@ export const Map = () => {
             backgroundColor: "#fff",
           }}
         >
-          {/* {JSON.stringify(visibleLayers)} */}
-
           {visibleLayers.map((vis) => {
             return (
               <Fragment key={"legendContent" + vis}>
                 {buckets.map((bucket, i) => {
                   if (vis === bucket.variable) {
                     return (
-                      // <Grid container className={classes.root} spacing={2}><Grid item xs={12}><Grid container justify='center' spacing={0}>
-                      //   <Grid item><Paper className={classes.grid} style={{backgroundColor: obj.value}} elevation={0}></Paper></Grid>
-                      // <Grid container justify='center' spacing={0}>
-                      //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.min}</Paper></Grid>
-                      //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.max}</Paper></Grid>
-                      // </Grid></Grid></Grid></Grid>
                       <Fragment key={"legendContent" + bucket.variable}>
-                        <Typography key={"legendTitle" + bucket.variable}>
+                        <Box
+                          fontSize="fontSize"
+                          key={"legendTitle" + bucket.variable}
+                        >
                           <strong>{vis}</strong>
-                        </Typography>
+                        </Box>
 
                         {bucket.legend.map((legend, j) => {
                           return (
@@ -461,6 +466,7 @@ export const Map = () => {
                                 }}
                                 key={legend.value.toString()}
                               ></div>
+
                               {legend.name === undefined
                                 ? legend.min.toFixed(0).toString() +
                                   " - " +
@@ -513,17 +519,31 @@ export const Map = () => {
           <div className={classes.paper}>
             {popupData.data.length === 1 && (
               <Box fontSize="fontSize">
-                <strong>{popupData.data[0].Name}:</strong>{" "}
-                {popupData.data[0].Value.toFixed(1)}
+                {popupData.data[0].Name === "Community Classification" ? (
+                  <Box>
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[0].Name}:{" "}
+                    </Box>
+                    {popupData.data[0].Value}
+                  </Box>
+                ) : (
+                  <Box>
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[0].Name}:{" "}
+                    </Box>
+                    {popupData.data[0].Value.toFixed(1)}
+                  </Box>
+                )}
               </Box>
             )}
             {popupData.data.length > 1 && (
               <>
                 <Box fontSize="fontSize">
                   <strong>Population Estimate:</strong>{" "}
-                  {popupData.data[7].Value}
+                  {popupData.data[8].Value}
                   <br></br>
-                  <strong>Community Classification:</strong> Rural Remote
+                  <strong>Community Classification:</strong>{" "}
+                  {popupData.data[1].Value}
                 </Box>
                 <Link
                   key={"seeMore"}
@@ -531,100 +551,109 @@ export const Map = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setPopover(e.currentTarget);
+                    setPopoverOpen(true);
                     // setPopup(null);
                   }}
                 >
                   SEE MORE
                 </Link>
-                <Popover
+                <Modal
                   id={idPopover}
                   key={idPopover}
-                  open={openPopover}
-                  anchorReference="anchorPosition"
-                  anchorPosition={{ top: 400, left: 800 }}
-                  style={{ zIndex: "2000" }}
-                  onClose={() => {
-                    setPopover(null);
+                  aria-labelledby="transition-modal-title"
+                  aria-describedby="transition-modal-description"
+                  className={classes.modal}
+                  open={popoverOpen}
+                  onClose={(e) => {
+                    setPopoverOpen(false);
                   }}
-                  anchorOrigin={{
-                    vertical: "center",
-                    horizontal: "center",
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
                   }}
-                  transformOrigin={{
-                    vertical: "center",
-                    horizontal: "center",
-                  }}
+                  elevation={3}
                 >
-                  <Grid
-                    container
-                    justify="flex-end"
-                    pt={2}
-                    key={"popoverHeader"}
-                  >
-                    <CloseIcon
-                      key={"popoverClose"}
-                      fontSize="small"
-                      color="disabled"
-                      onClick={(e) => {
-                        // e.preventDefault();
-                        setPopover(null);
-                        // openPopper(null)
-                      }}
-                    />
-                  </Grid>
-                  {cat.map((category, i) => {
-                    return (
-                      <Table
-                        className={classes.popover}
-                        key={"popoverTable" + i}
+                  <Fade in={popoverOpen}>
+                    <div className={classes.popover}>
+                      <Grid
+                        container
+                        justify="flex-end"
+                        pt={2}
+                        key={"popoverHeader"}
                       >
-                        <Box fontWeight="fontWeightBold" pt={1}>
-                          {category.toUpperCase()}
-                        </Box>
-
-                        <TableBody>
-                          {popupData.data.map((anObjectMapped, j) => {
-                            if (anObjectMapped.Category === category) {
-                              return (
-                                <TableRow key={"popoverTableRow" + j}>
-                                  <TableCell style={{ width: "70%" }}>
-                                    {anObjectMapped.Name}
-                                  </TableCell>
-                                  <TableCell
-                                    style={{ width: "30%" }}
-                                    align="center"
-                                  >
-                                    {anObjectMapped.Value}
-                                  </TableCell>
-                                </TableRow>
-                              );
-                            } else {
-                              return null;
-                            }
-                          })}
-                        </TableBody>
-                      </Table>
-                    );
-                  })}
-                  <Divider />
-                  <Grid container justify="center">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      className={classes.button}
-                      startIcon={<SaveIcon />}
-                    >
-                      DOWNLOAD TABLE
-                    </Button>
-                  </Grid>
-                </Popover>
+                        <CloseIcon
+                          key={"popoverClose"}
+                          fontSize="small"
+                          color="disabled"
+                          onClick={(e) => {
+                            setPopover(null);
+                          }}
+                        />
+                      </Grid>
+                      {cat.map((category, i) => {
+                        return (
+                          <Table
+                            className={classes.popover}
+                            key={"popoverTable" + i}
+                            elevation={0}
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell style={{ width: "70%" }}>
+                                  <Box fontWeight="fontWeightBold" pt={1}>
+                                    {category.toUpperCase()}
+                                  </Box>
+                                </TableCell>
+                                <TableCell
+                                  style={{ width: "30%" }}
+                                  align="right"
+                                ></TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {popupData.data.map((anObjectMapped, j) => {
+                                if (anObjectMapped.Category === category) {
+                                  return (
+                                    <TableRow key={"popoverTableRow" + j}>
+                                      <TableCell style={{ width: "75%" }}>
+                                        {anObjectMapped.Name}
+                                      </TableCell>
+                                      <TableCell
+                                        style={{ width: "25%" }}
+                                        align="right"
+                                      >
+                                        {anObjectMapped.Value}
+                                      </TableCell>
+                                    </TableRow>
+                                  );
+                                } else {
+                                  return null;
+                                }
+                              })}
+                            </TableBody>
+                          </Table>
+                        );
+                      })}
+                      <Divider />
+                      <Grid container justify="center">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          className={classes.button}
+                          startIcon={<SaveIcon />}
+                        >
+                          DOWNLOAD TABLE
+                        </Button>
+                      </Grid>
+                    </div>
+                  </Fade>
+                </Modal>
               </>
             )}
           </div>
         </Popper>
-        // ))}
       )}
     </div>
   );
