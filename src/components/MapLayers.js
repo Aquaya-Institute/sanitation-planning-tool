@@ -7,25 +7,24 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import FormGroup from '@material-ui/core/FormGroup';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import FormGroup from "@material-ui/core/FormGroup";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
 // import Drawer from '@material-ui/core/Drawer';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
 // import Button from '@material-ui/core/Button';
 
-
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Collapse from "@material-ui/core/Collapse";
 // import ListSubheader from '@material-ui/core/ListSubheader';
-import Paper from '@material-ui/core/Paper';
+import Paper from "@material-ui/core/Paper";
 
 // const drawerWidth = 200;
 /* Toggle button overrides */
@@ -34,9 +33,9 @@ const useStyles = makeStyles((theme) => ({
     border: "none",
     backgroundColor: "#ffffff",
     borderRadius: "50px",
-    width: '100%',
+    width: "100%",
     flexGrow: 1,
-    display: 'flex',
+    display: "flex",
   },
   selected: {
     backgroundColor: "unset!important",
@@ -44,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
   sizeSmall: {
     padding: "10px",
-    marginLeft: "-10px",  
+    marginLeft: "-10px",
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -52,13 +51,13 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     background: "",
-    '&:hover': {
-       background: "#f1f1f1",
+    "&:hover": {
+      background: "#f1f1f1",
     },
   },
   drawerContainer: {
-    maxHeight: '100%',
-    overflow: 'auto',
+    maxHeight: "100%",
+    overflow: "auto",
   },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
@@ -73,16 +72,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function createMarks(array) {
-  var obj,
-      i,
-      value, label;
-  var returnedTarget=[]
-  for (i = 0; i < array.length; i ++) {
-    obj = {}
+  var obj, i, value, label;
+  var returnedTarget = [];
+  for (i = 0; i < array.length; i++) {
+    obj = {};
     value = array[i];
     label = array[i].toString();
-    obj['value'] = value;
-    obj['label'] = label;
+    obj["value"] = value;
+    obj["label"] = label;
     returnedTarget.push(obj);
   }
   return returnedTarget;
@@ -112,15 +109,15 @@ export const MapLayers = () => {
   //   c: false,
   // });
   const classes = useStyles();
-  const [selectedLayer, setselectedLayer] = React.useState("")
+  const [selectedLayer, setselectedLayer] = React.useState("");
 
-  const handleClick = layerIndex => {
+  const handleClick = (layerIndex) => {
     if (selectedLayer === layerIndex) {
-      setselectedLayer("")
+      setselectedLayer("");
     } else {
-      setselectedLayer(layerIndex)
+      setselectedLayer(layerIndex);
     }
-  }
+  };
   useEffect(() => {
     if (currentMapID) {
       console.log(currentMapID);
@@ -158,7 +155,11 @@ export const MapLayers = () => {
 
   return (
     <div className={classes.root}>
-      <Container anchor="left" style={{ background: "#ffffff", width: "100%" }} key={"drawerLeft"}>
+      <Container
+        anchor="left"
+        style={{ background: "#ffffff", width: "100%" }}
+        key={"drawerLeft"}
+      >
         <Box>
           {/* needs rework to work with routers */}
           {/* <MapSelector /> */}
@@ -178,8 +179,8 @@ export const MapLayers = () => {
           </Box>
           <Divider />
           {maps[mapID].layers.map((layer, layerIndex) => (
-            <List key={"collapseHeader"+layerIndex} disablePadding>
-              <ListItem key={"collapseItem"+layerIndex}>
+            <List key={"collapseHeader" + layerIndex} disablePadding>
+              <ListItem key={"collapseItem" + layerIndex}>
                 <ListItemIcon key={"listItemIcon"}>
                   {
                     <ToggleButton
@@ -200,13 +201,11 @@ export const MapLayers = () => {
                 <ListItemText primary={layer.name} />
                 {layerIndex === selectedLayer ? (
                   <ExpandLess
-                    
                     onClick={() => handleClick(layerIndex)}
                     className={classes.icon}
                   />
                 ) : (
                   <ExpandMore
-                    
                     onClick={() => handleClick(layerIndex)}
                     className={classes.icon}
                   />
@@ -217,14 +216,18 @@ export const MapLayers = () => {
                 timeout="auto"
                 unmountOnExit
               >
-                <List key={"collapseSubHeader"+layerIndex}  component="div" disablePadding>
+                <List
+                  key={"collapseSubHeader" + layerIndex}
+                  component="div"
+                  disablePadding
+                >
                   {layer.filters.map((filter, filterIndex, filter_c) => {
                     switch (filter.type) {
                       /* you can implement category filter UI here */
                       case "categorical":
                         return (
                           <ListItem
-                            key={"cat"+filterIndex}
+                            key={"cat" + filterIndex}
                             button
                             className={classes.nested}
                           >
@@ -315,18 +318,26 @@ export const MapLayers = () => {
                       case "range":
                         return (
                           <ListItem
-                            key={"range"+filterIndex}
+                            key={"range" + filterIndex}
                             button
                             className={classes.nested}
                           >
-                            <Grid item xs={12} key={"rangeSubHeader"+filterIndex}>
+                            <Grid
+                              item
+                              xs={12}
+                              key={"rangeSubHeader" + filterIndex}
+                            >
                               <Typography variant="subtitle2">
                                 {filter.name}
                               </Typography>
-                              <Grid item xs={12} key={"sliderGrid"+filterIndex}>
+                              <Grid
+                                item
+                                xs={12}
+                                key={"sliderGrid" + filterIndex}
+                              >
                                 <Slider
                                   id={filterIndex}
-                                  key={"slider"+filterIndex}
+                                  key={"slider" + filterIndex}
                                   value={[
                                     Number(filter.value[0]),
                                     Number(filter.value[1]),

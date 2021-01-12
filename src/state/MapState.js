@@ -37,7 +37,7 @@ const initialState = {
               type: "categorical",
               column_name: "classes",
               column_values: [1, 2, 3],
-              value_labels: ['Rural remote','Rural on-road','Rural mixed']
+              value_labels: ["Rural remote", "Rural on-road", "Rural mixed"],
             },
           ],
         },
@@ -101,137 +101,140 @@ const initialState = {
             },
           ],
         },
-        // {
-        //   name: "Districts",
-        //   carto_tableName: "gha_dist_topo",
-        //   carto_layer: null,
-        //   carto_style: `#layer {marker-width: 5;marker-fill: ramp([pop_est], (#ede5cf, #daaf91, #c1766f, #95455a, #541f3f), quantiles);
-        //     marker-fill-opacity: 1;
-        //     marker-allow-overlap: true;
-        //     marker-line-width: 0.5;
-        //     marker-line-color: #000000;
-        //     marker-line-opacity: 1;}`,
-        //   visible: true,
-        //   order: 5,
-        //   /* These are all range filters and are implemented */
-        //   filters: [
-        //     {
-        //       name: "Population Estimate",
-        //       type: "range",
-        //       column_name: "pop_est",
-        //       min: 0,
-        //       max: 6033969,
-        //       value: [0, 6033969],
-        //     },
-        //     {
-        //       name: "Community Classification",
-        //       type: "categorical",
-        //       column_name: "classes",
-        //       values: [1,2,3],
-        //     },
-        //     {
-        //       name: "Open Defecation (%)",
-        //       type: "range",
-        //       column_name: "od",
-        //       min: 0,
-        //       max: 100,
-        //       value: [0, 100],
-        //       subcategory: "wash",
-        //     },
-        //     {
-        //       name: "Reliance on Unimproved Sanitation (%)",
-        //       type: "range",
-        //       column_name: "s_unimp",
-        //       min: 0,
-        //       max: 100,
-        //       value: [0, 100],
-        //       subcategory: "wash",
-        //     },
-        //     {
-        //       name: "Reliance on Unimproved Drinking Water (%)",
-        //       type: "range",
-        //       column_name: "w_unimp",
-        //       min: 0,
-        //       max: 100,
-        //       value: [0, 100],
-        //       subcategory: "wash",
-        //     },
-        //     {
-        //       name: "Time To Cities (min.)",
-        //       type: "range",
-        //       column_name: "timecities",
-        //       min: 17,
-        //       max: 197,
-        //       value: [0, 197],
-        //       subcategory: "accessibility",
-        //     },
-        //     {
-        //       name: "Distance to Roads (m)",
-        //       type: "range",
-        //       column_name: "dr",
-        //       min: 26,
-        //       max: 36648,
-        //       value: [26, 36648],
-        //       subcategory: "accessibility",
-        //     },
-        //     {
-        //       name: "Distance to Towns (m)",
-        //       type: "range",
-        //       column_name: "dt",
-        //       min: 0,
-        //       max: 91421,
-        //       value: [0, 91421],
-        //       subcategory: "accessibility",
-        //     },
-        //     {
-        //       name: "Diahrrea Prevalence in Children <5 Years (cases)",
-        //       type: "range",
-        //       column_name: "dia",
-        //       min: 0,
-        //       max: 37514,
-        //       value: [0, 37514],
-        //       subcategory: "health",
-        //     },
-        //     {
-        //       name: "Cholera Risk (cases/100,000pp)",
-        //       type: "range",
-        //       column_name: "cholera",
-        //       min: 0.1,
-        //       max: 108.7,
-        //       value: [0.1, 108.7],
-        //       subcategory: "health",
-        //     },
-        //     {
-        //       name: "Mortality in Children <5 Years",
-        //       type: "range",
-        //       column_name: "u5m",
-        //       min: 0.045,
-        //       max: 0.074,
-        //       value: [0.045, 0.074],
-        //       subcategory: "health",
-        //     },
-        //     {
-        //       name: "Women's Educational Attainment (yrs.)",
-        //       type: "range",
-        //       column_name: "edu_w",
-        //       min: 0,
-        //       max: 10,
-        //       value: [0, 10],
-        //       subcategory: "socioeconomic",
-        //     },
-        //     {
-        //       name: "Men's Educational Attainment (yrs.)",
-        //       type: "range",
-        //       column_name: "edu_w",
-        //       min: 0,
-        //       max: 10,
-        //       value: [0, 10],
-        //       subcategory: "socioeconomic",
-        //     },
-        //   ],
-        // },
         {
-          name: "Communities",
+          name: "Districts",
+          carto_tableName: "gha_dist_topo",
+          carto_layer: null,
+          carto_style: `#layer {
+            polygon-fill: #826dba;
+            polygon-opacity: 1;
+            }
+            #layer::outline {
+              line-width: 1;
+              line-color: #000000;
+              line-opacity: 0.5;
+            }`,
+          visible: false,
+          order: 5,
+          /* These are all range filters and are implemented */
+          filters: [
+            // {
+            //   name: "Population Estimate",
+            //   type: "range",
+            //   column_name: "pop_est",
+            //   min: 0,
+            //   max: 6033969,
+            //   value: [0, 6033969],
+            // },
+            {
+              name: "Community Classification",
+              type: "categorical",
+              column_name: "classes",
+              values: [1, 2, 3],
+            },
+            {
+              name: "Open Defecation (%)",
+              type: "range",
+              column_name: "od",
+              min: 11,
+              max: 91,
+              value: [11, 91],
+              subcategory: "wash",
+            },
+            {
+              name: "Reliance on Unimproved Sanitation (%)",
+              type: "range",
+              column_name: "s_unimp",
+              min: 1,
+              max: 33,
+              value: [1, 33],
+              subcategory: "wash",
+            },
+            {
+              name: "Reliance on Unimproved Drinking Water (%)",
+              type: "range",
+              column_name: "w_unimp",
+              min: 0,
+              max: 19,
+              value: [0, 19],
+              subcategory: "wash",
+            },
+            {
+              name: "Time To Cities (min.)",
+              type: "range",
+              column_name: "timecities",
+              min: 0,
+              max: 304,
+              value: [0, 304],
+              subcategory: "accessibility",
+            },
+            {
+              name: "Distance to Roads (m)",
+              type: "range",
+              column_name: "dr",
+              min: 226,
+              max: 17810,
+              value: [226, 17810],
+              subcategory: "accessibility",
+            },
+            {
+              name: "Distance to Towns (m)",
+              type: "range",
+              column_name: "dt",
+              min: 0,
+              max: 70401,
+              value: [0, 70401],
+              subcategory: "accessibility",
+            },
+            {
+              name: "Diahrrea Prevalence in Children <5 Years (cases)",
+              type: "range",
+              column_name: "dia",
+              min: 0,
+              max: 51505,
+              value: [0, 51505],
+              subcategory: "health",
+            },
+            {
+              name: "Cholera Risk (cases/100,000pp)",
+              type: "range",
+              column_name: "cholera",
+              min: 0.1,
+              max: 898.2,
+              value: [0.1, 898.2],
+              subcategory: "health",
+            },
+            {
+              name: "Mortality in Children <5 Years",
+              type: "range",
+              column_name: "u5m",
+              min: 0.0,
+              max: 0.075,
+              value: [0.0, 0.075],
+              subcategory: "health",
+            },
+            {
+              name: "Women's Educational Attainment (yrs.)",
+              type: "range",
+              column_name: "edu_w",
+              min: 0,
+              max: 10,
+              value: [0, 10],
+              subcategory: "socioeconomic",
+            },
+            {
+              name: "Men's Educational Attainment (yrs.)",
+              type: "range",
+              column_name: "edu_w",
+              min: 0,
+              max: 11,
+              value: [0, 11],
+              subcategory: "socioeconomic",
+            },
+          ],
+        },
+        {
+          name: "Communities (pop.)",
           carto_tableName: "gha_comms_point_topo",
           carto_layer: null,
           carto_style: `#layer {marker-width: 5;marker-fill: ramp([pop_est], (#f9ddda, #eda8bd, #ce78b3, #9955a8, #573b88), quantiles);
@@ -240,7 +243,7 @@ const initialState = {
             marker-line-width: 0.5;
             marker-line-color: #000000;
             marker-line-opacity: 1;}`,
-          visible: false,
+          visible: true,
           order: 5,
           /* These are all range filters and are implemented */
           filters: [
@@ -251,12 +254,14 @@ const initialState = {
               min: 0,
               max: 6033969,
               value: [0, 6033969],
+              subcategory: "socioeconomic",
             },
             {
               name: "Community Classification",
               type: "categorical",
               column_name: "classes",
-              values: [1,2,3],
+              values: [1, 2, 3],
+              subcategory: "accessibility",
             },
             {
               name: "Open Defecation (%)",
@@ -353,8 +358,8 @@ const initialState = {
               type: "range",
               column_name: "edu_m",
               min: 0,
-              max: 10,
-              value: [0, 10],
+              max: 11,
+              value: [0, 11],
               subcategory: "socioeconomic",
             },
           ],
@@ -377,15 +382,15 @@ const initialState = {
         //   carto_layer: null /* we will insert carto's layer object here */,
         //   carto_style: `#layer {polygon-fill: ramp([dn], (#4cd7d7, #1d5e96, #9b38a6), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
         //   visible: true,
-        //   /* 
-        //   we don't use order yet to order(re) the layers 
+        //   /*
+        //   we don't use order yet to order(re) the layers
         //   For now the first layer object is the bottom most rendered layer
         //   */
         //   order: 2,
         //   filters: [
         //     {
-        //       /* 
-        //       a categorical filter, such as this one is not implemented. 
+        //       /*
+        //       a categorical filter, such as this one is not implemented.
         //       It might be a good one to implement
         //      */
         //       name: "Community Classification",
@@ -544,24 +549,28 @@ const reducer = (state, action) => {
         ] = action.filter;
         //TODO: based on the type of filter (range, categorical)
         //use Switch statement to apply appropriate filters
-        switch (draft.maps[action.mapID].layers[action.layerIndex].filters[action.filterIndex].type){
+        switch (
+          draft.maps[action.mapID].layers[action.layerIndex].filters[
+            action.filterIndex
+          ].type
+        ) {
           case "range":
-              //this is how you get the filter out of the carto layer
-              const filter = draft.maps[action.mapID].layers[
-                action.layerIndex
-              ].carto_layer
-                .getSource()
-                .getFilters()[0] //since this is a filtercollection
-                .getFilters()[action.filterIndex];
-              //this is how you set the filter. this is specific to range filter
-              filter.setFilters({
-                gte: action.filter.value[0],
-                lte: action.filter.value[1],
-              });
-              // filter.resetFilters()
-              break;
+            //this is how you get the filter out of the carto layer
+            const filter = draft.maps[action.mapID].layers[
+              action.layerIndex
+            ].carto_layer
+              .getSource()
+              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[action.filterIndex];
+            //this is how you set the filter. this is specific to range filter
+            filter.setFilters({
+              gte: action.filter.value[0],
+              lte: action.filter.value[1],
+            });
+            // filter.resetFilters()
+            break;
           case "categorical":
-          //   return null;
+            //   return null;
             const filter_c = draft.maps[action.mapID].layers[
               action.layerIndex
             ].carto_layer
@@ -596,7 +605,7 @@ const reducer = (state, action) => {
               layerstoremove.push(layer.carto_layer);
             }
           });
-          if (layerstoremove.length > 1){
+          if (layerstoremove.length > 1) {
             console.log("Cleanup: layertoremove", layerstoremove);
             draft.carto_client.removeLayers(layerstoremove);
           }
