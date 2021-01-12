@@ -20,7 +20,7 @@ const initialState = {
           name: "Community Classification",
           carto_tableName: "gha_class_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([dn], (#0d882b, #200ab7, #ad1719), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
+          carto_style: `#layer {polygon-fill: ramp([classes], (#0d882b, #200ab7, #ad1719), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
           visible: false,
           /* 
           we don't use order yet to order(re) the layers 
@@ -35,7 +35,7 @@ const initialState = {
              */
               name: "Community Classification",
               type: "categorical",
-              column_name: "dn",
+              column_name: "classes",
               column_values: [1, 2, 3],
               value_labels: ['Rural remote','Rural on-road','Rural mixed']
             },
@@ -45,7 +45,7 @@ const initialState = {
           name: "Reliance on Open Defecation (%)",
           carto_tableName: "gha_od_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([val], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
+          carto_style: `#layer {polygon-fill: ramp([od], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
           visible: false,
           order: 3,
@@ -53,7 +53,7 @@ const initialState = {
             {
               name: "Reliance on Open Defecation (%)",
               type: "range",
-              column_name: "val",
+              column_name: "od",
               min: 0,
               max: 100,
               value: [0, 100],
@@ -65,7 +65,7 @@ const initialState = {
           name: "Women's Education (yrs.)",
           carto_tableName: "gha_edw_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([val], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
+          carto_style: `#layer {polygon-fill: ramp([edu_w], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
           visible: false,
           order: 2,
@@ -73,7 +73,7 @@ const initialState = {
             {
               name: "Women's Educational Attainment (yrs.)",
               type: "range",
-              column_name: "val",
+              column_name: "edu_w",
               min: 2,
               max: 11,
               value: [2, 11],
@@ -85,15 +85,15 @@ const initialState = {
           name: "Time to Cities (min.)",
           carto_tableName: "gha_timecities_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([val], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
+          carto_style: `#layer {polygon-fill: ramp([timecities], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
-          visible: false,
+          visible: true,
           order: 1,
           filters: [
             {
               name: "Time to Cities (min.)",
               type: "range",
-              column_name: "val",
+              column_name: "timecities",
               min: 0,
               max: 610,
               value: [0, 610],
@@ -240,7 +240,7 @@ const initialState = {
             marker-line-width: 0.5;
             marker-line-color: #000000;
             marker-line-opacity: 1;}`,
-          visible: true,
+          visible: false,
           order: 5,
           /* These are all range filters and are implemented */
           filters: [
@@ -351,7 +351,7 @@ const initialState = {
             {
               name: "Men's Educational Attainment (yrs.)",
               type: "range",
-              column_name: "edu_w",
+              column_name: "edu_m",
               min: 0,
               max: 10,
               value: [0, 10],

@@ -8,7 +8,7 @@ import {
   Link,
   Grid,
   Divider,
-  Button,
+  Button, Box
 } from "@material-ui/core";
 import Popover from "@material-ui/core/Popover";
 import Popper from "@material-ui/core/Popper";
@@ -97,10 +97,10 @@ export const Map = () => {
   const [leaflet, setLeaflet] = useState();
   const [cartoClient, setCartoClient] = useState();
   const [popup, setPopup] = useState();
-  const [popupData, setPopupData] = useState([]);
+  const [multiPopup, setMultiPopup] = useState();
+  const [popupData, setPopupData] = useState();
   const [popover, setPopover] = useState(null);
   const [buckets, setBuckets] = useState([]);
-  const [legend, setLegend] = useState(null);
   const openPopper = Boolean(popup);
   const openPopover = Boolean(popover);
   const idPopper = openPopper ? "transitions-popper" : undefined;
@@ -127,6 +127,7 @@ export const Map = () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, []);
+
   //set mapID
   useEffect(() => {
     console.log("currentMapID", currentMapID);
@@ -274,10 +275,11 @@ export const Map = () => {
           _layer.on("featureClicked", (featureEvent) => {
             console.log("clicked a feature", featureEvent);
             setPopup(featureEvent);
+            setPopover(null);
             console.log("popup", popup);
           });
         }
-
+        console.log("cycle")
         //set default visibility as set in map state
         if (layer.visible) {
           _layer.show();
@@ -311,15 +313,12 @@ export const Map = () => {
                 }
               }
               buckets_list.push(obj);
-              console.log("buckets", buckets);
             } else {
               obj['variable']=layer.name
               obj['legend']=event.styles[0]._buckets
               buckets_list.push(obj);	
-              console.log("buckets", buckets);
             }
             setBuckets(st => [...st, obj]);
-            console.log("bucket list", buckets_list);
           }
         });
         
@@ -338,6 +337,8 @@ export const Map = () => {
 
   useEffect(() => {
     console.log("updated popup", popup);
+    // setMultiPopup([...multiPopup, popup])
+    // console.log("updated popupmulti", multiPopup);
     if (popup) {
       var dat = [];
       currentMapState.layers[layerID].filters.forEach(function (element) {
@@ -360,7 +361,10 @@ export const Map = () => {
         }
       }
       dat_popup = transformArray(dat_popup);
-      setPopupData(dat_popup);
+      var obj={}
+      obj['data']=dat_popup
+      obj['position']=popup.position
+      setPopupData(obj);
       console.log("updated dat_popup", dat_popup);
       console.log("updated popupData", popupData);
     }
@@ -467,174 +471,142 @@ export const Map = () => {
           })}
         </Paper>
       )}
-      {popup &&
-        popup.data &&
-        (currentMapState.layers[layerID].name === "Communities" ? (
-          <Popper
-            ref={clickRef}
-            id={idPopper}
-            key={idPopper}
-            open={openPopper}
-            disablePortal={true}
-            modifiers={{
-              flip: {
-                enabled: true,
-              },
-              preventOverflow: {
-                enabled: true,
-                boundariesElement: "scrollParent",
-              },
-              arrow: {
-                enabled: true,
-                // element: arrowRef,
-              },
-            }}
-            style={{
-              position: "absolute",
-              left: popup.position.x,
-              top: popup.position.y,
-              zIndex: "1300",
-              backgroundColor: "#fff",
-              width: "200px",
-            }}
-            elevation={3}
-          >
-            <div className={classes.paper} elevation={3}>
-              <span>
-                <strong>Population Estimate:</strong> {popup.data.pop_est}
-              </span>
-              <br></br>
-              <span>
-                <strong>Community Classification:</strong> Rural Remote
-              </span>
-              <br></br>
-              <Link
-                key={"seeMore"}
-                component="button"
-                onClick={(e) => {
-                  // e.preventDefault();
-                  setPopover(e.currentTarget);
-                  // setPopper(null);
-                }}
-              >
-                SEE MORE
-              </Link>
-            </div>
+      {popupData && (
+        
+        <Popper
+          ref={clickRef}
+          id={idPopper}
+          key={idPopper}
+          open={openPopper}
+          disablePortal={true}
+          modifiers={{
+            flip: {
+              enabled: true,
+            },
+            preventOverflow: {
+              enabled: true,
+              boundariesElement: "scrollParent",
+            },
+            arrow: {
+              enabled: true,
+              // element: arrowRef,
+            },
+          }}
+          style={{
+            position: "absolute",
+            left: popupData.position.x,
+            top: popupData.position.y,
+            zIndex: "1300",
+            backgroundColor: "#fff",
+            width: "200px",
+          }}
+          elevation={3}
+        >
+          <div className={classes.paper}>
+            {popupData.data.length===1 && (
 
-            <Popover
-              id={idPopover}
-              key={idPopover}
-              open={openPopover}
-              anchorReference="anchorPosition"
-              anchorPosition={{ top: 400, left: 800 }}
-              onClose={() => {
-                setPopover(null);
-              }}
-              anchorOrigin={{
-                vertical: "center",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "center",
-                horizontal: "center",
-              }}
-            >
-              <Grid container justify="flex-end" pt={2} key={"popoverHeader"}>
-                <CloseIcon
-                  key={"popoverClose"}
-                  fontSize="small"
-                  color="disabled"
+              <Box fontSize="fontSize">
+                <strong>{popupData.data[0].Name}:</strong>{" "}
+                {popupData.data[0].Value.toFixed(1)}
+              </Box>
+            )}
+            {popupData.data.length>1 && (
+              <>
+                <Box fontSize="fontSize">
+                  <strong>Population Estimate:</strong> {popupData.data[7].Value}
+                  <br></br>
+                  <strong>Community Classification:</strong> Rural Remote
+                </Box>
+                <Link
+                  key={"seeMore"}
+                  component="button"
                   onClick={(e) => {
                     // e.preventDefault();
-                    setPopover(null);
-                    // openPopper(null)
+                    setPopover(e.currentTarget);
+                    // setPopup(null);
                   }}
-                />
-              </Grid>
-              {cat.map((category,i) => {
-                return (
-                  <Table className={classes.popover} key={"popoverTable"+i}>
-                    <TableHead>
-                      <br></br>
-                      <strong>{category.toUpperCase()}</strong>
-                    </TableHead>
-                    <TableBody>
-                      {popupData.map((anObjectMapped,j) => {
-                        if (anObjectMapped.Category === category) {
-                          return (
-                            <TableRow key={"popoverTableRow"+j}>
-                              <TableCell style={{ width: "70%" }}>
-                                {anObjectMapped.Name}
-                              </TableCell>
-                              <TableCell
-                                style={{ width: "30%" }}
-                                align="center"
-                              >
-                                {anObjectMapped.Value}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        } else {
-                          return null;
-                        }
-                      })}
-                    </TableBody>
-                  </Table>
-                );
-              })}
-              <Divider />
-              <Grid container justify="center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
                 >
-                  DOWNLOAD TABLE
-                </Button>
-              </Grid>
-            </Popover>
-          </Popper>
-        ) : (
-          <Popper
-            ref={clickRef}
-            id={idPopper}
-            open={openPopper}
-            // placement="left-end"
-            disablePortal={true}
-            // anchorEl={popup}
-            modifiers={{
-              flip: {
-                enabled: true,
-              },
-              preventOverflow: {
-                enabled: true,
-                boundariesElement: "scrollParent",
-              },
-              arrow: {
-                enabled: true,
-                // element: arrowRef,
-              },
-            }}
-            style={{
-              position: "absolute",
-              left: popup.position.x,
-              top: popup.position.y,
-              zIndex: "1300",
-              backgroundColor: "#fff",
-              width: "200px",
-            }}
-          >
-            <div className={classes.paper}>
-              <span>
-                <strong>{currentMapState.layers[layerID].name}:</strong>{" "}
-                {popup.data.val}
-              </span>
-              <br></br>
-            </div>
-          </Popper>
-        ))}
+                  SEE MORE
+                </Link>
+                <Popover
+                  id={idPopover}
+                  key={idPopover}
+                  open={openPopover}
+                  anchorReference="anchorPosition"
+                  anchorPosition={{ top: 400, left: 800 }}
+                  style={{zIndex: "2000"}}
+                  onClose={() => {
+                    setPopover(null);
+                  }}
+                  anchorOrigin={{
+                    vertical: "center",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "center",
+                    horizontal: "center",
+                  }}
+                >
+                  <Grid container justify="flex-end" pt={2} key={"popoverHeader"}>
+                    <CloseIcon
+                      key={"popoverClose"}
+                      fontSize="small"
+                      color="disabled"
+                      onClick={(e) => {
+                        // e.preventDefault();
+                        setPopover(null);
+                        // openPopper(null)
+                      }}
+                    />
+                  </Grid>
+                  {cat.map((category,i) => {
+                    return (
+                      <Table className={classes.popover} key={"popoverTable"+i}>
+                        <Box fontWeight="fontWeightBold" pt={1}>
+                          {category.toUpperCase()}</Box>
+                        
+                        <TableBody>
+                          {popupData.data.map((anObjectMapped,j) => {
+                            if (anObjectMapped.Category === category) {
+                              return (
+                                <TableRow key={"popoverTableRow"+j}>
+                                  <TableCell style={{ width: "70%" }}>
+                                    {anObjectMapped.Name}
+                                  </TableCell>
+                                  <TableCell
+                                    style={{ width: "30%" }}
+                                    align="center"
+                                  >
+                                    {anObjectMapped.Value}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            } else {
+                              return null;
+                            }
+                          })}
+                        </TableBody>
+                      </Table>
+                    );
+                  })}
+                  <Divider />
+                  <Grid container justify="center">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      className={classes.button}
+                      startIcon={<SaveIcon />}
+                    >
+                      DOWNLOAD TABLE
+                    </Button>
+                  </Grid>
+                </Popover>
+              </>
+            )}
+          </div>
+        </Popper>
+        // ))}
       )}
     </div>
   );
