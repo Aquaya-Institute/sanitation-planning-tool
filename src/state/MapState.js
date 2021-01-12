@@ -43,7 +43,7 @@ const initialState = {
                   checked: true,
                 },
                 {
-                  name: "Rural on-road",
+                  name: "Ruralon-road",
                   value: 2,
                   checked: true,
                 },
@@ -142,13 +142,29 @@ const initialState = {
             //   value: [0, 6033969],
             // },
             {
-              name: "Community Classification",
+              name: "Predominant Community Classification",
               type: "categorical",
               column_name: "classes",
-              values: [1, 2, 3],
+              value: [
+                {
+                  name: "Rural Remote",
+                  value: 1,
+                  checked: true,
+                },
+                {
+                  name: "Rural on-road",
+                  value: 2,
+                  checked: true,
+                },
+                {
+                  name: "Rural Mixed",
+                  value: 3,
+                  checked: true,
+                },
+              ] /* declaure col values that should be filtered on */,
             },
             {
-              name: "Open Defecation (%)",
+              name: "Average Open Defecation (%)",
               type: "range",
               column_name: "od",
               min: 11,
@@ -157,7 +173,7 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Reliance on Unimproved Sanitation (%)",
+              name: "Average Reliance on Unimproved Sanitation (%)",
               type: "range",
               column_name: "s_unimp",
               min: 1,
@@ -166,7 +182,7 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Reliance on Unimproved Drinking Water (%)",
+              name: "Average Reliance on Unimproved Drinking Water (%)",
               type: "range",
               column_name: "w_unimp",
               min: 0,
@@ -175,7 +191,7 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Time To Cities (min.)",
+              name: "Average Time To Cities (min.)",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -184,7 +200,7 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Distance to Roads (m)",
+              name: "Average Distance to Roads (m)",
               type: "range",
               column_name: "dr",
               min: 226,
@@ -193,7 +209,7 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Distance to Towns (m)",
+              name: "Average Distance to Towns (m)",
               type: "range",
               column_name: "dt",
               min: 0,
@@ -202,7 +218,7 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Diahrrea Prevalence in Children <5 Years (cases)",
+              name: "Average Diahrrea Prevalence in Children <5 Years (cases)",
               type: "range",
               column_name: "dia",
               min: 0,
@@ -211,7 +227,7 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Cholera Risk (cases/100,000pp)",
+              name: "Average Cholera Risk (cases/100,000pp)",
               type: "range",
               column_name: "cholera",
               min: 0.1,
@@ -220,7 +236,7 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Mortality in Children <5 Years",
+              name: "Average Mortality in Children <5 Years",
               type: "range",
               column_name: "u5m",
               min: 0.0,
@@ -229,7 +245,7 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Women's Educational Attainment (yrs.)",
+              name: "Average Women's Educational Attainment (yrs.)",
               type: "range",
               column_name: "edu_w",
               min: 0,
@@ -238,7 +254,7 @@ const initialState = {
               subcategory: "socioeconomic",
             },
             {
-              name: "Men's Educational Attainment (yrs.)",
+              name: "Average Men's Educational Attainment (yrs.)",
               type: "range",
               column_name: "edu_w",
               min: 0,
@@ -282,7 +298,7 @@ const initialState = {
                   checked: true,
                 },
                 {
-                  name: "Ruralon-road",
+                  name: "Rural on-road",
                   value: 2,
                   checked: true,
                 },

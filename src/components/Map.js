@@ -414,6 +414,22 @@ export const Map = () => {
     }
   }, [maps, mapID]);
 
+  // useEffect(()=>{
+  //   if (buckets_list>0 && visibleLayer_list>0) {
+  //     visibleLayer_list.map((vis) => {
+  //       return (
+  //         buckets_list.map((bucket,i) => {
+  //           if (vis === bucket[i].variable) {
+  //             return (
+  //               setLegend(bucket[i])
+  //             )
+  //           }
+  //         })
+  //       )
+  //     })
+  //   }
+  // },[])
+
   return (
     <div
       style={{ height: "100%", position: "relative" }}
@@ -488,6 +504,7 @@ export const Map = () => {
       )}
       {popupData && (
         <Popper
+          anchorEl={null}
           ref={clickRef}
           id={idPopper}
           key={idPopper}
