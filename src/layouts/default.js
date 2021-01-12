@@ -60,8 +60,8 @@ export default function DefaultLayout(props) {
           </Box>
         </Toolbar>
       </AppBar>
-      <main style={{flex:1, display:"flex"}}>
-        <Container maxWidth={true} disableGutters={true}>
+      <main style={{ flex: 1, display: "flex" }}>
+        <Container maxWidth={false} disableGutters={true}>
           {props.children}
         </Container>
       </main>

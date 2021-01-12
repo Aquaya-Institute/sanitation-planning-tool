@@ -8,7 +8,8 @@ import {
   Link,
   Grid,
   Divider,
-  Button, Box
+  Button,
+  Box,
 } from "@material-ui/core";
 import Popover from "@material-ui/core/Popover";
 import Popper from "@material-ui/core/Popper";
@@ -113,7 +114,7 @@ export const Map = () => {
   // const mapRef = useRef();
   // const [latLng, setLatLng] = useState([31, 55]);
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
-  var dat_popup = [];	
+  var dat_popup = [];
   //click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -249,11 +250,18 @@ export const Map = () => {
               _columns.push(filter.column_name);
               break;
             case "categorical":
-              // const _filter_c = new Carto.filter.Category(filter_c.column_name, {
-              //   in: filter_c.column_values
-              // });
-              // _filters.push(_filter_c);
-              // _columns.push(filter_c.column_name);
+              let col_vals_tofilter = [];
+              //on init get the category filter state and create
+              //an array of checked=true col values to filter by
+              filter.value.forEach((category) => {
+                if (category.checked === true)
+                  col_vals_tofilter.push(category.value);
+              });
+              const _filter_c = new Carto.filter.Category(filter.column_name, {
+                in: col_vals_tofilter,
+              });
+              _filters.push(_filter_c);
+              _columns.push(filter.column_name);
               break;
             default:
               break;
@@ -265,7 +273,7 @@ export const Map = () => {
           _source.addFilter(new Carto.filter.AND(_filters));
         }
 
-        //show hide layers based on initial state in config
+        //create the carto layer and add feature clicks
         const _layer = new Carto.layer.Layer(_source, _style, {
           featureClickColumns: _columns,
         });
@@ -279,7 +287,7 @@ export const Map = () => {
             console.log("popup", popup);
           });
         }
-        console.log("cycle")
+        console.log("cycle");
         //set default visibility as set in map state
         if (layer.visible) {
           _layer.show();
@@ -293,37 +301,35 @@ export const Map = () => {
 
         // change legend when data classification method changes
         var executed = false;
-        
+
         _layer.on("metadataChanged", function (event) {
-          if(!executed) {
+          if (!executed) {
             executed = true;
             console.log(event);
             var obj = {};
             // get buckets
-            if(event.styles[0]._buckets===undefined) {
-              obj['variable']=layer.name
-              obj['legend']=event.styles[0]._categories
+            if (event.styles[0]._buckets === undefined) {
+              obj["variable"] = layer.name;
+              obj["legend"] = event.styles[0]._categories;
               for (var i in obj.legend) {
                 if (obj.legend[i].name === 1) {
-                  obj.legend[i].name = 'Rural remote';
+                  obj.legend[i].name = "Rural remote";
                 } else if (obj.legend[i].name === 2) {
-                  obj.legend[i].name = 'Rural on-road';
+                  obj.legend[i].name = "Rural on-road";
                 } else {
-                  obj.legend[i].name = 'Rural mixed';
+                  obj.legend[i].name = "Rural mixed";
                 }
               }
               buckets_list.push(obj);
             } else {
-              obj['variable']=layer.name
-              obj['legend']=event.styles[0]._buckets
-              buckets_list.push(obj);	
+              obj["variable"] = layer.name;
+              obj["legend"] = event.styles[0]._buckets;
+              buckets_list.push(obj);
             }
-            setBuckets(st => [...st, obj]);
+            setBuckets((st) => [...st, obj]);
           }
         });
-        
-        
-        
+
         //add the carto layer to global state
         dispatch({
           type: "layer.addCartoLayer",
@@ -361,26 +367,26 @@ export const Map = () => {
         }
       }
       dat_popup = transformArray(dat_popup);
-      var obj={}
-      obj['data']=dat_popup
-      obj['position']=popup.position
+      var obj = {};
+      obj["data"] = dat_popup;
+      obj["position"] = popup.position;
       setPopupData(obj);
       console.log("updated dat_popup", dat_popup);
       console.log("updated popupData", popupData);
     }
   }, [popup]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (maps[mapID]) {
-      let visibleLayer_list=[]
+      let visibleLayer_list = [];
       maps[mapID].layers.forEach((layer, index) => {
         if (layer.visible) {
-          visibleLayer_list.push(layer.name)
+          visibleLayer_list.push(layer.name);
         }
-      })
-      setVisibleLayers(visibleLayer_list)
+      });
+      setVisibleLayers(visibleLayer_list);
     }
-  },[maps, mapID])
+  }, [maps, mapID]);
 
   // useEffect(()=>{
   //   if (buckets_list>0 && visibleLayer_list>0) {
@@ -399,8 +405,11 @@ export const Map = () => {
   // },[])
 
   return (
-    <div style={{ height: "100%", position:"relative" }} className={classes.content}>
-      <div id="map" style={{ height: "100%"}}></div>
+    <div
+      style={{ height: "100%", position: "relative" }}
+      className={classes.content}
+    >
+      <div id="map" style={{ height: "100%" }}></div>
       {buckets && visibleLayers && (
         <Paper
           key={"legendContainer"}

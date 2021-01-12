@@ -36,8 +36,23 @@ const initialState = {
               name: "Community Classification",
               type: "categorical",
               column_name: "classes",
-              column_values: [1, 2, 3],
-              value_labels: ['Rural remote','Rural on-road','Rural mixed']
+              value: [
+                {
+                  name: "Rural Remote",
+                  value: 1,
+                  checked: true,
+                },
+                {
+                  name: "Ruralon-road",
+                  value: 2,
+                  checked: true,
+                },
+                {
+                  name: "Rural Mixed",
+                  value: 3,
+                  checked: true,
+                },
+              ] /* declaure col values that should be filtered on */,
             },
           ],
         },
@@ -256,7 +271,23 @@ const initialState = {
               name: "Community Classification",
               type: "categorical",
               column_name: "classes",
-              values: [1,2,3],
+              value: [
+                {
+                  name: "Rural Remote",
+                  value: 1,
+                  checked: true,
+                },
+                {
+                  name: "Ruralon-road",
+                  value: 2,
+                  checked: true,
+                },
+                {
+                  name: "Rural Mixed",
+                  value: 3,
+                  checked: true,
+                },
+              ] /* declaure col values that should be filtered on */,
             },
             {
               name: "Open Defecation (%)",
@@ -377,21 +408,21 @@ const initialState = {
         //   carto_layer: null /* we will insert carto's layer object here */,
         //   carto_style: `#layer {polygon-fill: ramp([dn], (#4cd7d7, #1d5e96, #9b38a6), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
         //   visible: true,
-        //   /* 
-        //   we don't use order yet to order(re) the layers 
+        //   /*
+        //   we don't use order yet to order(re) the layers
         //   For now the first layer object is the bottom most rendered layer
         //   */
         //   order: 2,
         //   filters: [
         //     {
-        //       /* 
-        //       a categorical filter, such as this one is not implemented. 
+        //       /*
+        //       a categorical filter, such as this one is not implemented.
         //       It might be a good one to implement
         //      */
         //       name: "Community Classification",
         //       type: "categorical",
         //       column_name: "dn",
-        //       column_values: [1, 2, 3],
+        //       values: [1, 2, 3],
         //     },
         //   ],
         // },
@@ -544,35 +575,48 @@ const reducer = (state, action) => {
         ] = action.filter;
         //TODO: based on the type of filter (range, categorical)
         //use Switch statement to apply appropriate filters
-        switch (draft.maps[action.mapID].layers[action.layerIndex].filters[action.filterIndex].type){
+        switch (
+          draft.maps[action.mapID].layers[action.layerIndex].filters[
+            action.filterIndex
+          ].type
+        ) {
           case "range":
-              //this is how you get the filter out of the carto layer
-              const filter = draft.maps[action.mapID].layers[
-                action.layerIndex
-              ].carto_layer
-                .getSource()
-                .getFilters()[0] //since this is a filtercollection
-                .getFilters()[action.filterIndex];
-              //this is how you set the filter. this is specific to range filter
-              filter.setFilters({
-                gte: action.filter.value[0],
-                lte: action.filter.value[1],
-              });
-              // filter.resetFilters()
-              break;
-          case "categorical":
-          //   return null;
-            const filter_c = draft.maps[action.mapID].layers[
+            //this is how you get the filter out of the carto layer
+            const filter = draft.maps[action.mapID].layers[
               action.layerIndex
             ].carto_layer
               .getSource()
               .getFilters()[0] //since this is a filtercollection
               .getFilters()[action.filterIndex];
             //this is how you set the filter. this is specific to range filter
-            // filter_c.setFilters({
-            //   // column: action.filter.column_name,
-            //   in: action.filter.column_values,
-            // });
+            filter.setFilters({
+              gte: action.filter.value[0],
+              lte: action.filter.value[1],
+            });
+            // filter.resetFilters()
+            break;
+          case "categorical":
+            //   return null;
+            const filter_c = draft.maps[action.mapID].layers[
+              action.layerIndex
+            ].carto_layer
+              .getSource()
+              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[action.filterIndex];
+
+            let col_vals_tofilter = [];
+            //get the category filter state and create an array
+            //of checked=true col values to filter
+            action.filter.value.forEach((category) => {
+              if (category.checked === true)
+                col_vals_tofilter.push(category.value);
+            });
+
+            //this is how you set the filter. this is specific to range filter
+            filter_c.setFilters({
+              // column: action.filter.column_name,
+              in: col_vals_tofilter,
+            });
             break;
           default:
             return null;
@@ -596,7 +640,7 @@ const reducer = (state, action) => {
               layerstoremove.push(layer.carto_layer);
             }
           });
-          if (layerstoremove.length > 1){
+          if (layerstoremove.length > 1) {
             console.log("Cleanup: layertoremove", layerstoremove);
             draft.carto_client.removeLayers(layerstoremove);
           }
