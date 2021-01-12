@@ -263,11 +263,18 @@ export const Map = () => {
               _columns.push(filter.column_name);
               break;
             case "categorical":
-              // const _filter_c = new Carto.filter.Category(filter_c.column_name, {
-              //   in: filter_c.column_values
-              // });
-              // _filters.push(_filter_c);
-              // _columns.push(filter_c.column_name);
+              let col_vals_tofilter = [];
+              //on init get the category filter state and create
+              //an array of checked=true col values to filter by
+              filter.value.forEach((category) => {
+                if (category.checked === true)
+                  col_vals_tofilter.push(category.value);
+              });
+              const _filter_c = new Carto.filter.Category(filter.column_name, {
+                in: col_vals_tofilter,
+              });
+              _filters.push(_filter_c);
+              _columns.push(filter.column_name);
               break;
             default:
               break;
@@ -280,7 +287,7 @@ export const Map = () => {
           _source.addFilter(new Carto.filter.AND(_filters));
         }
 
-        //show hide layers based on initial state in config
+        //create the carto layer and add feature clicks
         const _layer = new Carto.layer.Layer(_source, _style, {
           featureClickColumns: _popupColumns,
         });

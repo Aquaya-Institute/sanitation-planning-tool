@@ -138,18 +138,33 @@ export const MapLayers = () => {
     filterIndex,
     newValue,
     filterStateObject,
+    categoryFilterIndex,
   }) => {
     /* 
     TODO: instead of layerindex use layerID 
     since layers can be visually ordered in 
     the future and using index will not work 
     */
+    if (
+      filterStateObject.type === "categorical" &&
+      categoryFilterIndex !== undefined
+    ) {
+      let new_cat_obj = {
+        ...filterStateObject.value[categoryFilterIndex],
+        checked: newValue,
+      };
+      newValue = [...filterStateObject.value];
+      newValue[categoryFilterIndex] = new_cat_obj;
+    }
     dispatch({
       type: "layer.filter",
       mapID: mapID,
       layerIndex: layerIndex,
       filterIndex: filterIndex,
-      filter: { ...filterStateObject, value: newValue },
+      filter: {
+        ...filterStateObject,
+        value: newValue,
+      },
     });
   };
 
@@ -228,89 +243,43 @@ export const MapLayers = () => {
                         return (
                           <ListItem
                             key={"cat" + filterIndex}
-                            button
                             className={classes.nested}
                           >
                             <FormGroup>
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    checked={true}
-                                    onChange={(e, newval) => {
-                                      updateFilter({
-                                        layerIndex: layerIndex,
-                                        filterIndex: filterIndex,
-                                        filterStateObject: filter_c,
-                                      });
-                                    }}
-                                    icon={
-                                      <CheckBoxOutlineBlankIcon fontSize="small" />
+                              {filter.value.map(
+                                (category, cat_filter_index) => (
+                                  <FormControlLabel
+                                    key={cat_filter_index}
+                                    control={
+                                      <Checkbox
+                                        checked={category.checked}
+                                        name={category.name}
+                                        onChange={(e, newval) => {
+                                          updateFilter({
+                                            layerIndex: layerIndex,
+                                            filterIndex: filterIndex,
+                                            filterStateObject: filter,
+                                            newValue: newval,
+                                            categoryFilterIndex: cat_filter_index,
+                                          });
+                                        }}
+                                        icon={
+                                          <CheckBoxOutlineBlankIcon fontSize="small" />
+                                        }
+                                        checkedIcon={
+                                          <CheckBoxIcon fontSize="small" />
+                                        }
+                                      />
                                     }
-                                    checkedIcon={
-                                      <CheckBoxIcon fontSize="small" />
+                                    label={
+                                      <Typography variant="body2">
+                                        {category.name}
+                                      </Typography>
                                     }
-                                    name="1"
+                                    size="small"
                                   />
-                                }
-                                label={
-                                  <Typography variant="body2">
-                                    Rural remote
-                                  </Typography>
-                                }
-                                size="small"
-                              />
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    checked={false}
-                                    onChange={(e, newval) => {
-                                      updateFilter({
-                                        layerIndex: layerIndex,
-                                        filterIndex: filterIndex,
-                                        filterStateObject: filter_c,
-                                      });
-                                    }}
-                                    icon={
-                                      <CheckBoxOutlineBlankIcon fontSize="small" />
-                                    }
-                                    checkedIcon={
-                                      <CheckBoxIcon fontSize="small" />
-                                    }
-                                    name="2"
-                                  />
-                                }
-                                label={
-                                  <Typography variant="body2">
-                                    Rural on-road
-                                  </Typography>
-                                }
-                              />
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    checked={true}
-                                    onChange={(e, newval) => {
-                                      updateFilter({
-                                        layerIndex: layerIndex,
-                                        filterIndex: filterIndex,
-                                        filterStateObject: filter_c,
-                                      });
-                                    }}
-                                    icon={
-                                      <CheckBoxOutlineBlankIcon fontSize="small" />
-                                    }
-                                    checkedIcon={
-                                      <CheckBoxIcon fontSize="small" />
-                                    }
-                                    name="3"
-                                  />
-                                }
-                                label={
-                                  <Typography variant="body2">
-                                    Rural mixed
-                                  </Typography>
-                                }
-                              />
+                                )
+                              )}
                             </FormGroup>
                           </ListItem>
                         );

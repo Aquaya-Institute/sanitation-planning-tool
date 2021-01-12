@@ -36,8 +36,23 @@ const initialState = {
               name: "Community Classification",
               type: "categorical",
               column_name: "classes",
-              column_values: [1, 2, 3],
-              value_labels: ["Rural remote", "Rural on-road", "Rural mixed"],
+              value: [
+                {
+                  name: "Rural Remote",
+                  value: 1,
+                  checked: true,
+                },
+                {
+                  name: "Rural on-road",
+                  value: 2,
+                  checked: true,
+                },
+                {
+                  name: "Rural Mixed",
+                  value: 3,
+                  checked: true,
+                },
+              ] /* declaure col values that should be filtered on */,
             },
           ],
         },
@@ -260,8 +275,23 @@ const initialState = {
               name: "Community Classification",
               type: "categorical",
               column_name: "classes",
-              values: [1, 2, 3],
-              subcategory: "accessibility",
+              value: [
+                {
+                  name: "Rural Remote",
+                  value: 1,
+                  checked: true,
+                },
+                {
+                  name: "Ruralon-road",
+                  value: 2,
+                  checked: true,
+                },
+                {
+                  name: "Rural Mixed",
+                  value: 3,
+                  checked: true,
+                },
+              ] /* declaure col values that should be filtered on */,
             },
             {
               name: "Open Defecation (%)",
@@ -396,7 +426,7 @@ const initialState = {
         //       name: "Community Classification",
         //       type: "categorical",
         //       column_name: "dn",
-        //       column_values: [1, 2, 3],
+        //       values: [1, 2, 3],
         //     },
         //   ],
         // },
@@ -577,11 +607,20 @@ const reducer = (state, action) => {
               .getSource()
               .getFilters()[0] //since this is a filtercollection
               .getFilters()[action.filterIndex];
+
+            let col_vals_tofilter = [];
+            //get the category filter state and create an array
+            //of checked=true col values to filter
+            action.filter.value.forEach((category) => {
+              if (category.checked === true)
+                col_vals_tofilter.push(category.value);
+            });
+
             //this is how you set the filter. this is specific to range filter
-            // filter_c.setFilters({
-            //   // column: action.filter.column_name,
-            //   in: action.filter.column_values,
-            // });
+            filter_c.setFilters({
+              // column: action.filter.column_name,
+              in: col_vals_tofilter,
+            });
             break;
           default:
             return null;
