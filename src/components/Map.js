@@ -399,7 +399,8 @@ export const Map = () => {
   // },[])
 
   return (
-    <div id="map" style={{ height: "91vh" }} className={classes.content}>
+    <div style={{ height: "100%", position:"relative" }} className={classes.content}>
+      <div id="map" style={{ height: "100%"}}></div>
       {buckets && visibleLayers && (
         <Paper
           key={"legendContainer"}
@@ -416,12 +417,11 @@ export const Map = () => {
             backgroundColor: "#fff",
           }}
         >
-          
           {/* {JSON.stringify(visibleLayers)} */}
-          
+
           {visibleLayers.map((vis) => {
             return (
-              <Fragment key={"legendContent"+vis}>
+              <Fragment key={"legendContent" + vis}>
                 {buckets.map((bucket, i) => {
                   if (vis === bucket.variable) {
                     return (
@@ -431,19 +431,19 @@ export const Map = () => {
                       //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.min}</Paper></Grid>
                       //   <Grid item><Paper className={classes.gridlabel} elevation={0}>{obj.max}</Paper></Grid>
                       // </Grid></Grid></Grid></Grid>
-                      <Fragment key={"legendContent"+bucket.variable}>
-                        <Typography key={"legendTitle"+bucket.variable}>
+                      <Fragment key={"legendContent" + bucket.variable}>
+                        <Typography key={"legendTitle" + bucket.variable}>
                           <strong>{vis}</strong>
                         </Typography>
-                        
-                        {bucket.legend.map((legend,j) => {
+
+                        {bucket.legend.map((legend, j) => {
                           return (
                             <Grid
                               container
                               direction="row"
                               alignItems="center"
                               className={classes.element}
-                              key={"bucket"+j}
+                              key={"bucket" + j}
                             >
                               <div
                                 className={classes.dot}
@@ -452,27 +452,26 @@ export const Map = () => {
                                 }}
                                 key={legend.value.toString()}
                               ></div>
-                              {(legend.name===undefined ? (
-                                legend.min.toFixed(0).toString()+' - '+legend.max.toFixed(0).toString()
-                              ) : (
-                                legend.name
-                              ))}
+                              {legend.name === undefined
+                                ? legend.min.toFixed(0).toString() +
+                                  " - " +
+                                  legend.max.toFixed(0).toString()
+                                : legend.name}
                             </Grid>
-                          )
+                          );
                         })}
-                      </ Fragment>
+                      </Fragment>
                     );
                   } else {
                     return null;
                   }
                 })}
-              </ Fragment>
+              </Fragment>
             );
           })}
         </Paper>
       )}
       {popupData && (
-        
         <Popper
           ref={clickRef}
           id={idPopper}
@@ -503,17 +502,17 @@ export const Map = () => {
           elevation={3}
         >
           <div className={classes.paper}>
-            {popupData.data.length===1 && (
-
+            {popupData.data.length === 1 && (
               <Box fontSize="fontSize">
                 <strong>{popupData.data[0].Name}:</strong>{" "}
                 {popupData.data[0].Value.toFixed(1)}
               </Box>
             )}
-            {popupData.data.length>1 && (
+            {popupData.data.length > 1 && (
               <>
                 <Box fontSize="fontSize">
-                  <strong>Population Estimate:</strong> {popupData.data[7].Value}
+                  <strong>Population Estimate:</strong>{" "}
+                  {popupData.data[7].Value}
                   <br></br>
                   <strong>Community Classification:</strong> Rural Remote
                 </Box>
@@ -521,7 +520,8 @@ export const Map = () => {
                   key={"seeMore"}
                   component="button"
                   onClick={(e) => {
-                    // e.preventDefault();
+                    e.preventDefault();
+                    e.stopPropagation();
                     setPopover(e.currentTarget);
                     // setPopup(null);
                   }}
@@ -534,7 +534,7 @@ export const Map = () => {
                   open={openPopover}
                   anchorReference="anchorPosition"
                   anchorPosition={{ top: 400, left: 800 }}
-                  style={{zIndex: "2000"}}
+                  style={{ zIndex: "2000" }}
                   onClose={() => {
                     setPopover(null);
                   }}
@@ -547,7 +547,12 @@ export const Map = () => {
                     horizontal: "center",
                   }}
                 >
-                  <Grid container justify="flex-end" pt={2} key={"popoverHeader"}>
+                  <Grid
+                    container
+                    justify="flex-end"
+                    pt={2}
+                    key={"popoverHeader"}
+                  >
                     <CloseIcon
                       key={"popoverClose"}
                       fontSize="small"
@@ -559,17 +564,21 @@ export const Map = () => {
                       }}
                     />
                   </Grid>
-                  {cat.map((category,i) => {
+                  {cat.map((category, i) => {
                     return (
-                      <Table className={classes.popover} key={"popoverTable"+i}>
+                      <Table
+                        className={classes.popover}
+                        key={"popoverTable" + i}
+                      >
                         <Box fontWeight="fontWeightBold" pt={1}>
-                          {category.toUpperCase()}</Box>
-                        
+                          {category.toUpperCase()}
+                        </Box>
+
                         <TableBody>
-                          {popupData.data.map((anObjectMapped,j) => {
+                          {popupData.data.map((anObjectMapped, j) => {
                             if (anObjectMapped.Category === category) {
                               return (
-                                <TableRow key={"popoverTableRow"+j}>
+                                <TableRow key={"popoverTableRow" + j}>
                                   <TableCell style={{ width: "70%" }}>
                                     {anObjectMapped.Name}
                                   </TableCell>

@@ -17,7 +17,7 @@ function MapDetail() {
   }, []);
 
   return (
-    <Grid container>
+    <Grid container style={{height:"100%"}}>
       <Grid item xs={4} md={4} lg={3}>
         <MapLayers />
       </Grid>
