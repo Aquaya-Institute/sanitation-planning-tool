@@ -142,21 +142,10 @@ const initialState = {
             //   max: 6033969,
             //   value: [0, 6033969],
             // },
-            {
-              name: "Region",
-              type: "none",
-              column_name: "region",
-              subcategory: "id",
-            },
-            {
-              name: "District",
-              type: "none",
-              column_name: "district",
-              subcategory: "id",
-            },
+            
             {
               name: "Predominant Community Classification",
-              type: "none",
+              type: "categorical",
               column_name: "classes",
               value: [
                 {
@@ -276,7 +265,18 @@ const initialState = {
               value: [0, 11],
               subcategory: "socioeconomic",
             },
-            
+            {
+              name: "Region",
+              type: "none",
+              column_name: "region",
+              subcategory: "id",
+            },
+            {
+              name: "District",
+              type: "none",
+              column_name: "district",
+              subcategory: "id",
+            },
           ],
         },
         {
