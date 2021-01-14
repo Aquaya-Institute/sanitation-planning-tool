@@ -156,7 +156,7 @@ const initialState = {
             },
             {
               name: "Predominant Community Classification",
-              type: "categorical",
+              type: "none",
               column_name: "classes",
               value: [
                 {
@@ -654,6 +654,8 @@ const reducer = (state, action) => {
               in: col_vals_tofilter,
             });
             break;
+          case "none":
+            return null;
           default:
             return null;
         }
