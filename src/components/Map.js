@@ -29,6 +29,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
+import {CSVLink} from 'react-csv';
 // import { AggregationTypes } from '@carto/react/widgets';
 // import { FormulaWidget } from '@carto/react/widgets';
 const useStyles = makeStyles((theme) => ({
@@ -82,19 +83,25 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
+  download: {
+    textDecoration: 'none',
+    color: 'white' 
+  }
 }));
 
 function transformArray(array) {
-  var obj, i, variable, value, cat;
+  var obj, i, layer, variable, value, cat;
   var returnedTarget = [];
   for (i = 0; i < array.length; i++) {
     obj = {};
-    variable = array[i][0];
-    value = array[i][1];
-    cat = array[i][2];
-    obj["Name"] = variable;
-    obj["Value"] = value;
-    obj["Category"] = cat;
+    layer = array[i][0];
+    variable = array[i][1];
+    value = array[i][2];
+    cat = array[i][3];
+    obj["layer"] = layer;
+    obj["name"] = variable;
+    obj["value"] = value;
+    obj["category"] = cat;
     returnedTarget.push(obj);
   }
   return returnedTarget;
@@ -117,7 +124,7 @@ export const Map = () => {
   const idPopper = openPopper ? "transitions-popper" : undefined;
   const idPopover = openPopover ? "simple-popover" : undefined;
   const [popoverOpen, setPopoverOpen] = useState(false);
-
+  const [popoverColumns, setPopoverColumns]= useState([]);
   // const arrowRef = useRef();
   const classes = useStyles();
   const clickRef = useRef(null);
@@ -127,6 +134,12 @@ export const Map = () => {
   // const [latLng, setLatLng] = useState([31, 55]);
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = [];
+  var filename=null
+
+  const [distIndex, setDistIndex] = useState();
+  const [regionIndex, setRegionIndex] = useState();
+  const [classIndex, setClassIndex] = useState();
+  const [popIndex, setPopIndex] = useState();
   //click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -243,7 +256,7 @@ export const Map = () => {
       // mapRef.current.setView(latLng,7)
       // mapRef.current.setView(new L.latLng(currentMapState.view),7)
       var buckets_list = [];
-
+      var objlist=[]
       currentMapState.layers.forEach((layer, index) => {
         const _source = new Carto.source.SQL(
           `SELECT * FROM ${layer.carto_tableName}`
@@ -251,8 +264,14 @@ export const Map = () => {
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
-        const _popupColumns = [];
+        var obj1 = [];
+        
         layer.filters.forEach((filter, filter_c) => {
+          obj1=[layer.name,filter.name, filter.column_name,filter.subcategory]
+          // obj1['name']=layer.name
+          // obj1['data']={name: filter.name, column: filter.column_name, category: filter.subcategory}
+          // setPopoverColumns((st) => [...st, obj1]);
+          objlist.push(obj1)
           switch (filter.type) {
             case "range":
               const _filter = new Carto.filter.Range(filter.column_name, {
@@ -276,12 +295,15 @@ export const Map = () => {
               _filters.push(_filter_c);
               _columns.push(filter.column_name);
               break;
+            case "none":
+              _columns.push(filter.column_name);
+              break;
             default:
               break;
           }
-          _popupColumns.push(filter.column_name);
+          
         });
-
+        
         //add filters to the source, if any
         if (_filters.length > 0) {
           _source.addFilter(new Carto.filter.AND(_filters));
@@ -289,14 +311,14 @@ export const Map = () => {
 
         //create the carto layer and add feature clicks
         const _layer = new Carto.layer.Layer(_source, _style, {
-          featureClickColumns: _popupColumns,
+          featureClickColumns: _columns,
         });
 
         //setup feature clicks on relevant layers
-        if (_popupColumns.length > 0) {
+        if (_columns.length > 0) {
           _layer.on("featureClicked", (featureEvent) => {
             console.log("clicked a feature", featureEvent);
-            setPopup(featureEvent);
+            setPopup([layer.name, featureEvent]);
             setPopoverOpen(false);
             console.log("popup", popup);
           });
@@ -357,6 +379,8 @@ export const Map = () => {
           cartoLayer: _layer,
         });
       });
+      setPopoverColumns(objlist)
+      console.log(popoverColumns)
     }
   }, [currentMapState, cartoClient, dispatch]);
 
@@ -369,33 +393,43 @@ export const Map = () => {
       });
       dat.sort();
       var dat_loc = [];
-      if (popup.data.classes !== undefined) {
-        if (popup.data.classes === 1) {
-          popup.data.classes = "Rural remote";
-        } else if (popup.data.classes === 2) {
-          popup.data.classes = "Rural on-road";
+      if (popup[1].data.classes !== undefined) {
+        if (popup[1].data.classes === 1) {
+          popup[1].data.classes = "Rural remote";
+        } else if (popup[1].data.classes === 2) {
+          popup[1].data.classes = "Rural on-road";
         } else {
-          popup.data.classes = "Rural mixed";
+          popup[1].data.classes = "Rural mixed";
         }
       }
-      Object.entries(popup.data)
+      Object.entries(popup[1].data)
         .slice(1)
         .map((keyName) => {
-          return dat_loc.push([keyName[0], keyName[1]]);
+          return dat_loc.push([popup[0],keyName[0], keyName[1]]);
         });
       dat_loc.sort();
 
-      for (let i = 0; i < dat.length; i++) {
-        for (let j = 0; j < dat_loc.length; j++) {
-          if (dat[i][0] === dat_loc[j][0]) {
-            dat_popup.push([dat[i][1], dat_loc[j][1], dat[i][2]]);
+      for (let j = 0; j < dat_loc.length; j++) {
+        for (let i = 0; i < popoverColumns.length; i++) {
+          if ((popoverColumns[i][2] === dat_loc[j][1])&&(popoverColumns[i][0] === dat_loc[j][0])) {
+            dat_popup.push([popoverColumns[i][0], popoverColumns[i][1], dat_loc[j][2], popoverColumns[i][3]]);
+            if (dat_loc[j][1]==="district") {
+              setDistIndex(j)
+            } else if (dat_loc[j][1]==="region") {
+              setRegionIndex(j)
+            } else if (dat_loc[j][1]==="classes") {
+              setClassIndex(j)
+            } else if (dat_loc[j][1]==="pop_est") {
+              setPopIndex(j)
+            }
+            break;
           }
         }
       }
       dat_popup = transformArray(dat_popup);
       var obj = {};
       obj["data"] = dat_popup;
-      obj["position"] = popup.position;
+      obj["position"] = popup[1].position;
       setPopupData(obj);
       console.log("updated dat_popup", dat_popup);
       console.log("updated popupData", popupData);
@@ -536,32 +570,37 @@ export const Map = () => {
           <div className={classes.paper}>
             {popupData.data.length === 1 && (
               <Box fontSize="fontSize">
-                {popupData.data[0].Name === "Community Classification" ? (
+                {popupData.data[0].layer === "Community Classification" ? (
                   <Box>
                     <Box fontWeight="fontWeightBold">
-                      {popupData.data[0].Name}:{" "}
+                      {popupData.data[0].name}:{" "}
                     </Box>
-                    {popupData.data[0].Value}
+                    {popupData.data[0].value}
                   </Box>
                 ) : (
                   <Box>
                     <Box fontWeight="fontWeightBold">
-                      {popupData.data[0].Name}:{" "}
+                      {popupData.data[0].name}:{" "}
                     </Box>
-                    {popupData.data[0].Value.toFixed(1)}
+                    {popupData.data[0].value.toFixed(1)}
                   </Box>
                 )}
               </Box>
             )}
             {popupData.data.length > 1 && (
-              <>
-                <Box fontSize="fontSize">
-                  <strong>Population Estimate:</strong>{" "}
-                  {popupData.data[8].Value}
-                  <br></br>
-                  <strong>Community Classification:</strong>{" "}
-                  {popupData.data[1].Value}
-                </Box>
+              <Fragment key={"popper"+popupData.data[0].layer}>
+                {popupData.data[0].layer === "Communities (pop.)" ? (
+                  <Box>
+                    <Box fontWeight="fontWeightBold">{popupData.data[popIndex].name}:{" "}</Box>{popupData.data[popIndex].value.toFixed(1)}
+                    <Box fontWeight="fontWeightBold">{popupData.data[classIndex].name}:{" "}</Box>{popupData.data[classIndex].value}
+                  </Box>
+                ) : (
+                  <Box>
+                    <Box fontWeight="fontWeightBold">{popupData.data[regionIndex].name}:{" "}</Box>{popupData.data[regionIndex].value}
+                    <Box fontWeight="fontWeightBold">{popupData.data[distIndex].name}:{" "}</Box>{popupData.data[distIndex].value}
+                    <Box fontWeight="fontWeightBold">{popupData.data[classIndex].name}:{" "}</Box>{popupData.data[classIndex].value}
+                  </Box>
+                )}
                 <Link
                   key={"seeMore"}
                   component="button"
@@ -576,6 +615,7 @@ export const Map = () => {
                 </Link>
                 <Modal
                   id={idPopover}
+                  ref={clickRef}
                   key={idPopover}
                   aria-labelledby="transition-modal-title"
                   aria-describedby="transition-modal-description"
@@ -604,54 +644,89 @@ export const Map = () => {
                           fontSize="small"
                           color="disabled"
                           onClick={(e) => {
-                            setPopover(null);
+                            setPopoverOpen(false);
                           }}
                         />
                       </Grid>
-                      {cat.map((category, i) => {
-                        return (
-                          <Table
-                            className={classes.popover}
-                            key={"popoverTable" + i}
-                            elevation={0}
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell style={{ width: "70%" }}>
-                                  <Box fontWeight="fontWeightBold" pt={1}>
-                                    {category.toUpperCase()}
-                                  </Box>
-                                </TableCell>
-                                <TableCell
-                                  style={{ width: "30%" }}
-                                  align="right"
-                                ></TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {popupData.data.map((anObjectMapped, j) => {
-                                if (anObjectMapped.Category === category) {
-                                  return (
-                                    <TableRow key={"popoverTableRow" + j}>
-                                      <TableCell style={{ width: "75%" }}>
-                                        {anObjectMapped.Name}
-                                      </TableCell>
-                                      <TableCell
-                                        style={{ width: "25%" }}
-                                        align="right"
-                                      >
-                                        {anObjectMapped.Value}
-                                      </TableCell>
-                                    </TableRow>
-                                  );
-                                } else {
-                                  return null;
-                                }
-                              })}
-                            </TableBody>
-                          </Table>
-                        );
-                      })}
+                      
+                      <Table
+                        className={classes.popover}
+                        key={"popoverTable"}
+                        elevation={0}
+                      >
+                        {popupData.data[0].layer === "Communities (pop.)" ?
+                          <TableHead>
+                            <TableRow>
+                              <TableCell colSpan={2} align="center">
+                                <Box fontWeight="fontWeightBold">
+                                  COMMUNITY DETAILS
+                                </Box>
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell colSpan={2} align="center" fontStyle="italic">
+                                <Box fontStyle="italic">Community Location:{" "}{popupData.position.x.toFixed(5)}, {popupData.position.y}</Box>
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                        :
+                          <TableHead>
+                            <TableRow>
+                              <TableCell colSpan={2} align="center">
+                                <Box fontWeight="fontWeightBold">
+                                  DISTRICT DETAILS
+                                </Box>
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell colSpan={2} align="center" fontStyle="italic">
+                                <Box fontStyle="italic">REGION: {popupData.data[regionIndex].value}, 
+                            DISTRICT: {popupData.data[distIndex].value}</Box>
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                        } 
+                        {cat.map((category, i) => {
+                          return (
+                            <Fragment key={"popoverTableRow" + category}>
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell style={{ width: "70%" }}>
+                                    <Box fontWeight="fontWeightBold" pt={1}>
+                                      {category.toUpperCase()}
+                                    </Box>
+                                  </TableCell>
+                                  <TableCell
+                                    style={{ width: "30%" }}
+                                    align="right"
+                                  ></TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {popupData.data.map((anObjectMapped, j) => {
+                                  if (anObjectMapped.category === category) {
+                                    return (
+                                      <TableRow key={"popoverTableRow" + j}>
+                                        <TableCell style={{ width: "75%" }}>
+                                          {anObjectMapped.name}
+                                        </TableCell>
+                                        <TableCell
+                                          style={{ width: "25%" }}
+                                          align="right"
+                                        >
+                                          {anObjectMapped.value}
+                                        </TableCell>
+                                      </TableRow>
+                                    );
+                                  } else {
+                                    return null;
+                                  }
+                                })}
+                              </TableBody>
+                            </Fragment>
+                          );
+                        })}
+                      </Table>
                       <Divider />
                       <Grid container justify="center">
                         <Button
@@ -661,13 +736,23 @@ export const Map = () => {
                           className={classes.button}
                           startIcon={<SaveIcon />}
                         >
-                          DOWNLOAD TABLE
+                          {popupData.data[0].layer === "Communities (pop.)" ?
+                            <CSVLink className={classes.download} data={popupData.data} filename={"SPT_"+popupData.position.x.toFixed(5).toString()+"_"+popupData.position.y.toString()+".csv"}>
+                              DOWNLOAD TABLE
+                            </CSVLink>
+                          :
+                            <CSVLink className={classes.download} data={popupData.data} filename={"SPT_"+popupData.data[distIndex].value+".csv"}>
+                              DOWNLOAD TABLE
+                            </CSVLink>
+                          }
+                            
+                          
                         </Button>
                       </Grid>
                     </div>
                   </Fade>
                 </Modal>
-              </>
+              </Fragment>
             )}
           </div>
         </Popper>

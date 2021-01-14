@@ -122,12 +122,12 @@ const initialState = {
           carto_layer: null,
           carto_style: `#layer {
             polygon-fill: #826dba;
-            polygon-opacity: 1;
+            polygon-opacity: 0;
             }
             #layer::outline {
-              line-width: 1;
+              line-width: 1.5;
               line-color: #000000;
-              line-opacity: 0.5;
+              line-opacity: 1;
             }`,
           visible: false,
           order: 5,
@@ -142,26 +142,39 @@ const initialState = {
             //   value: [0, 6033969],
             // },
             {
+              name: "Region",
+              type: "none",
+              column_name: "region",
+              subcategory: "id",
+            },
+            {
+              name: "District",
+              type: "none",
+              column_name: "district",
+              subcategory: "id",
+            },
+            {
               name: "Predominant Community Classification",
               type: "categorical",
               column_name: "classes",
               value: [
                 {
-                  name: "Rural Remote",
+                  name: "Predominantly Rural Remote",
                   value: 1,
                   checked: true,
                 },
                 {
-                  name: "Rural on-road",
+                  name: "Predominantly Rural on-road",
                   value: 2,
                   checked: true,
                 },
                 {
-                  name: "Rural Mixed",
+                  name: "Predominantly Rural Mixed",
                   value: 3,
                   checked: true,
                 },
               ] /* declaure col values that should be filtered on */,
+              subcategory: "accessibility",
             },
             {
               name: "Average Open Defecation (%)",
@@ -256,12 +269,13 @@ const initialState = {
             {
               name: "Average Men's Educational Attainment (yrs.)",
               type: "range",
-              column_name: "edu_w",
+              column_name: "edu_m",
               min: 0,
               max: 11,
               value: [0, 11],
               subcategory: "socioeconomic",
             },
+            
           ],
         },
         {
