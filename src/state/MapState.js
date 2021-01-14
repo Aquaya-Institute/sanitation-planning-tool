@@ -10,7 +10,8 @@ const initialState = {
     ghana: {
       name: "Ghana",
       mapID: "ghana",
-      view: "8.059229627200192, -1.0546875000000002",
+      view: [8.059229627200192, -1.0546875000000002],
+      zoom: 7,
       /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
@@ -121,7 +122,7 @@ const initialState = {
           carto_tableName: "gha_dist_topo",
           carto_layer: null,
           carto_style: `#layer {
-            polygon-fill: #826dba;
+            polygon-fill: transparent;
             polygon-opacity: 0;
             }
             #layer::outline {
@@ -430,7 +431,8 @@ const initialState = {
     cambodia: {
       name: "Cambodia",
       mapID: "cambodia",
-      view: "12.5, 105",
+      view: [12.5657, 104.9910],
+      zoom: 7.4,
       /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 

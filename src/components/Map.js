@@ -30,8 +30,7 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import {CSVLink} from 'react-csv';
-// import { AggregationTypes } from '@carto/react/widgets';
-// import { FormulaWidget } from '@carto/react/widgets';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     // flexGrow: 1,
@@ -86,7 +85,66 @@ const useStyles = makeStyles((theme) => ({
   download: {
     textDecoration: 'none',
     color: 'white' 
-  }
+  },
+  popper: {
+    // zIndex: 1400,
+    '&[x-placement*="bottom"] $arrow': {
+      top: 0,
+      left: 0,
+      marginTop: '-0.9em',
+      width: '3em',
+      height: '1em',
+      '&::before': {
+        borderWidth: '0 1em 1em 1em',
+        borderColor: `transparent transparent ${theme.palette.common.white} transparent`,
+      },
+    },
+    '&[x-placement*="top"] $arrow': {
+      bottom: 0,
+      left: 0,
+      marginBottom: '-0.9em',
+      width: '3em',
+      height: '1em',
+      '&::before': {
+        borderWidth: '1em 1em 0 1em',
+        borderColor: `${theme.palette.common.white} transparent transparent transparent`,
+      },
+    },
+    '&[x-placement*="right"] $arrow': {
+      left: 0,
+      marginLeft: '-0.9em',
+      height: '3em',
+      width: '1em',
+      '&::before': {
+        borderWidth: '1em 1em 1em 0',
+        borderColor: `transparent ${theme.palette.common.white} transparent transparent`,
+      },
+    },
+    '&[x-placement*="left"] $arrow': {
+      right: 0,
+      marginRight: '-0.9em',
+      height: '3em',
+      width: '1em',
+      '&::before': {
+        borderWidth: '1em 0 1em 1em',
+        borderColor: `transparent transparent transparent ${theme.palette.common.white}`,
+      },
+    },
+  },
+  arrow: {
+    position: 'absolute',
+    fontSize: 5,
+    width: '3em',
+    height: '3em',
+    '&::before': {
+      content: '""',
+      margin: 'auto',
+      display: 'block',
+      width: 0,
+      height: 0,
+      borderStyle: 'solid',
+    },
+  },
 }));
 
 function transformArray(array) {
@@ -117,29 +175,26 @@ export const Map = () => {
   const [cartoClient, setCartoClient] = useState();
   const [popup, setPopup] = useState();
   const [popupData, setPopupData] = useState();
-  const [popover, setPopover] = useState(null);
   const [buckets, setBuckets] = useState([]);
   const openPopper = Boolean(popup);
-  const openPopover = Boolean(popover);
   const idPopper = openPopper ? "transitions-popper" : undefined;
-  const idPopover = openPopover ? "simple-popover" : undefined;
   const [popoverOpen, setPopoverOpen] = useState(false);
+  const idPopover = popoverOpen ? "simple-popover" : undefined;
   const [popoverColumns, setPopoverColumns]= useState([]);
-  // const arrowRef = useRef();
+  const anchorRef = useRef(null);
+  const [arrowRef, setArrowRef] = useState(null);
+  const [arrow, setArrow] = useState(true);
   const classes = useStyles();
   const clickRef = useRef(null);
-  // const legend = $("#legend-content");
-  // const legend_title = $("#legend-title");
-  // const mapRef = useRef();
-  // const [latLng, setLatLng] = useState([31, 55]);
+  const [commCalcSource, setCommCalcSource] = useState(null)
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = [];
-  var filename=null
 
   const [distIndex, setDistIndex] = useState();
   const [regionIndex, setRegionIndex] = useState();
   const [classIndex, setClassIndex] = useState();
   const [popIndex, setPopIndex] = useState();
+  const [nativeMap, setNativeMap] = useState();
   //click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -189,35 +244,36 @@ export const Map = () => {
       apiKey: process.env.REACT_APP_CARTO_DEV_API_KEY,
       username: process.env.REACT_APP_CARTO_USERNAME,
     });
+    if (mapID){
+      const map = L.map("map").setView(
+        maps[mapID].view,
+        maps[mapID].zoom
+      );
 
-    const map = L.map("map").setView(
-      // maps[mapID].view ?? "[8.059229627200192, -1.0546875000000002], 7"
-      // latLng,7
-      [8.059229627200192, -1.0546875000000002],
-      7
-    );
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
-      {
-        maxZoom: 22,
-      }
-    ).addTo(map);
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
+        {
+          maxZoom: 22,
+        }
+      ).addTo(map);
 
-    setLeaflet((prevmap) => {
-      if (!prevmap) {
-        return map;
-      } else {
-        return prevmap;
-      }
-    });
+      setLeaflet((prevmap) => {
+        if (!prevmap) {
+          return map;
+        } else {
+          return prevmap;
+        }
+      });
 
-    setCartoClient(client);
-    client.getLeafletLayer().addTo(map);
-    dispatch({
-      type: "map.addCartoClient",
-      carto_client: client,
-    });
-  }, []);
+      setCartoClient(client);
+      client.getLeafletLayer().addTo(map);
+      dispatch({
+        type: "map.addCartoClient",
+        carto_client: client,
+      });
+      setNativeMap(map)
+    }
+  }, [mapID]);
 
   /* 
   check if map state should be updated, such as on
@@ -261,6 +317,9 @@ export const Map = () => {
         const _source = new Carto.source.SQL(
           `SELECT * FROM ${layer.carto_tableName}`
         );
+        if (layer.name==="Communities (pop.)") {
+          setCommCalcSource(_source)
+        }
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
@@ -268,9 +327,6 @@ export const Map = () => {
         
         layer.filters.forEach((filter, filter_c) => {
           obj1=[layer.name,filter.name, filter.column_name,filter.subcategory]
-          // obj1['name']=layer.name
-          // obj1['data']={name: filter.name, column: filter.column_name, category: filter.subcategory}
-          // setPopoverColumns((st) => [...st, obj1]);
           objlist.push(obj1)
           switch (filter.type) {
             case "range":
@@ -347,7 +403,7 @@ export const Map = () => {
             if (event.styles.length === 0) {
               obj["variable"] = "Districts";
               obj["legend"] = [
-                { name: "District boundaries", value: "#826dba" },
+                { name: "District boundaries", value: "transparent", border: '2px solid #000'},
               ];
             } else if (event.styles[0]._buckets === undefined) {
               obj["variable"] = layer.name;
@@ -429,6 +485,7 @@ export const Map = () => {
       dat_popup = transformArray(dat_popup);
       var obj = {};
       obj["data"] = dat_popup;
+      obj["latLng"] = popup[1].latLng;
       obj["position"] = popup[1].position;
       setPopupData(obj);
       console.log("updated dat_popup", dat_popup);
@@ -448,21 +505,28 @@ export const Map = () => {
     }
   }, [maps, mapID]);
 
-  // useEffect(()=>{
-  //   if (buckets_list>0 && visibleLayer_list>0) {
-  //     visibleLayer_list.map((vis) => {
-  //       return (
-  //         buckets_list.map((bucket,i) => {
-  //           if (vis === bucket[i].variable) {
-  //             return (
-  //               setLegend(bucket[i])
-  //             )
-  //           }
-  //         })
-  //       )
-  //     })
-  //   }
-  // },[])
+  
+  useEffect(() => {
+    if(cartoClient&&commCalcSource&&nativeMap){
+      const commCalculator = new Carto.dataview.Formula(commCalcSource, 'pop_est', {
+        operation: Carto.operation.COUNT
+      });
+      const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
+      cartoClient.addDataview(commCalculator)
+      commCalculator.addFilter(bboxFilter);
+
+      commCalculator.on('dataChanged', data => {
+        refreshCommCalculator(data.result);
+      });
+    }
+
+  }, [cartoClient, commCalcSource, nativeMap]);
+
+  function refreshCommCalculator(avgPopulation) {
+    const widgetDom = document.querySelector('#avgPopulationWidget');
+    const commCalculatorDom = widgetDom.querySelector('.AveragePopulation');
+    commCalculatorDom.innerText = Math.floor(avgPopulation);
+  }
 
   return (
     <div
@@ -513,6 +577,7 @@ export const Map = () => {
                                 className={classes.dot}
                                 style={{
                                   backgroundColor: legend.value,
+                                  border: legend.border
                                 }}
                                 key={legend.value.toString()}
                               ></div>
@@ -538,11 +603,12 @@ export const Map = () => {
       )}
       {popupData && (
         <Popper
-          anchorEl={null}
+          anchorEl={anchorRef.current}
           ref={clickRef}
           id={idPopper}
           key={idPopper}
           open={openPopper}
+          className={classes.popper}
           disablePortal={true}
           modifiers={{
             flip: {
@@ -554,7 +620,7 @@ export const Map = () => {
             },
             arrow: {
               enabled: true,
-              // element: arrowRef,
+              element: arrowRef,
             },
           }}
           style={{
@@ -562,11 +628,12 @@ export const Map = () => {
             left: popupData.position.x,
             top: popupData.position.y,
             zIndex: "1300",
-            backgroundColor: "#fff",
+            // backgroundColor: "#fff",
             width: "200px",
           }}
-          elevation={3}
+          // elevation={3}
         >
+          {arrow ? <span className={classes.arrow} ref={setArrowRef} /> : null}
           <div className={classes.paper}>
             {popupData.data.length === 1 && (
               <Box fontSize="fontSize">
@@ -665,7 +732,7 @@ export const Map = () => {
                             </TableRow>
                             <TableRow>
                               <TableCell colSpan={2} align="center" fontStyle="italic">
-                                <Box fontStyle="italic">Community Location:{" "}{popupData.position.x.toFixed(5)}, {popupData.position.y}</Box>
+                                <Box fontStyle="italic">Community Location:{" "}{popupData.latLng.lat.toFixed(5)}, {popupData.latLng.lng.toFixed(5)}</Box>
                               </TableCell>
                             </TableRow>
                           </TableHead>
@@ -737,7 +804,7 @@ export const Map = () => {
                           startIcon={<SaveIcon />}
                         >
                           {popupData.data[0].layer === "Communities (pop.)" ?
-                            <CSVLink className={classes.download} data={popupData.data} filename={"SPT_"+popupData.position.x.toFixed(5).toString()+"_"+popupData.position.y.toString()+".csv"}>
+                            <CSVLink className={classes.download} data={popupData.data} filename={"SPT_"+popupData.latLng.lat.toFixed(5).toString()+"_"+popupData.latLng.lng.toFixed(5).toString()+".csv"}>
                               DOWNLOAD TABLE
                             </CSVLink>
                           :
@@ -757,6 +824,29 @@ export const Map = () => {
           </div>
         </Popper>
       )}
+
+      <Paper
+        key={"commCalculator"}
+        style={{
+          padding: theme.spacing(1),
+          position: "absolute",
+          bottom: "unset",
+          right: "10px",
+          top: "10px",
+          left: "unset",
+          height: "auto",
+          width: "200px",
+          zIndex: "1000",
+          backgroundColor: "#fff",
+        }}
+      >
+        <div id="avgPopulationWidget" class="widget widget-formula">
+          <Box fontWeight="fontWeightBold" fontSize="h6.fontSize" align="center">Total Communities in Current View</Box>
+          {/* <Box class="js-average-population result" align="center" color="secondary">[calculating]</Box> */}
+          <Typography variant="h5" color="secondary" align="center" fontWeight="fontWeightBold" fontSize="h6.fontSize"><div class='AveragePopulation'>[calculating]</div></Typography>
+        </div>
+      </Paper>
+
     </div>
   );
 };
