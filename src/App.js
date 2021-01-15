@@ -7,6 +7,7 @@ import DefaultLayout from "./layouts/default"
 import Home from "./views/Home";
 import MapDetail from "./views/MapDetail";
 import About from "./views/About";
+import Datasets from "./views/Datasets";
 import "./App.css";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
               <Route path="/maps/:id" component={MapDetail} />
               <Route path="/maps" component={Home} />
               <Route path="/about" component={About} />
+              <Route path="/datasets" component={Datasets} />
               <Route exact path="/" component={Home} />
             </Switch>
           </DefaultLayout>

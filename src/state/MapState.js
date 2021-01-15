@@ -58,7 +58,7 @@ const initialState = {
           ],
         },
         {
-          name: "Reliance on Open Defecation (%)",
+          name: "Prevalence of Open Defecation (%)",
           carto_tableName: "gha_od_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([od], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
@@ -98,7 +98,7 @@ const initialState = {
           ],
         },
         {
-          name: "Time to Cities (min.)",
+          name: "Travel time to Cities (min.)",
           carto_tableName: "gha_timecities_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([timecities], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
@@ -167,7 +167,7 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Open Defecation (%)",
+              name: "Average Prevalence of Open Defecation (%)",
               type: "range",
               column_name: "od",
               min: 11,
@@ -194,7 +194,7 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Average Time To Cities (min.)",
+              name: "Average Travel Time To Cities (min.)",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -230,7 +230,7 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Average Cholera Risk (cases/100,000pp)",
+              name: "Average Predicted Annual Cholera Incidence (cases/100,000pp)",
               type: "range",
               column_name: "cholera",
               min: 0.1,
@@ -352,7 +352,7 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Time To Cities (min.)",
+              name: "Travel Time To Cities (min.)",
               type: "range",
               column_name: "timecities",
               min: 17,
@@ -388,7 +388,7 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Cholera Risk (cases/100,000pp)",
+              name: "Predicted Annual Cholera Incidence (cases/100,000pp)",
               type: "range",
               column_name: "cholera",
               min: 0.1,

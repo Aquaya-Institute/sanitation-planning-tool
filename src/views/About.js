@@ -32,8 +32,8 @@ function About() {
     <>
       <Box >
         <img src="/banner.png"
-                alt=""
-                style={{width:"99vw"}}
+          alt=""
+          style={{width:"99vw"}}
         >
           
         </img>

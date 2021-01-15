@@ -52,7 +52,11 @@ export default function DefaultLayout(props) {
               Home
             </Button>
           </Box>
-
+          <Box ml={3}>
+            <Button component={RouterLink} color="inherit" to="/datasets">
+              Datasets Overview
+            </Button>
+          </Box>
           <Box ml={3}>
             <Button component={RouterLink} color="inherit" to="/about">
               About
