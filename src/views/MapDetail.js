@@ -4,7 +4,7 @@ import { MapLayers } from "../components/MapLayers";
 import { Map } from "../components/Map";
 import { Grid } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-
+import Tour from "../utils/Tour";
 function MapDetail() {
   const [{}, dispatch] = React.useContext(MapContext);
   let { id } = useParams();

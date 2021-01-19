@@ -34,7 +34,7 @@ const initialState = {
               a categorical filter, such as this one is not implemented. 
               It might be a good one to implement
              */
-              name: "Community Classification",
+              // name: "Community Classification",
               type: "categorical",
               column_name: "classes",
               value: [
@@ -44,7 +44,7 @@ const initialState = {
                   checked: true,
                 },
                 {
-                  name: "Ruralon-road",
+                  name: "Rural On-road",
                   value: 2,
                   checked: true,
                 },
@@ -58,16 +58,18 @@ const initialState = {
           ],
         },
         {
-          name: "Prevalence of Open Defecation (%)",
+          name: "Population Practicing Open Defecation (%)",
           carto_tableName: "gha_od_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([od], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
           visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
           order: 3,
           filters: [
             {
-              name: "Reliance on Open Defecation (%)",
+              // name: "Population Practicing Open Defecation (%)",
               type: "range",
               column_name: "od",
               min: 0,
@@ -78,16 +80,18 @@ const initialState = {
           ],
         },
         {
-          name: "Women's Education (yrs.)",
+          name: "Women's Educational Attainment (yrs.)",
           carto_tableName: "gha_edw_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([edu_w], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
           visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
           order: 2,
           filters: [
             {
-              name: "Women's Educational Attainment (yrs.)",
+              // name: "Women's Educational Attainment (yrs.)",
               type: "range",
               column_name: "edu_w",
               min: 2,
@@ -105,9 +109,11 @@ const initialState = {
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
           visible: true,
           order: 1,
+          source: "Malaria Atlas Project",
+          year: 2015,
           filters: [
             {
-              name: "Time to Cities (min.)",
+              // name: "Time to Cities (min.)",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -167,7 +173,7 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Prevalence of Open Defecation (%)",
+              name: "Average Population Practicing Open Defecation (%)",
               type: "range",
               column_name: "od",
               min: 11,
@@ -203,7 +209,7 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Distance to Roads (m)",
+              name: "Average Distance to Roads (meters)",
               type: "range",
               column_name: "dr",
               min: 226,
@@ -212,7 +218,7 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Distance to Towns (m)",
+              name: "Average Distance to Towns (meters)",
               type: "range",
               column_name: "dt",
               min: 0,
@@ -239,7 +245,7 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Average Mortality in Children <5 Years",
+              name: "Average Mortality in Children <5 Years (prob.)",
               type: "range",
               column_name: "u5m",
               min: 0.0,
@@ -280,10 +286,18 @@ const initialState = {
           ],
         },
         {
-          name: "Communities (pop.)",
+          name: "Estimated Settlements and Communities (pop.)",
           carto_tableName: "gha_comms_point_topo",
           carto_layer: null,
-          carto_style: `#layer {marker-width: 5;marker-fill: ramp([pop_est], (#f9ddda, #eda8bd, #ce78b3, #9955a8, #573b88), quantiles);
+          carto_style: `#layer {
+            [zoom >10] {marker-width: 20}
+            [zoom =10] {marker-width: 15}
+            [zoom =9] {marker-width: 10}
+            [zoom =8] {marker-width: 7.5}
+            [zoom =7] {marker-width: 5}
+            [zoom <7] {marker-width: 0}
+            
+            marker-fill: ramp([pop_est], (#f9ddda, #eda8bd, #ce78b3, #9955a8, #573b88), quantiles);
             marker-fill-opacity: 1;
             marker-allow-overlap: true;
             marker-line-width: 0.5;
@@ -313,7 +327,7 @@ const initialState = {
                   checked: true,
                 },
                 {
-                  name: "Rural on-road",
+                  name: "Rural On-road",
                   value: 2,
                   checked: true,
                 },
@@ -325,7 +339,7 @@ const initialState = {
               ] /* declaure col values that should be filtered on */,
             },
             {
-              name: "Open Defecation (%)",
+              name: "Population Practicing Open Defecation (%)",
               type: "range",
               column_name: "od",
               min: 0,
@@ -361,7 +375,7 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Distance to Roads (m)",
+              name: "Distance to Roads (meters)",
               type: "range",
               column_name: "dr",
               min: 26,
@@ -370,7 +384,7 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Distance to Towns (m)",
+              name: "Distance to Towns (meters)",
               type: "range",
               column_name: "dt",
               min: 0,
@@ -397,7 +411,7 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Mortality in Children <5 Years",
+              name: "Mortality in Children <5 Years (prob.)",
               type: "range",
               column_name: "u5m",
               min: 0.045,
@@ -463,7 +477,7 @@ const initialState = {
         //   ],
         // },
         // {
-        //   name: "Communities",
+        //   name: "Estimated Settlements and Communities (pop.)",
         //   carto_tableName: "gha_comms_point_topo",
         //   carto_layer: null,
         //   carto_style: `#layer {marker-width: 5;marker-fill: #EE4D5A;marker-fill-opacity: 0.9;marker-allow-overlap: true;marker-line-width: 0;marker-line-color: #FFFFFF;marker-line-opacity: 1;}`,
@@ -498,7 +512,7 @@ const initialState = {
         //   ],
         // },
         {
-          name: "Reliance on Open Defecation (%)",
+          name: "Population Practicing Open Defecation (%)",
           carto_tableName: "khm_od_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([val], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
@@ -507,7 +521,7 @@ const initialState = {
           order: 3,
           filters: [
             {
-              name: "Reliance on Open Defecation (%)",
+              name: "Population Practicing Open Defecation (%)",
               type: "range",
               column_name: "val",
               min: 0,

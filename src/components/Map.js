@@ -317,7 +317,7 @@ export const Map = () => {
         const _source = new Carto.source.SQL(
           `SELECT * FROM ${layer.carto_tableName}`
         );
-        if (layer.name==="Communities (pop.)") {
+        if (layer.name==="Estimated Settlements and Communities (pop.)") {
           setCommCalcSource(_source)
         }
         const _style = new Carto.style.CartoCSS(layer.carto_style);
@@ -545,7 +545,7 @@ export const Map = () => {
             top: "unset",
             left: "unset",
             height: "auto",
-            width: "auto",
+            width: "200px",
             zIndex: "1000",
             backgroundColor: "#fff",
           }}
@@ -656,7 +656,7 @@ export const Map = () => {
             )}
             {popupData.data.length > 1 && (
               <Fragment key={"popper"+popupData.data[0].layer}>
-                {popupData.data[0].layer === "Communities (pop.)" ? (
+                {popupData.data[0].layer === "Estimated Settlements and Communities (pop.)" ? (
                   <Box>
                     <Box fontWeight="fontWeightBold">{popupData.data[popIndex].name}:{" "}</Box>{popupData.data[popIndex].value.toFixed(1)}
                     <Box fontWeight="fontWeightBold">{popupData.data[classIndex].name}:{" "}</Box>{popupData.data[classIndex].value}
@@ -721,18 +721,18 @@ export const Map = () => {
                         key={"popoverTable"}
                         elevation={0}
                       >
-                        {popupData.data[0].layer === "Communities (pop.)" ?
+                        {popupData.data[0].layer === "Estimated Settlements and Communities (pop.)" ?
                           <TableHead>
                             <TableRow>
                               <TableCell colSpan={2} align="center">
                                 <Box fontWeight="fontWeightBold">
-                                  COMMUNITY DETAILS
+                                  ESTIMATED SETTLEMENT/COMMUNITY DETAILS
                                 </Box>
                               </TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell colSpan={2} align="center" fontStyle="italic">
-                                <Box fontStyle="italic">Community Location:{" "}{popupData.latLng.lat.toFixed(5)}, {popupData.latLng.lng.toFixed(5)}</Box>
+                                <Box fontStyle="italic">Location:{" "}{popupData.latLng.lat.toFixed(5)}, {popupData.latLng.lng.toFixed(5)}</Box>
                               </TableCell>
                             </TableRow>
                           </TableHead>
@@ -803,7 +803,7 @@ export const Map = () => {
                           className={classes.button}
                           startIcon={<SaveIcon />}
                         >
-                          {popupData.data[0].layer === "Communities (pop.)" ?
+                          {popupData.data[0].layer === "Estimated Settlements and Communities (pop.)" ?
                             <CSVLink className={classes.download} data={popupData.data} filename={"SPT_"+popupData.latLng.lat.toFixed(5).toString()+"_"+popupData.latLng.lng.toFixed(5).toString()+".csv"}>
                               DOWNLOAD TABLE
                             </CSVLink>
@@ -840,8 +840,8 @@ export const Map = () => {
           backgroundColor: "#fff",
         }}
       >
-        <div id="avgPopulationWidget" class="widget widget-formula">
-          <Box fontWeight="fontWeightBold" fontSize="h6.fontSize" align="center">Total Communities in Current View</Box>
+        <div id="avgPopulationWidget" class="widget widget-formula" className='tour-community-calc'>
+          <Box fontWeight="fontWeightBold" fontSize="h7.fontSize" align="center">Total Estimated Settlements and Communities in Current View</Box>
           {/* <Box class="js-average-population result" align="center" color="secondary">[calculating]</Box> */}
           <Typography variant="h5" color="secondary" align="center" fontWeight="fontWeightBold" fontSize="h6.fontSize"><div class='AveragePopulation'>[calculating]</div></Typography>
         </div>

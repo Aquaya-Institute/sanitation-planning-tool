@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { MapContext } from "../state/MapState";
 
+
 const useCardStyles = makeStyles({
   root: {
     minWidth: 275,

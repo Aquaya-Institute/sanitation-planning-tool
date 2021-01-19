@@ -1,192 +1,338 @@
-import { Grid, Card, CardContent, CardActionArea, CardMedia,CardActions, Container, Button,Box, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Divider,
+  Link,
+  CardActionArea,
+  CardMedia,
+  CardActions,
+  Container,
+  Button,
+  Box,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
-import { useEffect } from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { MapContext } from "../state/MapState";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-
-
+import "../index.css";
+// import rules from '../../public/class-rules.png';
 
 const useCardStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
     // minHeight: 260,
   },
-  media: {
-    height: 140,
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
+  image: {
+    height: "100%",
+    width: "100%",
   },
 }));
 
-const datasetsInfo = [
-    {
-        name: "Women's Educational Attainment",
-        year: 2017,
-        resolution: "5km",
-        source: "Institute for Health Metrics and Evaluation",
-        subcategory:"socioeconomic",
-        link: "http://www.healthdata.org/research-article/mapping-disparities-education-across-low-and-middle-income-countries",
-        citation: "Local Burden of Disease Educational Attainment Collaborators. Mapping disparities in education across low- and middle-income countries. Nature. 25 December 2019. doi:10.1038/s41586-019-1872-1."
-    },
-    {
-        name: "Men's Educational Attainment",
-        year: 2017,
-        resolution: "5km",
-        source: "Institute for Health Metrics and Evaluation",
-        subcategory:"socioeconomic",
-        link: "http://www.healthdata.org/research-article/mapping-disparities-education-across-low-and-middle-income-countries",
-        citation: "Local Burden of Disease Educational Attainment Collaborators. Mapping disparities in education across low- and middle-income countries. Nature. 25 December 2019. doi:10.1038/s41586-019-1872-1."
-    },
-    {
-        name: "Diahrrea Prevalence in Children <5 Years",
-        year: 2017,
-        resolution: "5km",
-        source: "Institute for Health Metrics and Evaluation",
-        subcategory:"health",
-        link: "http://www.healthdata.org/research-article/mapping-geographical-inequalities-childhood-diarrhoeal-morbidity-and-mortality-low",
-        citation: "Local Burden of Disease Diarrhoea Collaborators. Mapping geographical inequalities in childhood diarrhoeal morbidity and mortality in low-income and middle-income countries, 2000–17: analysis for the Global Burden of Disease Study 2017. The Lancet. 6 May 2020. doi:10.1016/S0140-6736(20)30114-8."
-    },
-    {
-        name: "Reliance on Unimproved Sanitation",
-        year: 2017,
-        resolution: "5km",
-        source: "Institute for Health Metrics and Evaluation",
-        subcategory:"wash",
-        link: "http://www.healthdata.org/research-article/mapping-geographic-inequalities-access-drinking-water-and-sanitation-facilities-low",
-        citation: "Local Burden of Disease WaSH Collaborators. Mapping geographical inequalities in access to drinking water and sanitation facilities in low-income and middle-income countries, 2000–17. The Lancet Global Health. August 2020. doi:10.1016/S2214-109X(20)30278-3."
-    },
-    {
-        name: "Reliance on Unimproved Water",
-        year: 2017,
-        resolution: "5km",
-        source: "Institute for Health Metrics and Evaluation",
-        subcategory:"wash",
-        link: "http://www.healthdata.org/research-article/mapping-geographic-inequalities-access-drinking-water-and-sanitation-facilities-low",
-        citation: "Local Burden of Disease WaSH Collaborators. Mapping geographical inequalities in access to drinking water and sanitation facilities in low-income and middle-income countries, 2000–17. The Lancet Global Health. August 2020. doi:10.1016/S2214-109X(20)30278-3."
-    },
-    {
-        name: "Mortality in Children <5 Years",
-        year: 2017,
-        resolution: "5km",
-        source: "Institute for Health Metrics and Evaluation",
-        subcategory:"health",
-        link: "http://www.healthdata.org/research-article/mapping-under-5-and-neonatal-mortality-africa-2000%E2%80%9315-baseline-analysis-sustainable",
-        citation: "Golding, N., et al. Mapping under-5 and neonatal mortality in Africa, 2000–15: a baseline analysis for the Sustainable Development Goals. The Lancet."
-    },
-    {
-        name: "Predicted Annual Cholera Incidence",
-        year: 2016,
-        resolution: "20km",
-        source: "Infectious Disease Dynamics",
-        subcategory:"health",
-        link: "http://www.iddynamics.jhsph.edu/projects/cholera-dynamics",
-        citation: "Lessler, J., et al. Mapping the burden of cholera in sub-Saharan Africa and implications for control: an analysis of data across geographical scales. Lancet, 2018: 391(10133): 1908-1915, 10.1016/S0140-6736(17)33050-7"
-    },
-    {
-        name: "Travel Time to Cities",
-        year: 2015,
-        resolution: "1km",
-        source: "Malaria Atlas Project",
-        subcategory:"accessibility",
-        link: "https://malariaatlas.org/research-project/accessibility-to-cities/",
-        citation: "Weiss, D.J., et al. A global map of travel time to cities to assess inequalities in accessibility in 2015. (2018). Nature. doi:10.1038/nature25181."
-    },
-    {
-        name: "Roadways",
-        year: 2020,
-        resolution: "vector",
-        source: "Open Street Maps",
-        subcategory:"socioeconomic",
-        note: "This dataset was used to calculate the 'Distance to Roads' dataset.",
-        link: "https://www.openstreetmap.org/"
-    },
-    {
-        name: "Population",
-        year: 2020,
-        resolution: "1km",
-        source: "WorldPop",
-        subcategory:"socioeconomic",
-        note: "This dataset was used to calculate the 'Distance to Towns' dataset.",
-        link: "https://www.worldpop.org/"
-    },
-]
-
-
 function Datasets() {
-    const classes = useCardStyles();
-    const [expanded, setExpanded] = React.useState(false);
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
-    return (
+  const classes = useCardStyles();
+  const datasetsInfo = [
+    {
+      name: "Predicted Annual Cholera Incidence",
+      description:
+        "Each mapped pixel represents the mean annual cholera incidence rate (cases per 100,000 people) in that geographic area between 2010 and 2016.",
+      year: "2010-2016",
+      resolution: "20km",
+      source: "Infectious Disease Dynamics",
+      subcategory: "health",
+      link: "http://www.iddynamics.jhsph.edu/projects/cholera-dynamics",
+      citation:
+        "Lessler, J., et al. Mapping the burden of cholera in sub-Saharan Africa and implications for control: an analysis of data across geographical scales. Lancet, 2018: 391(10133): 1908-1915, 10.1016/S0140-6736(17)33050-7",
+    },
+    {
+      name: "Travel Time to Cities",
+      description:
+        "Each mapped pixel represents the straight-line distance from that location to the nearest city of 50,000 people or larger.",
+      year: 2015,
+      resolution: "1km",
+      source: "Malaria Atlas Project",
+      subcategory: "accessibility",
+      link:
+        "https://malariaatlas.org/research-project/accessibility-to-cities/",
+      citation:
+        "Weiss, D.J., et al. A global map of travel time to cities to assess inequalities in accessibility in 2015. (2018). Nature. doi:10.1038/nature25181.",
+    },
+    {
+      name: "Roadways",
+      description:
+        "'Main' roadways include 'trunk', 'primary', 'secondary' or 'tertiary' roadway. These constitute roadways that link sizable towns together.",
+      year: 2020,
+      resolution: "vector",
+      source: "Open Street Maps",
+      subcategory: "socioeconomic",
+      note:
+        "This dataset was used to calculate the 'Distance to Roads' dataset.",
+      link: "https://www.openstreetmap.org/",
+    },
+    {
+      name: "Population",
+      description:
+        "Each mapped pixel represents the estimated population in that location.",
+      year: 2020,
+      resolution: "1km",
+      source: "WorldPop",
+      subcategory: "socioeconomic",
+      note:
+        "This dataset was used to calculate the 'Distance to Towns' dataset.",
+      link: "https://www.worldpop.org/",
+    },
+    {
+      name: "Women's Educational Attainment",
+      description:
+        "Each mapped pixel displays the average years of education for women ages 15-49 in that location.",
+      ihme:
+        "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
+      year: 2017,
+      resolution: "5km",
+      source: "Institute for Health Metrics and Evaluation",
+      subcategory: "socioeconomic",
+      link:
+        "http://www.healthdata.org/research-article/mapping-disparities-education-across-low-and-middle-income-countries",
+      citation:
+        "Local Burden of Disease Educational Attainment Collaborators. Mapping disparities in education across low- and middle-income countries. Nature. 25 December 2019. doi:10.1038/s41586-019-1872-1.",
+    },
+    {
+      name: "Men's Educational Attainment",
+      description:
+        "Each mapped pixel displays the average years of education for men ages 15-49 in that location.",
+      ihme:
+        "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
+      year: 2017,
+      resolution: "5km",
+      source: "Institute for Health Metrics and Evaluation",
+      subcategory: "socioeconomic",
+      link:
+        "http://www.healthdata.org/research-article/mapping-disparities-education-across-low-and-middle-income-countries",
+      citation:
+        "Local Burden of Disease Educational Attainment Collaborators. Mapping disparities in education across low- and middle-income countries. Nature. 25 December 2019. doi:10.1038/s41586-019-1872-1.",
+    },
+    {
+      name: "Diahrrea Prevalence in Children <5 Years",
+      description:
+        "Each mapped pixel displays the number of diarrhea cases in children under 5 years in that geographic area.",
+      ihme:
+        "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
+      year: 2017,
+      resolution: "5km",
+      source: "Institute for Health Metrics and Evaluation",
+      subcategory: "health",
+      link:
+        "http://www.healthdata.org/research-article/mapping-geographical-inequalities-childhood-diarrhoeal-morbidity-and-mortality-low",
+      citation:
+        "Local Burden of Disease Diarrhoea Collaborators. Mapping geographical inequalities in childhood diarrhoeal morbidity and mortality in low-income and middle-income countries, 2000–17: analysis for the Global Burden of Disease Study 2017. The Lancet. 6 May 2020. doi:10.1016/S0140-6736(20)30114-8.",
+    },
+    {
+      name: "Reliance on Unimproved Sanitation",
+      description:
+        "Each mapped pixel displays the percent of the population utilizing an unimproved sanitation source in that geographic area.",
+      ihme:
+        "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
+      year: 2017,
+      resolution: "5km",
+      source: "Institute for Health Metrics and Evaluation",
+      subcategory: "wash",
+      link:
+        "http://www.healthdata.org/research-article/mapping-geographic-inequalities-access-drinking-water-and-sanitation-facilities-low",
+      citation:
+        "Local Burden of Disease WaSH Collaborators. Mapping geographical inequalities in access to drinking water and sanitation facilities in low-income and middle-income countries, 2000–17. The Lancet Global Health. August 2020. doi:10.1016/S2214-109X(20)30278-3.",
+    },
+    {
+      name: "Reliance on Unimproved Water",
+      ihme:
+        "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
+      description:
+        "Each mapped pixel displays the percent of the population utilizing an unimproved drinking water source in that geographic area.",
+      year: 2017,
+      resolution: "5km",
+      source: "Institute for Health Metrics and Evaluation",
+      subcategory: "wash",
+      link:
+        "http://www.healthdata.org/research-article/mapping-geographic-inequalities-access-drinking-water-and-sanitation-facilities-low",
+      citation:
+        "Local Burden of Disease WaSH Collaborators. Mapping geographical inequalities in access to drinking water and sanitation facilities in low-income and middle-income countries, 2000–17. The Lancet Global Health. August 2020. doi:10.1016/S2214-109X(20)30278-3.",
+    },
+    {
+      name: "Population Practicing Open Defecation",
+      ihme:
+        "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
+      description:
+        "Each mapped pixel displays the percent of the population estimated to practice open defecation in that geographic area.",
+      year: 2017,
+      resolution: "5km",
+      source: "Institute for Health Metrics and Evaluation",
+      subcategory: "wash",
+      link:
+        "http://www.healthdata.org/research-article/mapping-geographic-inequalities-access-drinking-water-and-sanitation-facilities-low",
+      citation:
+        "Local Burden of Disease WaSH Collaborators. Mapping geographical inequalities in access to drinking water and sanitation facilities in low-income and middle-income countries, 2000–17. The Lancet Global Health. August 2020. doi:10.1016/S2214-109X(20)30278-3.",
+    },
+    {
+      name: "Mortality in Children <5 Years",
+      ihme:
+        "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
+      description:
+        "Each mapped pixel displays the probability of death before reaching age 5 in that geographic area.",
+      year: 2017,
+      resolution: "5km",
+      source: "Institute for Health Metrics and Evaluation",
+      subcategory: "health",
+      link:
+        "http://www.healthdata.org/research-article/mapping-under-5-and-neonatal-mortality-africa-2000%E2%80%9315-baseline-analysis-sustainable",
+      citation:
+        "Golding, N., et al. Mapping under-5 and neonatal mortality in Africa, 2000–15: a baseline analysis for the Sustainable Development Goals. The Lancet.",
+    },
+  ];
+  const datasetsInfoCustom = [
+    {
+      name: "Distance to Roads",
+      description:
+        "Each pixel represents the straight-line distance to the nearest trunk, primary, secondary or tertiary roadway. These constitute roadways that link sizable towns together.",
+      note:
+        "This dataset was created with the 'Roadways' dataset from Open Street Maps.",
+      year: 2020,
+      resolution: "200m",
+      source: "SanPlan",
+      subcategory: "accessibility",
+    },
+    {
+      name: "Distance to Towns",
+      description:
+        "Each pixel represents the straight-line distance to the nearest ‘town’. SanPlan considers a ‘town’ to be an estimated settlement area with a population of 5,000 or more.",
+      note:
+        "This dataset was created with the 'Population' dataset from WorldPop.",
+      year: 2020,
+      resolution: "200m",
+      source: "SanPlan",
+      subcategory: "accessibility",
+    },
+    {
+      name: "Community Classification",
+      description:
+        "This layer assigns all geographic areas of the country into one of three typologies to give an indication of accessibility and remoteness: rural mixed, rural on-road, and rural remote. These typologies were inspired by the Rethinking Rural Sanitation Guidance. Implementers enacting this guidance will be able to utilize the SanPlan classification layer to determine community classifications at once, without field visits or key informant interviews.",
+      remote:
+        "Rural communities far from urban areas or far from main roads. SanPlan considered an area to be ‘rural remote’ if they were further than 25 minutes travel time to a city, further than 800 meters from a small town/city, and more than 1.5 kilometers from a major roadway.",
+      road:
+        "Rural communities that are on or close to main road. SanPlan considered an area to be ‘rural on-road’ if it is further than 25 minutes travel time to a city, further than 800 meters from a small town/city, and within 1.5 kilometers from a major roadway.",
+      mixed:
+        "Communities with mixed rural and urban characteristics such as peri-urban areas or small towns. SanPlan considered an area to be ‘rural mixed’ if it is within 25 minutes travel time to a city or within 800 meters to a small town/city.",
+      note:
+        "This dataset was created with the 'Distance to Roads', 'Distance to Towns', and 'Time to Cities' datasets.",
+      year: 2020,
+      resolution: "200m",
+      source: "SanPlan",
+      subcategory: "accessibility",
+      link:
+        "https://washmatters.wateraid.org/publications/rethinking-rural-sanitation",
+    },
+  ];
+  return (
     <Container>
-        <Box mt={4} mb={4}>
-          <Typography variant="h4" color="secondary">
-            Overview of Datasets Utlilized
-          </Typography>
-        </Box>
-        <Grid container item spacing={2} lg={12}>
-            {Object.entries(datasetsInfo).map((data,i) => (
-                <Grid key={"dataCard"+i} item xs={12} md={6} lg={6}>
-                    <Card className={classes.root}>
-                        <CardContent>
-                            <Typography  variant="h5" component="h2">
-                            {data[1].name}
-                            </Typography>
-                            <Typography  variant="body2" color="textSecondary" >
-                            {data[1].note}
-                            </Typography>
-                            <Typography variant="body1" color="secondary">
-                                {data[1].year}
-                            </Typography>
-                            <Typography  variant="body1" component="h5">
-                                Dataset resolution: {data[1].resolution}
-                            </Typography>
-                            <Typography  variant="h7" component="h3">
-                                {data[1].source}
-                                    <IconButton
-                                        className={(classes.expand, {
-                                            [classes.expandOpen]: expanded,
-                                        })}
-                                        onClick={handleExpandClick}
-                                        aria-expanded={expanded}
-                                        aria-label="show more"
-                                        >
-                                        <ExpandMoreIcon />
-                                    </IconButton>
-                                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                                    <CardContent>
-                                    <Typography variant="body2" color="textSecondary" >{data[1].citation}</Typography>
-                                    </CardContent>
-                                </Collapse>
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                
-                            </Typography>
-                            <Button href={data[1].link} size="small" color="primary">
-                                Link to Data Source
-                            </Button>
-                        </CardContent>
-                    </Card> 
-                </Grid>
-            ))}
-        </Grid>
+      <Box mt={4} mb={2} id="publicData">
+        <Typography variant="h5" color="secondary">
+          Overview of Public Datasets Utlilized
+        </Typography>
+      </Box>
+      <Grid container item spacing={2} lg={12}>
+        {Object.entries(datasetsInfo).map((data, i) => (
+          <Grid key={"dataCard" + i} item xs={12} md={12} lg={12}>
+            <Card className={classes.root} elevation={0}>
+              <CardContent>
+                <Typography variant="h6" component="h2">
+                  {data[1].name}
+                </Typography>
+                {data[1].description}
+                <br></br>
+                <Typography color="textSecondary">{data[1].note}</Typography>
+                <Typography variant="body1">Year: {data[1].year}</Typography>
+                <Typography variant="body1" component="h5">
+                  Dataset resolution: {data[1].resolution}
+                </Typography>
+                <Typography variant="body1" color="primary">
+                  <strong>{data[1].source}</strong>
+                </Typography>
+                {data[1].ihme && (
+                  <>
+                    <Typography variant="body2" gutterBottom>
+                      {data[1].ihme}
+                    </Typography>
+                  </>
+                )}
+                {data[1].citation && (
+                  <Typography variant="body2" color="textSecondary">
+                    Corresponding publication: {data[1].citation}
+                  </Typography>
+                )}
+                <Button
+                  href={data[1].link}
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                >
+                  Link to data source
+                </Button>
+              </CardContent>
+            </Card>
+            <Divider />
+          </Grid>
+        ))}
+      </Grid>
+      <Box mt={4} mb={2} id="customData">
+        <Typography variant="h5" color="secondary">
+          Overview of Custom-Built Datasets
+        </Typography>
+      </Box>
+      <Grid container item spacing={2} lg={12}>
+        {Object.entries(datasetsInfoCustom).map((data, i) => (
+          <Grid key={"dataCard" + i} item xs={12} md={12} lg={12}>
+            <Card className={classes.root} elevation={0}>
+              <CardContent>
+                <Typography variant="h6" component="h2">
+                  {data[1].name}
+                </Typography>
+                {data[1].description}
+                {data[1].remote && (
+                  <>
+                    <ul>
+                      <li>
+                        <strong>Rural Mixed:</strong> {data[1].mixed}
+                      </li>
+                      <li>
+                        <strong>Rural On-road:</strong> {data[1].road}
+                      </li>
+                      <li>
+                        <strong>Rural Remote:</strong> {data[1].remote}
+                      </li>
+                    </ul>
+                    <img
+                      src="/class-rules.png"
+                      alt=""
+                      style={{ height: "230px", width: "auto" }}
+                      class="center"
+                    ></img>
+                  </>
+                )}
+                <Typography color="textSecondary">{data[1].note}</Typography>
+                <Typography variant="body1">Year: {data[1].year}</Typography>
+                <Typography variant="body1" component="h5">
+                  Dataset resolution: {data[1].resolution}
+                </Typography>
+                <Typography variant="body1" color="primary">
+                  <strong>{data[1].source}</strong>
+                </Typography>
+              </CardContent>
+            </Card>
+            <Divider />
+          </Grid>
+        ))}
+      </Grid>
     </Container>
-    );
+  );
 }
-  
+
 export default Datasets;
-  
