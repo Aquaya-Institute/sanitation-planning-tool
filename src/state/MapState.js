@@ -453,78 +453,21 @@ const initialState = {
       do maintain the same structure for all. 
       */
       layers: [
-        // {
-        //   name: "Community Classification",
-        //   carto_tableName: "gha_class_topo",
-        //   carto_layer: null /* we will insert carto's layer object here */,
-        //   carto_style: `#layer {polygon-fill: ramp([dn], (#4cd7d7, #1d5e96, #9b38a6), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
-        //   visible: true,
-        //   /*
-        //   we don't use order yet to order(re) the layers
-        //   For now the first layer object is the bottom most rendered layer
-        //   */
-        //   order: 2,
-        //   filters: [
-        //     {
-        //       /*
-        //       a categorical filter, such as this one is not implemented.
-        //       It might be a good one to implement
-        //      */
-        //       name: "Community Classification",
-        //       type: "categorical",
-        //       column_name: "dn",
-        //       values: [1, 2, 3],
-        //     },
-        //   ],
-        // },
-        // {
-        //   name: "Estimated Settlements and Communities (pop.)",
-        //   carto_tableName: "gha_comms_point_topo",
-        //   carto_layer: null,
-        //   carto_style: `#layer {marker-width: 5;marker-fill: #EE4D5A;marker-fill-opacity: 0.9;marker-allow-overlap: true;marker-line-width: 0;marker-line-color: #FFFFFF;marker-line-opacity: 1;}`,
-        //   visible: false,
-        //   order: 1,
-        //   /* These are all range filters and are implemented */
-        //   filters: [
-        //     {
-        //       name: "Population Estimate",
-        //       type: "range",
-        //       column_name: "pop_est",
-        //       min: 0,
-        //       max: 6033969,
-        //       value: [0, 6033969],
-        //     },
-        //     {
-        //       name: "Open Defecation (%)",
-        //       type: "range",
-        //       column_name: "od",
-        //       min: 0,
-        //       max: 100,
-        //       value: [0, 100],
-        //     },
-        //     {
-        //       name: "Time To Cities",
-        //       type: "range",
-        //       column_name: "timecities",
-        //       min: 17,
-        //       max: 197,
-        //       value: [0, 197],
-        //     },
-        //   ],
-        // },
         {
           name: "Population Practicing Open Defecation (%)",
           carto_tableName: "khm_od_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([val], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
+          carto_style: `#layer {polygon-fill: ramp([od], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
-          visible: true,
+          visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
           order: 3,
           filters: [
             {
               name: "Population Practicing Open Defecation (%)",
               type: "range",
-              column_name: "val",
+              column_name: "od",
               min: 0,
               max: 100,
               value: [0, 100],
@@ -533,38 +476,42 @@ const initialState = {
           ],
         },
         {
-          name: "Women's Education (yrs.)",
+          name: "Women's Educational Attainment (yrs.)",
           carto_tableName: "khm_edw_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([val], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
+          carto_style: `#layer {polygon-fill: ramp([edu_w], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
           visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
           order: 2,
           filters: [
             {
-              name: "Women's Education (yrs.)",
+              name: "Women's Educational Attainment (yrs.)",
               type: "range",
-              column_name: "val",
-              min: 2,
+              column_name: "edu_w",
+              min: 0,
               max: 8,
-              value: [2, 8],
+              value: [0, 8],
               subcategory: "socioeconomic",
             },
           ],
         },
         {
-          name: "Time to Cities (min.)",
+          name: "Travel Time to Cities (min.)",
           carto_tableName: "khm_timecities_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([val], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
+          carto_style: `#layer {polygon-fill: ramp([timecities], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
-          visible: false,
+          visible: true,
           order: 1,
+          source: "Malaria Atlas Project",
+          year: 2015,
           filters: [
             {
-              name: "Time to Cities (min.)",
+              name: "Travel Time to Cities (min.)",
               type: "range",
-              column_name: "val",
+              column_name: "timecities",
               min: 0,
               max: 1497,
               value: [0, 1497],
@@ -604,7 +551,7 @@ const reducer = (state, action) => {
       immutable manner easily, see immer lib doc 
       */
       return produce(state, (draft) => {
-        const mid = action.mapID;
+        const mid = draft.currentMapID;
         const lid = action.layerID;
         const cartoLayer = draft.maps[mid].layers[lid].carto_layer;
         //update the state
@@ -621,19 +568,19 @@ const reducer = (state, action) => {
     //when a filter is manipulated
     case "layer.filter":
       return produce(state, (draft) => {
-        draft.maps[action.mapID].layers[action.layerIndex].filters[
+        draft.maps[draft.currentMapID].layers[action.layerIndex].filters[
           action.filterIndex
         ] = action.filter;
         //TODO: based on the type of filter (range, categorical)
         //use Switch statement to apply appropriate filters
         switch (
-          draft.maps[action.mapID].layers[action.layerIndex].filters[
+          draft.maps[draft.currentMapID].layers[action.layerIndex].filters[
             action.filterIndex
           ].type
         ) {
           case "range":
             //this is how you get the filter out of the carto layer
-            const filter = draft.maps[action.mapID].layers[
+            const filter = draft.maps[draft.currentMapID].layers[
               action.layerIndex
             ].carto_layer
               .getSource()
@@ -648,7 +595,7 @@ const reducer = (state, action) => {
             break;
           case "categorical":
             //   return null;
-            const filter_c = draft.maps[action.mapID].layers[
+            const filter_c = draft.maps[draft.currentMapID].layers[
               action.layerIndex
             ].carto_layer
               .getSource()
@@ -679,7 +626,7 @@ const reducer = (state, action) => {
     //when a new carto layer is added
     case "layer.addCartoLayer":
       return produce(state, (draft) => {
-        draft.maps[action.mapID].layers[action.layerID].carto_layer =
+        draft.maps[draft.currentMapID].layers[action.layerID].carto_layer =
           action.cartoLayer;
       });
 
