@@ -30,7 +30,7 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import {CSVLink} from 'react-csv';
-import Tour from "../utils/Tour";
+import Tour from "./subcomponents/Tour";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -535,7 +535,7 @@ export const Map = () => {
       style={{ height: "100%", position: "relative" }}
       className={classes.content}
     >
-      <div id="map" style={{ height: "100%" }}></div>
+      <div id="map" style={{ height: "100%" }} className='tour-map'></div>
       
       {buckets && visibleLayers && (
         <Paper square

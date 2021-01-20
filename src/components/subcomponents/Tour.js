@@ -27,15 +27,15 @@ const TOUR_STEPS = [
   },
   {
     target: ".tour-dist",
-    content: "View data according to district...",
+    content: "Explore and filter additional contextual varaibles by district...",
   },
   {
     target: ".tour-comm ",
-    content: ["...or settlement.",<br key="space"></br>,<p style={{fontSize:"13px"}} key="disclaimer">*Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement.*</p>],
+    content: ["...or estimated settlement area.",<br key="space"></br>,<p style={{fontSize:"13px"}} key="disclaimer">*Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement.*</p>],
   },
   {
     target: ".tour-map",
-    content: "Click on a district or settlement for more information.",
+    content: "Click directly on a district or settlement for more information and the ability to download data tables.",
   },
 ];
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MapContext } from "../state/MapState";
+import { MapContext } from "../../state/MapState";
 import Slider from "@material-ui/core/Slider";
 // import { MapSelector } from "./MapSelector";
 import { Container, Grid, Box, Typography } from "@material-ui/core";
@@ -19,7 +19,7 @@ import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 // import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
-import Datasets from "../views/Datasets";
+import Datasets from "../../views/Datasets";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";

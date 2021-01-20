@@ -14,7 +14,7 @@ import List from "@material-ui/core/List";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 
-import MapLayerContent from "../utils/MapLayerContent"
+import MapLayerContent from "./subcomponents/MapLayerContent"
 /* Toggle button overrides */
 const useStyles = makeStyles((theme) => ({
   root: {
