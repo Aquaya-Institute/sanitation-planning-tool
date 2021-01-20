@@ -25,8 +25,12 @@ const TOUR_STEPS = [
       "The number of communities will change as you zoom in the map view or filter on variables of interest within the 'Estimated Settlements and Communities' layer.",
   },
   {
-    target: ".tour-comm-dist",
-    content: "View data according to district or community.",
+    target: ".tour-dist",
+    content: "View data according to district...",
+  },
+  {
+    target: ".tour-comm ",
+    content: ["...or settlement.",<br key="space"></br>,<p style={{fontSize:"13px"}} key="disclaimer">*Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement.*</p>],
   },
   {
     target: ".tour-map",
@@ -81,7 +85,7 @@ const Tour = () => {
 
   // Set once tour is viewed, skipped or closed
   const setTourViewed = () => {
-    // localStorage.setItem("tour", "1");
+    localStorage.setItem("tour", "1");
   };
 
   const callback = (data) => {
@@ -112,13 +116,7 @@ const Tour = () => {
 
   return (
     <>
-      {/* <li className="items-center tour-link" onClick={startTour}>
-        <button className="text-gray-800 hover:text-gray-600 text-xs uppercase py-3 font-bold block">
-          <i className="fas fa-fingerprint text-gray-500 mr-2 text-sm"></i>{" "}
-          Restart tour
-        </button>
-      </li> */}
-      <Button onClick={startTour}>Resart Tour</Button>
+      <Button onClick={startTour}>Restart Tour</Button>
       <JoyRide
         {...tourState}
         callback={callback}

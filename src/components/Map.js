@@ -30,6 +30,7 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import {CSVLink} from 'react-csv';
+import Tour from "../utils/Tour";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -534,6 +535,23 @@ export const Map = () => {
       className={classes.content}
     >
       <div id="map" style={{ height: "100%" }}></div>
+      <Paper
+        style={{
+          // padding: theme.spacing(1),
+          position: "absolute",
+          bottom: "10px",
+          right: "210px",
+          top: "unset",
+          left: "unset",
+          // height: "auto",
+          // width: "200px",
+          zIndex: "1000",
+          backgroundColor: "transparent",
+        }}
+        elevation={0}
+      >
+        <Tour />
+      </Paper>
       {buckets && visibleLayers && (
         <Paper
           key={"legendContainer"}
@@ -835,18 +853,23 @@ export const Map = () => {
           top: "10px",
           left: "unset",
           height: "auto",
-          width: "200px",
+          width: "150px",
           zIndex: "1000",
-          backgroundColor: "#fff",
+          backgroundColor: "#fff",//theme.palette.background.paper,
+          // border: '1px solid',
+          // borderColor: "#000",
         }}
+        elevation={3}
+        square
+        // variant="outlined"
       >
         <div id="avgPopulationWidget" class="widget widget-formula" className='tour-community-calc'>
-          <Box fontWeight="fontWeightBold" fontSize="h7.fontSize" align="center">Total Estimated Settlements and Communities in Current View</Box>
+          <Box fontSize="h7.fontSize" align="center">Total Estimated Settlements in Current View</Box>
           {/* <Box class="js-average-population result" align="center" color="secondary">[calculating]</Box> */}
           <Typography variant="h5" color="secondary" align="center" fontWeight="fontWeightBold" fontSize="h6.fontSize"><div class='AveragePopulation'>[calculating]</div></Typography>
         </div>
       </Paper>
-
+      
     </div>
   );
 };

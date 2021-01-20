@@ -1,4 +1,4 @@
-import { Grid, Card, CardContent, CardActionArea, CardMedia,CardActions, Container, Button,Box, Typography } from "@material-ui/core";
+import { Paper, Grid, Card, CardContent, CardActionArea, CardMedia,CardActions, Container, Button,Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import { useEffect } from "react";
@@ -19,6 +19,7 @@ const useCardStyles = makeStyles({
 function MapCard({name, url}) {
   const classes = useCardStyles();
   return (
+ 
     <Card className={classes.root}>
       <CardActionArea component={Link} to={url}>
         <CardMedia
@@ -31,16 +32,11 @@ function MapCard({name, url}) {
           <Typography gutterBottom variant="h5" component="h2">
             {name}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-            convallis diam at vestibulum rutrum. Proin facilisis ornare neque,
-            eget sodales nisl posuere id.
-          </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
         <Button component={Link} to={url} size="small" color="primary">
-          Open
+          Explore the Map
         </Button>
         {/* <Button size="small" color="primary">
           Learn More
@@ -55,11 +51,37 @@ function Home() {
 
   return (
     <Container>
-      <Box mt={4} mb={4}>
-        <Typography variant="h4" color="secondary">
-          Sanitation Planning Maps
+      <Paper elevation={0} >
+        <Box p={2} >
+        <Typography variant="h5" color="secondary">
+        <strong>What</strong> is the SanPlan tool?
         </Typography>
-      </Box>
+          <br></br>
+          SanPlan saves sanitation practitioners the time and challenges of collecting, analyzing, 
+          and mapping data to inform their program design by giving them access to key contextual data, 
+          all in one place, and displayed spatially within a map. Users can explore trends and patterns 
+          within a geographic area, or use the built in filters and sliders to customize their analysis 
+          and download detailed, granular data on their area of interest.
+        </Box>
+        <Box  p={2}>
+        <Typography variant="h5" color="secondary" p={2}>
+          <strong>Who</strong> should use this tool? 
+        </Typography>
+          <br></br>
+          The tool is designed for anyone in the planning or budgeting phase of a sanitation project at the 
+          national, regional or local scale. Typical users might include government agencies, program funders, 
+          and implementing partners who are looking to better understand more existing context where they are 
+          planning to work.
+        </Box>
+        <Box  p={2}>
+        <Typography variant="h5" color="secondary">
+        <strong>How</strong> does the tool work? 
+        </Typography>
+          <br></br>
+          SanPlan uses existing publicly available data and links it to a specific location on the map. This 
+          allows users to click anywhere on the map and access information on key contextual factors.  
+        </Box>
+      </Paper>
       <Grid container item spacing={2} lg={12}>
         {Object.keys(maps).map((map) => (
           <Grid key={maps[map].mapID} item xs={12} md={4} lg={3}>
