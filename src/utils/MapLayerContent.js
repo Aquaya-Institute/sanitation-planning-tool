@@ -52,12 +52,8 @@ const useStyles = makeStyles((theme) => ({
     icon: {
       background: "",
       "&:hover": {
-        background: "#f1f1f1",
+        background: "#e3e3e3",
       },
-    },
-    drawerContainer: {
-      maxHeight: "100%",
-      overflow: "auto",
     },
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
@@ -213,6 +209,7 @@ const MapLayerContent = ({layer, layerIndex}) => {
                     <ExpandMore
                     onClick={() => handleClick(layerIndex)}
                     className='tour-expand'
+                    className={classes.icon}
                     />
                 )}
             </ListItem>
@@ -336,12 +333,10 @@ const MapLayerContent = ({layer, layerIndex}) => {
                                     max={filter.max}
                                     aria-labelledby="input-slider"
                                     valueLabelDisplay="auto"
-                                    // marks={createMarks([
-                                    //     Number(filter.min),
-                                    //     Number(filter.max),
-                                    // ])}
-                                    
-                                    // scale={(x) => Math.round(Math.log(x))}
+                                    marks={createMarks([
+                                        Number(filter.min),
+                                        Number(filter.max),
+                                    ])}
                                     onChange={(e, newval) => {
                                     updateFilter({
                                         layerIndex: layerIndex,
@@ -350,10 +345,10 @@ const MapLayerContent = ({layer, layerIndex}) => {
                                         filterStateObject: filter,
                                     });
                                     }}
-                                    marks={stepFunc(filter.name, filter.min, filter.max, [
-                                        Number(filter.value[0]),
-                                        Number(filter.value[1]),
-                                    ])}
+                                    // marks={stepFunc(filter.name, filter.min, filter.max, [
+                                    //     Number(filter.value[0]),
+                                    //     Number(filter.value[1]),
+                                    // ])}
                                 />
                                 {/* <Button
                                     onClick={(e) => {

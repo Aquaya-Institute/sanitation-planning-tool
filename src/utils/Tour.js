@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect } from "react";
 import JoyRide, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 import Button from "@material-ui/core/Button";
+import MapIcon from '@material-ui/icons/Map';
 // import theme from "./theme/theme";
 
 const TOUR_STEPS = [
@@ -22,7 +23,7 @@ const TOUR_STEPS = [
   {
     target: ".tour-community-calc",
     content:
-      "The number of communities will change as you zoom in the map view or filter on variables of interest within the 'Estimated Settlements and Communities' layer.",
+      "The number of settlements will change as you zoom in the map view or filter on variables of interest within the 'Estimated Settlements and Communities' layer.",
   },
   {
     target: ".tour-dist",
@@ -34,7 +35,7 @@ const TOUR_STEPS = [
   },
   {
     target: ".tour-map",
-    content: "Click on a district or community for more information.",
+    content: "Click on a district or settlement for more information.",
   },
 ];
 
@@ -116,7 +117,7 @@ const Tour = () => {
 
   return (
     <>
-      <Button onClick={startTour}>Restart Tour</Button>
+      <Button justify='center' startIcon={<MapIcon />} onClick={startTour}>Restart Tour</Button>
       <JoyRide
         {...tourState}
         callback={callback}

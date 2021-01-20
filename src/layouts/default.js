@@ -44,7 +44,7 @@ export default function DefaultLayout(props) {
           <Typography variant="h6" className={classes.title}>
             {/* Place the logo here instead and link to home */}
             {/* <Link component={RouterLink} color="inherit" to="/" style={{textDecoration: 'none'}}> */}
-            <strong>Sanitation Planning Tool</strong>
+            <strong>SanPlan: The Sanitation Planning Tool</strong>
             {/* </Link> */}
           </Typography>
           <Box ml={3}>

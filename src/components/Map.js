@@ -252,7 +252,8 @@ export const Map = () => {
       );
 
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
+        "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg70?access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ",
+        // "https://api.mapbox.com/styles/v1/karastuart/ckk5tl36t02e017npyq4xsp0s.html?fresh=true&title=copy&access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ",
         {
           maxZoom: 22,
         }
@@ -535,31 +536,15 @@ export const Map = () => {
       className={classes.content}
     >
       <div id="map" style={{ height: "100%" }}></div>
-      <Paper
-        style={{
-          // padding: theme.spacing(1),
-          position: "absolute",
-          bottom: "10px",
-          right: "210px",
-          top: "unset",
-          left: "unset",
-          // height: "auto",
-          // width: "200px",
-          zIndex: "1000",
-          backgroundColor: "transparent",
-        }}
-        elevation={0}
-      >
-        <Tour />
-      </Paper>
+      
       {buckets && visibleLayers && (
-        <Paper
+        <Paper square
           key={"legendContainer"}
           style={{
             padding: theme.spacing(1),
             position: "absolute",
-            bottom: "10px",
-            right: "10px",
+            bottom: "0px",
+            right: "0px",
             top: "unset",
             left: "unset",
             height: "auto",
@@ -849,25 +834,28 @@ export const Map = () => {
           padding: theme.spacing(1),
           position: "absolute",
           bottom: "unset",
-          right: "10px",
-          top: "10px",
+          right: "0px",
+          top: "0px",
           left: "unset",
           height: "auto",
-          width: "150px",
+          width: "200px",
           zIndex: "1000",
           backgroundColor: "#fff",//theme.palette.background.paper,
-          // border: '1px solid',
-          // borderColor: "#000",
+          margin: 'auto'
+
         }}
-        elevation={3}
+  
+        elevation={2}
         square
         // variant="outlined"
       >
+        <Tour style={{justifyContent: 'center'}}/>
         <div id="avgPopulationWidget" class="widget widget-formula" className='tour-community-calc'>
           <Box fontSize="h7.fontSize" align="center">Total Estimated Settlements in Current View</Box>
           {/* <Box class="js-average-population result" align="center" color="secondary">[calculating]</Box> */}
           <Typography variant="h5" color="secondary" align="center" fontWeight="fontWeightBold" fontSize="h6.fontSize"><div class='AveragePopulation'>[calculating]</div></Typography>
         </div>
+        
       </Paper>
       
     </div>
