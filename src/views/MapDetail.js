@@ -19,10 +19,10 @@ function MapDetail() {
   return (
     <Grid container style={{height:"100%"}}>
       <Grid item xs={4} md={4} lg={3} style={{boxShadow:"0px 0px 10px black", zIndex: 1100}}>
-      <Box
-        p={2}>
+      {/* <Box
+        p={2}> */}
         <MapLayers />
-      </Box>
+      {/* </Box> */}
       </Grid>
       <Grid item xs={8} md={8} lg={9}>
         <Map />

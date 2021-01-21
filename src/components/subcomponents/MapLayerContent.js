@@ -290,7 +290,7 @@ const MapLayerContent = ({layer, layerIndex}) => {
                                 </Typography>
                                 <Grid
                                 item
-                                xs={12}
+                                xs={11}
                                 key={"sliderGrid" + filterIndex}
                                 >
                                 {/* <Grid item>

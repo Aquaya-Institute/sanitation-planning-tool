@@ -77,8 +77,9 @@ export const MapLayers = () => {
           style={{ maxHeight: "91vh", overflow: "auto"}}
           elevation={0}
           key={"drawerPaper"}
+          
         >
-          <Box mt={3}>
+          <Box mt={3} p={1}>
             {mapID && (
               <Typography variant="h5" color="secondary">
                 <strong>{maps[mapID].name}</strong>
