@@ -67,7 +67,7 @@ function About() {
           program funders, and implementing partners who are looking to understand more existing context 
           where they are planning to work. Users might use SanPlan to identify where communities with 
           high open defecation rates and low access to sanitation are in a specific region, or they may 
-          be interested to know how many estimated settlements/communities in their region on a major roadway.
+          be interested to know how many settlement areas/communities in their region are on a major roadway.
         </Box>
         <Box  p={2}>
         <Typography variant="h5" color="secondary">

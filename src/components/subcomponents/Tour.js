@@ -23,15 +23,15 @@ const TOUR_STEPS = [
   {
     target: ".tour-community-calc",
     content:
-      "The number of settlements will change as you zoom in the map view or filter on variables of interest within the 'Estimated Settlements and Communities' layer.",
+      "The number of settlements will change as you zoom in the map view or filter on variables of interest within the 'Settlement Areas and Estimated Population' layer.",
   },
   {
     target: ".tour-dist",
-    content: "Explore and filter additional contextual varaibles by district...",
+    content: "Explore and filter additional contextual variables by district...",
   },
   {
     target: ".tour-comm ",
-    content: ["...or estimated settlement area.",<br key="space"></br>,<p style={{fontSize:"13px"}} key="disclaimer">*Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement.*</p>],
+    content: ["...or settlement area.",<br key="space"></br>,<p style={{fontSize:"13px"}} key="disclaimer">*Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement.*</p>],
   },
   {
     target: ".tour-map",

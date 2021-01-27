@@ -14,7 +14,7 @@ import List from "@material-ui/core/List";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 
-import MapLayerContent from "./subcomponents/MapLayerContent"
+import MapLayerContent from "./subcomponents/MapLayerContent";
 /* Toggle button overrides */
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export const MapLayers = () => {
   //pick specific states (and dispatcher) we need from mapstate
   const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
@@ -63,51 +62,81 @@ export const MapLayers = () => {
     }
   }, [currentMapID]);
 
-  
-
   return (
-      <div >
-      
-        <Box>
-          {/* needs rework to work with routers */}
-          {/* <MapSelector /> */}
+    <div>
+      <Box>
+        {/* needs rework to work with routers */}
+        {/* <MapSelector /> */}
+      </Box>
+
+      <Paper
+        style={{ maxHeight: "91vh", overflow: "auto" }}
+        elevation={0}
+        key={"drawerPaper"}
+      >
+        <Box mt={1.5} p={2}>
+          {mapID && (
+            <Typography variant="h5" color="secondary">
+              <strong>{maps[mapID].name}</strong>
+            </Typography>
+          )}
         </Box>
-
-        <Paper
-          style={{ maxHeight: "91vh", overflow: "auto"}}
-          elevation={0}
-          key={"drawerPaper"}
-          
-        >
-          <Box mt={3} p={1}>
-            {mapID && (
-              <Typography variant="h5" color="secondary">
-                <strong>{maps[mapID].name}</strong>
-              </Typography>
+        <Divider />
+        <Box mt={2} ml={2}>
+          <Typography variant="button" color="black">
+            <strong>Explore Maps of Key Variables</strong>
+          </Typography>
+        </Box>
+        {maps[mapID].layers.map((layer, layerIndex) => (
+          <List key={"collapseHeader" + layerIndex} disablePadding>
+            {layer.name ===
+              "Settlement Areas and Estimated Population (pop.)" ||
+            layer.name === "Districts" ? (
+              <div></div>
+            ) : (
+              <div>
+                <MapLayerContent layer={layer} layerIndex={layerIndex} />
+              </div>
             )}
-            
-          </Box>
-          <Divider />
-          {maps[mapID].layers.map((layer, layerIndex) => (
-            <List key={"collapseHeader" + layerIndex} disablePadding>
-              {layer.name==="Estimated Settlements and Communities (pop.)" ? 
-                <div className="tour-comm">
-                  <MapLayerContent layer={layer} layerIndex={layerIndex}/>
-                </div>
-              : layer.name==="Districts" ?
-                <div className="tour-dist">
-                  <MapLayerContent layer={layer} layerIndex={layerIndex}/>
-                </div>
-              : 
-                <div>
-                  <MapLayerContent layer={layer} layerIndex={layerIndex}/>
-                </div>
-              }
-
-            </List>
-          ))}
-        </Paper>
-      </div>
+          </List>
+        ))}
+        <Box mt={2} ml={2}>
+          <Typography variant="button" color="black">
+            <strong>Target Settlements & Districts by Attribute(s)</strong>
+          </Typography>
+        </Box>
+        {maps[mapID].layers.map((layer, layerIndex) => (
+          <List key={"collapseHeader" + layerIndex} disablePadding>
+            {layer.name ===
+            "Settlement Areas and Estimated Population (pop.)" ? (
+              <div className="tour-comm">
+                <MapLayerContent layer={layer} layerIndex={layerIndex} />
+              </div>
+            ) : layer.name === "Districts" ? (
+              <div className="tour-dist">
+                <MapLayerContent layer={layer} layerIndex={layerIndex} />
+              </div>
+            ) : (
+              <div></div>
+            )}
+          </List>
+        ))}
+        <Box mt={2} ml={2}>
+          <Typography variant="button" color="black">
+            <strong>Explore District by Name</strong>
+          </Typography>
+        </Box>
+        <Box mt={2} ml={2} mb={3} key={"countriesDataview"}>
+          <div id="countriesWidget" class="widget">
+            <p>Select District from Dropdown</p>
+            {/* <p>{JSON.stringify(selectedDistricts)}</p> */}
+            <select class="js-countries">
+              <option value="">All</option>
+            </select>
+          </div>
+        </Box>
+      </Paper>
+    </div>
     // </div>
   );
 };

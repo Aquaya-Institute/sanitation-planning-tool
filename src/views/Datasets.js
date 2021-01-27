@@ -203,7 +203,7 @@ function Datasets() {
     {
       name: "Distance to Towns",
       description:
-        "Each pixel represents the straight-line distance to the nearest ‘town’. SanPlan considers a ‘town’ to be an estimated settlement area with a population of 5,000 or more.",
+        "Each pixel represents the straight-line distance to the nearest ‘town’. SanPlan considers a ‘town’ to be a settlement area with a population of 5,000 or more.",
       note:
         "This dataset was created with the 'Population' dataset from WorldPop.",
       year: 2020,
@@ -231,9 +231,9 @@ function Datasets() {
         "https://washmatters.wateraid.org/publications/rethinking-rural-sanitation",
     },
     {
-        name: "Estimated Settlements and Communities",
+        name: "Settlement Areas and Estimated Population",
         description:
-          "All settlements (areas consisting of multiple households/buildings) were mapped with the combination of two population mapping datasets. The datasets estimate the location of all settlements using satellite imagery. SanPlan combined these together to determine the location and boundary of all settlements. Data from various publicly available sources were then extracted for each settlement. The point layer represented on the SanPlan map represents the geographic center of each estimated settlement boundary location.",
+          "All settlements (areas consisting of multiple households/buildings) were mapped with the combination of two population mapping datasets. The datasets estimate the location of all settlements using satellite imagery. SanPlan combined these together to determine the location and boundary of all settlements. Data from various publicly available sources were then extracted for each settlement. The point layer represented on the SanPlan map represents the geographic center of each settlement areas's estimated boundary.",
         note:
           "DISCLAIMER: Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement. As a result, center point locations may appear ‘off’ when compared with satellite imagery or base maps.",
         year: 2020,
@@ -306,10 +306,18 @@ function Datasets() {
       </Box>
       <Grid container item spacing={2} lg={12}>
         {Object.entries(datasetsInfoCustom).map((data, i) => (
-          <Grid key={"dataCard" + i} item xs={12} md={12} lg={12}>
+          <Grid key={"dataCard" + i} item xs={12} md={12} lg={12} id={()=>{
+            if(data[1].name.includes("Classification")){
+              return "class"
+            }else if (data[1].name.includes("Settlement")){
+              return "settle"
+            }else{
+              return ""
+            }
+            }}>
             <Card className={classes.root} elevation={0}>
               <CardContent>
-                <Typography variant="h6" component="h2">
+                <Typography variant="h6" component="h2" >
                   {data[1].name}
                 </Typography>
                 {data[1].description}

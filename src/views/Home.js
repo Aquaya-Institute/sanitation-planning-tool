@@ -58,8 +58,8 @@ function Home() {
         </Typography>
           <br></br>
           SanPlan saves sanitation practitioners the time and challenges of collecting, analyzing, 
-          and mapping data to inform their program design by giving them access to key contextual data, 
-          all in one place, and displayed spatially within a map. Users can explore trends and patterns 
+          and mapping data to inform their program design by giving them access to information on key 
+          contextual factors, all in one place. Users can explore trends and patterns 
           within a geographic area, or use the built in filters and sliders to customize their analysis 
           and download detailed, granular data on their area of interest.
         </Box>

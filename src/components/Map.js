@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, useRef, Fragment } from "react";
 import { MapContext } from "../state/MapState";
 import Carto, { isNull } from "@carto/carto.js";
 import L, { map } from "leaflet";
+import mapboxgl from "mapbox-gl";
 import "leaflet/dist/leaflet.css";
 import {
   Typography,
@@ -29,7 +30,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import {CSVLink} from 'react-csv';
+import { CSVLink } from "react-csv";
 import Tour from "./subcomponents/Tour";
 
 const useStyles = makeStyles((theme) => ({
@@ -84,66 +85,66 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   download: {
-    textDecoration: 'none',
-    color: 'white' 
+    textDecoration: "none",
+    color: "white",
   },
   popper: {
     // zIndex: 1400,
     '&[x-placement*="bottom"] $arrow': {
       top: 0,
       left: 0,
-      marginTop: '-0.9em',
-      width: '3em',
-      height: '1em',
-      '&::before': {
-        borderWidth: '0 1em 1em 1em',
+      marginTop: "-0.9em",
+      width: "3em",
+      height: "1em",
+      "&::before": {
+        borderWidth: "0 1em 1em 1em",
         borderColor: `transparent transparent ${theme.palette.common.white} transparent`,
       },
     },
     '&[x-placement*="top"] $arrow': {
       bottom: 0,
       left: 0,
-      marginBottom: '-0.9em',
-      width: '3em',
-      height: '1em',
-      '&::before': {
-        borderWidth: '1em 1em 0 1em',
+      marginBottom: "-0.9em",
+      width: "3em",
+      height: "1em",
+      "&::before": {
+        borderWidth: "1em 1em 0 1em",
         borderColor: `${theme.palette.common.white} transparent transparent transparent`,
       },
     },
     '&[x-placement*="right"] $arrow': {
       left: 0,
-      marginLeft: '-0.9em',
-      height: '3em',
-      width: '1em',
-      '&::before': {
-        borderWidth: '1em 1em 1em 0',
+      marginLeft: "-0.9em",
+      height: "3em",
+      width: "1em",
+      "&::before": {
+        borderWidth: "1em 1em 1em 0",
         borderColor: `transparent ${theme.palette.common.white} transparent transparent`,
       },
     },
     '&[x-placement*="left"] $arrow': {
       right: 0,
-      marginRight: '-0.9em',
-      height: '3em',
-      width: '1em',
-      '&::before': {
-        borderWidth: '1em 0 1em 1em',
+      marginRight: "-0.9em",
+      height: "3em",
+      width: "1em",
+      "&::before": {
+        borderWidth: "1em 0 1em 1em",
         borderColor: `transparent transparent transparent ${theme.palette.common.white}`,
       },
     },
   },
   arrow: {
-    position: 'absolute',
+    position: "absolute",
     fontSize: 5,
-    width: '3em',
-    height: '3em',
-    '&::before': {
+    width: "3em",
+    height: "3em",
+    "&::before": {
       content: '""',
-      margin: 'auto',
-      display: 'block',
+      margin: "auto",
+      display: "block",
       width: 0,
       height: 0,
-      borderStyle: 'solid',
+      borderStyle: "solid",
     },
   },
 }));
@@ -181,13 +182,17 @@ export const Map = () => {
   const idPopper = openPopper ? "transitions-popper" : undefined;
   const [popoverOpen, setPopoverOpen] = useState(false);
   const idPopover = popoverOpen ? "simple-popover" : undefined;
-  const [popoverColumns, setPopoverColumns]= useState([]);
+  const [popoverColumns, setPopoverColumns] = useState([]);
   const anchorRef = useRef(null);
   const [arrowRef, setArrowRef] = useState(null);
   const [arrow, setArrow] = useState(true);
   const classes = useStyles();
   const clickRef = useRef(null);
-  const [commCalcSource, setCommCalcSource] = useState(null)
+  const [commCalcSource, setCommCalcSource] = useState(null);
+  const [districtsSource, setDistrictsSource] = useState(null);
+  const [districtsStyle, setDistrictsStyle] = useState(null);
+  const [selectedDistricts, setSelectedDistricts] = useState([]);
+
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = [];
 
@@ -245,17 +250,15 @@ export const Map = () => {
       apiKey: process.env.REACT_APP_CARTO_DEV_API_KEY,
       username: process.env.REACT_APP_CARTO_USERNAME,
     });
-    if (mapID){
-      const map = L.map("map").setView(
-        maps[mapID].view,
-        maps[mapID].zoom
-      );
+    if (mapID) {
+      const map = L.map("map").setView(maps[mapID].view, maps[mapID].zoom);
 
       L.tileLayer(
         "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg70?access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ",
         // "https://api.mapbox.com/styles/v1/karastuart/ckk5tl36t02e017npyq4xsp0s.html?fresh=true&title=copy&access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ",
         {
           maxZoom: 22,
+          // minZoom: 7,
         }
       ).addTo(map);
 
@@ -273,7 +276,7 @@ export const Map = () => {
         type: "map.addCartoClient",
         carto_client: client,
       });
-      setNativeMap(map)
+      setNativeMap(map);
     }
   }, [mapID]);
 
@@ -309,27 +312,33 @@ export const Map = () => {
     if (cartoClient && currentMapState) {
       console.log("Creating Carto Layers");
       const _mapID = currentMapState.mapID;
-      // map.setView(new L.LatLng(34.5333, 69.1333),7);
-      // setLatLng(currentMapState.view)
-      // mapRef.current.setView(latLng,7)
-      // mapRef.current.setView(new L.latLng(currentMapState.view),7)
       var buckets_list = [];
-      var objlist=[]
+      var objlist = [];
       currentMapState.layers.forEach((layer, index) => {
         const _source = new Carto.source.SQL(
           `SELECT * FROM ${layer.carto_tableName}`
         );
-        if (layer.name==="Estimated Settlements and Communities (pop.)") {
-          setCommCalcSource(_source)
-        }
+
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
+        if (layer.name === "Settlement Areas and Estimated Population (pop.)") {
+          setCommCalcSource(_source);
+        }
+        if (layer.name === "Districts") {
+          setDistrictsSource(_source);
+          setDistrictsStyle(_style);
+        }
         var obj1 = [];
-        
+
         layer.filters.forEach((filter, filter_c) => {
-          obj1=[layer.name,filter.name, filter.column_name,filter.subcategory]
-          objlist.push(obj1)
+          obj1 = [
+            layer.name,
+            filter.name,
+            filter.column_name,
+            filter.subcategory,
+          ];
+          objlist.push(obj1);
           switch (filter.type) {
             case "range":
               const _filter = new Carto.filter.Range(filter.column_name, {
@@ -359,9 +368,8 @@ export const Map = () => {
             default:
               break;
           }
-          
         });
-        
+
         //add filters to the source, if any
         if (_filters.length > 0) {
           _source.addFilter(new Carto.filter.AND(_filters));
@@ -405,7 +413,11 @@ export const Map = () => {
             if (event.styles.length === 0) {
               obj["variable"] = "Districts";
               obj["legend"] = [
-                { name: "District boundaries", value: "transparent", border: '2px solid #000'},
+                {
+                  name: "District boundaries",
+                  value: "transparent",
+                  border: "2px solid #000",
+                },
               ];
             } else if (event.styles[0]._buckets === undefined) {
               obj["variable"] = layer.name;
@@ -437,8 +449,8 @@ export const Map = () => {
           cartoLayer: _layer,
         });
       });
-      setPopoverColumns(objlist)
-      console.log(popoverColumns)
+      setPopoverColumns(objlist);
+      console.log(popoverColumns);
     }
   }, [currentMapState, cartoClient, dispatch]);
 
@@ -463,22 +475,30 @@ export const Map = () => {
       Object.entries(popup[1].data)
         .slice(1)
         .map((keyName) => {
-          return dat_loc.push([popup[0],keyName[0], keyName[1]]);
+          return dat_loc.push([popup[0], keyName[0], keyName[1]]);
         });
       dat_loc.sort();
 
       for (let j = 0; j < dat_loc.length; j++) {
         for (let i = 0; i < popoverColumns.length; i++) {
-          if ((popoverColumns[i][2] === dat_loc[j][1])&&(popoverColumns[i][0] === dat_loc[j][0])) {
-            dat_popup.push([popoverColumns[i][0], popoverColumns[i][1], dat_loc[j][2], popoverColumns[i][3]]);
-            if (dat_loc[j][1]==="district") {
-              setDistIndex(j)
-            } else if (dat_loc[j][1]==="region") {
-              setRegionIndex(j)
-            } else if (dat_loc[j][1]==="classes") {
-              setClassIndex(j)
-            } else if (dat_loc[j][1]==="pop_est") {
-              setPopIndex(j)
+          if (
+            popoverColumns[i][2] === dat_loc[j][1] &&
+            popoverColumns[i][0] === dat_loc[j][0]
+          ) {
+            dat_popup.push([
+              popoverColumns[i][0],
+              popoverColumns[i][1],
+              dat_loc[j][2],
+              popoverColumns[i][3],
+            ]);
+            if (dat_loc[j][1] === "district") {
+              setDistIndex(j);
+            } else if (dat_loc[j][1] === "region") {
+              setRegionIndex(j);
+            } else if (dat_loc[j][1] === "classes") {
+              setClassIndex(j);
+            } else if (dat_loc[j][1] === "pop_est") {
+              setPopIndex(j);
             }
             break;
           }
@@ -507,27 +527,124 @@ export const Map = () => {
     }
   }, [maps, mapID]);
 
-  
   useEffect(() => {
-    if(cartoClient&&commCalcSource&&nativeMap){
-      const commCalculator = new Carto.dataview.Formula(commCalcSource, 'pop_est', {
-        operation: Carto.operation.COUNT
-      });
+    if (cartoClient && commCalcSource && nativeMap) {
+      const commCalculator = new Carto.dataview.Formula(
+        commCalcSource,
+        "pop_est",
+        {
+          operation: Carto.operation.COUNT,
+        }
+      );
       const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
-      cartoClient.addDataview(commCalculator)
+      cartoClient.addDataview(commCalculator);
       commCalculator.addFilter(bboxFilter);
 
-      commCalculator.on('dataChanged', data => {
+      commCalculator.on("dataChanged", (data) => {
         refreshCommCalculator(data.result);
       });
     }
-
   }, [cartoClient, commCalcSource, nativeMap]);
 
   function refreshCommCalculator(avgPopulation) {
-    const widgetDom = document.querySelector('#avgPopulationWidget');
-    const commCalculatorDom = widgetDom.querySelector('.AveragePopulation');
+    const widgetDom = document.querySelector("#avgPopulationWidget");
+    const commCalculatorDom = widgetDom.querySelector(".AveragePopulation");
     commCalculatorDom.innerText = Math.floor(avgPopulation);
+  }
+
+  useEffect(() => {
+    if (cartoClient && districtsSource && nativeMap) {
+      const countriesDataview = new Carto.dataview.Category(
+        districtsSource,
+        "district",
+        {
+          limit: 216,
+          // operation: Carto.operation.AVG, // Compute the average
+          // operationColumn: 'sum'
+        }
+      );
+      cartoClient.addDataview(countriesDataview);
+
+      countriesDataview.on("dataChanged", (data) => {
+        const countryNames = data.categories
+          .map((category) => category.name)
+          .sort();
+        refreshCountriesWidget(countryNames);
+      });
+    }
+  }, [cartoClient, districtsSource, nativeMap]);
+
+  function refreshCountriesWidget(districtNames) {
+    const widgetDom = document.querySelector("#countriesWidget");
+    const countriesDom = widgetDom.querySelector(".js-countries");
+
+    countriesDom.onchange = (event) => {
+      setSelectedDistricts((st) => [...st, event.target.value]);
+    };
+
+    // Fill in the list of countries
+    districtNames.forEach((district) => {
+      const option = document.createElement("option");
+      option.innerHTML = district;
+      option.value = district;
+      countriesDom.appendChild(option);
+    });
+  }
+  useEffect(() => {
+    if (selectedDistricts.length > 0) {
+      highlightCountry(selectedDistricts);
+      filterPopulatedPlacesByCountry(selectedDistricts);
+    }
+  }, [selectedDistricts]);
+
+  function highlightCountry(district) {
+    district.forEach((district) => {
+      let cartoCSS = `
+      #layer {
+        polygon-fill: 'transparent';
+        polygon-opacity: 1;
+        ::outline {
+          line-width: 1;
+          line-color: #000000;
+          line-opacity: 0.5;
+        }
+      } `;
+      if (district) {
+        // cartoCSS = `
+        //   ${cartoCSS}
+        //   #layer[!district.includes('${district}')] {
+        //     polygon-fill: #808080;
+        //     polygon-opacity: .75;
+        //   }
+        // `;
+        cartoCSS = `
+          ${cartoCSS}
+          #layer[district!='${district}'] {
+            polygon-fill: #808080;
+            polygon-opacity: .75;
+          }
+        `;
+      }
+      districtsStyle.setContent(cartoCSS);
+    });
+  }
+
+  function filterPopulatedPlacesByCountry(district) {
+    district.forEach((district) => {
+      let query = `
+        SELECT *
+          FROM gha_comms_points
+          WHERE district IN (SELECT district FROM gha_dist)
+      `;
+      if (district) {
+        query = `
+          SELECT *
+            FROM gha_comms_points
+            WHERE district='${district}'
+        `;
+      }
+      commCalcSource.setQuery(query);
+    });
   }
 
   return (
@@ -535,10 +652,11 @@ export const Map = () => {
       style={{ height: "100%", position: "relative" }}
       className={classes.content}
     >
-      <div id="map" style={{ height: "100%" }} className='tour-map'></div>
-      
+      <div id="map" style={{ height: "100%" }} className="tour-map"></div>
+
       {buckets && visibleLayers && (
-        <Paper square
+        <Paper
+          square
           key={"legendContainer"}
           style={{
             padding: theme.spacing(1),
@@ -580,7 +698,7 @@ export const Map = () => {
                                 className={classes.dot}
                                 style={{
                                   backgroundColor: legend.value,
-                                  border: legend.border
+                                  border: legend.border,
                                 }}
                                 key={legend.value.toString()}
                               ></div>
@@ -658,17 +776,33 @@ export const Map = () => {
               </Box>
             )}
             {popupData.data.length > 1 && (
-              <Fragment key={"popper"+popupData.data[0].layer}>
-                {popupData.data[0].layer === "Estimated Settlements and Communities (pop.)" ? (
+              <Fragment key={"popper" + popupData.data[0].layer}>
+                {popupData.data[0].layer ===
+                "Settlement Areas and Estimated Population (pop.)" ? (
                   <Box>
-                    <Box fontWeight="fontWeightBold">{popupData.data[popIndex].name}:{" "}</Box>{popupData.data[popIndex].value.toFixed(1)}
-                    <Box fontWeight="fontWeightBold">{popupData.data[classIndex].name}:{" "}</Box>{popupData.data[classIndex].value}
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[popIndex].name}:{" "}
+                    </Box>
+                    {popupData.data[popIndex].value.toFixed(1)}
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[classIndex].name}:{" "}
+                    </Box>
+                    {popupData.data[classIndex].value}
                   </Box>
                 ) : (
                   <Box>
-                    <Box fontWeight="fontWeightBold">{popupData.data[regionIndex].name}:{" "}</Box>{popupData.data[regionIndex].value}
-                    <Box fontWeight="fontWeightBold">{popupData.data[distIndex].name}:{" "}</Box>{popupData.data[distIndex].value}
-                    <Box fontWeight="fontWeightBold">{popupData.data[classIndex].name}:{" "}</Box>{popupData.data[classIndex].value}
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[regionIndex].name}:{" "}
+                    </Box>
+                    {popupData.data[regionIndex].value}
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[distIndex].name}:{" "}
+                    </Box>
+                    {popupData.data[distIndex].value}
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[classIndex].name}:{" "}
+                    </Box>
+                    {popupData.data[classIndex].value}
                   </Box>
                 )}
                 <Link
@@ -718,28 +852,36 @@ export const Map = () => {
                           }}
                         />
                       </Grid>
-                      
+
                       <Table
                         className={classes.popover}
                         key={"popoverTable"}
                         elevation={0}
                       >
-                        {popupData.data[0].layer === "Estimated Settlements and Communities (pop.)" ?
+                        {popupData.data[0].layer ===
+                        "Settlement Areas and Estimated Population (pop.)" ? (
                           <TableHead>
                             <TableRow>
                               <TableCell colSpan={2} align="center">
                                 <Box fontWeight="fontWeightBold">
-                                  ESTIMATED SETTLEMENT/COMMUNITY DETAILS
+                                  SETTLEMENT AREA/COMMUNITY DETAILS
                                 </Box>
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell colSpan={2} align="center" fontStyle="italic">
-                                <Box fontStyle="italic">Location:{" "}{popupData.latLng.lat.toFixed(5)}, {popupData.latLng.lng.toFixed(5)}</Box>
+                              <TableCell
+                                colSpan={2}
+                                align="center"
+                                fontStyle="italic"
+                              >
+                                <Box fontStyle="italic">
+                                  Location: {popupData.latLng.lat.toFixed(5)},{" "}
+                                  {popupData.latLng.lng.toFixed(5)}
+                                </Box>
                               </TableCell>
                             </TableRow>
                           </TableHead>
-                        :
+                        ) : (
                           <TableHead>
                             <TableRow>
                               <TableCell colSpan={2} align="center">
@@ -749,13 +891,19 @@ export const Map = () => {
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell colSpan={2} align="center" fontStyle="italic">
-                                <Box fontStyle="italic">REGION: {popupData.data[regionIndex].value}, 
-                            DISTRICT: {popupData.data[distIndex].value}</Box>
+                              <TableCell
+                                colSpan={2}
+                                align="center"
+                                fontStyle="italic"
+                              >
+                                <Box fontStyle="italic">
+                                  REGION: {popupData.data[regionIndex].value},
+                                  DISTRICT: {popupData.data[distIndex].value}
+                                </Box>
                               </TableCell>
                             </TableRow>
                           </TableHead>
-                        } 
+                        )}
                         {cat.map((category, i) => {
                           return (
                             <Fragment key={"popoverTableRow" + category}>
@@ -806,17 +954,34 @@ export const Map = () => {
                           className={classes.button}
                           startIcon={<SaveIcon />}
                         >
-                          {popupData.data[0].layer === "Estimated Settlements and Communities (pop.)" ?
-                            <CSVLink className={classes.download} data={popupData.data} filename={"SPT_"+popupData.latLng.lat.toFixed(5).toString()+"_"+popupData.latLng.lng.toFixed(5).toString()+".csv"}>
+                          {popupData.data[0].layer ===
+                          "Settlement Areas and Estimated Population (pop.)" ? (
+                            <CSVLink
+                              className={classes.download}
+                              data={popupData.data}
+                              filename={
+                                "SPT_" +
+                                popupData.latLng.lat.toFixed(5).toString() +
+                                "_" +
+                                popupData.latLng.lng.toFixed(5).toString() +
+                                ".csv"
+                              }
+                            >
                               DOWNLOAD TABLE
                             </CSVLink>
-                          :
-                            <CSVLink className={classes.download} data={popupData.data} filename={"SPT_"+popupData.data[distIndex].value+".csv"}>
+                          ) : (
+                            <CSVLink
+                              className={classes.download}
+                              data={popupData.data}
+                              filename={
+                                "SPT_" +
+                                popupData.data[distIndex].value +
+                                ".csv"
+                              }
+                            >
                               DOWNLOAD TABLE
                             </CSVLink>
-                          }
-                            
-                          
+                          )}
                         </Button>
                       </Grid>
                     </div>
@@ -840,24 +1005,34 @@ export const Map = () => {
           height: "auto",
           width: "200px",
           zIndex: "1000",
-          backgroundColor: "#fff",//theme.palette.background.paper,
-          margin: 'auto'
-
+          backgroundColor: "#fff", //theme.palette.background.paper,
+          margin: "auto",
         }}
-  
         elevation={2}
         square
         // variant="outlined"
       >
-        <Tour style={{justifyContent: 'center'}}/>
-        <div id="avgPopulationWidget" class="widget widget-formula" className='tour-community-calc'>
-          <Box fontSize="h7.fontSize" align="center">Total Estimated Settlements in Current View</Box>
+        <Tour style={{ justifyContent: "center" }} />
+        <div
+          id="avgPopulationWidget"
+          class="widget widget-formula"
+          className="tour-community-calc"
+        >
+          <Box fontSize="h7.fontSize" align="center">
+            Total Mapped Settlement Areas in Current View
+          </Box>
           {/* <Box class="js-average-population result" align="center" color="secondary">[calculating]</Box> */}
-          <Typography variant="h5" color="secondary" align="center" fontWeight="fontWeightBold" fontSize="h6.fontSize"><div class='AveragePopulation'>[calculating]</div></Typography>
+          <Typography
+            variant="h5"
+            color="secondary"
+            align="center"
+            fontWeight="fontWeightBold"
+            fontSize="h6.fontSize"
+          >
+            <div class="AveragePopulation">[calculating]</div>
+          </Typography>
         </div>
-        
       </Paper>
-      
     </div>
   );
 };

@@ -12,6 +12,7 @@ const initialState = {
       mapID: "ghana",
       view: [8.059229627200192, -1.0546875000000002],
       zoom: 7,
+      minzoom: 7,
       /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
@@ -22,7 +23,7 @@ const initialState = {
           carto_tableName: "gha_class_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([classes], (#0d882b, #200ab7, #ad1719), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
-          visible: false,
+          visible: true,
           /* 
           we don't use order yet to order(re) the layers 
           For now the first layer object is the bottom most rendered layer
@@ -35,6 +36,7 @@ const initialState = {
               It might be a good one to implement
              */
               name: "Community Classification",
+              unit: "",
               type: "categorical",
               column_name: "classes",
               value: [
@@ -69,7 +71,8 @@ const initialState = {
           order: 3,
           filters: [
             {
-              name: "Population Practicing Open Defecation (%)",
+              name: "Population Practicing Open Defecation",
+              unit: "(%)",
               type: "range",
               column_name: "od",
               min: 0,
@@ -91,7 +94,8 @@ const initialState = {
           order: 2,
           filters: [
             {
-              name: "Women's Educational Attainment (yrs.)",
+              name: "Women's Educational Attainment",
+              unit: "(yrs.)",
               type: "range",
               column_name: "edu_w",
               min: 2,
@@ -107,13 +111,14 @@ const initialState = {
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([timecities], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
-          visible: true,
+          visible: false,
           order: 1,
           source: "Malaria Atlas Project",
           year: 2015,
           filters: [
             {
-              name: "Travel Time to Cities (min.)",
+              name: "Travel Time to Cities",
+              unit: "(min.)",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -136,7 +141,7 @@ const initialState = {
               line-color: #000000;
               line-opacity: 1;
             }`,
-          visible: false,
+          visible: true,
           order: 5,
           /* These are all range filters and are implemented */
           filters: [
@@ -148,9 +153,10 @@ const initialState = {
             //   max: 6033969,
             //   value: [0, 6033969],
             // },
-            
+
             {
               name: "Predominant Community Classification",
+              unit: "",
               type: "categorical",
               column_name: "classes",
               value: [
@@ -173,7 +179,8 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Population Practicing Open Defecation (%)",
+              name: "Average Population Practicing Open Defecation",
+              unit: "(%)",
               type: "range",
               column_name: "od",
               min: 11,
@@ -182,7 +189,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Average Reliance on Unimproved Sanitation (%)",
+              name: "Average Reliance on Unimproved Sanitation",
+              unit: "(%)",
               type: "range",
               column_name: "s_unimp",
               min: 1,
@@ -191,7 +199,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Average Reliance on Unimproved Drinking Water (%)",
+              name: "Average Reliance on Unimproved Drinking Water",
+              unit: "(%)",
               type: "range",
               column_name: "w_unimp",
               min: 0,
@@ -200,7 +209,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Average Travel Time To Cities (min.)",
+              name: "Average Travel Time To Cities",
+              unit: "(min.)",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -209,7 +219,8 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Distance to Roads (meters)",
+              name: "Average Distance to Roads",
+              unit: "(meters)",
               type: "range",
               column_name: "dr",
               min: 226,
@@ -218,7 +229,8 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Distance to Towns (meters)",
+              name: "Average Distance to Towns",
+              unit: "(meters)",
               type: "range",
               column_name: "dt_km",
               min: 0,
@@ -227,7 +239,8 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Diahrrea Prevalence in Children <5 Years (%)",
+              name: "Average Diahrrea Prevalence in Children <5 Years",
+              unit: "(%)",
               type: "range",
               column_name: "dia",
               min: 2.5,
@@ -236,7 +249,8 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Average Predicted Annual Cholera Incidence (cases/100,000pp)",
+              name: "Average Predicted Annual Cholera Incidence",
+              unit: "(cases/100,000pp)",
               type: "range",
               column_name: "cholera",
               min: 0.1,
@@ -245,7 +259,8 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Average Mortality in Children <5 Years (%)",
+              name: "Average Mortality in Children <5 Years",
+              unit: "(%)",
               type: "range",
               column_name: "u5m",
               min: 4.6,
@@ -254,7 +269,8 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Average Women's Educational Attainment (yrs.)",
+              name: "Average Women's Educational Attainment",
+              unit: "(yrs.)",
               type: "range",
               column_name: "edu_w",
               min: 3,
@@ -263,7 +279,8 @@ const initialState = {
               subcategory: "socioeconomic",
             },
             {
-              name: "Average Men's Educational Attainment (yrs.)",
+              name: "Average Men's Educational Attainment",
+              unit: "(yrs.)",
               type: "range",
               column_name: "edu_m",
               min: 4,
@@ -286,7 +303,7 @@ const initialState = {
           ],
         },
         {
-          name: "Estimated Settlements and Communities (pop.)",
+          name: "Settlement Areas and Estimated Population (pop.)",
           carto_tableName: "gha_comms_points",
           carto_layer: null,
           carto_style: `#layer {
@@ -309,6 +326,7 @@ const initialState = {
           filters: [
             {
               name: "Population Estimate",
+              unit: "(pop.)",
               type: "range",
               column_name: "pop_est",
               column_slider: "pop_log",
@@ -319,6 +337,7 @@ const initialState = {
             },
             {
               name: "Community Classification",
+              unit: "",
               type: "categorical",
               column_name: "classes",
               value: [
@@ -340,7 +359,8 @@ const initialState = {
               ] /* declaure col values that should be filtered on */,
             },
             {
-              name: "Population Practicing Open Defecation (%)",
+              name: "Population Practicing Open Defecation",
+              unit: "(%)",
               type: "range",
               column_name: "od",
               min: 0,
@@ -349,7 +369,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Reliance on Unimproved Sanitation (%)",
+              name: "Reliance on Unimproved Sanitation",
+              unit: "(%)",
               type: "range",
               column_name: "s_unimp",
               min: 0,
@@ -358,7 +379,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Reliance on Unimproved Drinking Water (%)",
+              name: "Reliance on Unimproved Drinking Water",
+              unit: "(%)",
               type: "range",
               column_name: "w_unimp",
               min: 0,
@@ -367,7 +389,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Travel Time To Cities (min.)",
+              name: "Travel Time To Cities",
+              unit: "(min.)",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -376,7 +399,8 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Distance to Roads (meters)",
+              name: "Distance to Roads",
+              unit: "(meters)",
               type: "range",
               column_name: "dr",
               min: 26,
@@ -385,7 +409,8 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Distance to Towns (km.)",
+              name: "Distance to Towns",
+              unit: "(km.)",
               type: "range",
               column_name: "dt_km",
               min: 0,
@@ -394,7 +419,8 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Diahrrea Prevalence in Children <5 Years (%)",
+              name: "Diahrrea Prevalence in Children <5 Years",
+              unit: "(%)",
               type: "range",
               column_name: "dia",
               min: 2.3,
@@ -404,6 +430,7 @@ const initialState = {
             },
             {
               name: "Predicted Annual Cholera Incidence (cases/100,000pp)",
+              unit: "(cases/100,000pp)",
               type: "range",
               column_name: "cholera",
               min: 0,
@@ -412,7 +439,8 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Mortality in Children <5 Years (%)",
+              name: "Mortality in Children <5 Years",
+              unit: "(%)",
               type: "range",
               column_name: "u5m",
               min: 0.05,
@@ -421,7 +449,8 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Women's Educational Attainment (yrs.)",
+              name: "Women's Educational Attainment",
+              unit: "(yrs.)",
               type: "range",
               column_name: "edu_w",
               min: 1,
@@ -430,7 +459,8 @@ const initialState = {
               subcategory: "socioeconomic",
             },
             {
-              name: "Men's Educational Attainment (yrs.)",
+              name: "Men's Educational Attainment",
+              unit: "(yrs.)",
               type: "range",
               column_name: "edu_m",
               min: 3,
@@ -446,7 +476,7 @@ const initialState = {
     cambodia: {
       name: "Cambodia",
       mapID: "cambodia",
-      view: [12.5657, 104.9910],
+      view: [12.5657, 104.991],
       zoom: 7.4,
       /* 
       you can add as many layers for each indicator. 
