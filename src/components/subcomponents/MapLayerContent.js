@@ -212,7 +212,7 @@ const MapLayerContent = ({ layer, layerIndex }) => {
           <ExpandMore
             onClick={() => handleClick(layerIndex)}
             className="tour-expand"
-            className={classes.icon}
+            // className={classes.icon}
           />
         )}
       </ListItem>
@@ -222,6 +222,17 @@ const MapLayerContent = ({ layer, layerIndex }) => {
           component="div"
           disablePadding
         >
+          {layer.name==="Settlement Areas and Estimated Population (pop.)" &&(
+            <Box mt={2} ml={3.5} mb={2} key={"countriesDataview"}>
+              <div id="countriesWidget" class="widget">
+              <Typography variant="subtitle2">Select District from Dropdown</Typography>
+                {/* <p>{JSON.stringify(selectedDistricts)}</p> */}
+                <select class="js-countries">
+                  <option value="">All</option>
+                </select>
+              </div>
+            </Box>
+          )}
           {layer.filters.map((filter, filterIndex) => {
             switch (filter.type) {
               /* you can implement category filter UI here */

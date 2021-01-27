@@ -83,7 +83,7 @@ export const MapLayers = () => {
         </Box>
         <Divider />
         <Box mt={2} ml={2}>
-          <Typography variant="button" color="black">
+          <Typography variant="button" color="inherit">
             <strong>Explore Maps of Key Variables</strong>
           </Typography>
         </Box>
@@ -100,8 +100,8 @@ export const MapLayers = () => {
             )}
           </List>
         ))}
-        <Box mt={2} ml={2}>
-          <Typography variant="button" color="black">
+        <Box mt={2} ml={2} mr={2}>
+          <Typography variant="button" color="inherit">
             <strong>Target Settlements & Districts by Attribute(s)</strong>
           </Typography>
         </Box>
@@ -110,7 +110,7 @@ export const MapLayers = () => {
             {layer.name ===
             "Settlement Areas and Estimated Population (pop.)" ? (
               <div className="tour-comm">
-                <MapLayerContent layer={layer} layerIndex={layerIndex} />
+                <MapLayerContent layer={layer} layerIndex={layerIndex} id="countriesWidget" />
               </div>
             ) : layer.name === "Districts" ? (
               <div className="tour-dist">
@@ -121,20 +121,6 @@ export const MapLayers = () => {
             )}
           </List>
         ))}
-        <Box mt={2} ml={2}>
-          <Typography variant="button" color="black">
-            <strong>Explore District by Name</strong>
-          </Typography>
-        </Box>
-        <Box mt={2} ml={2} mb={3} key={"countriesDataview"}>
-          <div id="countriesWidget" class="widget">
-            <p>Select District from Dropdown</p>
-            {/* <p>{JSON.stringify(selectedDistricts)}</p> */}
-            <select class="js-countries">
-              <option value="">All</option>
-            </select>
-          </div>
-        </Box>
       </Paper>
     </div>
     // </div>

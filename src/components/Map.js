@@ -424,11 +424,11 @@ export const Map = () => {
               obj["legend"] = event.styles[0]._categories;
               for (var i in obj.legend) {
                 if (obj.legend[i].name === 1) {
-                  obj.legend[i].name = "Rural remote";
+                  obj.legend[i].name = "Rural Remote";
                 } else if (obj.legend[i].name === 2) {
-                  obj.legend[i].name = "Rural on-road";
-                } else {
-                  obj.legend[i].name = "Rural mixed";
+                  obj.legend[i].name = "Rural On-road";
+                } else if (obj.legend[i].name === 3) {
+                  obj.legend[i].name = "Rural Mixed";
                 }
               }
               buckets_list.push(obj);
@@ -465,11 +465,11 @@ export const Map = () => {
       var dat_loc = [];
       if (popup[1].data.classes !== undefined) {
         if (popup[1].data.classes === 1) {
-          popup[1].data.classes = "Rural remote";
+          popup[1].data.classes = "Rural Remote";
         } else if (popup[1].data.classes === 2) {
-          popup[1].data.classes = "Rural on-road";
-        } else {
-          popup[1].data.classes = "Rural mixed";
+          popup[1].data.classes = "Rural On-road";
+        } else if (popup[1].data.classes === 3) {
+          popup[1].data.classes = "Rural Mixed";
         }
       }
       Object.entries(popup[1].data)
@@ -553,47 +553,58 @@ export const Map = () => {
   }
 
   useEffect(() => {
-    if (cartoClient && districtsSource && nativeMap) {
+    if (cartoClient && districtsSource) {
       const countriesDataview = new Carto.dataview.Category(
         districtsSource,
         "district",
         {
           limit: 216,
-          // operation: Carto.operation.AVG, // Compute the average
-          // operationColumn: 'sum'
         }
       );
       cartoClient.addDataview(countriesDataview);
 
       countriesDataview.on("dataChanged", (data) => {
+        console.log("dataChanged");
         const countryNames = data.categories
           .map((category) => category.name)
           .sort();
         refreshCountriesWidget(countryNames);
       });
     }
-  }, [cartoClient, districtsSource, nativeMap]);
+  }, [cartoClient, districtsSource]);
 
   function refreshCountriesWidget(districtNames) {
     const widgetDom = document.querySelector("#countriesWidget");
-    const countriesDom = widgetDom.querySelector(".js-countries");
+    if (widgetDom != null) {
+      const countriesDom = widgetDom.querySelector(".js-countries");
 
-    countriesDom.onchange = (event) => {
-      setSelectedDistricts((st) => [...st, event.target.value]);
-    };
+      countriesDom.onchange = (event) => {
+        setSelectedDistricts((st) => [...st, event.target.value]);
+        // setSelectedDistricts(event.target.value);
+      };
 
-    // Fill in the list of countries
-    districtNames.forEach((district) => {
-      const option = document.createElement("option");
-      option.innerHTML = district;
-      option.value = district;
-      countriesDom.appendChild(option);
-    });
+      // Fill in the list of countries
+      districtNames.forEach((district) => {
+        const option = document.createElement("option");
+        option.innerHTML = district;
+        option.value = district;
+        countriesDom.appendChild(option);
+      });
+    }
   }
   useEffect(() => {
     if (selectedDistricts.length > 0) {
       highlightCountry(selectedDistricts);
       filterPopulatedPlacesByCountry(selectedDistricts);
+      // document.getElementById('js-countries').addEventListener("change", function () {
+      // let input = selectedDistricts;
+      //     return  fetch(`https://karastuart.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM gha_dist where admin Ilike '${selectedDistricts}'`)
+      //     .then((resp) => resp.json())
+      //     .then((response) => {
+      //         let geojsonLayer = L.geoJson(response)
+      //         map.fitBounds(geojsonLayer.getBounds());
+      //     })
+      // });
     }
   }, [selectedDistricts]);
 
@@ -754,8 +765,18 @@ export const Map = () => {
           }}
           // elevation={3}
         >
-          {arrow ? <span className={classes.arrow} ref={setArrowRef} /> : null}
+          {/* {arrow ? <span className={classes.arrow} ref={setArrowRef} /> : null} */}
           <div className={classes.paper}>
+            <Grid container justify="flex-end" pt={2} key={"popperHeader"}>
+              <CloseIcon
+                key={"popperClose"}
+                fontSize="small"
+                color="disabled"
+                onClick={(e) => {
+                  setPopup(null);
+                }}
+              />
+            </Grid>
             {popupData.data.length === 1 && (
               <Box fontSize="fontSize">
                 {popupData.data[0].layer === "Community Classification" ? (
