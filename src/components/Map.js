@@ -1,4 +1,11 @@
-import { useState, useEffect, useContext, useLayoutEffect, useRef, Fragment } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  Fragment,
+} from "react";
 import { MapContext } from "../state/MapState";
 import Carto, { isNull } from "@carto/carto.js";
 import L, { map } from "leaflet";
@@ -158,7 +165,7 @@ function transformArray(array) {
     variable = array[i][1];
     value = array[i][2];
     cat = array[i][3];
-    unit = array[i][4]
+    unit = array[i][4];
     obj["layer"] = layer;
     obj["name"] = variable;
     obj["value"] = value;
@@ -194,8 +201,8 @@ export const Map = () => {
   const [districtsSource, setDistrictsSource] = useState(null);
   const [districtsStyle, setDistrictsStyle] = useState(null);
   const [selectedDistricts, setSelectedDistricts] = useState([]);
-  const [widgetLoad, setWidgetLoad] = useState()
-  const [allDistricts, setAllDistricts] = useState([])
+  const [widgetLoad, setWidgetLoad] = useState();
+  const [allDistricts, setAllDistricts] = useState([]);
 
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = [];
@@ -341,7 +348,7 @@ export const Map = () => {
             filter.name,
             filter.column_name,
             filter.subcategory,
-            filter.unit
+            filter.unit,
           ];
           objlist.push(obj1);
           switch (filter.type) {
@@ -464,7 +471,12 @@ export const Map = () => {
     if (popup) {
       var dat = [];
       currentMapState.layers[layerID].filters.forEach(function (element) {
-        dat.push([element.column_name, element.name, element.subcategory, element.unit]);
+        dat.push([
+          element.column_name,
+          element.name,
+          element.subcategory,
+          element.unit,
+        ]);
       });
       dat.sort();
       var dat_loc = [];
@@ -583,26 +595,26 @@ export const Map = () => {
   // useLayoutEffect(()=> {
   //   if(widgetLoad===true) {
   //     refreshCountriesWidget(allDistricts);
-  //   }  
+  //   }
   // }, [widgetLoad])
 
   function refreshCountriesWidget(districtNames) {
     const widgetDom = document.querySelector("#countriesWidget");
     // if (widgetDom != null) {
-      const countriesDom = widgetDom.querySelector(".js-countries");
+    const countriesDom = widgetDom.querySelector(".js-countries");
 
-      countriesDom.onchange = (event) => {
-        // setSelectedDistricts((st) => [...st, event.target.value]);
-        setSelectedDistricts(event.target.value);
-      };
+    countriesDom.onchange = (event) => {
+      // setSelectedDistricts((st) => [...st, event.target.value]);
+      setSelectedDistricts(event.target.value);
+    };
 
-      // Fill in the list of countries
-      districtNames.forEach((district) => {
-        const option = document.createElement("option");
-        option.innerHTML = district;
-        option.value = district;
-        countriesDom.appendChild(option);
-      });
+    // Fill in the list of countries
+    districtNames.forEach((district) => {
+      const option = document.createElement("option");
+      option.innerHTML = district;
+      option.value = district;
+      countriesDom.appendChild(option);
+    });
     // }
   }
   useEffect(() => {
@@ -611,23 +623,25 @@ export const Map = () => {
       filterPopulatedPlacesByCountry(selectedDistricts);
       // document.getElementById('js-countries').addEventListener("change", function () {
       // let input = selectedDistricts;
-          return  fetch(`https://karastuart.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM gha_dist where district Ilike '${selectedDistricts}'`)
-          .then((resp) => resp.json())
-          .then((response) => {
-              let geojsonLayer = L.geoJSON(response)
-              nativeMap.fitBounds(geojsonLayer.getBounds());
-          })
+      return fetch(
+        `https://karastuart.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM gha_dist where district Ilike '${selectedDistricts}'`
+      )
+        .then((resp) => resp.json())
+        .then((response) => {
+          let geojsonLayer = L.geoJSON(response);
+          nativeMap.fitBounds(geojsonLayer.getBounds());
+        });
       // });
     } else if (selectedDistricts === "") {
       highlightCountry(selectedDistricts);
       filterPopulatedPlacesByCountry(selectedDistricts);
-      nativeMap.setView(maps[mapID].view, maps[mapID].zoom)
+      nativeMap.setView(maps[mapID].view, maps[mapID].zoom);
     }
   }, [selectedDistricts]);
 
   function highlightCountry(district) {
     // district.forEach((district) => {
-      let cartoCSS = `
+    let cartoCSS = `
       #layer {
         polygon-fill: 'transparent';
         polygon-opacity: 1;
@@ -637,41 +651,41 @@ export const Map = () => {
           line-opacity: 0.5;
         }
       } `;
-      if (district) {
-        // cartoCSS = `
-        //   ${cartoCSS}
-        //   #layer[!district.includes('${district}')] {
-        //     polygon-fill: #808080;
-        //     polygon-opacity: .75;
-        //   }
-        // `;
-        cartoCSS = `
+    if (district) {
+      // cartoCSS = `
+      //   ${cartoCSS}
+      //   #layer[!district.includes('${district}')] {
+      //     polygon-fill: #808080;
+      //     polygon-opacity: .75;
+      //   }
+      // `;
+      cartoCSS = `
           ${cartoCSS}
           #layer[district!='${district}'] {
             polygon-fill: #808080;
             polygon-opacity: .75;
           }
         `;
-      }
-      districtsStyle.setContent(cartoCSS);
+    }
+    districtsStyle.setContent(cartoCSS);
     // });
   }
 
   function filterPopulatedPlacesByCountry(district) {
     // district.forEach((district) => {
-      let query = `
+    let query = `
         SELECT *
           FROM gha_comms_points
           WHERE district IN (SELECT district FROM gha_dist)
       `;
-      if (district) {
-        query = `
+    if (district) {
+      query = `
           SELECT *
             FROM gha_comms_points
             WHERE district='${district}'
         `;
-      }
-      commCalcSource.setQuery(query);
+    }
+    commCalcSource.setQuery(query);
     // });
   }
 
@@ -970,7 +984,8 @@ export const Map = () => {
                                           style={{ width: "25%" }}
                                           align="right"
                                         >
-                                          {anObjectMapped.value} {anObjectMapped.unit}
+                                          {anObjectMapped.value}{" "}
+                                          {anObjectMapped.unit}
                                         </TableCell>
                                       </TableRow>
                                     );

@@ -28,17 +28,16 @@ import Collapse from "@material-ui/core/Collapse";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import DatasetInfoPopover from "./DatasetInfoPopover";
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import { selectedDistricts } from "../Map";
-import InfoOutlinedIcon from '@material-ui/icons/Info';
+import InfoOutlinedIcon from "@material-ui/icons/Info";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import CloseIcon from "@material-ui/icons/Close";
 import theme from "../../theme/theme";
 import { Card, CardContent, Button } from "@material-ui/core";
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   collapse: {
     entered: {
       background: "blue",
-    }
+    },
   },
   modal: {
     display: "flex",
@@ -96,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   popover: {
     width: 550,
     // boxShadow: theme.shadows[5],
-    padding: theme.spacing(1, 1, 1,1),
+    padding: theme.spacing(1, 1, 1, 1),
     backgroundColor: theme.palette.background.paper,
   },
 }));
@@ -120,7 +119,7 @@ const MapLayerContent = ({ layer, layerIndex }) => {
   const [mapID, setMapID] = useState("ghana");
   const classes = useStyles();
   const [selectedLayer, setselectedLayer] = React.useState("");
-  const [age, setAge] = React.useState('');
+  const [age, setAge] = React.useState("");
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [hover, setHover] = useState(false);
   const clickRef = useRef(null);
@@ -135,10 +134,10 @@ const MapLayerContent = ({ layer, layerIndex }) => {
   const handleClick = (layerIndex) => {
     if (selectedLayer === layerIndex) {
       setselectedLayer("");
-      setMenuBackground(theme.palette.background.paper)
+      setMenuBackground(theme.palette.background.paper);
     } else {
       setselectedLayer(layerIndex);
-      setMenuBackground("#d8d9e3")
+      setMenuBackground("#d8d9e3");
     }
   };
 
@@ -223,29 +222,37 @@ const MapLayerContent = ({ layer, layerIndex }) => {
     });
   };
 
-  const settlementInfo = 
-    {
-      name: "Settlement Areas and Estimated Population",
-      description:
-        "All settlements (areas consisting of multiple households/buildings) were mapped with the combination of two population mapping datasets. The datasets estimate the location of all settlements using satellite imagery. SanPlan combined these together to determine the location and boundary of all settlements. Data from various publicly available sources were then extracted for each settlement. The point layer represented on the SanPlan map represents the geographic center of each settlement areas's estimated boundary.",
-      note:
-        "DISCLAIMER: Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement. As a result, center point locations may appear ‘off’ when compared with satellite imagery or base maps.",
-      year: 2020,
-      resolution: "30m",
-      source: "SanPlan",
-      subcategory: "accessibility",
-      wsf:"An effort headed by the German Aerospace Center which improves upon previous efforts to outline settlements (e.g., Global Urban Footprint) by employing a novel and robust methodology which jointly exploits open-and-free multitemporal optical and radar data.",
-      wsf_citation: "Marconcini, M., Metz-Marconcini, A., Üreyen, S. et al. Outlining where humans live, the World Settlement Footprint 2015. Sci Data 7, 242 (2020). https://doi.org/10.1038/s41597-020-00580-5",
-      wsf_link: "https://springernature.figshare.com/collections/Outlining_where_humans_live_-_The_World_Settlement_Footprint_2015/4712852",
-      fb:"Facebook, in partnership with the Center for International Earth Science Information Network (CIESIN) at Columbia University, utilized state-of-the-art computer vision techniques to identify buildings from publicly accessible mapping services to create population datasets at a 30m resolution.",
-      fb_citation: "Facebook Connectivity Lab and Center for International Earth Science Information Network - CIESIN - Columbia University. 2016. High Resolution Settlement Layer (HRSL). Source imagery for HRSL © 2016 DigitalGlobe. Accessed 15 Sept. 2020.",
-      fb_link: "https://dataforgood.fb.com/tools/population-density-maps/",
-      link: "/Datasets/#settle"
-    };
+  const settlementInfo = {
+    name: "Settlement Areas and Estimated Population",
+    description:
+      "All settlements (areas consisting of multiple households/buildings) were mapped with the combination of two population mapping datasets. The datasets estimate the location of all settlements using satellite imagery. SanPlan combined these together to determine the location and boundary of all settlements. Data from various publicly available sources were then extracted for each settlement. The point layer represented on the SanPlan map represents the geographic center of each settlement areas's estimated boundary.",
+    note:
+      "DISCLAIMER: Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement. As a result, center point locations may appear ‘off’ when compared with satellite imagery or base maps.",
+    year: 2020,
+    resolution: "30m",
+    source: "SanPlan",
+    subcategory: "accessibility",
+    wsf:
+      "An effort headed by the German Aerospace Center which improves upon previous efforts to outline settlements (e.g., Global Urban Footprint) by employing a novel and robust methodology which jointly exploits open-and-free multitemporal optical and radar data.",
+    wsf_citation:
+      "Marconcini, M., Metz-Marconcini, A., Üreyen, S. et al. Outlining where humans live, the World Settlement Footprint 2015. Sci Data 7, 242 (2020). https://doi.org/10.1038/s41597-020-00580-5",
+    wsf_link:
+      "https://springernature.figshare.com/collections/Outlining_where_humans_live_-_The_World_Settlement_Footprint_2015/4712852",
+    fb:
+      "Facebook, in partnership with the Center for International Earth Science Information Network (CIESIN) at Columbia University, utilized state-of-the-art computer vision techniques to identify buildings from publicly accessible mapping services to create population datasets at a 30m resolution.",
+    fb_citation:
+      "Facebook Connectivity Lab and Center for International Earth Science Information Network - CIESIN - Columbia University. 2016. High Resolution Settlement Layer (HRSL). Source imagery for HRSL © 2016 DigitalGlobe. Accessed 15 Sept. 2020.",
+    fb_link: "https://dataforgood.fb.com/tools/population-density-maps/",
+    link: "/Datasets/#settle",
+  };
 
   return (
     <>
-      <ListItem key={"collapseItem" + layerIndex} style={{backgroundColor: menuBackground}} className={classes.icon} >
+      <ListItem
+        key={"collapseItem" + layerIndex}
+        style={{ backgroundColor: menuBackground }}
+        className={classes.icon}
+      >
         <ListItemIcon key={"listItemIcon"}>
           {
             <ToggleButton
@@ -263,23 +270,30 @@ const MapLayerContent = ({ layer, layerIndex }) => {
             </ToggleButton>
           }
         </ListItemIcon>
-        <ListItemText primary={layer.name} onClick={() => handleClick(layerIndex)} />
+        <ListItemText
+          primary={layer.name}
+          onClick={() => handleClick(layerIndex)}
+        />
         {layer.name === "Settlement Areas and Estimated Population (pop.)" && (
           <>
-            <InfoOutlinedIcon fontSize="small" onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setPopoverOpen(true);
-              // setDatasetName(layer.name);
-              // setPopup(null);
+            <InfoOutlinedIcon
+              fontSize="small"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setPopoverOpen(true);
+                // setDatasetName(layer.name);
+                // setPopup(null);
               }}
               onMouseEnter={() => {
-              setHover(true);
+                setHover(true);
               }}
               onMouseLeave={() => {
-              setHover(false);
+                setHover(false);
               }}
-              style={{ color: hover ? theme.palette.secondary.main : "#a8a8a8" }}
+              style={{
+                color: hover ? theme.palette.secondary.main : "#a8a8a8",
+              }}
             />
             <Modal
               ref={clickRef}
@@ -288,31 +302,31 @@ const MapLayerContent = ({ layer, layerIndex }) => {
               className={classes.modal}
               open={popoverOpen}
               onClose={(e) => {
-              setPopoverOpen(false);
+                setPopoverOpen(false);
               }}
               closeAfterTransition
               BackdropComponent={Backdrop}
               BackdropProps={{
-              timeout: 500,
+                timeout: 500,
               }}
               elevation={3}
             >
               <Fade in={popoverOpen}>
-              <div className={classes.popover}>
+                <div className={classes.popover}>
                   <Grid
-                  container
-                  justify="flex-end"
-                  pt={2}
-                  key={"popoverHeader"}
+                    container
+                    justify="flex-end"
+                    pt={2}
+                    key={"popoverHeader"}
                   >
-                  <CloseIcon
-                    key={"popoverClose"}
-                    fontSize="small"
-                    color="disabled"
-                    onClick={(e) => {
-                    setPopoverOpen(false);
-                    }}
-                  />
+                    <CloseIcon
+                      key={"popoverClose"}
+                      fontSize="small"
+                      color="disabled"
+                      onClick={(e) => {
+                        setPopoverOpen(false);
+                      }}
+                    />
                     <Card className={classes.root} elevation={0}>
                       <CardContent>
                         <Typography variant="h6" component="h2">
@@ -320,8 +334,12 @@ const MapLayerContent = ({ layer, layerIndex }) => {
                         </Typography>
                         {settlementInfo.description}
                         <br></br>
-                        <Typography color="textSecondary">{settlementInfo.note}</Typography>
-                        <Typography variant="body1">Year: {settlementInfo.year}</Typography>
+                        <Typography color="textSecondary">
+                          {settlementInfo.note}
+                        </Typography>
+                        <Typography variant="body1">
+                          Year: {settlementInfo.year}
+                        </Typography>
                         <Typography variant="body1" component="h5">
                           Dataset resolution: {settlementInfo.resolution}
                         </Typography>
@@ -330,10 +348,10 @@ const MapLayerContent = ({ layer, layerIndex }) => {
                         </Typography>
                         {settlementInfo.source === "SanPlan" && (
                           <Button
-                          href={settlementInfo.link}
-                          size="small"
-                          variant="outlined"
-                          color="primary"
+                            href={settlementInfo.link}
+                            size="small"
+                            variant="outlined"
+                            color="primary"
                           >
                             More Info on This Layer
                           </Button>
@@ -341,15 +359,13 @@ const MapLayerContent = ({ layer, layerIndex }) => {
                       </CardContent>
                     </Card>
                   </Grid>
-              </div>
+                </div>
               </Fade>
             </Modal>
           </>
         )}
         {layerIndex === selectedLayer ? (
-          <ExpandLess
-            onClick={() => handleClick(layerIndex)}
-          />
+          <ExpandLess onClick={() => handleClick(layerIndex)} />
         ) : (
           <ExpandMore
             onClick={() => handleClick(layerIndex)}
@@ -357,7 +373,12 @@ const MapLayerContent = ({ layer, layerIndex }) => {
           />
         )}
       </ListItem>
-      <Collapse in={layerIndex === selectedLayer} timeout="auto" unmountOnExit className={classes.collapse}>
+      <Collapse
+        in={layerIndex === selectedLayer}
+        timeout="auto"
+        unmountOnExit
+        className={classes.collapse}
+      >
         <List
           key={"collapseSubHeader" + layerIndex}
           component="div"

@@ -209,7 +209,7 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Average Travel Time To Cities",
+              name: "Average Travel Time to Cities",
               unit: "min.",
               type: "range",
               column_name: "timecities",
@@ -390,7 +390,7 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Travel Time To Cities",
+              name: "Travel Time to Cities",
               unit: "min.",
               type: "range",
               column_name: "timecities",

@@ -102,7 +102,9 @@ export const MapLayers = () => {
         ))}
         <Box mt={2} ml={2} mr={2}>
           <Typography variant="button" color="inherit">
-            <strong>Locate Settlements & Districts by Contextual Factor(s)</strong>
+            <strong>
+              Locate Settlements & Districts by Contextual Factor(s)
+            </strong>
           </Typography>
         </Box>
         {maps[mapID].layers.map((layer, layerIndex) => (
@@ -110,10 +112,16 @@ export const MapLayers = () => {
             {layer.name ===
             "Settlement Areas and Estimated Population (pop.)" ? (
               <div className="tour-comm">
-                <MapLayerContent layer={layer} layerIndex={layerIndex} id="countriesWidget" />
+                <MapLayerContent
+                  layer={layer}
+                  layerIndex={layerIndex}
+                  id="countriesWidget"
+                />
                 <Box mt={2} ml={3.5} mb={2} key={"countriesDataview"}>
                   <div id="countriesWidget" class="widget">
-                    <Typography variant="subtitle2">Select District from Dropdown</Typography>
+                    <Typography variant="subtitle2">
+                      Select District from Dropdown
+                    </Typography>
                     {/* <p>{JSON.stringify(selectedDistricts)}</p> */}
                     {/* <Select
                       labelId="demo-simple-select-disabled-label"
@@ -130,7 +138,7 @@ export const MapLayers = () => {
                           {name}
                         </MenuItem>
                       ))} */}
-                    {/* </Select> */} 
+                    {/* </Select> */}
                     <select class="js-countries">
                       <option value="">All Districts</option>
                     </select>
