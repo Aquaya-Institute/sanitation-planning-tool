@@ -14,13 +14,13 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-      },
-      popover: {
+    },
+    popover: {
         width: 550,
         // boxShadow: theme.shadows[5],
         padding: theme.spacing(1, 1, 1,1),
         backgroundColor: theme.palette.background.paper,
-      },
+    },
   }));
 
 const DatasetInfoPopover = ({filter, filterIndex}) => {
@@ -35,7 +35,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
         {
           name: "Predicted Annual Cholera Incidence",
           description:
-            "Each mapped pixel represents the mean annual cholera incidence rate (cases per 100,000 people) in that geographic area between 2010 and 2016.",
+            "The mean annual cholera incidence rate (cases per 100,000 people) in the immediate geographic area between 2010 and 2016.",
           year: "2010-2016",
           resolution: "20km",
           source: "Infectious Disease Dynamics",
@@ -47,7 +47,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
         {
           name: "Travel Time to Cities",
           description:
-            "Each mapped pixel represents the straight-line distance from that location to the nearest city of 50,000 people or larger.",
+            "The straight-line distance from the selected location to the nearest city of 50,000 people or larger.",
           year: 2015,
           resolution: "1km",
           source: "Malaria Atlas Project",
@@ -72,7 +72,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
         {
           name: "Population Estimate",
           description:
-            "Each mapped pixel represents the estimated population in that location.",
+            "The estimated population in the location.",
           year: 2020,
           resolution: "1km",
           source: "WorldPop",
@@ -84,7 +84,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
         {
           name: "Women's Educational Attainment",
           description:
-            "Each mapped pixel displays the average years of education for women ages 15-49 in that location.",
+            "The average years of education for women ages 15-49 in the selected location.",
           ihme:
             "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
           year: 2017,
@@ -99,7 +99,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
         {
           name: "Men's Educational Attainment",
           description:
-            "Each mapped pixel displays the average years of education for men ages 15-49 in that location.",
+            "The average years of education for men ages 15-49 in the selected location.",
           ihme:
             "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
           year: 2017,
@@ -114,7 +114,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
         {
           name: "Diahrrea Prevalence in Children <5 Years",
           description:
-            "Each mapped pixel displays the number of diarrhea cases in children under 5 years in that geographic area.",
+            "The number of diarrhea cases in children under 5 years in the immediate geographic area.",
           ihme:
             "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
           year: 2017,
@@ -129,7 +129,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
         {
           name: "Reliance on Unimproved Sanitation",
           description:
-            "Each mapped pixel displays the percent of the population utilizing an unimproved sanitation source in that geographic area.",
+            "The percent of the population utilizing an unimproved sanitation source in the immediate geographic area.",
           ihme:
             "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
           year: 2017,
@@ -146,7 +146,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
           ihme:
             "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
           description:
-            "Each mapped pixel displays the percent of the population utilizing an unimproved drinking water source in that geographic area.",
+            "The percent of the population utilizing an unimproved drinking water source in the immediate geographic area.",
           year: 2017,
           resolution: "5km",
           source: "Institute for Health Metrics and Evaluation",
@@ -161,7 +161,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
           ihme:
             "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
           description:
-            "Each mapped pixel displays the percent of the population estimated to practice open defecation in that geographic area.",
+            "The percent of the population estimated to practice open defecation in the immediate geographic area.",
           year: 2017,
           resolution: "5km",
           source: "Institute for Health Metrics and Evaluation",
@@ -176,7 +176,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
           ihme:
             "IHME estimations were created with various data sources including the Demographic and Health Survey (DHS) and UNICEF Multiple Indicator Cluster Survey (MICS) series, and other country‐specific surveys.",
           description:
-            "Each mapped pixel displays the probability of death before reaching age 5 in that geographic area.",
+            "The probability of death before reaching age 5 in the immediate geographic area.",
           year: 2017,
           resolution: "5km",
           source: "Institute for Health Metrics and Evaluation",
@@ -189,7 +189,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
         {
           name: "Distance to Roads",
           description:
-            "Each pixel represents the straight-line distance to the nearest trunk, primary, secondary or tertiary roadway. These constitute roadways that link sizable towns together.",
+            "The straight-line distance to the nearest trunk, primary, secondary or tertiary roadway. These constitute roadways that link sizable towns together.",
           note:
             "This dataset was created with the 'Roadways' dataset from Open Street Maps.",
           year: 2020,
@@ -200,7 +200,7 @@ const DatasetInfoPopover = ({filter, filterIndex}) => {
         {
           name: "Distance to Towns",
           description:
-            "Each pixel represents the straight-line distance to the nearest ‘town’. SanPlan considers a ‘town’ to be a settlement area with a population of 5,000 or more.",
+            "The straight-line distance to the nearest ‘town’. SanPlan considers a ‘town’ to be a settlement area with a population of 5,000 or more.",
           note:
             "This dataset was created with the 'Population' dataset from WorldPop.",
           year: 2020,

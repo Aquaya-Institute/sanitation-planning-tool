@@ -84,7 +84,7 @@ export const MapLayers = () => {
         <Divider />
         <Box mt={2} ml={2}>
           <Typography variant="button" color="inherit">
-            <strong>Explore Maps of Key Variables</strong>
+            <strong>Explore Maps of Key Contextual Factors</strong>
           </Typography>
         </Box>
         {maps[mapID].layers.map((layer, layerIndex) => (
@@ -102,7 +102,7 @@ export const MapLayers = () => {
         ))}
         <Box mt={2} ml={2} mr={2}>
           <Typography variant="button" color="inherit">
-            <strong>Target Settlements & Districts by Attribute(s)</strong>
+            <strong>Locate Settlements & Districts by Contextual Factor(s)</strong>
           </Typography>
         </Box>
         {maps[mapID].layers.map((layer, layerIndex) => (
@@ -111,6 +111,31 @@ export const MapLayers = () => {
             "Settlement Areas and Estimated Population (pop.)" ? (
               <div className="tour-comm">
                 <MapLayerContent layer={layer} layerIndex={layerIndex} id="countriesWidget" />
+                <Box mt={2} ml={3.5} mb={2} key={"countriesDataview"}>
+                  <div id="countriesWidget" class="widget">
+                    <Typography variant="subtitle2">Select District from Dropdown</Typography>
+                    {/* <p>{JSON.stringify(selectedDistricts)}</p> */}
+                    {/* <Select
+                      labelId="demo-simple-select-disabled-label"
+                      id="demo-simple-select-disabled"
+                      value={age}
+                      onChange={handleChange}
+                      class="js-countries"
+                    >
+                      <MenuItem value="">
+                        <em>All Districts</em>
+                      </MenuItem>
+                      {/* {selectedDistricts.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          {name}
+                        </MenuItem>
+                      ))} */}
+                    {/* </Select> */} 
+                    <select class="js-countries">
+                      <option value="">All Districts</option>
+                    </select>
+                  </div>
+                </Box>
               </div>
             ) : layer.name === "Districts" ? (
               <div className="tour-dist">

@@ -10,9 +10,13 @@ const useCardStyles = makeStyles({
   root: {
     minWidth: 275,
     minHeight: 275,
+    backgroundColor:"#ffffff"
   },
   media: {
-    height: 140,
+    height: 180,
+  },
+  content: {
+    height: 50,
   },
 });
 
@@ -25,11 +29,11 @@ function MapCard({name, url}) {
         <CardMedia
           className={classes.media}
           /* Show a static tile generated from map */
-          image="/none"
+          image={`/${name}_thumb.png`}
           title={`Map of ${name}`}
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+        <CardContent className={classes.content}>
+          <Typography  variant="h5" component="h2">
             {name}
           </Typography>
         </CardContent>
@@ -53,33 +57,30 @@ function Home() {
     <Container>
       <Paper elevation={0} >
         <Box p={2} >
-        <Typography variant="h5" color="secondary">
+        <Typography variant="h4" color="secondary" align="center">
+        <strong>Welcome to the Sanitation Planning Tool</strong>
+        </Typography>
+        </Box>
+        <Box p={2} >
+        <Typography variant="h5" color="secondary" gutterBottom>
         <strong>What</strong> is the SanPlan tool?
         </Typography>
-          <br></br>
-          SanPlan saves sanitation practitioners the time and challenges of collecting, analyzing, 
-          and mapping data to inform their program design by giving them access to information on key 
-          contextual factors, all in one place. Users can explore trends and patterns 
-          within a geographic area, or use the built in filters and sliders to customize their analysis 
-          and download detailed, granular data on their area of interest.
+          {/* <br></br> */}
+          SanPlan helps sanitation practitioners design and execute sanitation programs by allowing them to explore highly-localized, contextual, spatial data. It harmonizes data from multiple sources so that users can visualize geographic patterns and conduct their own analyses.
         </Box>
         <Box  p={2}>
-        <Typography variant="h5" color="secondary" p={2}>
+        <Typography variant="h5" color="secondary" p={2} gutterBottom>
           <strong>Who</strong> should use this tool? 
         </Typography>
-          <br></br>
-          The tool is designed for anyone in the planning or budgeting phase of a sanitation project at the 
-          national, regional or local scale. Typical users might include government agencies, program funders, 
-          and implementing partners who are looking to better understand more existing context where they are 
-          planning to work.
+          {/* <br></br> */}
+          SanPlan is intended for use for sanitation projects at national, regional or local scales. Users in the planning or budgeting phases can use the spatial information to select and target interventions based on the characteristics of a particular geographic area. Similarly, someone in the monitoring & reporting phase could use the tool to compare the local context of their program area to the rest of the country. Program implementers, funders, and government institutions, and researchers are all intended users.
         </Box>
         <Box  p={2}>
-        <Typography variant="h5" color="secondary">
+        <Typography variant="h5" color="secondary" gutterBottom>
         <strong>How</strong> does the tool work? 
-        </Typography>
-          <br></br>
-          SanPlan uses existing publicly available data and links it to a specific location on the map. This 
-          allows users to click anywhere on the map and access information on key contextual factors.  
+        </Typography >
+          {/* <br></br> */}
+          SanPlan integrates data on contextual factors that are thought to influence sanitation program success, allowing users to identify areas where particular interventions are more likely to succeed, or to determine what interventions best suit a particular geographic area of interest.
         </Box>
       </Paper>
       <Grid container item spacing={2} lg={12}>

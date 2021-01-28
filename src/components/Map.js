@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef, Fragment } from "react";
+import { useState, useEffect, useContext, useLayoutEffect, useRef, Fragment } from "react";
 import { MapContext } from "../state/MapState";
 import Carto, { isNull } from "@carto/carto.js";
 import L, { map } from "leaflet";
@@ -150,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function transformArray(array) {
-  var obj, i, layer, variable, value, cat;
+  var obj, i, layer, variable, value, cat, unit;
   var returnedTarget = [];
   for (i = 0; i < array.length; i++) {
     obj = {};
@@ -158,10 +158,12 @@ function transformArray(array) {
     variable = array[i][1];
     value = array[i][2];
     cat = array[i][3];
+    unit = array[i][4]
     obj["layer"] = layer;
     obj["name"] = variable;
     obj["value"] = value;
     obj["category"] = cat;
+    obj["unit"] = unit;
     returnedTarget.push(obj);
   }
   return returnedTarget;
@@ -192,6 +194,8 @@ export const Map = () => {
   const [districtsSource, setDistrictsSource] = useState(null);
   const [districtsStyle, setDistrictsStyle] = useState(null);
   const [selectedDistricts, setSelectedDistricts] = useState([]);
+  const [widgetLoad, setWidgetLoad] = useState()
+  const [allDistricts, setAllDistricts] = useState([])
 
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = [];
@@ -257,7 +261,7 @@ export const Map = () => {
         "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg70?access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ",
         // "https://api.mapbox.com/styles/v1/karastuart/ckk5tl36t02e017npyq4xsp0s.html?fresh=true&title=copy&access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ",
         {
-          maxZoom: 22,
+          // maxZoom: 22,
           // minZoom: 7,
         }
       ).addTo(map);
@@ -337,6 +341,7 @@ export const Map = () => {
             filter.name,
             filter.column_name,
             filter.subcategory,
+            filter.unit
           ];
           objlist.push(obj1);
           switch (filter.type) {
@@ -459,7 +464,7 @@ export const Map = () => {
     if (popup) {
       var dat = [];
       currentMapState.layers[layerID].filters.forEach(function (element) {
-        dat.push([element.column_name, element.name, element.subcategory]);
+        dat.push([element.column_name, element.name, element.subcategory, element.unit]);
       });
       dat.sort();
       var dat_loc = [];
@@ -490,6 +495,7 @@ export const Map = () => {
               popoverColumns[i][1],
               dat_loc[j][2],
               popoverColumns[i][3],
+              popoverColumns[i][4],
             ]);
             if (dat_loc[j][1] === "district") {
               setDistIndex(j);
@@ -569,18 +575,25 @@ export const Map = () => {
           .map((category) => category.name)
           .sort();
         refreshCountriesWidget(countryNames);
+        setAllDistricts(countryNames);
       });
     }
   }, [cartoClient, districtsSource]);
 
+  // useLayoutEffect(()=> {
+  //   if(widgetLoad===true) {
+  //     refreshCountriesWidget(allDistricts);
+  //   }  
+  // }, [widgetLoad])
+
   function refreshCountriesWidget(districtNames) {
     const widgetDom = document.querySelector("#countriesWidget");
-    if (widgetDom != null) {
+    // if (widgetDom != null) {
       const countriesDom = widgetDom.querySelector(".js-countries");
 
       countriesDom.onchange = (event) => {
-        setSelectedDistricts((st) => [...st, event.target.value]);
-        // setSelectedDistricts(event.target.value);
+        // setSelectedDistricts((st) => [...st, event.target.value]);
+        setSelectedDistricts(event.target.value);
       };
 
       // Fill in the list of countries
@@ -590,7 +603,7 @@ export const Map = () => {
         option.value = district;
         countriesDom.appendChild(option);
       });
-    }
+    // }
   }
   useEffect(() => {
     if (selectedDistricts.length > 0) {
@@ -598,18 +611,22 @@ export const Map = () => {
       filterPopulatedPlacesByCountry(selectedDistricts);
       // document.getElementById('js-countries').addEventListener("change", function () {
       // let input = selectedDistricts;
-      //     return  fetch(`https://karastuart.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM gha_dist where admin Ilike '${selectedDistricts}'`)
-      //     .then((resp) => resp.json())
-      //     .then((response) => {
-      //         let geojsonLayer = L.geoJson(response)
-      //         map.fitBounds(geojsonLayer.getBounds());
-      //     })
+          return  fetch(`https://karastuart.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM gha_dist where district Ilike '${selectedDistricts}'`)
+          .then((resp) => resp.json())
+          .then((response) => {
+              let geojsonLayer = L.geoJSON(response)
+              nativeMap.fitBounds(geojsonLayer.getBounds());
+          })
       // });
+    } else if (selectedDistricts === "") {
+      highlightCountry(selectedDistricts);
+      filterPopulatedPlacesByCountry(selectedDistricts);
+      nativeMap.setView(maps[mapID].view, maps[mapID].zoom)
     }
   }, [selectedDistricts]);
 
   function highlightCountry(district) {
-    district.forEach((district) => {
+    // district.forEach((district) => {
       let cartoCSS = `
       #layer {
         polygon-fill: 'transparent';
@@ -637,11 +654,11 @@ export const Map = () => {
         `;
       }
       districtsStyle.setContent(cartoCSS);
-    });
+    // });
   }
 
   function filterPopulatedPlacesByCountry(district) {
-    district.forEach((district) => {
+    // district.forEach((district) => {
       let query = `
         SELECT *
           FROM gha_comms_points
@@ -655,7 +672,7 @@ export const Map = () => {
         `;
       }
       commCalcSource.setQuery(query);
-    });
+    // });
   }
 
   return (
@@ -672,7 +689,7 @@ export const Map = () => {
           style={{
             padding: theme.spacing(1),
             position: "absolute",
-            bottom: "0px",
+            bottom: "16px",
             right: "0px",
             top: "unset",
             left: "unset",
@@ -953,7 +970,7 @@ export const Map = () => {
                                           style={{ width: "25%" }}
                                           align="right"
                                         >
-                                          {anObjectMapped.value}
+                                          {anObjectMapped.value} {anObjectMapped.unit}
                                         </TableCell>
                                       </TableRow>
                                     );
@@ -1057,3 +1074,5 @@ export const Map = () => {
     </div>
   );
 };
+
+// export const newContext = createContext({ selectedDistricts});

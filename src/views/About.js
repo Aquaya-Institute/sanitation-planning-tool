@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
+    textAlign: 'left',
   },
   box: {
     backgroundImage: `url(/banner.png)`,
@@ -125,7 +125,7 @@ function About() {
                   style={{width:"200px", height:"60px"}}>
                 </img>
               </Grid>
-              <Grid item xs={9}>
+              <Grid item xs={9} className={classes.paper}>
               TETRA TECH has over 30 years of successful WASH sector programming and thought leadership. 
               Tetra Tech provides technical assistance in the areas of rural water supply, sustainability 
               assessments, the sanitation value chain including fecal sludge management, and environmental 

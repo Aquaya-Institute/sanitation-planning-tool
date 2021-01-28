@@ -72,7 +72,7 @@ const initialState = {
           filters: [
             {
               name: "Population Practicing Open Defecation",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "od",
               min: 0,
@@ -95,7 +95,7 @@ const initialState = {
           filters: [
             {
               name: "Women's Educational Attainment",
-              unit: "(yrs.)",
+              unit: "yrs.",
               type: "range",
               column_name: "edu_w",
               min: 2,
@@ -118,7 +118,7 @@ const initialState = {
           filters: [
             {
               name: "Travel Time to Cities",
-              unit: "(min.)",
+              unit: "min.",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -180,7 +180,7 @@ const initialState = {
             },
             {
               name: "Average Population Practicing Open Defecation",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "od",
               min: 11,
@@ -190,7 +190,7 @@ const initialState = {
             },
             {
               name: "Average Reliance on Unimproved Sanitation",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "s_unimp",
               min: 1,
@@ -200,7 +200,7 @@ const initialState = {
             },
             {
               name: "Average Reliance on Unimproved Drinking Water",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "w_unimp",
               min: 0,
@@ -210,7 +210,7 @@ const initialState = {
             },
             {
               name: "Average Travel Time To Cities",
-              unit: "(min.)",
+              unit: "min.",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -220,7 +220,7 @@ const initialState = {
             },
             {
               name: "Average Distance to Roads",
-              unit: "(meters)",
+              unit: "meters",
               type: "range",
               column_name: "dr",
               min: 226,
@@ -230,7 +230,7 @@ const initialState = {
             },
             {
               name: "Average Distance to Towns",
-              unit: "(meters)",
+              unit: "meters",
               type: "range",
               column_name: "dt_km",
               min: 0,
@@ -240,7 +240,7 @@ const initialState = {
             },
             {
               name: "Average Diahrrea Prevalence in Children <5 Years",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "dia",
               min: 2.5,
@@ -250,7 +250,7 @@ const initialState = {
             },
             {
               name: "Average Predicted Annual Cholera Incidence",
-              unit: "(cases/100,000pp)",
+              unit: "cases/100,000pp",
               type: "range",
               column_name: "cholera",
               min: 0.1,
@@ -260,7 +260,7 @@ const initialState = {
             },
             {
               name: "Average Mortality in Children <5 Years",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "u5m",
               min: 4.6,
@@ -270,7 +270,7 @@ const initialState = {
             },
             {
               name: "Average Women's Educational Attainment",
-              unit: "(yrs.)",
+              unit: "yrs.",
               type: "range",
               column_name: "edu_w",
               min: 3,
@@ -280,7 +280,7 @@ const initialState = {
             },
             {
               name: "Average Men's Educational Attainment",
-              unit: "(yrs.)",
+              unit: "yrs.",
               type: "range",
               column_name: "edu_m",
               min: 4,
@@ -326,7 +326,7 @@ const initialState = {
           filters: [
             {
               name: "Population Estimate",
-              unit: "(pop.)",
+              unit: "pop.",
               type: "range",
               column_name: "pop_est",
               column_slider: "pop_log",
@@ -340,6 +340,7 @@ const initialState = {
               unit: "",
               type: "categorical",
               column_name: "classes",
+              subcategory: "accessibility",
               value: [
                 {
                   name: "Rural Remote",
@@ -360,7 +361,7 @@ const initialState = {
             },
             {
               name: "Population Practicing Open Defecation",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "od",
               min: 0,
@@ -370,7 +371,7 @@ const initialState = {
             },
             {
               name: "Reliance on Unimproved Sanitation",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "s_unimp",
               min: 0,
@@ -380,7 +381,7 @@ const initialState = {
             },
             {
               name: "Reliance on Unimproved Drinking Water",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "w_unimp",
               min: 0,
@@ -390,7 +391,7 @@ const initialState = {
             },
             {
               name: "Travel Time To Cities",
-              unit: "(min.)",
+              unit: "min.",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -400,7 +401,7 @@ const initialState = {
             },
             {
               name: "Distance to Roads",
-              unit: "(meters)",
+              unit: "meters",
               type: "range",
               column_name: "dr",
               min: 26,
@@ -410,7 +411,7 @@ const initialState = {
             },
             {
               name: "Distance to Towns",
-              unit: "(km.)",
+              unit: "km.",
               type: "range",
               column_name: "dt_km",
               min: 0,
@@ -420,7 +421,7 @@ const initialState = {
             },
             {
               name: "Diahrrea Prevalence in Children <5 Years",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "dia",
               min: 2.3,
@@ -429,8 +430,8 @@ const initialState = {
               subcategory: "health",
             },
             {
-              name: "Predicted Annual Cholera Incidence (cases/100,000pp)",
-              unit: "(cases/100,000pp)",
+              name: "Predicted Annual Cholera Incidence",
+              unit: "cases/100,000pp",
               type: "range",
               column_name: "cholera",
               min: 0,
@@ -440,7 +441,7 @@ const initialState = {
             },
             {
               name: "Mortality in Children <5 Years",
-              unit: "(%)",
+              unit: "%",
               type: "range",
               column_name: "u5m",
               min: 0.05,
@@ -450,7 +451,7 @@ const initialState = {
             },
             {
               name: "Women's Educational Attainment",
-              unit: "(yrs.)",
+              unit: "yrs.",
               type: "range",
               column_name: "edu_w",
               min: 1,
@@ -460,7 +461,7 @@ const initialState = {
             },
             {
               name: "Men's Educational Attainment",
-              unit: "(yrs.)",
+              unit: "yrs.",
               type: "range",
               column_name: "edu_m",
               min: 3,
