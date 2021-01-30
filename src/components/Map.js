@@ -360,6 +360,14 @@ export const Map = () => {
               _filters.push(_filter);
               _columns.push(filter.column_name);
               break;
+            case "range_non_linear":
+              const _filter_non = new Carto.filter.Range(filter.column_name, {
+                gte: filter.scaledValue[0],
+                lte: filter.scaledValue[1],
+              });
+              _filters.push(_filter_non);
+              _columns.push(filter.column_name);
+              break;
             case "categorical":
               let col_vals_tofilter = [];
               //on init get the category filter state and create
