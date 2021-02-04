@@ -322,18 +322,60 @@ const initialState = {
             marker-line-opacity: 1;}`,
           visible: true,
           order: 5,
-          /* These are all range filters and are implemented */
           filters: [
             {
               name: "Population Estimate",
               unit: "pop.",
-              type: "range",
+              type: "range_non_linear",
               column_name: "pop_est",
-              column_slider: "pop_log",
               min: 0,
-              max: 6033969,
-              value: [0, 6033969],
+              max: 70, //we want 7 breaks not counting start value of 0.
+              value: [0, 70], //slider range will be from 0-70, which we will scale to
+              scaledValue: [0, 6033969], //the actual min/max of column
               subcategory: "socioeconomic",
+              // define 7+1 non linear marks here, note that value goes from 0-70 only
+              marks: [
+                {
+                  value: 0,
+                  scaledValue: 0,
+                  label: "0",
+                },
+                {
+                  value: 10,
+                  scaledValue: 100,
+                  label: "100",
+                },
+                {
+                  value: 20,
+                  scaledValue: 500,
+                  label: "500",
+                },
+                {
+                  value: 30,
+                  scaledValue: 1000,
+                  label: "1K",
+                },
+                {
+                  value: 40,
+                  scaledValue: 5000,
+                  label: "5K",
+                },
+                {
+                  value: 50,
+                  scaledValue: 50000,
+                  label: "50K",
+                },
+                {
+                  value: 60,
+                  scaledValue: 1000000,
+                  label: "1M",
+                },
+                {
+                  value: 70,
+                  scaledValue: 7000000,
+                  label: "7M",
+                }
+              ],
             },
             {
               name: "Community Classification",
@@ -624,6 +666,21 @@ const reducer = (state, action) => {
             });
             // filter.resetFilters()
             break;
+          case "range_non_linear":
+            //this is how you get the filter out of the carto layer
+            const filter_non = draft.maps[draft.currentMapID].layers[
+              action.layerIndex
+            ].carto_layer
+              .getSource()
+              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[action.filterIndex];
+            //this is how you set the filter. this is specific to range filter
+            filter_non.setFilters({
+              gte: action.filter.scaledValue[0],
+              lte: action.filter.scaledValue[1],
+            });
+            // filter.resetFilters()
+            break;
           case "categorical":
             //   return null;
             const filter_c = draft.maps[draft.currentMapID].layers[
@@ -648,9 +705,9 @@ const reducer = (state, action) => {
             });
             break;
           case "none":
-            return null;
+            break;
           default:
-            return null;
+            break;
         }
       });
 

@@ -38,6 +38,7 @@ import Fade from "@material-ui/core/Fade";
 import CloseIcon from "@material-ui/icons/Close";
 import theme from "../../theme/theme";
 import { Card, CardContent, Button } from "@material-ui/core";
+import { SliderNonLinear } from "./SliderNonLinear";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -191,6 +192,7 @@ const MapLayerContent = ({ layer, layerIndex }) => {
     layerIndex,
     filterIndex,
     newValue,
+    scaledValue,
     filterStateObject,
     categoryFilterIndex,
   }) => {
@@ -218,6 +220,7 @@ const MapLayerContent = ({ layer, layerIndex }) => {
       filter: {
         ...filterStateObject,
         value: newValue,
+        scaledValue: scaledValue
       },
     });
   };
@@ -567,6 +570,57 @@ const MapLayerContent = ({ layer, layerIndex }) => {
                                   }}
                                   />
                               </Grid> */}
+                      </Grid>
+                    </Grid>
+                  </ListItem>
+                );
+              /* non-linear range filter UI implementation */
+              case "range_non_linear":
+                return (
+                  <ListItem
+                    key={"range" + filterIndex}
+                    button
+                    className={classes.nested}
+                  >
+                    <Grid
+                      container
+                      spacing={0}
+                      key={"rangeSubHeader" + filterIndex}
+                    >
+                      <Grid item xs={11}>
+                        <Typography variant="subtitle2">
+                          {filter.name} ({filter.unit})
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <DatasetInfoPopover
+                          filter={filter}
+                          filterIndex={filterIndex}
+                        />
+                      </Grid>
+                      <Grid item xs={11} key={"sliderGrid" + filterIndex}>       
+                        <SliderNonLinear
+                          id={filterIndex}
+                          key={"slider" + filterIndex}
+                          value={[
+                            Number(filter.value[0]),
+                            Number(filter.value[1]),
+                          ]}    
+                          min={filter.min}
+                          max={filter.max}
+                          aria-labelledby="non-linear-input-slider"
+                          valueLabelDisplay="auto"
+                          marks={filter.marks}
+                          callback={(e, newval, scaledVal) => {
+                            updateFilter({
+                              layerIndex: layerIndex,
+                              filterIndex: filterIndex,
+                              newValue: newval,
+                              scaledValue: scaledVal,
+                              filterStateObject: filter,
+                            });
+                          }}
+                        />
                       </Grid>
                     </Grid>
                   </ListItem>
