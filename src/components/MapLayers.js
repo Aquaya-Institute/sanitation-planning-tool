@@ -91,7 +91,8 @@ export const MapLayers = () => {
           <List key={"collapseHeader" + layerIndex} disablePadding>
             {layer.name ===
               "Settlement Areas and Estimated Population (pop.)" ||
-            layer.name === "Districts" ? (
+            layer.name === "Districts"||
+            layer.name === "Communities" ? (
               <div></div>
             ) : (
               <div>
@@ -110,7 +111,7 @@ export const MapLayers = () => {
         {maps[mapID].layers.map((layer, layerIndex) => (
           <List key={"collapseHeader" + layerIndex} disablePadding>
             {layer.name ===
-            "Settlement Areas and Estimated Population (pop.)" ? (
+            "Settlement Areas and Estimated Population (pop.)"||layer.name === "Communities" ? (
               <div className="tour-comm">
                 <MapLayerContent
                   layer={layer}

@@ -137,7 +137,7 @@ const initialState = {
             polygon-opacity: 0;
             }
             #layer::outline {
-              line-width: 1.5;
+              line-width: 1.75;
               line-color: #000000;
               line-opacity: 1;
             }`,
@@ -570,25 +570,393 @@ const initialState = {
             },
           ],
         },
+        // {
+        //   name: "Travel Time to Cities (min.)",
+        //   carto_tableName: "khm_timecities_topo",
+        //   carto_layer: null /* we will insert carto's layer object here */,
+        //   carto_style: `#layer {polygon-fill: ramp([timecities], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
+        //     #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
+        //   visible: true,
+        //   order: 1,
+        //   source: "Malaria Atlas Project",
+        //   year: 2015,
+        //   filters: [
+        //     {
+        //       name: "Travel Time to Cities (min.)",
+        //       type: "range",
+        //       column_name: "timecities",
+        //       min: 0,
+        //       max: 1497,
+        //       value: [0, 1497],
+        //       subcategory: "accessibility",
+        //     },
+        //   ],
+        // },
+      ],
+    },
+    ghanaUU: {
+      name: "Ghana User Upload Demo",
+      mapID: "ghanaUU",
+      view: [8.059229627200192, -1.0546875000000002],
+      zoom: 7,
+      minzoom: 7,
+      /* 
+      you can add as many layers for each indicator. 
+      do maintain the same structure for all. 
+      */
+      layers: [
+        {
+          name: "Community Classification",
+          carto_tableName: "gha_class_topo",
+          carto_layer: null /* we will insert carto's layer object here */,
+          carto_style: `#layer {polygon-fill: ramp([classes], (#0d882b, #200ab7, #ad1719), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
+          visible: true,
+          /* 
+          we don't use order yet to order(re) the layers 
+          For now the first layer object is the bottom most rendered layer
+          */
+          order: 4,
+          filters: [
+            {
+              /* 
+              a categorical filter, such as this one is not implemented. 
+              It might be a good one to implement
+             */
+              name: "Community Classification",
+              unit: "",
+              type: "categorical",
+              column_name: "classes",
+              value: [
+                {
+                  name: "Rural Remote",
+                  value: 1,
+                  checked: true,
+                },
+                {
+                  name: "Rural On-road",
+                  value: 2,
+                  checked: true,
+                },
+                {
+                  name: "Rural Mixed",
+                  value: 3,
+                  checked: true,
+                },
+              ] /* declaure col values that should be filtered on */,
+            },
+          ],
+        },
+        {
+          name: "Population Practicing Open Defecation (%)",
+          carto_tableName: "gha_od_topo",
+          carto_layer: null /* we will insert carto's layer object here */,
+          carto_style: `#layer {polygon-fill: ramp([od], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
+            #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
+          visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
+          order: 3,
+          filters: [
+            {
+              name: "Population Practicing Open Defecation",
+              unit: "%",
+              type: "range",
+              column_name: "od",
+              min: 0,
+              max: 100,
+              value: [0, 100],
+              subcategory: "wash",
+            },
+          ],
+        },
+        {
+          name: "Women's Educational Attainment (yrs.)",
+          carto_tableName: "gha_edw_topo",
+          carto_layer: null /* we will insert carto's layer object here */,
+          carto_style: `#layer {polygon-fill: ramp([edu_w], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
+            #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
+          visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
+          order: 2,
+          filters: [
+            {
+              name: "Women's Educational Attainment",
+              unit: "yrs.",
+              type: "range",
+              column_name: "edu_w",
+              min: 2,
+              max: 11,
+              value: [2, 11],
+              subcategory: "socioeconomic",
+            },
+          ],
+        },
         {
           name: "Travel Time to Cities (min.)",
-          carto_tableName: "khm_timecities_topo",
+          carto_tableName: "gha_timecities_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([timecities], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
-          visible: true,
+          visible: false,
           order: 1,
           source: "Malaria Atlas Project",
           year: 2015,
           filters: [
             {
-              name: "Travel Time to Cities (min.)",
+              name: "Travel Time to Cities",
+              unit: "min.",
               type: "range",
               column_name: "timecities",
               min: 0,
-              max: 1497,
-              value: [0, 1497],
+              max: 610,
+              value: [0, 610],
               subcategory: "accessibility",
+            },
+          ],
+        },
+        {
+          name: "Districts",
+          carto_tableName: "gha_dist",
+          carto_layer: null,
+          carto_style: `#layer {
+            polygon-fill: transparent;
+            polygon-opacity: 0;
+            }
+            #layer::outline {
+              line-width: 1.75;
+              line-color: #000000;
+              line-opacity: 1;
+            }`,
+          visible: true,
+          order: 5,
+          /* These are all range filters and are implemented */
+          filters: [
+            // {
+            //   name: "Population Estimate",
+            //   type: "range",
+            //   column_name: "pop_est",
+            //   min: 0,
+            //   max: 6033969,
+            //   value: [0, 6033969],
+            // },
+
+            {
+              name: "Predominant Community Classification",
+              unit: "",
+              type: "categorical",
+              column_name: "classes",
+              value: [
+                {
+                  name: "Predominantly Rural Remote",
+                  value: 1,
+                  checked: true,
+                },
+                {
+                  name: "Predominantly Rural on-road",
+                  value: 2,
+                  checked: true,
+                },
+                {
+                  name: "Predominantly Rural Mixed",
+                  value: 3,
+                  checked: true,
+                },
+              ] /* declaure col values that should be filtered on */,
+              subcategory: "accessibility",
+            },
+            {
+              name: "Average Population Practicing Open Defecation",
+              unit: "%",
+              type: "range",
+              column_name: "od",
+              min: 11,
+              max: 91,
+              value: [11, 91],
+              subcategory: "wash",
+            },
+            {
+              name: "Average Reliance on Unimproved Sanitation",
+              unit: "%",
+              type: "range",
+              column_name: "s_unimp",
+              min: 1,
+              max: 33,
+              value: [1, 33],
+              subcategory: "wash",
+            },
+            {
+              name: "Average Reliance on Unimproved Drinking Water",
+              unit: "%",
+              type: "range",
+              column_name: "w_unimp",
+              min: 0,
+              max: 19,
+              value: [0, 19],
+              subcategory: "wash",
+            },
+            {
+              name: "Average Travel Time to Cities",
+              unit: "min.",
+              type: "range",
+              column_name: "timecities",
+              min: 0,
+              max: 304,
+              value: [0, 304],
+              subcategory: "accessibility",
+            },
+            {
+              name: "Average Distance to Roads",
+              unit: "meters",
+              type: "range",
+              column_name: "dr",
+              min: 226,
+              max: 17810,
+              value: [226, 17810],
+              subcategory: "accessibility",
+            },
+            {
+              name: "Average Distance to Towns",
+              unit: "meters",
+              type: "range",
+              column_name: "dt_km",
+              min: 0,
+              max: 70.4,
+              value: [0, 70.4],
+              subcategory: "accessibility",
+            },
+            {
+              name: "Average Diahrrea Prevalence in Children <5 Years",
+              unit: "%",
+              type: "range",
+              column_name: "dia",
+              min: 2.5,
+              max: 5.2,
+              value: [2.5, 5.5],
+              subcategory: "health",
+            },
+            {
+              name: "Average Predicted Annual Cholera Incidence",
+              unit: "cases/100,000pp",
+              type: "range",
+              column_name: "cholera",
+              min: 0.1,
+              max: 898.2,
+              value: [0.1, 898.2],
+              subcategory: "health",
+            },
+            {
+              name: "Average Mortality in Children <5 Years",
+              unit: "%",
+              type: "range",
+              column_name: "u5m",
+              min: 4.6,
+              max: 7.5,
+              value: [4.6, 7.5],
+              subcategory: "health",
+            },
+            {
+              name: "Average Women's Educational Attainment",
+              unit: "yrs.",
+              type: "range",
+              column_name: "edu_w",
+              min: 3,
+              max: 10,
+              value: [3, 10],
+              subcategory: "socioeconomic",
+            },
+            {
+              name: "Average Men's Educational Attainment",
+              unit: "yrs.",
+              type: "range",
+              column_name: "edu_m",
+              min: 4,
+              max: 11,
+              value: [4, 11],
+              subcategory: "socioeconomic",
+            },
+            {
+              name: "Region",
+              type: "none",
+              column_name: "region",
+              subcategory: "id",
+            },
+            {
+              name: "District",
+              type: "none",
+              column_name: "district",
+              subcategory: "id",
+            },
+          ],
+        },
+        {
+          name: "Communities",
+          carto_tableName: "gh_gccomms",
+          carto_layer: null,
+          carto_style: `#layer {
+            [zoom >10] {marker-width: 20}
+            [zoom =10] {marker-width: 15}
+            [zoom =9] {marker-width: 10}
+            [zoom =8] {marker-width: 7.5}
+            [zoom =7] {marker-width: 5}
+            [zoom <7] {marker-width: 0}
+            
+            marker-fill: #a54acc;
+            marker-fill-opacity: 1;
+            marker-allow-overlap: true;
+            marker-line-width: 1;
+            marker-line-color: #7a228c;
+            marker-line-opacity: 1;}`,
+          visible: true,
+          order: 5,
+          filters: [
+            {
+              name: "Number of Households",
+              unit: "HH",
+              type: "range",
+              column_name: "hh_num",
+              min: 5,
+              max: 127, //we want 7 breaks not counting start value of 0.
+              value: [5, 127],
+              subcategory: "socioeconomic",
+            },
+            {
+              name: "ODF Attainment",
+              unit: "y/n",
+              type: "categorical",
+              column_name: "odfhist",
+              value: [
+                {
+                  name: "ODF",
+                  value: 1,
+                  checked: true,
+                },
+                {
+                  name: "Not ODF",
+                  value: 0,
+                  checked: true,
+                },
+              ],
+              subcategory: "wash",
+            },
+            {
+              name: "Program",
+              unit: "",
+              type: "categorical",
+              column_name: "program",
+              value: [
+                {
+                  name: "WASH for Health",
+                  value: "W4H",
+                  checked: true,
+                },
+                {
+                  name: "Resiliency in Northern Ghana",
+                  value: "RING",
+                  checked: true,
+                },
+              ],
+              subcategory: "wash",
             },
           ],
         },

@@ -333,7 +333,7 @@ export const Map = () => {
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
-        if (layer.name === "Settlement Areas and Estimated Population (pop.)") {
+        if (layer.name === "Settlement Areas and Estimated Population (pop.)"||layer.name === "Communities") {
           setCommCalcSource(_source);
         }
         if (layer.name === "Districts") {
@@ -431,14 +431,24 @@ export const Map = () => {
             var obj = {};
             // get buckets
             if (event.styles.length === 0) {
-              obj["variable"] = "Districts";
-              obj["legend"] = [
-                {
-                  name: "District boundaries",
-                  value: "transparent",
-                  border: "2px solid #000",
-                },
-              ];
+              obj["variable"] = layer.name;
+              if (layer.name === "Districts") {
+                obj["legend"] = [
+                  {
+                    name: "District boundaries",
+                    value: "transparent",
+                    border: "2px solid #000",
+                  },
+                ];
+              } else {
+                obj["legend"] = [
+                  {
+                    name: "User Uploaded Points",
+                    value: "#a54acc",
+                    border: "2px solid #7a228c",
+                  },
+                ];
+              }
             } else if (event.styles[0]._buckets === undefined) {
               obj["variable"] = layer.name;
               obj["legend"] = event.styles[0]._categories;
@@ -628,7 +638,7 @@ export const Map = () => {
   useEffect(() => {
     if (selectedDistricts.length > 0) {
       highlightCountry(selectedDistricts);
-      filterPopulatedPlacesByCountry(selectedDistricts);
+      // filterPopulatedPlacesByCountry(selectedDistricts);
       // document.getElementById('js-countries').addEventListener("change", function () {
       // let input = selectedDistricts;
       return fetch(
@@ -642,7 +652,7 @@ export const Map = () => {
       // });
     } else if (selectedDistricts === "") {
       highlightCountry(selectedDistricts);
-      filterPopulatedPlacesByCountry(selectedDistricts);
+      // filterPopulatedPlacesByCountry(selectedDistricts);
       nativeMap.setView(maps[mapID].view, maps[mapID].zoom);
     }
   }, [selectedDistricts]);
@@ -681,17 +691,28 @@ export const Map = () => {
 
   function filterPopulatedPlacesByCountry(district) {
     // district.forEach((district) => {
-    let query = `
-        SELECT *
-          FROM gha_comms_points
-          WHERE district IN (SELECT district FROM gha_dist)
+      let query = `
+      SELECT *
+        FROM gh_gccomms
+        WHERE district IN (SELECT district FROM gha_dist)
       `;
-    if (district) {
+      if (district) {
       query = `
-          SELECT *
-            FROM gha_comms_points
-            WHERE district='${district}'
-        `;
+        SELECT *
+          FROM gh_gccomms
+          WHERE district='${district}'
+      `;
+    // let query = `
+    //     SELECT *
+    //       FROM gha_comms_points
+    //       WHERE district IN (SELECT district FROM gha_dist)
+    //   `;
+    // if (district) {
+    //   query = `
+    //       SELECT *
+    //         FROM gha_comms_points
+    //         WHERE district='${district}'
+    //     `;
     }
     commCalcSource.setQuery(query);
     // });
@@ -838,7 +859,7 @@ export const Map = () => {
             {popupData.data.length > 1 && (
               <Fragment key={"popper" + popupData.data[0].layer}>
                 {popupData.data[0].layer ===
-                "Settlement Areas and Estimated Population (pop.)" ? (
+                "Settlement Areas and Estimated Population (pop.)"||popupData.data[0].layer === "Communities" ? (
                   <Box>
                     <Box fontWeight="fontWeightBold">
                       {popupData.data[popIndex].name}:{" "}
@@ -919,7 +940,7 @@ export const Map = () => {
                         elevation={0}
                       >
                         {popupData.data[0].layer ===
-                        "Settlement Areas and Estimated Population (pop.)" ? (
+                        "Settlement Areas and Estimated Population (pop.)"||popupData.data[0].layer === "Communities" ? (
                           <TableHead>
                             <TableRow>
                               <TableCell colSpan={2} align="center">
@@ -1016,7 +1037,7 @@ export const Map = () => {
                           startIcon={<SaveIcon />}
                         >
                           {popupData.data[0].layer ===
-                          "Settlement Areas and Estimated Population (pop.)" ? (
+                          "Settlement Areas and Estimated Population (pop.)"||popupData.data[0].layer=== "Communities" ? (
                             <CSVLink
                               className={classes.download}
                               data={popupData.data}

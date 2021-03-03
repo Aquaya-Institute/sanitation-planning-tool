@@ -277,7 +277,7 @@ const MapLayerContent = ({ layer, layerIndex }) => {
           primary={layer.name}
           onClick={() => handleClick(layerIndex)}
         />
-        {layer.name === "Settlement Areas and Estimated Population (pop.)" && (
+        {(layer.name === "Settlement Areas and Estimated Population (pop.)"||layer.name === "Communities") && (
           <>
             <InfoOutlinedIcon
               fontSize="small"
