@@ -10,7 +10,9 @@ const initialState = {
     ghana: {
       name: "Ghana",
       mapID: "ghana",
-      view: "8.059229627200192, -1.0546875000000002",
+      view: [8.059229627200192, -1.0546875000000002],
+      zoom: 7,
+      minzoom: 7,
       /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
@@ -21,7 +23,7 @@ const initialState = {
           carto_tableName: "gha_class_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([classes], (#0d882b, #200ab7, #ad1719), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
-          visible: false,
+          visible: true,
           /* 
           we don't use order yet to order(re) the layers 
           For now the first layer object is the bottom most rendered layer
@@ -34,6 +36,7 @@ const initialState = {
               It might be a good one to implement
              */
               name: "Community Classification",
+              unit: "",
               type: "categorical",
               column_name: "classes",
               value: [
@@ -43,7 +46,7 @@ const initialState = {
                   checked: true,
                 },
                 {
-                  name: "Ruralon-road",
+                  name: "Rural On-road",
                   value: 2,
                   checked: true,
                 },
@@ -57,16 +60,19 @@ const initialState = {
           ],
         },
         {
-          name: "Reliance on Open Defecation (%)",
+          name: "Population Practicing Open Defecation (%)",
           carto_tableName: "gha_od_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([od], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
           visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
           order: 3,
           filters: [
             {
-              name: "Reliance on Open Defecation (%)",
+              name: "Population Practicing Open Defecation",
+              unit: "%",
               type: "range",
               column_name: "od",
               min: 0,
@@ -77,16 +83,19 @@ const initialState = {
           ],
         },
         {
-          name: "Women's Education (yrs.)",
+          name: "Women's Educational Attainment (yrs.)",
           carto_tableName: "gha_edw_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([edu_w], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
           visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
           order: 2,
           filters: [
             {
-              name: "Women's Educational Attainment (yrs.)",
+              name: "Women's Educational Attainment",
+              unit: "yrs.",
               type: "range",
               column_name: "edu_w",
               min: 2,
@@ -97,16 +106,19 @@ const initialState = {
           ],
         },
         {
-          name: "Time to Cities (min.)",
+          name: "Travel Time to Cities (min.)",
           carto_tableName: "gha_timecities_topo",
           carto_layer: null /* we will insert carto's layer object here */,
           carto_style: `#layer {polygon-fill: ramp([timecities], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
-          visible: true,
+          visible: false,
           order: 1,
+          source: "Malaria Atlas Project",
+          year: 2015,
           filters: [
             {
-              name: "Time to Cities (min.)",
+              name: "Travel Time to Cities",
+              unit: "min.",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -118,18 +130,18 @@ const initialState = {
         },
         {
           name: "Districts",
-          carto_tableName: "gha_dist_topo",
+          carto_tableName: "gha_dist",
           carto_layer: null,
           carto_style: `#layer {
-            polygon-fill: #826dba;
-            polygon-opacity: 1;
+            polygon-fill: transparent;
+            polygon-opacity: 0;
             }
             #layer::outline {
-              line-width: 1;
+              line-width: 1.5;
               line-color: #000000;
-              line-opacity: 0.5;
+              line-opacity: 1;
             }`,
-          visible: false,
+          visible: true,
           order: 5,
           /* These are all range filters and are implemented */
           filters: [
@@ -141,30 +153,34 @@ const initialState = {
             //   max: 6033969,
             //   value: [0, 6033969],
             // },
+
             {
               name: "Predominant Community Classification",
+              unit: "",
               type: "categorical",
               column_name: "classes",
               value: [
                 {
-                  name: "Rural Remote",
+                  name: "Predominantly Rural Remote",
                   value: 1,
                   checked: true,
                 },
                 {
-                  name: "Rural on-road",
+                  name: "Predominantly Rural on-road",
                   value: 2,
                   checked: true,
                 },
                 {
-                  name: "Rural Mixed",
+                  name: "Predominantly Rural Mixed",
                   value: 3,
                   checked: true,
                 },
               ] /* declaure col values that should be filtered on */,
+              subcategory: "accessibility",
             },
             {
-              name: "Average Open Defecation (%)",
+              name: "Average Population Practicing Open Defecation",
+              unit: "%",
               type: "range",
               column_name: "od",
               min: 11,
@@ -173,7 +189,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Average Reliance on Unimproved Sanitation (%)",
+              name: "Average Reliance on Unimproved Sanitation",
+              unit: "%",
               type: "range",
               column_name: "s_unimp",
               min: 1,
@@ -182,7 +199,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Average Reliance on Unimproved Drinking Water (%)",
+              name: "Average Reliance on Unimproved Drinking Water",
+              unit: "%",
               type: "range",
               column_name: "w_unimp",
               min: 0,
@@ -191,7 +209,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Average Time To Cities (min.)",
+              name: "Average Travel Time to Cities",
+              unit: "min.",
               type: "range",
               column_name: "timecities",
               min: 0,
@@ -200,7 +219,8 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Distance to Roads (m)",
+              name: "Average Distance to Roads",
+              unit: "meters",
               type: "range",
               column_name: "dr",
               min: 226,
@@ -209,25 +229,28 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Average Distance to Towns (m)",
+              name: "Average Distance to Towns",
+              unit: "meters",
               type: "range",
-              column_name: "dt",
+              column_name: "dt_km",
               min: 0,
-              max: 70401,
-              value: [0, 70401],
+              max: 70.4,
+              value: [0, 70.4],
               subcategory: "accessibility",
             },
             {
-              name: "Average Diahrrea Prevalence in Children <5 Years (cases)",
+              name: "Average Diahrrea Prevalence in Children <5 Years",
+              unit: "%",
               type: "range",
               column_name: "dia",
-              min: 0,
-              max: 51505,
-              value: [0, 51505],
+              min: 2.5,
+              max: 5.2,
+              value: [2.5, 5.5],
               subcategory: "health",
             },
             {
-              name: "Average Cholera Risk (cases/100,000pp)",
+              name: "Average Predicted Annual Cholera Incidence",
+              unit: "cases/100,000pp",
               type: "range",
               column_name: "cholera",
               min: 0.1,
@@ -237,38 +260,61 @@ const initialState = {
             },
             {
               name: "Average Mortality in Children <5 Years",
+              unit: "%",
               type: "range",
               column_name: "u5m",
-              min: 0.0,
-              max: 0.075,
-              value: [0.0, 0.075],
+              min: 4.6,
+              max: 7.5,
+              value: [4.6, 7.5],
               subcategory: "health",
             },
             {
-              name: "Average Women's Educational Attainment (yrs.)",
+              name: "Average Women's Educational Attainment",
+              unit: "yrs.",
               type: "range",
               column_name: "edu_w",
-              min: 0,
+              min: 3,
               max: 10,
-              value: [0, 10],
+              value: [3, 10],
               subcategory: "socioeconomic",
             },
             {
-              name: "Average Men's Educational Attainment (yrs.)",
+              name: "Average Men's Educational Attainment",
+              unit: "yrs.",
               type: "range",
-              column_name: "edu_w",
-              min: 0,
+              column_name: "edu_m",
+              min: 4,
               max: 11,
-              value: [0, 11],
+              value: [4, 11],
               subcategory: "socioeconomic",
+            },
+            {
+              name: "Region",
+              type: "none",
+              column_name: "region",
+              subcategory: "id",
+            },
+            {
+              name: "District",
+              type: "none",
+              column_name: "district",
+              subcategory: "id",
             },
           ],
         },
         {
-          name: "Communities (pop.)",
-          carto_tableName: "gha_comms_point_topo",
+          name: "Settlement Areas and Estimated Population (pop.)",
+          carto_tableName: "gha_comms_points",
           carto_layer: null,
-          carto_style: `#layer {marker-width: 5;marker-fill: ramp([pop_est], (#f9ddda, #eda8bd, #ce78b3, #9955a8, #573b88), quantiles);
+          carto_style: `#layer {
+            [zoom >10] {marker-width: 20}
+            [zoom =10] {marker-width: 15}
+            [zoom =9] {marker-width: 10}
+            [zoom =8] {marker-width: 7.5}
+            [zoom =7] {marker-width: 5}
+            [zoom <7] {marker-width: 0}
+            
+            marker-fill: ramp([pop_est], (#f9ddda, #eda8bd, #ce78b3, #9955a8, #573b88), quantiles);
             marker-fill-opacity: 1;
             marker-allow-overlap: true;
             marker-line-width: 0.5;
@@ -276,21 +322,67 @@ const initialState = {
             marker-line-opacity: 1;}`,
           visible: true,
           order: 5,
-          /* These are all range filters and are implemented */
           filters: [
             {
               name: "Population Estimate",
-              type: "range",
+              unit: "pop.",
+              type: "range_non_linear",
               column_name: "pop_est",
               min: 0,
-              max: 6033969,
-              value: [0, 6033969],
+              max: 70, //we want 7 breaks not counting start value of 0.
+              value: [0, 70], //slider range will be from 0-70, which we will scale to
+              scaledValue: [0, 6033969], //the actual min/max of column
               subcategory: "socioeconomic",
+              // define 7+1 non linear marks here, note that value goes from 0-70 only
+              marks: [
+                {
+                  value: 0,
+                  scaledValue: 0,
+                  label: "0",
+                },
+                {
+                  value: 10,
+                  scaledValue: 100,
+                  label: "100",
+                },
+                {
+                  value: 20,
+                  scaledValue: 500,
+                  label: "500",
+                },
+                {
+                  value: 30,
+                  scaledValue: 1000,
+                  label: "1K",
+                },
+                {
+                  value: 40,
+                  scaledValue: 5000,
+                  label: "5K",
+                },
+                {
+                  value: 50,
+                  scaledValue: 50000,
+                  label: "50K",
+                },
+                {
+                  value: 60,
+                  scaledValue: 1000000,
+                  label: "1M",
+                },
+                {
+                  value: 70,
+                  scaledValue: 7000000,
+                  label: "7M",
+                }
+              ],
             },
             {
               name: "Community Classification",
+              unit: "",
               type: "categorical",
               column_name: "classes",
+              subcategory: "accessibility",
               value: [
                 {
                   name: "Rural Remote",
@@ -298,7 +390,7 @@ const initialState = {
                   checked: true,
                 },
                 {
-                  name: "Rural on-road",
+                  name: "Rural On-road",
                   value: 2,
                   checked: true,
                 },
@@ -310,7 +402,8 @@ const initialState = {
               ] /* declaure col values that should be filtered on */,
             },
             {
-              name: "Open Defecation (%)",
+              name: "Population Practicing Open Defecation",
+              unit: "%",
               type: "range",
               column_name: "od",
               min: 0,
@@ -319,7 +412,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Reliance on Unimproved Sanitation (%)",
+              name: "Reliance on Unimproved Sanitation",
+              unit: "%",
               type: "range",
               column_name: "s_unimp",
               min: 0,
@@ -328,7 +422,8 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Reliance on Unimproved Drinking Water (%)",
+              name: "Reliance on Unimproved Drinking Water",
+              unit: "%",
               type: "range",
               column_name: "w_unimp",
               min: 0,
@@ -337,16 +432,18 @@ const initialState = {
               subcategory: "wash",
             },
             {
-              name: "Time To Cities (min.)",
+              name: "Travel Time to Cities",
+              unit: "min.",
               type: "range",
               column_name: "timecities",
-              min: 17,
-              max: 197,
-              value: [0, 197],
+              min: 0,
+              max: 546,
+              value: [0, 546],
               subcategory: "accessibility",
             },
             {
-              name: "Distance to Roads (m)",
+              name: "Distance to Roads",
+              unit: "meters",
               type: "range",
               column_name: "dr",
               min: 26,
@@ -355,57 +452,63 @@ const initialState = {
               subcategory: "accessibility",
             },
             {
-              name: "Distance to Towns (m)",
+              name: "Distance to Towns",
+              unit: "km.",
               type: "range",
-              column_name: "dt",
+              column_name: "dt_km",
               min: 0,
-              max: 91421,
-              value: [0, 91421],
+              max: 91.4,
+              value: [0, 91.4],
               subcategory: "accessibility",
             },
             {
-              name: "Diahrrea Prevalence in Children <5 Years (cases)",
+              name: "Diahrrea Prevalence in Children <5 Years",
+              unit: "%",
               type: "range",
               column_name: "dia",
-              min: 0,
-              max: 37514,
-              value: [0, 37514],
+              min: 2.3,
+              max: 47,
+              value: [2.3, 47],
               subcategory: "health",
             },
             {
-              name: "Cholera Risk (cases/100,000pp)",
+              name: "Predicted Annual Cholera Incidence",
+              unit: "cases/100,000pp",
               type: "range",
               column_name: "cholera",
-              min: 0.1,
-              max: 108.7,
-              value: [0.1, 108.7],
+              min: 0,
+              max: 6410.7,
+              value: [0, 6410.7],
               subcategory: "health",
             },
             {
               name: "Mortality in Children <5 Years",
+              unit: "%",
               type: "range",
               column_name: "u5m",
-              min: 0.045,
-              max: 0.074,
-              value: [0.045, 0.074],
+              min: 0.05,
+              max: 12.7,
+              value: [0.05, 12.7],
               subcategory: "health",
             },
             {
-              name: "Women's Educational Attainment (yrs.)",
+              name: "Women's Educational Attainment",
+              unit: "yrs.",
               type: "range",
               column_name: "edu_w",
-              min: 0,
+              min: 1,
               max: 10,
-              value: [0, 10],
+              value: [1, 10],
               subcategory: "socioeconomic",
             },
             {
-              name: "Men's Educational Attainment (yrs.)",
+              name: "Men's Educational Attainment",
+              unit: "yrs.",
               type: "range",
               column_name: "edu_m",
-              min: 0,
+              min: 3,
               max: 11,
-              value: [0, 11],
+              value: [3, 11],
               subcategory: "socioeconomic",
             },
           ],
@@ -416,84 +519,28 @@ const initialState = {
     cambodia: {
       name: "Cambodia",
       mapID: "cambodia",
-      view: "12.5, 105",
+      view: [12.5657, 104.991],
+      zoom: 7.4,
       /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
       */
       layers: [
-        // {
-        //   name: "Community Classification",
-        //   carto_tableName: "gha_class_topo",
-        //   carto_layer: null /* we will insert carto's layer object here */,
-        //   carto_style: `#layer {polygon-fill: ramp([dn], (#4cd7d7, #1d5e96, #9b38a6), (2, 1, 3), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
-        //   visible: true,
-        //   /*
-        //   we don't use order yet to order(re) the layers
-        //   For now the first layer object is the bottom most rendered layer
-        //   */
-        //   order: 2,
-        //   filters: [
-        //     {
-        //       /*
-        //       a categorical filter, such as this one is not implemented.
-        //       It might be a good one to implement
-        //      */
-        //       name: "Community Classification",
-        //       type: "categorical",
-        //       column_name: "dn",
-        //       values: [1, 2, 3],
-        //     },
-        //   ],
-        // },
-        // {
-        //   name: "Communities",
-        //   carto_tableName: "gha_comms_point_topo",
-        //   carto_layer: null,
-        //   carto_style: `#layer {marker-width: 5;marker-fill: #EE4D5A;marker-fill-opacity: 0.9;marker-allow-overlap: true;marker-line-width: 0;marker-line-color: #FFFFFF;marker-line-opacity: 1;}`,
-        //   visible: false,
-        //   order: 1,
-        //   /* These are all range filters and are implemented */
-        //   filters: [
-        //     {
-        //       name: "Population Estimate",
-        //       type: "range",
-        //       column_name: "pop_est",
-        //       min: 0,
-        //       max: 6033969,
-        //       value: [0, 6033969],
-        //     },
-        //     {
-        //       name: "Open Defecation (%)",
-        //       type: "range",
-        //       column_name: "od",
-        //       min: 0,
-        //       max: 100,
-        //       value: [0, 100],
-        //     },
-        //     {
-        //       name: "Time To Cities",
-        //       type: "range",
-        //       column_name: "timecities",
-        //       min: 17,
-        //       max: 197,
-        //       value: [0, 197],
-        //     },
-        //   ],
-        // },
         {
-          name: "Reliance on Open Defecation (%)",
+          name: "Population Practicing Open Defecation (%)",
           carto_tableName: "khm_od_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([val], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
+          carto_style: `#layer {polygon-fill: ramp([od], (#fbe6c5, #f2a28a, #dc7176, #b24b65, #70284a), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
-          visible: true,
+          visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
           order: 3,
           filters: [
             {
-              name: "Reliance on Open Defecation (%)",
+              name: "Population Practicing Open Defecation (%)",
               type: "range",
-              column_name: "val",
+              column_name: "od",
               min: 0,
               max: 100,
               value: [0, 100],
@@ -502,38 +549,42 @@ const initialState = {
           ],
         },
         {
-          name: "Women's Education (yrs.)",
+          name: "Women's Educational Attainment (yrs.)",
           carto_tableName: "khm_edw_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([val], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
+          carto_style: `#layer {polygon-fill: ramp([edu_w], (#d1eeea, #96d0d1, #68abb8, #45829b, #2a5674), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
           visible: false,
+          source: "Institute for Health Metrics and Evaluation",
+          year: 2017,
           order: 2,
           filters: [
             {
-              name: "Women's Education (yrs.)",
+              name: "Women's Educational Attainment (yrs.)",
               type: "range",
-              column_name: "val",
-              min: 2,
+              column_name: "edu_w",
+              min: 0,
               max: 8,
-              value: [2, 8],
+              value: [0, 8],
               subcategory: "socioeconomic",
             },
           ],
         },
         {
-          name: "Time to Cities (min.)",
+          name: "Travel Time to Cities (min.)",
           carto_tableName: "khm_timecities_topo",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([val], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
+          carto_style: `#layer {polygon-fill: ramp([timecities], (#d3f2a3, #82d091, #4c9b82, #19696f, #074050), quantiles);}
             #layer::outline {line-width: 0; line-color: #ffffff; line-opacity: 0;}`,
-          visible: false,
+          visible: true,
           order: 1,
+          source: "Malaria Atlas Project",
+          year: 2015,
           filters: [
             {
-              name: "Time to Cities (min.)",
+              name: "Travel Time to Cities (min.)",
               type: "range",
-              column_name: "val",
+              column_name: "timecities",
               min: 0,
               max: 1497,
               value: [0, 1497],
@@ -573,7 +624,7 @@ const reducer = (state, action) => {
       immutable manner easily, see immer lib doc 
       */
       return produce(state, (draft) => {
-        const mid = action.mapID;
+        const mid = draft.currentMapID;
         const lid = action.layerID;
         const cartoLayer = draft.maps[mid].layers[lid].carto_layer;
         //update the state
@@ -590,19 +641,19 @@ const reducer = (state, action) => {
     //when a filter is manipulated
     case "layer.filter":
       return produce(state, (draft) => {
-        draft.maps[action.mapID].layers[action.layerIndex].filters[
+        draft.maps[draft.currentMapID].layers[action.layerIndex].filters[
           action.filterIndex
         ] = action.filter;
         //TODO: based on the type of filter (range, categorical)
         //use Switch statement to apply appropriate filters
         switch (
-          draft.maps[action.mapID].layers[action.layerIndex].filters[
+          draft.maps[draft.currentMapID].layers[action.layerIndex].filters[
             action.filterIndex
           ].type
         ) {
           case "range":
             //this is how you get the filter out of the carto layer
-            const filter = draft.maps[action.mapID].layers[
+            const filter = draft.maps[draft.currentMapID].layers[
               action.layerIndex
             ].carto_layer
               .getSource()
@@ -615,9 +666,24 @@ const reducer = (state, action) => {
             });
             // filter.resetFilters()
             break;
+          case "range_non_linear":
+            //this is how you get the filter out of the carto layer
+            const filter_non = draft.maps[draft.currentMapID].layers[
+              action.layerIndex
+            ].carto_layer
+              .getSource()
+              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[action.filterIndex];
+            //this is how you set the filter. this is specific to range filter
+            filter_non.setFilters({
+              gte: action.filter.scaledValue[0],
+              lte: action.filter.scaledValue[1],
+            });
+            // filter.resetFilters()
+            break;
           case "categorical":
             //   return null;
-            const filter_c = draft.maps[action.mapID].layers[
+            const filter_c = draft.maps[draft.currentMapID].layers[
               action.layerIndex
             ].carto_layer
               .getSource()
@@ -638,15 +704,17 @@ const reducer = (state, action) => {
               in: col_vals_tofilter,
             });
             break;
+          case "none":
+            break;
           default:
-            return null;
+            break;
         }
       });
 
     //when a new carto layer is added
     case "layer.addCartoLayer":
       return produce(state, (draft) => {
-        draft.maps[action.mapID].layers[action.layerID].carto_layer =
+        draft.maps[draft.currentMapID].layers[action.layerID].carto_layer =
           action.cartoLayer;
       });
 
