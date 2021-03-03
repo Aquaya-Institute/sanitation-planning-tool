@@ -859,7 +859,7 @@ export const Map = () => {
             {popupData.data.length > 1 && (
               <Fragment key={"popper" + popupData.data[0].layer}>
                 {popupData.data[0].layer ===
-                "Settlement Areas and Estimated Population (pop.)"||popupData.data[0].layer === "Communities" ? (
+                "Settlement Areas and Estimated Population (pop.)" ? (
                   <Box>
                     <Box fontWeight="fontWeightBold">
                       {popupData.data[popIndex].name}:{" "}
@@ -870,7 +870,7 @@ export const Map = () => {
                     </Box>
                     {popupData.data[classIndex].value}
                   </Box>
-                ) : (
+                ) : popupData.data[0].layer === "Districts" ? (
                   <Box>
                     <Box fontWeight="fontWeightBold">
                       {popupData.data[regionIndex].name}:{" "}
@@ -884,6 +884,21 @@ export const Map = () => {
                       {popupData.data[classIndex].name}:{" "}
                     </Box>
                     {popupData.data[classIndex].value}
+                  </Box>
+                ) : (
+                  <Box>
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[0].name}:{" "}
+                    </Box>
+                    {popupData.data[0].value}
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[3].name}:{" "}
+                    </Box>
+                    {popupData.data[3].value}
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data[4].name}:{" "}
+                    </Box>
+                    {popupData.data[4].value}
                   </Box>
                 )}
                 <Link

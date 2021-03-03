@@ -911,6 +911,27 @@ const initialState = {
           order: 5,
           filters: [
             {
+              name: "Community Name",
+              unit: "",
+              type: "none",
+              column_name: "community",
+              subcategory: "id",
+            },
+            {
+              name: "District Name (user)",
+              unit: "",
+              type: "none",
+              column_name: "district",
+              subcategory: "id",
+            },
+            {
+              name: "Region Name (user)",
+              unit: "",
+              type: "none",
+              column_name: "region",
+              subcategory: "id",
+            },
+            {
               name: "Number of Households",
               unit: "HH",
               type: "range",
@@ -922,7 +943,7 @@ const initialState = {
             },
             {
               name: "ODF Attainment",
-              unit: "y/n",
+              unit: "",
               type: "categorical",
               column_name: "odfhist",
               value: [
