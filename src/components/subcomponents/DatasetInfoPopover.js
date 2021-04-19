@@ -6,15 +6,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import theme from "../../theme/theme";
 import { useState, useRef, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Container,
-  Grid,
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-} from "@material-ui/core";
+import { Grid, Typography, Card, CardContent, Button } from "@material-ui/core";
 // import datasetsInfo from "../../views/Datasets"
 
 const useStyles = makeStyles((theme) => ({
@@ -22,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    zIndex: "2000",
   },
   popover: {
     width: 550,
@@ -34,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 const DatasetInfoPopover = ({ filter, filterIndex }) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [hover, setHover] = useState(false);
-  const clickRef = useRef(null);
+  const clickRefData = useRef(null);
   const classes = useStyles();
   const [datasetName, setDatasetName] = useState();
   const [selectedDataset, setSelectedDataset] = useState();
@@ -259,13 +252,15 @@ const DatasetInfoPopover = ({ filter, filterIndex }) => {
   ];
 
   useEffect(() => {
-    console.log("datasetName", datasetName);
     if (datasetName) {
-      datasetsInfo.forEach((data, i) => {
-        if (datasetName.includes(data.name)) {
-          setSelectedDataset(data);
-        }
-      });
+      console.log("datasetName", datasetName);
+      if (datasetName) {
+        datasetsInfo.forEach((data, i) => {
+          if (datasetName.includes(data.name)) {
+            setSelectedDataset(data);
+          }
+        });
+      }
     }
   }, [datasetName]);
   return (
@@ -288,7 +283,7 @@ const DatasetInfoPopover = ({ filter, filterIndex }) => {
         style={{ color: hover ? theme.palette.secondary.main : "#a8a8a8" }}
       />
       <Modal
-        ref={clickRef}
+        ref={clickRefData}
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
@@ -296,7 +291,7 @@ const DatasetInfoPopover = ({ filter, filterIndex }) => {
         onClose={(e) => {
           setPopoverOpen(false);
         }}
-        closeAfterTransition
+        // closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,

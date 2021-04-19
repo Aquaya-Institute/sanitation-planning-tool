@@ -39,6 +39,11 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { CSVLink } from "react-csv";
 import Tour from "./subcomponents/Tour";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -95,8 +100,10 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: "white",
   },
+  checkboxLabel: {
+    fontSize: 13,
+  },
   popper: {
-    // zIndex: 1400,
     '&[x-placement*="bottom"] $arrow': {
       top: 0,
       left: 0,
@@ -212,6 +219,8 @@ export const Map = () => {
   const [classIndex, setClassIndex] = useState();
   const [popIndex, setPopIndex] = useState();
   const [nativeMap, setNativeMap] = useState();
+  const [scaleValue, setScaleValue] = useState("1");
+
   //click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -333,7 +342,10 @@ export const Map = () => {
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
-        if (layer.name === "Settlement Areas and Estimated Population (pop.)"||layer.name === "Communities") {
+        if (
+          layer.name === "Settlement Areas and Estimated Population (pop.)" ||
+          layer.name === "Communities"
+        ) {
           setCommCalcSource(_source);
         }
         if (layer.name === "Districts") {
@@ -407,6 +419,9 @@ export const Map = () => {
             setPopup([layer.name, featureEvent]);
             setPopoverOpen(false);
             console.log("popup", popup);
+            // const onButtonClick = () => {
+            // `current` points to the mounted text input element
+            anchorRef.current.focus();
           });
         }
         console.log("cycle");
@@ -459,6 +474,8 @@ export const Map = () => {
                   obj.legend[i].name = "Rural On-road";
                 } else if (obj.legend[i].name === 3) {
                   obj.legend[i].name = "Rural Mixed";
+                } else if (obj.legend[i].name === 4) {
+                  obj.legend[i].name = "Urban";
                 }
               }
               buckets_list.push(obj);
@@ -533,7 +550,7 @@ export const Map = () => {
               setRegionIndex(j);
             } else if (dat_loc[j][1] === "classes") {
               setClassIndex(j);
-            } else if (dat_loc[j][1] === "pop_est") {
+            } else if (dat_loc[j][1] === "pop") {
               setPopIndex(j);
             }
             break;
@@ -562,188 +579,193 @@ export const Map = () => {
       setVisibleLayers(visibleLayer_list);
     }
   }, [maps, mapID]);
+  // Community counter
+  // useEffect(() => {
+  //   if (cartoClient && commCalcSource && nativeMap) {
+  //     if(mapID==="GhanaUU"){
+  //       const commCalculator = new Carto.dataview.Formula(
+  //         commCalcSource,
+  //         "community",
+  //         {
+  //           operation: Carto.operation.COUNT,
+  //         }
+  //       );
+  //       const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
+  //       cartoClient.addDataview(commCalculator);
+  //       commCalculator.addFilter(bboxFilter);
 
-  useEffect(() => {
-    if (cartoClient && commCalcSource && nativeMap) {
-      if(mapID==="GhanaUU"){
-        const commCalculator = new Carto.dataview.Formula(
-          commCalcSource,
-          "community",
-          {
-            operation: Carto.operation.COUNT,
-          }
-        );
-        const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
-        cartoClient.addDataview(commCalculator);
-        commCalculator.addFilter(bboxFilter);
+  //       commCalculator.on("dataChanged", (data) => {
+  //         refreshCommCalculator(data.result);
+  //       });
+  //     }else {
+  //       const commCalculator = new Carto.dataview.Formula(
+  //         commCalcSource,
+  //         "community",
+  //         {
+  //           operation: Carto.operation.COUNT,
+  //         }
+  //       );
+  //       const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
+  //       cartoClient.addDataview(commCalculator);
+  //       commCalculator.addFilter(bboxFilter);
 
-        commCalculator.on("dataChanged", (data) => {
-          refreshCommCalculator(data.result);
-        });
-      }else {
-        const commCalculator = new Carto.dataview.Formula(
-          commCalcSource,
-          "community",
-          {
-            operation: Carto.operation.COUNT,
-          }
-        );
-        const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
-        cartoClient.addDataview(commCalculator);
-        commCalculator.addFilter(bboxFilter);
+  //       commCalculator.on("dataChanged", (data) => {
+  //         refreshCommCalculator(data.result);
+  //       });
+  //     }
 
-        commCalculator.on("dataChanged", (data) => {
-          refreshCommCalculator(data.result);
-        });
-      }
-      
-      
-    }
-  }, [cartoClient, commCalcSource, nativeMap]);
-
-  function refreshCommCalculator(avgPopulation) {
-    const widgetDom = document.querySelector("#avgPopulationWidget");
-    const commCalculatorDom = widgetDom.querySelector(".AveragePopulation");
-    commCalculatorDom.innerText = Math.floor(avgPopulation);
-  }
-
-  useEffect(() => {
-    if (cartoClient && districtsSource) {
-      const countriesDataview = new Carto.dataview.Category(
-        districtsSource,
-        "district",
-        {
-          limit: 216,
-        }
-      );
-      cartoClient.addDataview(countriesDataview);
-
-      countriesDataview.on("dataChanged", (data) => {
-        console.log("dataChanged");
-        const countryNames = data.categories
-          .map((category) => category.name)
-          .sort();
-        refreshCountriesWidget(countryNames);
-        setAllDistricts(countryNames);
-      });
-    }
-  }, [cartoClient, districtsSource]);
-
-  // useLayoutEffect(()=> {
-  //   if(widgetLoad===true) {
-  //     refreshCountriesWidget(allDistricts);
   //   }
-  // }, [widgetLoad])
+  // }, [cartoClient, commCalcSource, nativeMap]);
 
-  function refreshCountriesWidget(districtNames) {
-    const widgetDom = document.querySelector("#countriesWidget");
-    // if (widgetDom != null) {
-    const countriesDom = widgetDom.querySelector(".js-countries");
+  // function refreshCommCalculator(avgPopulation) {
+  //   const widgetDom = document.querySelector("#avgPopulationWidget");
+  //   const commCalculatorDom = widgetDom.querySelector(".AveragePopulation");
+  //   commCalculatorDom.innerText = Math.floor(avgPopulation);
+  // }
+  // District dropdown
+  // useEffect(() => {
+  //   if (cartoClient && districtsSource) {
+  //     const countriesDataview = new Carto.dataview.Category(
+  //       districtsSource,
+  //       "district",
+  //       {
+  //         limit: 216,
+  //       }
+  //     );
+  //     cartoClient.addDataview(countriesDataview);
 
-    countriesDom.onchange = (event) => {
-      // setSelectedDistricts((st) => [...st, event.target.value]);
-      setSelectedDistricts(event.target.value);
-    };
+  //     countriesDataview.on("dataChanged", (data) => {
+  //       console.log("dataChanged");
+  //       const countryNames = data.categories
+  //         .map((category) => category.name)
+  //         .sort();
+  //       refreshCountriesWidget(countryNames);
+  //       setAllDistricts(countryNames);
+  //     });
+  //   }
+  // }, [cartoClient, districtsSource]);
 
-    // Fill in the list of countries
-    districtNames.forEach((district) => {
-      const option = document.createElement("option");
-      option.innerHTML = district;
-      option.value = district;
-      countriesDom.appendChild(option);
+  // // useLayoutEffect(()=> {
+  // //   if(widgetLoad===true) {
+  // //     refreshCountriesWidget(allDistricts);
+  // //   }
+  // // }, [widgetLoad])
+
+  // function refreshCountriesWidget(districtNames) {
+  //   const widgetDom = document.querySelector("#countriesWidget");
+  //   // if (widgetDom != null) {
+  //   const countriesDom = widgetDom.querySelector(".js-countries");
+
+  //   countriesDom.onchange = (event) => {
+  //     // setSelectedDistricts((st) => [...st, event.target.value]);
+  //     setSelectedDistricts(event.target.value);
+  //   };
+
+  //   // Fill in the list of countries
+  //   districtNames.forEach((district) => {
+  //     const option = document.createElement("option");
+  //     option.innerHTML = district;
+  //     option.value = district;
+  //     countriesDom.appendChild(option);
+  //   });
+  //   // }
+  // }
+  // useEffect(() => {
+  //   if (selectedDistricts.length > 0) {
+  //     highlightCountry(selectedDistricts);
+  //     // filterPopulatedPlacesByCountry(selectedDistricts);
+  //     // document.getElementById('js-countries').addEventListener("change", function () {
+  //     // let input = selectedDistricts;
+  //     return fetch(
+  //       `https://karastuart.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM gha_multivariable_dist where district Ilike '${selectedDistricts}'`
+  //     )
+  //       .then((resp) => resp.json())
+  //       .then((response) => {
+  //         let geojsonLayer = L.geoJSON(response);
+  //         nativeMap.fitBounds(geojsonLayer.getBounds());
+  //       });
+  //     // });
+  //   } else if (selectedDistricts === "") {
+  //     highlightCountry(selectedDistricts);
+  //     // filterPopulatedPlacesByCountry(selectedDistricts);
+  //     nativeMap.setView(maps[mapID].view, maps[mapID].zoom);
+  //   }
+  // }, [selectedDistricts]);
+
+  // function highlightCountry(district) {
+  //   // district.forEach((district) => {
+  //   let cartoCSS = `
+  //     #layer {
+  //       polygon-fill: 'transparent';
+  //       polygon-opacity: 1;
+  //       ::outline {
+  //         line-width: 1;
+  //         line-color: #000000;
+  //         line-opacity: 0.5;
+  //       }
+  //     } `;
+  //   if (district) {
+  //     // cartoCSS = `
+  //     //   ${cartoCSS}
+  //     //   #layer[!district.includes('${district}')] {
+  //     //     polygon-fill: #808080;
+  //     //     polygon-opacity: .75;
+  //     //   }
+  //     // `;
+  //     cartoCSS = `
+  //         ${cartoCSS}
+  //         #layer[district!='${district}'] {
+  //           polygon-fill: #808080;
+  //           polygon-opacity: .75;
+  //         }
+  //       `;
+  //   }
+  //   districtsStyle.setContent(cartoCSS);
+  //   // });
+  // }
+
+  // function filterPopulatedPlacesByCountry(district) {
+  //   // district.forEach((district) => {
+  //     let query = `
+  //     SELECT *
+  //       FROM gh_gccomms
+  //       WHERE district IN (SELECT district FROM gha_multivariable_dist)
+  //     `;
+  //     if (district) {
+  //     query = `
+  //       SELECT *
+  //         FROM gh_gccomms
+  //         WHERE district='${district}'
+  //     `;
+  //   // let query = `
+  //   //     SELECT *
+  //   //       FROM gha_comms_points
+  //   //       WHERE district IN (SELECT district FROM gha_multivariable_dist)
+  //   //   `;
+  //   // if (district) {
+  //   //   query = `
+  //   //       SELECT *
+  //   //         FROM gha_comms_points
+  //   //         WHERE district='${district}'
+  //   //     `;
+  //   }
+  //   commCalcSource.setQuery(query);
+  //   // });
+  // }
+  const toggleLayerVisibility = (layerID) => {
+    dispatch({
+      type: "layer.toggle",
+      mapID: mapID,
+      layerID: layerID,
     });
-    // }
-  }
-  useEffect(() => {
-    if (selectedDistricts.length > 0) {
-      highlightCountry(selectedDistricts);
-      // filterPopulatedPlacesByCountry(selectedDistricts);
-      // document.getElementById('js-countries').addEventListener("change", function () {
-      // let input = selectedDistricts;
-      return fetch(
-        `https://karastuart.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM gha_dist where district Ilike '${selectedDistricts}'`
-      )
-        .then((resp) => resp.json())
-        .then((response) => {
-          let geojsonLayer = L.geoJSON(response);
-          nativeMap.fitBounds(geojsonLayer.getBounds());
-        });
-      // });
-    } else if (selectedDistricts === "") {
-      highlightCountry(selectedDistricts);
-      // filterPopulatedPlacesByCountry(selectedDistricts);
-      nativeMap.setView(maps[mapID].view, maps[mapID].zoom);
-    }
-  }, [selectedDistricts]);
-
-  function highlightCountry(district) {
-    // district.forEach((district) => {
-    let cartoCSS = `
-      #layer {
-        polygon-fill: 'transparent';
-        polygon-opacity: 1;
-        ::outline {
-          line-width: 1;
-          line-color: #000000;
-          line-opacity: 0.5;
-        }
-      } `;
-    if (district) {
-      // cartoCSS = `
-      //   ${cartoCSS}
-      //   #layer[!district.includes('${district}')] {
-      //     polygon-fill: #808080;
-      //     polygon-opacity: .75;
-      //   }
-      // `;
-      cartoCSS = `
-          ${cartoCSS}
-          #layer[district!='${district}'] {
-            polygon-fill: #808080;
-            polygon-opacity: .75;
-          }
-        `;
-    }
-    districtsStyle.setContent(cartoCSS);
-    // });
-  }
-
-  function filterPopulatedPlacesByCountry(district) {
-    // district.forEach((district) => {
-      let query = `
-      SELECT *
-        FROM gh_gccomms
-        WHERE district IN (SELECT district FROM gha_dist)
-      `;
-      if (district) {
-      query = `
-        SELECT *
-          FROM gh_gccomms
-          WHERE district='${district}'
-      `;
-    // let query = `
-    //     SELECT *
-    //       FROM gha_comms_points
-    //       WHERE district IN (SELECT district FROM gha_dist)
-    //   `;
-    // if (district) {
-    //   query = `
-    //       SELECT *
-    //         FROM gha_comms_points
-    //         WHERE district='${district}'
-    //     `;
-    }
-    commCalcSource.setQuery(query);
-    // });
-  }
-
+  };
   return (
     <div
       style={{ height: "100%", position: "relative" }}
       className={classes.content}
     >
       <div id="map" style={{ height: "100%" }} className="tour-map"></div>
-
+      {/* Legend */}
       {buckets && visibleLayers && (
         <Paper
           square
@@ -812,6 +834,7 @@ export const Map = () => {
           })}
         </Paper>
       )}
+      {/* Popup */}
       {popupData && (
         <Popper
           anchorEl={anchorRef.current}
@@ -932,6 +955,7 @@ export const Map = () => {
                 >
                   SEE MORE
                 </Link>
+                {/* Popover */}
                 <Modal
                   id={idPopover}
                   ref={clickRef}
@@ -974,7 +998,8 @@ export const Map = () => {
                         elevation={0}
                       >
                         {popupData.data[0].layer ===
-                        "Settlement Areas and Estimated Population (pop.)"||popupData.data[0].layer === "Communities" ? (
+                          "Settlement Areas and Estimated Population (pop.)" ||
+                        popupData.data[0].layer === "Communities" ? (
                           <TableHead>
                             <TableRow>
                               <TableCell colSpan={2} align="center">
@@ -1071,7 +1096,8 @@ export const Map = () => {
                           startIcon={<SaveIcon />}
                         >
                           {popupData.data[0].layer ===
-                          "Settlement Areas and Estimated Population (pop.)"||popupData.data[0].layer=== "Communities" ? (
+                            "Settlement Areas and Estimated Population (pop.)" ||
+                          popupData.data[0].layer === "Communities" ? (
                             <CSVLink
                               className={classes.download}
                               data={popupData.data}
@@ -1108,47 +1134,6 @@ export const Map = () => {
           </div>
         </Popper>
       )}
-
-      <Paper
-        key={"commCalculator"}
-        style={{
-          padding: theme.spacing(1),
-          position: "absolute",
-          bottom: "unset",
-          right: "0px",
-          top: "0px",
-          left: "unset",
-          height: "auto",
-          width: "200px",
-          zIndex: "1000",
-          backgroundColor: "#fff", //theme.palette.background.paper,
-          margin: "auto",
-        }}
-        elevation={2}
-        square
-        // variant="outlined"
-      >
-        <Tour style={{ justifyContent: "center" }} />
-        <div
-          id="avgPopulationWidget"
-          class="widget widget-formula"
-          className="tour-community-calc"
-        >
-          <Box fontSize="h7.fontSize" align="center">
-            Total Mapped Settlement Areas in Current View
-          </Box>
-          {/* <Box class="js-average-population result" align="center" color="secondary">[calculating]</Box> */}
-          <Typography
-            variant="h5"
-            color="secondary"
-            align="center"
-            fontWeight="fontWeightBold"
-            fontSize="h6.fontSize"
-          >
-            <div class="AveragePopulation">[calculating]</div>
-          </Typography>
-        </div>
-      </Paper>
     </div>
   );
 };

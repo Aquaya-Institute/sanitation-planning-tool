@@ -2,7 +2,7 @@ import * as React from "react";
 import { MapContext } from "../state/MapState";
 import { MapLayers } from "../components/MapLayers";
 import { Map } from "../components/Map";
-import { Grid, Box } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 
 function MapDetail() {
@@ -14,17 +14,15 @@ function MapDetail() {
       type: "map.select",
       mapID: id,
     });
-  }, []);
+  }, [dispatch, id]);
 
   return (
     <Grid container style={{height:"100%"}}>
-      <Grid item xs={4} md={4} lg={3} style={{boxShadow:"0px 0px 10px black", zIndex: 1100}}>
-      {/* <Box
-        p={2}> */}
+      {/* <Grid item  style={{boxShadow:"0px 0px 10px black", zIndex: 1100}}> */}
+      <Grid item>
         <MapLayers />
-      {/* </Box> */}
       </Grid>
-      <Grid item xs={8} md={8} lg={9}>
+      <Grid item xs={true} md={true} lg={true}>
         <Map />
       </Grid>
     </Grid>
