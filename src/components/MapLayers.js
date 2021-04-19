@@ -51,7 +51,7 @@ export const MapLayers = () => {
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMenu, setSelectedMenu] = React.useState(null);
-  const [scaleValue, setScaleValue] = useState("1");
+  const [scaleValue, setScaleValue] = useState("2");
   const setActive = (event, text) => {
     setSelectedMenu(text);
   };
@@ -301,7 +301,7 @@ export const MapLayers = () => {
             }}
           >
             <FormControlLabel
-              value="0"
+              value="1"
               control={<Radio />}
               label="1km square pixel (Classification layer only)"
               classes={{
@@ -309,7 +309,7 @@ export const MapLayers = () => {
               }}
             />
             <FormControlLabel
-              value="1"
+              value="2"
               control={<Radio />}
               label="5km square pixel"
               classes={{
@@ -317,7 +317,7 @@ export const MapLayers = () => {
               }}
             />
             <FormControlLabel
-              value="2"
+              value="3"
               control={<Radio />}
               label="District"
               classes={{

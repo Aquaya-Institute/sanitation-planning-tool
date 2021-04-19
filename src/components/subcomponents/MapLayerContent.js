@@ -40,7 +40,6 @@ function createMarks(array) {
 const MapLayerContent = ({ cat, layerID }) => {
   const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
   const [mapID, setMapID] = useState("ghana");
-  const [visibleLayers, setVisibleLayers] = useState(1);
 
   const classes = useStyles();
   // const [selectedLayer, setselectedLayer] = React.useState("");
@@ -52,15 +51,7 @@ const MapLayerContent = ({ cat, layerID }) => {
       setMapID(currentMapID);
     }
   }, [currentMapID]);
-  useEffect(() => {
-    if (mapID) {
-      maps[mapID].layers.forEach((layer, index) => {
-        if (layer.visible) {
-          setVisibleLayers(index);
-        }
-      });
-    }
-  }, [mapID]);
+
   // const handleClick = (layerIndex) => {
   //   if (selectedLayer === layerIndex) {
   //     setselectedLayer("");

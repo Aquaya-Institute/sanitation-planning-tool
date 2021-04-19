@@ -19,6 +19,27 @@ const initialState = {
       */
       layers: [
         {
+          name: "Country Border",
+          carto_tableName: "gha_adm0",
+          carto_layer: null /* we will insert carto's layer object here */,
+          carto_style: `#layer {
+            polygon-fill: #826dba;
+            polygon-opacity: 0;
+          }
+          #layer::outline {
+            line-width: 1.75;
+            line-color: #000000;
+            line-opacity: 1;
+          }`,
+          visible: true,
+          /* 
+          we don't use order yet to order(re) the layers 
+          For now the first layer object is the bottom most rendered layer
+          */
+          order: 4,
+          filters: [],
+        },
+        {
           name: "Community Classification",
           carto_tableName: "gha_class",
           carto_layer: null /* we will insert carto's layer object here */,
@@ -280,14 +301,13 @@ const initialState = {
           carto_tableName: "gha_multivariable_dist",
           carto_layer: null,
           carto_style: `#layer {
-            polygon-fill: transparent;
-            polygon-opacity: 0;
-            }
-            #layer::outline {
-              line-width: 1.75;
-              line-color: #000000;
-              line-opacity: 1;
-            }`,
+            polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);
+          }
+          #layer::outline {
+            line-width: 1.5;
+            line-color: #000000;
+            line-opacity: 1;
+          }`,
           visible: false,
           order: 5,
           filters: [
@@ -570,7 +590,7 @@ const reducer = (state, action) => {
         const cartoLayer = draft.maps[mid].layers[lid].carto_layer;
         //update the state
         for (var i in draft.maps[mid].layers) {
-          if (i === lid) {
+          if (i === lid || i === "0") {
             draft.maps[mid].layers[lid].visible = true;
             cartoLayer.show();
           } else {
