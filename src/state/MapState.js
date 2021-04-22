@@ -605,7 +605,19 @@ const reducer = (state, action) => {
             draft.maps[mid].layers[i].carto_layer.hide();
           }
         }
-        draft.activeLegend = "0";
+        legendStyles.map((style, i) => {
+          if (
+            style.style === draft.maps[mid].layers[action.layerID].carto_style
+          ) {
+            return (draft.activeLegend = i);
+          }
+        });
+        // draft.activeLegend = legendStyles.indexOf(
+        //   legendStyles.style ===
+        //     draft.maps[mid].layers[action.layerID].carto_style
+        // );
+        // draft.maps[mid].layers[action.layerID].carto_style =
+        //   legendStyles[0].style;
       });
 
     // case "clear.filter":
@@ -614,7 +626,7 @@ const reducer = (state, action) => {
     case "legend.select":
       return produce(state, (draft) => {
         const mid = draft.currentMapID;
-        const lid = action.layerID;
+        const lid = draft.activeLayer;
         draft.maps[mid].layers[lid].carto_style = action.styleNew;
         draft.activeLegend = action.legendIndex;
       });
