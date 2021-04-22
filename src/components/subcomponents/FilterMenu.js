@@ -33,6 +33,7 @@ const FilterMenu = ({
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, [setFilterMenuOpen, setSelectedMenu]);
+
   return (
     <Popper
       id={cat + "filterMenu"}
@@ -81,6 +82,14 @@ const FilterMenu = ({
           overflow: "auto",
         }}
       >
+        {layerID === "1" && cat !== "accessibility" && (
+          <Box m={1} fontStyle="italic">
+            <Typography variant={"body2"}>
+              To access these indicators, select "5x5km area" resolution or
+              larger from top right menu.
+            </Typography>
+          </Box>
+        )}
         <MapLayerContent cat={cat} layerID={layerID} />
       </Box>
     </Popper>

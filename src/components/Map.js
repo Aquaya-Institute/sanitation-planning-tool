@@ -44,6 +44,11 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import Select from "@material-ui/core/Select";
+import NativeSelect from "@material-ui/core/NativeSelect";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { legendStyles } from "./subcomponents/LegendStyles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -184,7 +189,10 @@ function transformArray(array) {
 }
 
 export const Map = () => {
-  const [{ currentMapID, maps }, dispatch] = useContext(MapContext);
+  const [
+    { currentMapID, maps, activeLayer, activeLegend },
+    dispatch,
+  ] = useContext(MapContext);
   const [mapID, setMapID] = useState();
   const [layerID, setlayerID] = useState();
   const [visibleLayers, setVisibleLayers] = useState();
@@ -204,12 +212,12 @@ export const Map = () => {
   const [arrow, setArrow] = useState(true);
   const classes = useStyles();
   const clickRef = useRef(null);
-  const [commCalcSource, setCommCalcSource] = useState(null);
-  const [districtsSource, setDistrictsSource] = useState(null);
-  const [districtsStyle, setDistrictsStyle] = useState(null);
-  const [selectedDistricts, setSelectedDistricts] = useState([]);
-  const [widgetLoad, setWidgetLoad] = useState();
-  const [allDistricts, setAllDistricts] = useState([]);
+  // const [commCalcSource, setCommCalcSource] = useState(null);
+  // const [districtsSource, setDistrictsSource] = useState(null);
+  // const [districtsStyle, setDistrictsStyle] = useState(null);
+  // const [selectedDistricts, setSelectedDistricts] = useState([]);
+  // const [widgetLoad, setWidgetLoad] = useState();
+  // const [allDistricts, setAllDistricts] = useState([]);
 
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = [];
@@ -219,7 +227,8 @@ export const Map = () => {
   const [classIndex, setClassIndex] = useState();
   const [popIndex, setPopIndex] = useState();
   const [nativeMap, setNativeMap] = useState();
-  const [scaleValue, setScaleValue] = useState("1");
+
+  // const [legendIndex, setLegendIndex] = useState(0);
 
   //click outside
   useEffect(() => {
@@ -329,12 +338,15 @@ export const Map = () => {
   useEffect(() => {
     console.log("Selected Map Changed", currentMapState);
 
-    if (cartoClient && currentMapState) {
+    if (cartoClient && mapID) {
+      dispatch({
+        type: "layer.removeCartoLayers",
+      });
       console.log("Creating Carto Layers");
-      const _mapID = currentMapState.mapID;
-      var buckets_list = [];
+      const _mapID = mapID;
+
       var objlist = [];
-      currentMapState.layers.forEach((layer, index) => {
+      maps[mapID].layers.forEach((layer, index) => {
         const _source = new Carto.source.SQL(
           `SELECT * FROM ${layer.carto_tableName}`
         );
@@ -342,16 +354,15 @@ export const Map = () => {
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
-        if (
-          layer.name === "Settlement Areas and Estimated Population (pop.)" ||
-          layer.name === "Communities"
-        ) {
-          setCommCalcSource(_source);
-        }
-        if (layer.name === "Districts") {
-          setDistrictsSource(_source);
-          setDistrictsStyle(_style);
-        }
+        // if (
+        //   layer.name === "5x5km area" ||
+        //   layer.name === "Communities"
+        // ) {
+        //   setCommCalcSource(_source);
+        // } else if (layer.name === "Districts") {
+        //   setDistrictsSource(_source);
+        //   setDistrictsStyle(_style);
+        // }
         var obj1 = [];
 
         layer.filters.forEach((filter, filter_c) => {
@@ -437,12 +448,14 @@ export const Map = () => {
         setlayerID(index);
 
         // change legend when data classification method changes
-        var executed = false;
+        // var executed = false;
 
         _layer.on("metadataChanged", function (event) {
-          if (!executed) {
-            executed = true;
-            console.log(event);
+          // if (!executed) {
+          // executed = true;
+          console.log(event);
+          // setBuckets([]);
+          if (layer.name === maps[mapID].layers[activeLayer].name) {
             var obj = {};
             // get buckets
             if (event.styles.length === 0) {
@@ -458,9 +471,9 @@ export const Map = () => {
               } else {
                 obj["legend"] = [
                   {
-                    name: "User Uploaded Points",
-                    value: "#a54acc",
-                    border: "2px solid #7a228c",
+                    name: "Country boundaries",
+                    value: "transparent",
+                    border: "2px solid #000",
                   },
                 ];
               }
@@ -478,14 +491,14 @@ export const Map = () => {
                   obj.legend[i].name = "Urban";
                 }
               }
-              buckets_list.push(obj);
             } else {
               obj["variable"] = layer.name;
               obj["legend"] = event.styles[0]._buckets;
-              buckets_list.push(obj);
             }
-            setBuckets((st) => [...st, obj]);
+            setBuckets(obj);
+            // setBuckets((st) => [...st, obj]);
           }
+          // }
         });
 
         //add the carto layer to global state
@@ -499,7 +512,7 @@ export const Map = () => {
       setPopoverColumns(objlist);
       console.log(popoverColumns);
     }
-  }, [currentMapState, cartoClient, dispatch]);
+  }, [currentMapState, cartoClient, dispatch, activeLegend, activeLayer]);
 
   useEffect(() => {
     console.log("updated popup", popup);
@@ -522,6 +535,8 @@ export const Map = () => {
           popup[1].data.classes = "Rural On-road";
         } else if (popup[1].data.classes === 3) {
           popup[1].data.classes = "Rural Mixed";
+        } else if (popup[1].data.classes === 4) {
+          popup[1].data.classes = "Urban";
         }
       }
       Object.entries(popup[1].data)
@@ -568,17 +583,19 @@ export const Map = () => {
     }
   }, [popup]);
 
-  useEffect(() => {
-    if (maps[mapID]) {
-      let visibleLayer_list = [];
-      maps[mapID].layers.forEach((layer, index) => {
-        if (layer.visible) {
-          visibleLayer_list.push(layer.name);
-        }
-      });
-      setVisibleLayers(visibleLayer_list);
-    }
-  }, [maps, mapID]);
+  // Visible layer
+  // useEffect(() => {
+  //   if (maps[mapID]) {
+  //     let visibleLayer_list = [];
+  //     maps[mapID].layers.forEach((layer, index) => {
+  //       if ((index !== 0) & layer.visible) {
+  //         visibleLayer_list.push(layer.name);
+  //       }
+  //     });
+  //     setVisibleLayers(visibleLayer_list);
+  //   }
+  // }, [maps, mapID]);
+
   // Community counter
   // useEffect(() => {
   //   if (cartoClient && commCalcSource && nativeMap) {
@@ -622,6 +639,7 @@ export const Map = () => {
   //   const commCalculatorDom = widgetDom.querySelector(".AveragePopulation");
   //   commCalculatorDom.innerText = Math.floor(avgPopulation);
   // }
+
   // District dropdown
   // useEffect(() => {
   //   if (cartoClient && districtsSource) {
@@ -752,13 +770,17 @@ export const Map = () => {
   //   commCalcSource.setQuery(query);
   //   // });
   // }
-  const toggleLayerVisibility = (layerID) => {
+  const handleChange = (event) => {
+    const styleNew = legendStyles[event.target.value].style;
+
     dispatch({
-      type: "layer.toggle",
-      mapID: mapID,
-      layerID: layerID,
+      type: "legend.select",
+      layerID: activeLayer,
+      legendIndex: event.target.value,
+      styleNew: styleNew,
     });
   };
+
   return (
     <div
       style={{ height: "100%", position: "relative" }}
@@ -766,7 +788,7 @@ export const Map = () => {
     >
       <div id="map" style={{ height: "100%" }} className="tour-map"></div>
       {/* Legend */}
-      {buckets && visibleLayers && (
+      {mapID && activeLayer && (
         <Paper
           square
           key={"legendContainer"}
@@ -778,60 +800,74 @@ export const Map = () => {
             top: "unset",
             left: "unset",
             height: "auto",
-            width: "200px",
+            width: "250px",
             zIndex: "1000",
             backgroundColor: "#fff",
           }}
         >
-          {visibleLayers.map((vis) => {
-            return (
-              <Fragment key={"legendContent" + vis}>
-                {buckets.map((bucket, i) => {
-                  if (vis === bucket.variable) {
+          <Fragment key={"legendContent" + activeLayer}>
+            <Box variant="subtitle2" fontSize={12} fontWeight="light">
+              Selected layer: {maps[mapID].layers[activeLayer].name}
+            </Box>
+            <FormControl className={classes.formControl}>
+              <Box
+                variant="subtitle2"
+                fontStyle="italic"
+                fontWeight="fontWeightBold"
+              >
+                Select the indicator to visualize:
+              </Box>
+              <NativeSelect
+                value={activeLegend}
+                onChange={handleChange}
+                inputProps={{
+                  name: "age",
+                  id: "age-native-label-placeholder",
+                }}
+              >
+                {maps[mapID].layers[activeLayer].filters.map((filter, i) => {
+                  if (filter.subcategory !== "id") {
                     return (
-                      <Fragment key={"legendContent" + bucket.variable}>
-                        <Box
-                          fontSize="fontSize"
-                          key={"legendTitle" + bucket.variable}
-                        >
-                          <strong>{vis}</strong>
-                        </Box>
-
-                        {bucket.legend.map((legend, j) => {
-                          return (
-                            <Grid
-                              container
-                              direction="row"
-                              alignItems="center"
-                              className={classes.element}
-                              key={"bucket" + j}
-                            >
-                              <div
-                                className={classes.dot}
-                                style={{
-                                  backgroundColor: legend.value,
-                                  border: legend.border,
-                                }}
-                                key={legend.value.toString()}
-                              ></div>
-
-                              {legend.name === undefined
-                                ? legend.min.toFixed(0).toString() +
-                                  " - " +
-                                  legend.max.toFixed(0).toString()
-                                : legend.name}
-                            </Grid>
-                          );
-                        })}
-                      </Fragment>
+                      <option key={"filter" + i} value={i}>
+                        {filter.name}
+                      </option>
                     );
-                  } else {
-                    return null;
                   }
                 })}
+              </NativeSelect>
+              <FormHelperText> </FormHelperText>
+            </FormControl>
+            {maps[mapID].layers[activeLayer].name === buckets.variable && (
+              <Fragment key={"legendContent" + buckets.variable}>
+                {buckets.legend.map((legend, j) => {
+                  return (
+                    <Grid
+                      container
+                      direction="row"
+                      alignItems="center"
+                      className={classes.element}
+                      key={"bucket" + j}
+                    >
+                      <div
+                        className={classes.dot}
+                        style={{
+                          backgroundColor: legend.value,
+                          border: legend.border,
+                        }}
+                        key={legend.value.toString()}
+                      ></div>
+
+                      {legend.name === undefined
+                        ? legend.min.toFixed(0).toString() +
+                          " - " +
+                          legend.max.toFixed(0).toString()
+                        : legend.name}
+                    </Grid>
+                  );
+                })}
               </Fragment>
-            );
-          })}
+            )}
+          </Fragment>
         </Paper>
       )}
       {/* Popup */}
@@ -881,7 +917,7 @@ export const Map = () => {
             </Grid>
             {popupData.data.length === 1 && (
               <Box fontSize="fontSize">
-                {popupData.data[0].layer === "Community Classification" ? (
+                {popupData.data[0].layer === "1x1km area" ? (
                   <Box>
                     <Box fontWeight="fontWeightBold">
                       {popupData.data[0].name}:{" "}
@@ -900,8 +936,7 @@ export const Map = () => {
             )}
             {popupData.data.length > 1 && (
               <Fragment key={"popper" + popupData.data[0].layer}>
-                {popupData.data[0].layer ===
-                "Settlement Areas and Estimated Population (pop.)" ? (
+                {popupData.data[0].layer === "5x5km area" ? (
                   <Box>
                     <Box fontWeight="fontWeightBold">
                       {popupData.data[popIndex].name}:{" "}
@@ -997,8 +1032,7 @@ export const Map = () => {
                         key={"popoverTable"}
                         elevation={0}
                       >
-                        {popupData.data[0].layer ===
-                          "Settlement Areas and Estimated Population (pop.)" ||
+                        {popupData.data[0].layer === "5x5km area" ||
                         popupData.data[0].layer === "Communities" ? (
                           <TableHead>
                             <TableRow>
@@ -1095,8 +1129,7 @@ export const Map = () => {
                           className={classes.button}
                           startIcon={<SaveIcon />}
                         >
-                          {popupData.data[0].layer ===
-                            "Settlement Areas and Estimated Population (pop.)" ||
+                          {popupData.data[0].layer === "5x5km area" ||
                           popupData.data[0].layer === "Communities" ? (
                             <CSVLink
                               className={classes.download}

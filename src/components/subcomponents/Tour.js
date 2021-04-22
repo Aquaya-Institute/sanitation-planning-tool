@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from "react";
 import JoyRide, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 import Button from "@material-ui/core/Button";
-import MapIcon from '@material-ui/icons/Map';
+import MapIcon from "@material-ui/icons/Map";
 // import theme from "./theme/theme";
 
 const TOUR_STEPS = [
@@ -27,15 +27,25 @@ const TOUR_STEPS = [
   },
   {
     target: ".tour-dist",
-    content: "Explore and filter additional contextual variables by district...",
+    content:
+      "Explore and filter additional contextual variables by district...",
   },
   {
     target: ".tour-comm ",
-    content: ["...or settlement area.",<br key="space"></br>,<p style={{fontSize:"13px"}} key="disclaimer">*Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement.*</p>],
+    content: [
+      "...or settlement area.",
+      <br key="space"></br>,
+      <p style={{ fontSize: "13px" }} key="disclaimer">
+        *Settlements mapped in this manner do not represent administratively
+        recognized communities. It is highly likely that multiple communities in
+        close proximity were combined graphically into a single settlement.*
+      </p>,
+    ],
   },
   {
     target: ".tour-map",
-    content: "Click directly on a district or settlement for more information and the ability to download data tables.",
+    content:
+      "Click directly on a district or settlement for more information and the ability to download data tables.",
   },
 ];
 
@@ -117,7 +127,9 @@ const Tour = () => {
 
   return (
     <>
-      <Button justify='center' startIcon={<MapIcon />} onClick={startTour}>Restart Tour</Button>
+      <Button justify="center" startIcon={<MapIcon />} onClick={startTour}>
+        Restart Tour
+      </Button>
       <JoyRide
         {...tourState}
         callback={callback}

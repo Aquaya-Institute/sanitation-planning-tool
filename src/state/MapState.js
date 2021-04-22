@@ -1,5 +1,7 @@
 import * as React from "react";
 import produce from "immer";
+import Carto, { isNull } from "@carto/carto.js";
+import { legendStyles } from "../components/subcomponents/LegendStyles";
 
 //this is the "global map state". this is where state is maintained and updated
 const initialState = {
@@ -32,24 +34,22 @@ const initialState = {
             line-opacity: 1;
           }`,
           visible: true,
-          /* 
-          we don't use order yet to order(re) the layers 
-          For now the first layer object is the bottom most rendered layer
-          */
-          order: 4,
           filters: [],
         },
         {
-          name: "Community Classification",
+          name: "1x1km area",
           carto_tableName: "gha_class",
           carto_layer: null /* we will insert carto's layer object here */,
-          carto_style: `#layer {polygon-fill: ramp([class], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);}#layer::outline {line-width: 0;line-color: #FFFFFF;line-opacity: 0.5;}`,
+          carto_style: `#layer {
+            polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);
+          }
+          #layer::outline {
+            line-width: 0;
+            line-color: #ffffff;
+            line-opacity: 0;
+          }`,
           visible: false,
-          /* 
-          we don't use order yet to order(re) the layers 
-          For now the first layer object is the bottom most rendered layer
-          */
-          order: 4,
+          accessCounter: 0,
           filters: [
             {
               /* 
@@ -59,7 +59,7 @@ const initialState = {
               name: "Community Classification",
               unit: "",
               type: "categorical",
-              column_name: "class",
+              column_name: "classes",
               subcategory: "accessibility",
               value: [
                 {
@@ -87,20 +87,52 @@ const initialState = {
           ],
         },
         {
-          name: "Settlement Areas and Estimated Population (pop.)",
+          name: "5x5km area",
           carto_tableName: "gha_multivariable_pixel",
           carto_layer: null,
           carto_style: `#layer {
             polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);
           }
           #layer::outline {
-            line-width: 0;
-            line-color: #ffffff;
+            line-width: 0.5;
+            line-color: #000000;
             line-opacity: 0;
           }`,
           visible: true,
-          order: 5,
+          accessCounter: 0,
+          washCounter: 0,
+          socioCounter: 0,
+          healthCounter: 0,
           filters: [
+            {
+              name: "Community Classification",
+              unit: "",
+              type: "categorical",
+              column_name: "classes",
+              subcategory: "accessibility",
+              value: [
+                {
+                  name: "Rural Remote",
+                  value: 1,
+                  checked: true,
+                },
+                {
+                  name: "Rural On-road",
+                  value: 2,
+                  checked: true,
+                },
+                {
+                  name: "Rural Mixed",
+                  value: 3,
+                  checked: true,
+                },
+                {
+                  name: "Urban",
+                  value: 4,
+                  checked: true,
+                },
+              ] /* declaure col values that should be filtered on */,
+            },
             {
               name: "Population Estimate",
               unit: "pop.",
@@ -156,35 +188,6 @@ const initialState = {
               ],
             },
             {
-              name: "Community Classification",
-              unit: "",
-              type: "categorical",
-              column_name: "classes",
-              subcategory: "accessibility",
-              value: [
-                {
-                  name: "Rural Remote",
-                  value: 1,
-                  checked: true,
-                },
-                {
-                  name: "Rural On-road",
-                  value: 2,
-                  checked: true,
-                },
-                {
-                  name: "Rural Mixed",
-                  value: 3,
-                  checked: true,
-                },
-                {
-                  name: "Urban",
-                  value: 4,
-                  checked: true,
-                },
-              ] /* declaure col values that should be filtered on */,
-            },
-            {
               name: "Population Practicing Open Defecation",
               unit: "%",
               type: "range",
@@ -229,9 +232,9 @@ const initialState = {
               unit: "km.",
               type: "range",
               column_name: "dr",
-              min: 0.5,
+              min: 0.1,
               max: 37.8,
-              value: [0.5, 37.8],
+              value: [0.1, 37.8],
               subcategory: "accessibility",
             },
             {
@@ -239,9 +242,9 @@ const initialState = {
               unit: "km.",
               type: "range",
               column_name: "dt",
-              min: 0.1,
+              min: 0,
               max: 76.2,
-              value: [0.1, 76.2],
+              value: [0, 76.2],
               subcategory: "accessibility",
             },
             {
@@ -249,9 +252,9 @@ const initialState = {
               unit: "%",
               type: "range",
               column_name: "dia",
-              min: 2.5,
-              max: 5.7,
-              value: [2.5, 5.7],
+              min: 2.4,
+              max: 6.5,
+              value: [2.4, 6.5],
               subcategory: "health",
             },
             {
@@ -269,9 +272,9 @@ const initialState = {
               unit: "%",
               type: "range",
               column_name: "u5m",
-              min: 5,
-              max: 12.6,
-              value: [5, 12.6],
+              min: 4.4,
+              max: 13.3,
+              value: [4.4, 13.3],
               subcategory: "health",
             },
             {
@@ -280,8 +283,8 @@ const initialState = {
               type: "range",
               column_name: "edu_w",
               min: 2,
-              max: 8,
-              value: [2, 8],
+              max: 10,
+              value: [2, 10],
               subcategory: "socioeconomic",
             },
             {
@@ -289,9 +292,9 @@ const initialState = {
               unit: "yrs.",
               type: "range",
               column_name: "edu_m",
-              min: 4,
-              max: 9,
-              value: [4, 9],
+              min: 3,
+              max: 11,
+              value: [3, 11],
               subcategory: "socioeconomic",
             },
           ],
@@ -304,23 +307,16 @@ const initialState = {
             polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);
           }
           #layer::outline {
-            line-width: 1.5;
+            line-width: 0.5;
             line-color: #000000;
             line-opacity: 1;
           }`,
           visible: false,
-          order: 5,
+          accessCounter: 0,
+          washCounter: 0,
+          socioCounter: 0,
+          healthCounter: 0,
           filters: [
-            {
-              name: "Population Estimate",
-              unit: "pop.",
-              type: "range",
-              column_name: "pop",
-              min: 27942,
-              max: 3107236,
-              value: [27942, 3107236],
-              subcategory: "socioeconomic",
-            },
             {
               name: "Predominant Community Classification",
               unit: "",
@@ -349,6 +345,16 @@ const initialState = {
                 },
               ] /* declaure col values that should be filtered on */,
               subcategory: "accessibility",
+            },
+            {
+              name: "Population Estimate",
+              unit: "pop.",
+              type: "range",
+              column_name: "pop",
+              min: 27942,
+              max: 3107236,
+              value: [27942, 3107236],
+              subcategory: "socioeconomic",
             },
             {
               name: "Average Population Practicing Open Defecation",
@@ -496,7 +502,6 @@ const initialState = {
           visible: false,
           source: "Institute for Health Metrics and Evaluation",
           year: 2017,
-          order: 3,
           filters: [
             {
               name: "Population Practicing Open Defecation (%)",
@@ -556,6 +561,8 @@ const initialState = {
       ],
     },
   },
+  activeLayer: "2",
+  activeLegend: "0",
 };
 
 //the reducer is essentially the place where the state is manipulated/maintained.
@@ -586,24 +593,30 @@ const reducer = (state, action) => {
       */
       return produce(state, (draft) => {
         const mid = draft.currentMapID;
-        const lid = action.layerID;
-        const cartoLayer = draft.maps[mid].layers[lid].carto_layer;
+        draft.activeLayer = action.layerID;
+        const cartoLayer = draft.maps[mid].layers[action.layerID].carto_layer;
         //update the state
         for (var i in draft.maps[mid].layers) {
-          if (i === lid || i === "0") {
-            draft.maps[mid].layers[lid].visible = true;
+          if (i === action.layerID || i === "0") {
+            draft.maps[mid].layers[action.layerID].visible = true;
             cartoLayer.show();
           } else {
             draft.maps[mid].layers[i].visible = false;
             draft.maps[mid].layers[i].carto_layer.hide();
           }
         }
-        //toggle the carto layer visibility
-        // if (draft.maps[mid].layers[lid].visible) {
-        //   cartoLayer.show();
-        // } else {
-        //   cartoLayer.hide();
-        // }
+        draft.activeLegend = "0";
+      });
+
+    // case "clear.filter":
+    // cycle over initial filter states, see which filters are on, and reset the carto API
+
+    case "legend.select":
+      return produce(state, (draft) => {
+        const mid = draft.currentMapID;
+        const lid = action.layerID;
+        draft.maps[mid].layers[lid].carto_style = action.styleNew;
+        draft.activeLegend = action.legendIndex;
       });
 
     //when a filter is manipulated
@@ -676,6 +689,29 @@ const reducer = (state, action) => {
             break;
           default:
             break;
+        }
+
+        if (action.layerIndex === "1") {
+          draft.maps[action.mapID].layers[action.layerIndex].accessCounter =
+            action.accessCounter_1;
+        } else if (action.layerIndex === "2") {
+          draft.maps[action.mapID].layers[action.layerIndex].accessCounter =
+            action.accessCounter_2;
+          draft.maps[action.mapID].layers[action.layerIndex].washCounter =
+            action.washCounter_2;
+          draft.maps[action.mapID].layers[action.layerIndex].socioCounter =
+            action.socioCounter_2;
+          draft.maps[action.mapID].layers[action.layerIndex].healthCounter =
+            action.healthCounter_2;
+        } else if (action.layerIndex === "3") {
+          draft.maps[action.mapID].layers[action.layerIndex].accessCounter =
+            action.accessCounter_3;
+          draft.maps[action.mapID].layers[action.layerIndex].washCounter =
+            action.washCounter_3;
+          draft.maps[action.mapID].layers[action.layerIndex].socioCounter =
+            action.socioCounter_3;
+          draft.maps[action.mapID].layers[action.layerIndex].healthCounter =
+            action.healthCounter_3;
         }
       });
 
