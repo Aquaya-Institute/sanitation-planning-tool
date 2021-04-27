@@ -52,10 +52,6 @@ const initialState = {
           accessCounter: 0,
           filters: [
             {
-              /* 
-              a categorical filter, such as this one is not implemented. 
-              It might be a good one to implement
-             */
               name: "Community Classification",
               unit: "",
               type: "categorical",
@@ -135,12 +131,14 @@ const initialState = {
             },
             {
               name: "Population Estimate",
-              unit: "pop.",
+              unit: "",
               type: "range_non_linear",
               column_name: "pop",
-              min: 6,
+              min: 0,
               max: 70, //we want 7 breaks not counting start value of 0.
-              value: [6, 70], //slider range will be from 0-70, which we will scale to
+              value: [0, 70], //slider range will be from 0-70, which we will scale to
+              scaledMin: 0,
+              scaledMax: 442720,
               scaledValue: [0, 442720], //the actual min/max of column
               subcategory: "socioeconomic",
               // define 7+1 non linear marks here, note that value goes from 0-70 only
@@ -177,13 +175,13 @@ const initialState = {
                 },
                 {
                   value: 60,
-                  scaledValue: 1000000,
-                  label: "1M",
+                  scaledValue: 100000,
+                  label: "100K",
                 },
                 {
                   value: 70,
-                  scaledValue: 7000000,
-                  label: "7M",
+                  scaledValue: 500000,
+                  label: "500K",
                 },
               ],
             },
@@ -348,7 +346,7 @@ const initialState = {
             },
             {
               name: "Population Estimate",
-              unit: "pop.",
+              unit: "",
               type: "range",
               column_name: "pop",
               min: 27942,
@@ -398,7 +396,7 @@ const initialState = {
             },
             {
               name: "Average Distance to Roads",
-              unit: "meters",
+              unit: "km.",
               type: "range",
               column_name: "dr",
               min: 0.2,
@@ -408,7 +406,7 @@ const initialState = {
             },
             {
               name: "Average Distance to Towns",
-              unit: "meters",
+              unit: "km.",
               type: "range",
               column_name: "dt",
               min: 0,
@@ -612,12 +610,6 @@ const reducer = (state, action) => {
             return (draft.activeLegend = i);
           }
         });
-        // draft.activeLegend = legendStyles.indexOf(
-        //   legendStyles.style ===
-        //     draft.maps[mid].layers[action.layerID].carto_style
-        // );
-        // draft.maps[mid].layers[action.layerID].carto_style =
-        //   legendStyles[0].style;
       });
 
     // case "clear.filter":
@@ -727,6 +719,53 @@ const reducer = (state, action) => {
         }
       });
 
+    case "reset.filters":
+      return produce(state, (draft) => {
+        const layer = draft.maps[draft.currentMapID].layers[draft.activeLayer];
+        layer.filters.forEach((filter, filterIndex) => {
+          if (filter.type === "categorical") {
+            const cartofilter_c = layer.carto_layer
+              .getSource()
+              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[filterIndex];
+
+            let col_vals_tofilter = [];
+            //get the category filter state and create an array
+            //of checked=true col values to filter
+            filter.value.forEach((category) => {
+              category.checked = true;
+              col_vals_tofilter.push(category.value);
+            });
+            cartofilter_c.setFilters({
+              in: col_vals_tofilter,
+            });
+          } else if (filter.type === "range") {
+            const cartofilter = layer.carto_layer
+              .getSource()
+              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[filterIndex];
+            //this is how you set the filter. this is specific to range filter
+            cartofilter.setFilters({
+              gte: filter.min,
+              lte: filter.max,
+            });
+          } else if (filter.type === "range_non_linear") {
+            const cartofilter_non = layer.carto_layer
+              .getSource()
+              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[filterIndex];
+            //this is how you set the filter. this is specific to range filter
+            cartofilter_non.setFilters({
+              gte: filter.scaledMin,
+              lte: filter.scaledMax,
+            });
+          }
+        });
+        layer.accessCounter = 0;
+        layer.washCounter = 0;
+        layer.socioCounter = 0;
+        layer.healthCounter = 0;
+      });
     //when a new carto layer is added
     case "layer.addCartoLayer":
       return produce(state, (draft) => {

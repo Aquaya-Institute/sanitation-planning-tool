@@ -49,6 +49,7 @@ import NativeSelect from "@material-ui/core/NativeSelect";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { legendStyles } from "./subcomponents/LegendStyles";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -221,7 +222,9 @@ export const Map = () => {
 
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = [];
-
+  var highlight_layer = null;
+  // const highlightLayer = useRef();
+  const [highlightLayer, setHighlightLayer] = useState();
   const [distIndex, setDistIndex] = useState();
   const [regionIndex, setRegionIndex] = useState();
   const [classIndex, setClassIndex] = useState();
@@ -236,6 +239,9 @@ export const Map = () => {
       if (clickRef.current && !clickRef.current.contains(event.target)) {
         setPopup(null);
         console.log("clicked outside");
+        // if (highlightLayer) {
+        //   cartoClient.removeLayer(highlightLayer);
+        // }
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -243,6 +249,10 @@ export const Map = () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, []);
+
+  // const handleClickAway = () => {
+  //   setPopup(null);
+  // };
 
   //set mapID
   useEffect(() => {
@@ -422,17 +432,36 @@ export const Map = () => {
         const _layer = new Carto.layer.Layer(_source, _style, {
           featureClickColumns: _columns,
         });
-
+        // var highlight_layer = null;
         //setup feature clicks on relevant layers
         if (_columns.length > 0) {
           _layer.on("featureClicked", (featureEvent) => {
             console.log("clicked a feature", featureEvent);
+            if (highlight_layer) {
+              cartoClient.removeLayer(highlight_layer);
+            }
+
+            var input = featureEvent.data.cartodb_id;
+            var source = new Carto.source.SQL(
+              `SELECT * FROM ${layer.carto_tableName} where cartodb_id = ${input}`
+            );
+            let style = new Carto.style.CartoCSS(
+              `#layer {
+                polygon-fill: #FFFFFF;
+                polygon-opacity: 0.3;
+              }
+              #layer::outline {
+                line-width: 2;
+                line-color: #FFFFFF;
+                line-opacity: 1;
+              }`
+            );
+            highlight_layer = new Carto.layer.Layer(source, style);
+            cartoClient.addLayer(highlight_layer);
+            setHighlightLayer(highlight_layer);
             setPopup([layer.name, featureEvent]);
             setPopoverOpen(false);
             console.log("popup", popup);
-            // const onButtonClick = () => {
-            // `current` points to the mounted text input element
-            anchorRef.current.focus();
           });
         }
         console.log("cycle");
@@ -446,9 +475,6 @@ export const Map = () => {
         //add the layer to carto client
         cartoClient.addLayer(_layer);
         setlayerID(index);
-
-        // change legend when data classification method changes
-        // var executed = false;
 
         _layer.on("metadataChanged", function (event) {
           // if (!executed) {
@@ -578,8 +604,6 @@ export const Map = () => {
       obj["latLng"] = popup[1].latLng;
       obj["position"] = popup[1].position;
       setPopupData(obj);
-      console.log("updated dat_popup", dat_popup);
-      console.log("updated popupData", popupData);
     }
   }, [popup]);
 
@@ -807,7 +831,7 @@ export const Map = () => {
         >
           <Fragment key={"legendContent" + activeLayer}>
             <Box variant="subtitle2" fontSize={12} fontWeight="light">
-              Selected layer: {maps[mapID].layers[activeLayer].name}
+              Selected resolution: {maps[mapID].layers[activeLayer].name}
             </Box>
             <FormControl className={classes.formControl}>
               <Box
@@ -824,6 +848,7 @@ export const Map = () => {
                   name: "age",
                   id: "age-native-label-placeholder",
                 }}
+                className="tour-legendselect"
               >
                 {maps[mapID].layers[activeLayer].filters.map((filter, i) => {
                   if (filter.subcategory !== "id") {
@@ -860,7 +885,10 @@ export const Map = () => {
                       {legend.name === undefined
                         ? legend.min.toFixed(0).toString() +
                           " - " +
-                          legend.max.toFixed(0).toString()
+                          legend.max.toFixed(0).toString() +
+                          " " +
+                          maps[mapID].layers[activeLayer].filters[activeLegend]
+                            .unit
                         : legend.name}
                     </Grid>
                   );

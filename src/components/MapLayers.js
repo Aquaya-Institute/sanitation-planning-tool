@@ -43,21 +43,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 13,
   },
 }));
-const drawerWidth = 116;
+const drawerWidth = 135;
 
 export const MapLayers = () => {
   //pick specific states (and dispatcher) we need from mapstate
-  const [
-    {
-      maps,
-      currentMapID,
-      // accessCounter,
-      // washCounter,
-      // socioCounter,
-      // healthCounter,
-    },
-    dispatch,
-  ] = useContext(MapContext);
+  const [{ maps, currentMapID, activeLayer }, dispatch] = useContext(
+    MapContext
+  );
   const [mapID, setMapID] = useState("ghana");
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -85,6 +77,11 @@ export const MapLayers = () => {
     });
   };
 
+  const resetFilter = () => {
+    dispatch({
+      type: "reset.filters",
+    });
+  };
   // // District dropdown
   // useEffect(() => {
   //   if (cartoClient && districtsSource) {
@@ -131,7 +128,7 @@ export const MapLayers = () => {
             Select to view filters:
           </Box>
           {/* {accessCounter && ( */}
-          <List>
+          <List className="tour-themes">
             <Badge
               badgeContent={maps[mapID].layers[scaleValue].accessCounter}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -338,6 +335,10 @@ export const MapLayers = () => {
                 justifyContent: "center",
                 alignItems: "center",
               }}
+              onClick={(e, newval) => {
+                resetFilter();
+              }}
+              className="tour-reset"
             >
               <Typography variant="subtitle2" align="center">
                 Reset Filters
@@ -366,10 +367,10 @@ export const MapLayers = () => {
         }}
         elevation={2}
         square
+
         // variant="outlined"
       >
         <Toolbar />
-
         <FormControl component="fieldset">
           <FormLabel component="legend">
             <Box mt={1} align="center" fontWeight="fontWeightBold">
@@ -397,6 +398,7 @@ export const MapLayers = () => {
               setScaleValue(e.target.value);
               toggleLayerVisibility(e.target.value);
             }}
+            className="tour-scale"
           >
             <FormControlLabel
               value="1"

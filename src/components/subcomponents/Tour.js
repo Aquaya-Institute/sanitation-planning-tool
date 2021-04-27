@@ -11,27 +11,28 @@ const TOUR_STEPS = [
     placement: "center",
   },
   {
-    target: ".tour-visibility",
+    target: ".tour-scale",
     content:
-      "Turn layers on/off by clicking on the eye symbol next to the layer you want to visualize.",
+      "Select the resolution at which you would like to explore and filter the map. If you select 5km or larger resolution, you are able to explore 13 contextual indicators across the country. Only the Community Classification data is available is availble at the 1km resolution. You are free to move back and forth between resolutions.",
     disableBeacon: true, // This makes the tour to start automatically without clicking
   },
   {
-    target: ".tour-expand",
-    content: "Click the arrow buttons to expand filter options for each layer.",
-  },
-  {
-    target: ".tour-community-calc",
+    target: ".tour-themes",
     content:
-      "The number of settlements will change as you zoom in the map view or filter on variables of interest within the 'Settlement Areas and Estimated Population' layer.",
+      "Click on a theme to open a menu of filters for contextual indicators associated with that theme. Manipulate the filters to locate areas of interest on the map. You can use multiple filters at once, and combine filters from multiple themes. Your selections are saved if you move between resolutions.",
   },
   {
-    target: ".tour-dist",
+    target: ".tour-reset",
     content:
-      "Explore and filter additional contextual variables by district...",
+      "Click this button to clear all filter selections for the currently selected resolution.",
   },
   {
-    target: ".tour-comm ",
+    target: ".tour-legendselect",
+    content:
+      "Select the indicator from this dropdown that you would like to see represented in the legend. Each indicator will display a unique color scale. Your selection will be saved between resolutions.",
+  },
+  {
+    target: ".tour-comm",
     content: [
       "...or settlement area.",
       <br key="space"></br>,
@@ -45,7 +46,7 @@ const TOUR_STEPS = [
   {
     target: ".tour-map",
     content:
-      "Click directly on a district or settlement for more information and the ability to download data tables.",
+      "Click directly on a grid square or administrative boundary to access data for all avalable indicators at the selected location, and the ability to download data tables.",
   },
 ];
 
