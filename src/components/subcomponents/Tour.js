@@ -2,7 +2,6 @@ import React, { useReducer, useEffect } from "react";
 import JoyRide, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 import Button from "@material-ui/core/Button";
 import MapIcon from "@material-ui/icons/Map";
-// import theme from "./theme/theme";
 
 const TOUR_STEPS = [
   {

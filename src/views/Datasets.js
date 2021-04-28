@@ -4,9 +4,6 @@ import {
   CardContent,
   Divider,
   Link,
-  CardActionArea,
-  CardMedia,
-  CardActions,
   Container,
   Button,
   Box,
@@ -14,15 +11,11 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import { MapContext } from "../state/MapState";
 import "../index.css";
-// import rules from '../../public/class-rules.png';
 
 const useCardStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
-    // minHeight: 260,
   },
   image: {
     height: "100%",
@@ -409,5 +402,4 @@ function Datasets() {
     </Container>
   );
 }
-
 export default Datasets;

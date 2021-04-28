@@ -1,9 +1,8 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { MapContextProvider } from "./state/MapState";
-
 import theme from "./theme/theme";
-import DefaultLayout from "./layouts/default"
+import DefaultLayout from "./layouts/default";
 import Home from "./views/Home";
 import MapDetail from "./views/MapDetail";
 import About from "./views/About";

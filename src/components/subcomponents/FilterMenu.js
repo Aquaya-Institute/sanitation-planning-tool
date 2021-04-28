@@ -53,6 +53,7 @@ const FilterMenu = ({
         width: "285px",
         zIndex: "1300",
         backgroundColor: "#fff",
+        overflow: "auto",
       }}
       open={filterMenuOpen}
       onClose={(e) => {

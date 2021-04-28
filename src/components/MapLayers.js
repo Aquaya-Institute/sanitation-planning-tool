@@ -22,6 +22,8 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Paper from "@material-ui/core/Paper";
 import theme from "../theme/theme";
 import Badge from "@material-ui/core/Badge";
+import { UploadButton } from "./subcomponents/UploadButton";
+// import ReactFileReader from "react-file-reader";
 
 /* Toggle button overrides */
 const useStyles = makeStyles((theme) => ({
@@ -47,9 +49,7 @@ const drawerWidth = 135;
 
 export const MapLayers = () => {
   //pick specific states (and dispatcher) we need from mapstate
-  const [{ maps, currentMapID, activeLayer }, dispatch] = useContext(
-    MapContext
-  );
+  const [{ maps, currentMapID }, dispatch] = useContext(MapContext);
   const [mapID, setMapID] = useState("ghana");
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -82,6 +82,7 @@ export const MapLayers = () => {
       type: "reset.filters",
     });
   };
+
   // // District dropdown
   // useEffect(() => {
   //   if (cartoClient && districtsSource) {
@@ -130,7 +131,7 @@ export const MapLayers = () => {
           {/* {accessCounter && ( */}
           <List className="tour-themes">
             <Badge
-              badgeContent={maps[mapID].layers[scaleValue].accessCounter}
+              badgeContent={maps[mapID].layers[scaleValue].accessCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
               color="secondary"
@@ -178,7 +179,7 @@ export const MapLayers = () => {
               </ListItem>
             </Badge>
             <Badge
-              badgeContent={maps[mapID].layers[scaleValue].washCounter}
+              badgeContent={maps[mapID].layers[scaleValue].washCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
               color="secondary"
@@ -226,7 +227,7 @@ export const MapLayers = () => {
               </ListItem>
             </Badge>
             <Badge
-              badgeContent={maps[mapID].layers[scaleValue].socioCounter}
+              badgeContent={maps[mapID].layers[scaleValue].socioCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
               color="secondary"
@@ -275,7 +276,7 @@ export const MapLayers = () => {
               </ListItem>
             </Badge>
             <Badge
-              badgeContent={maps[mapID].layers[scaleValue].healthCounter}
+              badgeContent={maps[mapID].layers[scaleValue].healthCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
               color="secondary"
@@ -426,6 +427,10 @@ export const MapLayers = () => {
             />
           </RadioGroup>
         </FormControl>
+        {/* <ReactFileReader handleFiles={handleFiles} fileTypes={".csv"}>
+          <button className="btn">Upload</button>
+        </ReactFileReader> */}
+        <UploadButton />
         {/* <div
           id="avgPopulationWidget"
           class="widget widget-formula"

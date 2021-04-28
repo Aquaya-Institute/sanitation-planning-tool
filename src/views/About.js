@@ -10,47 +10,25 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
-import theme from "../theme/theme";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   paper: {
     padding: theme.spacing(2),
     textAlign: "left",
-  },
-  box: {
-    backgroundImage: `url(/banner.png)`,
-    // backgroundPosition: 'center',
-    // // backgroundSize: 'cover',
-    // backgroundRepeat: 'no-repeat',
-    height: "25vh",
-    width: "100vw",
-    // display: 'flex',
   },
 }));
 function About() {
   const classes = useStyles();
   return (
     <>
-      {/* <Box >
-        <img src="/banner.png"
-          alt=""
-          style={{width:"99vw"}}
-        >
-          
-        </img>
-      </Box> */}
       <Container m={2}>
-        <br></br>
+        <br />
         <Paper elevation={0}>
           <Box p={2}>
             <Typography variant="h5" color="secondary">
               <strong>What</strong> is the SanPlan tool?
             </Typography>
-            <br></br>
+            <br />
             SanPlan saves sanitation practitioners the time and challenges of
             collecting, analyzing, and mapping data to inform their program
             design by giving them access to key contextual data required for
@@ -66,7 +44,7 @@ function About() {
             <Typography variant="h5" color="secondary" p={2}>
               <strong>Who</strong> should use this tool?
             </Typography>
-            <br></br>
+            <br />
             The tool is designed for anyone in the planning or budgeting phase
             of a sanitation project at the national, regional or local scale.
             Typical users might include government agencies, program funders,
@@ -81,7 +59,7 @@ function About() {
             <Typography variant="h5" color="secondary">
               <strong>How</strong> does the tool work?
             </Typography>
-            <br></br>
+            <br />
             SanPlan uses existing publicly available data and links it to a
             specific location on the map. This allows users to click anywhere on
             the map and access information on key contextual factors. Because
@@ -160,5 +138,4 @@ function About() {
     </>
   );
 }
-
 export default About;

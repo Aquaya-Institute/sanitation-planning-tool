@@ -7,20 +7,20 @@ export const MapSelector = () => {
   const [{ maps }, dispatch] = React.useContext(MapContext);
 
   const onSelectChange = (event) => {
-    <Redirect to={event.target.value} />
-    // dispatch({
-    //   type: "layer.removeCartoLayers",
-    // });
-    // dispatch({
-    //   type: "map.select",
-    //   mapID: event.target.value,
-    // });
+    <Redirect to={event.target.value} />;
+    dispatch({
+      type: "layer.removeCartoLayers",
+    });
+    dispatch({
+      type: "map.select",
+      mapID: event.target.value,
+    });
   };
 
   return (
     <div>
       <span>Show Map Of </span>
-      <select onChange={onSelectChange} style={{textTransform:"capitalize"}}>
+      <select onChange={onSelectChange} style={{ textTransform: "capitalize" }}>
         {Object.keys(maps).map((map, index) => (
           <option key={index} value={map}>
             {map}

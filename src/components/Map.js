@@ -1,36 +1,18 @@
-import {
-  useState,
-  useEffect,
-  useContext,
-  useLayoutEffect,
-  useRef,
-  Fragment,
-} from "react";
+import { useState, useEffect, useContext, useRef, Fragment } from "react";
 import { MapContext } from "../state/MapState";
-import Carto, { isNull } from "@carto/carto.js";
-import L, { map } from "leaflet";
-import mapboxgl from "mapbox-gl";
+import Carto from "@carto/carto.js";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import {
-  Typography,
-  Link,
-  Grid,
-  Divider,
-  Button,
-  Box,
-} from "@material-ui/core";
-import Popover from "@material-ui/core/Popover";
+import { Link, Grid, Divider, Button, Box } from "@material-ui/core";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles } from "@material-ui/core/styles";
 import "../App.css";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-// import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-// import { positions } from "@material-ui/system";
 import theme from "../theme/theme";
 import CloseIcon from "@material-ui/icons/Close";
 import SaveIcon from "@material-ui/icons/Save";
@@ -38,18 +20,10 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { CSVLink } from "react-csv";
-import Tour from "./subcomponents/Tour";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import Select from "@material-ui/core/Select";
 import NativeSelect from "@material-ui/core/NativeSelect";
-import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { legendStyles } from "./subcomponents/LegendStyles";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -109,64 +83,6 @@ const useStyles = makeStyles((theme) => ({
   checkboxLabel: {
     fontSize: 13,
   },
-  popper: {
-    '&[x-placement*="bottom"] $arrow': {
-      top: 0,
-      left: 0,
-      marginTop: "-0.9em",
-      width: "3em",
-      height: "1em",
-      "&::before": {
-        borderWidth: "0 1em 1em 1em",
-        borderColor: `transparent transparent ${theme.palette.common.white} transparent`,
-      },
-    },
-    '&[x-placement*="top"] $arrow': {
-      bottom: 0,
-      left: 0,
-      marginBottom: "-0.9em",
-      width: "3em",
-      height: "1em",
-      "&::before": {
-        borderWidth: "1em 1em 0 1em",
-        borderColor: `${theme.palette.common.white} transparent transparent transparent`,
-      },
-    },
-    '&[x-placement*="right"] $arrow': {
-      left: 0,
-      marginLeft: "-0.9em",
-      height: "3em",
-      width: "1em",
-      "&::before": {
-        borderWidth: "1em 1em 1em 0",
-        borderColor: `transparent ${theme.palette.common.white} transparent transparent`,
-      },
-    },
-    '&[x-placement*="left"] $arrow': {
-      right: 0,
-      marginRight: "-0.9em",
-      height: "3em",
-      width: "1em",
-      "&::before": {
-        borderWidth: "1em 0 1em 1em",
-        borderColor: `transparent transparent transparent ${theme.palette.common.white}`,
-      },
-    },
-  },
-  arrow: {
-    position: "absolute",
-    fontSize: 5,
-    width: "3em",
-    height: "3em",
-    "&::before": {
-      content: '""',
-      margin: "auto",
-      display: "block",
-      width: 0,
-      height: 0,
-      borderStyle: "solid",
-    },
-  },
 }));
 
 function transformArray(array) {
@@ -196,7 +112,6 @@ export const Map = () => {
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState();
   const [layerID, setlayerID] = useState();
-  const [visibleLayers, setVisibleLayers] = useState();
   const [currentMapState, setCurrentMapState] = useState();
   const [leaflet, setLeaflet] = useState();
   const [cartoClient, setCartoClient] = useState();
@@ -209,8 +124,6 @@ export const Map = () => {
   const idPopover = popoverOpen ? "simple-popover" : undefined;
   const [popoverColumns, setPopoverColumns] = useState([]);
   const anchorRef = useRef(null);
-  const [arrowRef, setArrowRef] = useState(null);
-  const [arrow, setArrow] = useState(true);
   const classes = useStyles();
   const clickRef = useRef(null);
   // const [commCalcSource, setCommCalcSource] = useState(null);
@@ -222,14 +135,12 @@ export const Map = () => {
 
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = [];
-  var highlight_layer = null;
-  // const highlightLayer = useRef();
-  const [highlightLayer, setHighlightLayer] = useState();
+  const highlightLayer = useRef();
+  // const [highlightLayer, setHighlightLayer] = useState();
   const [distIndex, setDistIndex] = useState();
   const [regionIndex, setRegionIndex] = useState();
   const [classIndex, setClassIndex] = useState();
   const [popIndex, setPopIndex] = useState();
-  const [nativeMap, setNativeMap] = useState();
 
   // const [legendIndex, setLegendIndex] = useState(0);
 
@@ -239,8 +150,8 @@ export const Map = () => {
       if (clickRef.current && !clickRef.current.contains(event.target)) {
         setPopup(null);
         console.log("clicked outside");
-        // if (highlightLayer) {
-        //   cartoClient.removeLayer(highlightLayer);
+        // if (highlightLayer.current) {
+        //   cartoClient.removeLayer(highlightLayer.current);
         // }
       }
     };
@@ -249,10 +160,6 @@ export const Map = () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, []);
-
-  // const handleClickAway = () => {
-  //   setPopup(null);
-  // };
 
   //set mapID
   useEffect(() => {
@@ -263,7 +170,7 @@ export const Map = () => {
   }, [currentMapID]);
   //clean up
   useEffect(() => {
-    if (mapID) {
+    if (mapID && dispatch) {
       return function cleanup() {
         dispatch({
           type: "map.select",
@@ -274,13 +181,12 @@ export const Map = () => {
         });
       };
     }
-  }, [mapID]);
+  }, [dispatch, mapID]);
 
   useEffect(() => {
     console.log("load");
 
     if (leaflet !== undefined) {
-      //https://github.com/Leaflet/Leaflet/issues/3962#issuecomment-568678650
       console.log("remove map renderer");
       leaflet.remove();
     }
@@ -289,16 +195,11 @@ export const Map = () => {
       apiKey: process.env.REACT_APP_CARTO_DEV_API_KEY,
       username: process.env.REACT_APP_CARTO_USERNAME,
     });
-    if (mapID) {
+    if (maps && mapID) {
       const map = L.map("map").setView(maps[mapID].view, maps[mapID].zoom);
 
       L.tileLayer(
-        "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg70?access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ",
-        // "https://api.mapbox.com/styles/v1/karastuart/ckk5tl36t02e017npyq4xsp0s.html?fresh=true&title=copy&access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ",
-        {
-          // maxZoom: 22,
-          // minZoom: 7,
-        }
+        "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg70?access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ"
       ).addTo(map);
 
       setLeaflet((prevmap) => {
@@ -315,7 +216,6 @@ export const Map = () => {
         type: "map.addCartoClient",
         carto_client: client,
       });
-      setNativeMap(map);
     }
   }, [mapID]);
 
@@ -432,8 +332,8 @@ export const Map = () => {
         const _layer = new Carto.layer.Layer(_source, _style, {
           featureClickColumns: _columns,
         });
-        // var highlight_layer = null;
-        //setup feature clicks on relevant layers
+        var highlight_layer = null;
+        // setup feature clicks on relevant layers
         if (_columns.length > 0) {
           _layer.on("featureClicked", (featureEvent) => {
             console.log("clicked a feature", featureEvent);
@@ -458,7 +358,8 @@ export const Map = () => {
             );
             highlight_layer = new Carto.layer.Layer(source, style);
             cartoClient.addLayer(highlight_layer);
-            setHighlightLayer(highlight_layer);
+            highlightLayer.current = highlight_layer;
+            // setHighlightLayer(highlight_layer);
             setPopup([layer.name, featureEvent]);
             setPopoverOpen(false);
             console.log("popup", popup);
@@ -539,6 +440,40 @@ export const Map = () => {
       console.log(popoverColumns);
     }
   }, [currentMapState, cartoClient, dispatch, activeLegend, activeLayer]);
+
+  // useEffect(() => {
+  //   if (mapID && activeLayer) {
+  //     var layer = maps[mapID].layers[activeLayer];
+  //     layer.on("featureClicked", (featureEvent) => {
+  //       console.log("clicked a feature", featureEvent);
+  //       if (highlight_layer) {
+  //         cartoClient.removeLayer(highlight_layer);
+  //       }
+
+  //       var input = featureEvent.data.cartodb_id;
+  //       var source = new Carto.source.SQL(
+  //         `SELECT * FROM ${layer.carto_tableName} where cartodb_id = ${input}`
+  //       );
+  //       let style = new Carto.style.CartoCSS(
+  //         `#layer {
+  //           polygon-fill: #FFFFFF;
+  //           polygon-opacity: 0.3;
+  //         }
+  //         #layer::outline {
+  //           line-width: 2;
+  //           line-color: #FFFFFF;
+  //           line-opacity: 1;
+  //         }`
+  //       );
+  //       highlight_layer = new Carto.layer.Layer(source, style);
+  //       cartoClient.addLayer(highlight_layer);
+  //       setHighlightLayer(highlight_layer);
+  //       setPopup([layer.name, featureEvent]);
+  //       setPopoverOpen(false);
+  //       console.log("popup", popup);
+  //     });
+  //   }
+  // }, [activeLayer, mapID]);
 
   useEffect(() => {
     console.log("updated popup", popup);
@@ -857,6 +792,8 @@ export const Map = () => {
                         {filter.name}
                       </option>
                     );
+                  } else {
+                    return null;
                   }
                 })}
               </NativeSelect>
@@ -906,7 +843,6 @@ export const Map = () => {
           id={idPopper}
           key={idPopper}
           open={openPopper}
-          className={classes.popper}
           disablePortal={true}
           modifiers={{
             flip: {
@@ -915,10 +851,6 @@ export const Map = () => {
             preventOverflow: {
               enabled: true,
               boundariesElement: "scrollParent",
-            },
-            arrow: {
-              enabled: true,
-              element: arrowRef,
             },
           }}
           style={{
@@ -929,9 +861,7 @@ export const Map = () => {
             // backgroundColor: "#fff",
             width: "200px",
           }}
-          // elevation={3}
         >
-          {/* {arrow ? <span className={classes.arrow} ref={setArrowRef} /> : null} */}
           <div className={classes.paper}>
             <Grid container justify="flex-end" pt={2} key={"popperHeader"}>
               <CloseIcon
@@ -1013,7 +943,6 @@ export const Map = () => {
                     e.preventDefault();
                     e.stopPropagation();
                     setPopoverOpen(true);
-                    // setPopup(null);
                   }}
                 >
                   SEE MORE
@@ -1198,5 +1127,3 @@ export const Map = () => {
     </div>
   );
 };
-
-// export const newContext = createContext({ selectedDistricts});

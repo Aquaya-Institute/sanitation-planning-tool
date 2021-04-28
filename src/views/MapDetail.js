@@ -6,6 +6,7 @@ import { Grid } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 
 function MapDetail() {
+  // eslint-disable-next-line no-empty-pattern
   const [{}, dispatch] = React.useContext(MapContext);
   let { id } = useParams();
 
@@ -17,7 +18,7 @@ function MapDetail() {
   }, [dispatch, id]);
 
   return (
-    <Grid container style={{height:"100%"}}>
+    <Grid container style={{ height: "100%" }}>
       {/* <Grid item  style={{boxShadow:"0px 0px 10px black", zIndex: 1100}}> */}
       <Grid item>
         <MapLayers />

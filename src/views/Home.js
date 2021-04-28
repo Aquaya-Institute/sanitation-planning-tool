@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
-import { useEffect } from "react";
+// eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { MapContext } from "../state/MapState";
 
@@ -52,9 +52,6 @@ function MapCard({ name, url }) {
         <Button component={Link} to={url} size="small" color="primary">
           Explore the Map
         </Button>
-        {/* <Button size="small" color="primary">
-          Learn More
-        </Button> */}
       </CardActions>
     </Card>
   );
@@ -75,7 +72,6 @@ function Home() {
           <Typography variant="h5" color="secondary" gutterBottom>
             <strong>What</strong> is the SanPlan tool?
           </Typography>
-          {/* <br></br> */}
           SanPlan helps sanitation practitioners design and execute sanitation
           programs by allowing them to explore highly-localized, contextual,
           spatial data. It harmonizes data from multiple sources so that users
@@ -85,7 +81,6 @@ function Home() {
           <Typography variant="h5" color="secondary" p={2} gutterBottom>
             <strong>Who</strong> should use this tool?
           </Typography>
-          {/* <br></br> */}
           SanPlan is intended for use for sanitation projects at national,
           regional or local scales. Users in the planning or budgeting phases
           can use the spatial information to select and target interventions
