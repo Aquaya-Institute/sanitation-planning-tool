@@ -14,25 +14,6 @@ import ListItem from "@material-ui/core/ListItem";
 import DatasetInfoPopover from "./DatasetInfoPopover";
 import { SliderNonLinear } from "./SliderNonLinear";
 
-// const accessCountNames_1 = [];
-// const accessCountNames_2 = [];
-// const socioCountNames_2 = [];
-// const washCountNames_2 = [];
-// const healthCountNames_2 = [];
-// const accessCountNames_3 = [];
-// const socioCountNames_3 = [];
-// const washCountNames_3 = [];
-// const healthCountNames_3 = [];
-// let accessCounts_1 = new Set(null);
-// let accessCounts_2 = new Set(null);
-// let washCounts_2 = new Set(null);
-// let socioCounts_2 = new Set(null);
-// let healthCounts_2 = new Set(null);
-// let accessCounts_3 = new Set(null);
-// let washCounts_3 = new Set(null);
-// let socioCounts_3 = new Set(null);
-// let healthCounts_3 = new Set(null);
-
 const useStyles = makeStyles((theme) => ({
   nested: {
     paddingLeft: theme.spacing(3),
@@ -82,41 +63,6 @@ const MapLayerContent = ({ cat, layerID }) => {
       the future and using index will not work 
       */
 
-    // if (layerIndex === "1") {
-    //   if (filterStateObject.subcategory === "accessibility") {
-    //     accessCountNames_1.push(filterStateObject.name);
-    //     accessCounts_1 = [...new Set(accessCountNames_1)];
-    //   }
-    // } else if (layerIndex === "2") {
-    //   if (filterStateObject.subcategory === "accessibility") {
-    //     accessCountNames_2.push(filterStateObject.name);
-    //     accessCounts_2 = [...new Set(accessCountNames_2)];
-    //   } else if (filterStateObject.subcategory === "wash") {
-    //     washCountNames_2.push(filterStateObject.name);
-    //     washCounts_2 = [...new Set(washCountNames_2)];
-    //   } else if (filterStateObject.subcategory === "socioeconomic") {
-    //     socioCountNames_2.push(filterStateObject.name);
-    //     socioCounts_2 = [...new Set(socioCountNames_2)];
-    //   } else if (filterStateObject.subcategory === "health") {
-    //     healthCountNames_2.push(filterStateObject.name);
-    //     healthCounts_2 = [...new Set(healthCountNames_2)];
-    //   }
-    // } else if (layerIndex === "3") {
-    //   if (filterStateObject.subcategory === "accessibility") {
-    //     accessCountNames_3.push(filterStateObject.name);
-    //     accessCounts_3 = [...new Set(accessCountNames_3)];
-    //   } else if (filterStateObject.subcategory === "wash") {
-    //     washCountNames_3.push(filterStateObject.name);
-    //     washCounts_3 = [...new Set(washCountNames_3)];
-    //   } else if (filterStateObject.subcategory === "socioeconomic") {
-    //     socioCountNames_3.push(filterStateObject.name);
-    //     socioCounts_3 = [...new Set(socioCountNames_3)];
-    //   } else if (filterStateObject.subcategory === "health") {
-    //     healthCountNames_3.push(filterStateObject.name);
-    //     healthCounts_3 = [...new Set(healthCountNames_3)];
-    //   }
-    // }
-
     if (
       filterStateObject.type === "categorical" &&
       categoryFilterIndex !== undefined
@@ -139,25 +85,15 @@ const MapLayerContent = ({ cat, layerID }) => {
         value: newValue,
         scaledValue: scaledValue,
       },
-      // accessCounter: layer.accessCounter,
-      // accessCounter_1: accessCounts_1.length,
-      // accessCounter_2: accessCounts_2.length,
-      // washCounter_2: washCounts_2.length,
-      // socioCounter_2: socioCounts_2.length,
-      // healthCounter_2: healthCounts_2.length,
-      // accessCounter_3: accessCounts_3.length,
-      // washCounter_3: washCounts_3.length,
-      // socioCounter_3: socioCounts_3.length,
-      // healthCounter_3: healthCounts_3.length,
     });
   };
 
   return (
-    <>
+    <React.Fragment key="filterListDiv">
       {maps[mapID].layers[layerID].filters.map((filter, filterIndex) => (
-        <>
+        <React.Fragment key="filterListDiv2">
           {filter.subcategory === cat && (
-            <List>
+            <List key="filterList">
               {filter.type === "categorical" ? (
                 <ListItem key={"cat" + filterIndex} className={classes.nested}>
                   <Grid
@@ -206,7 +142,10 @@ const MapLayerContent = ({ cat, layerID }) => {
                               />
                             }
                             label={
-                              <Typography variant="body2">
+                              <Typography
+                                key="filterListItemLabel"
+                                variant="body2"
+                              >
                                 {category.name}
                               </Typography>
                             }
@@ -324,9 +263,9 @@ const MapLayerContent = ({ cat, layerID }) => {
               )}
             </List>
           )}
-        </>
+        </React.Fragment>
       ))}
-    </>
+    </React.Fragment>
   );
 };
 export default MapLayerContent;

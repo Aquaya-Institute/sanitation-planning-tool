@@ -127,7 +127,12 @@ const Tour = () => {
 
   return (
     <>
-      <Button justify="center" startIcon={<MapIcon />} onClick={startTour}>
+      <Button
+        justify="center"
+        startIcon={<MapIcon />}
+        onClick={startTour}
+        style={{ fontSize: 13, padding: 0 }}
+      >
         Restart Tour
       </Button>
       <JoyRide

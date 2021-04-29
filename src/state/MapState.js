@@ -50,6 +50,9 @@ const initialState = {
           }`,
           visible: false,
           accessCounter: new Set(null),
+          washCounter: new Set(null),
+          socioCounter: new Set(null),
+          healthCounter: new Set(null),
           filters: [
             {
               name: "Community Classification",
@@ -90,8 +93,8 @@ const initialState = {
             polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);
           }
           #layer::outline {
-            line-width: 0.5;
-            line-color: #000000;
+            line-width: 0;
+            line-color: #ffffff;
             line-opacity: 0;
           }`,
           visible: true,
@@ -603,15 +606,28 @@ const reducer = (state, action) => {
             draft.maps[mid].layers[i].carto_layer.hide();
           }
         }
-        legendStyles.map((style, i) => {
-          if (
-            style.style === draft.maps[mid].layers[action.layerID].carto_style
-          ) {
-            return (draft.activeLegend = i);
-          } else {
-            return null;
-          }
-        });
+        // for (var i in legendStyles.style) {
+        //   if (
+        //     legendStyles.style[i] === draft.maps[mid].layers[action.layerID].carto_style
+        //   ) {
+        //     draft.activeLegend = i;
+        //     break;
+        //   } else {
+        //     draft.activeLegend = 0;
+        //   }
+        // };
+        draft.activeLegend = legendStyles.findIndex(
+          (x) => x.style === draft.maps[mid].layers[action.layerID].carto_style
+        );
+        if (draft.activeLegend < 0) {
+          draft.activeLegend = 0;
+        }
+        // function findNeedle(haystack) {
+        //   return haystack.indexOf(
+        //     draft.maps[mid].layers[action.layerID].carto_style
+        //   );
+        // }
+        // draft.activeLegend = findNeedle(legendStyles.style);
       });
 
     // case "clear.filter":
@@ -631,7 +647,7 @@ const reducer = (state, action) => {
         draft.maps[draft.currentMapID].layers[action.layerIndex].filters[
           action.filterIndex
         ] = action.filter;
-        // const layer = draft.maps[action.mapID].layers[action.layerIndex];
+        const layer = draft.maps[action.mapID].layers[action.layerIndex];
         //TODO: based on the type of filter (range, categorical)
         //use Switch statement to apply appropriate filters
         switch (
@@ -641,8 +657,6 @@ const reducer = (state, action) => {
         ) {
           case "range":
             //this is how you get the filter out of the carto layer
-            const layer =
-              draft.maps[draft.currentMapID].layers[action.layerIndex];
             const filter = draft.maps[draft.currentMapID].layers[
               action.layerIndex
             ].carto_layer
@@ -702,7 +716,6 @@ const reducer = (state, action) => {
             }
             break;
           case "categorical":
-            //   return null;
             const filter_c = draft.maps[draft.currentMapID].layers[
               action.layerIndex
             ].carto_layer
@@ -729,7 +742,6 @@ const reducer = (state, action) => {
             }
             //this is how you set the filter. this is specific to range filter
             filter_c.setFilters({
-              // column: action.filter.column_name,
               in: col_vals_tofilter,
             });
 
@@ -739,29 +751,6 @@ const reducer = (state, action) => {
           default:
             break;
         }
-
-        // if (action.layerIndex === "1") {
-        //   draft.maps[action.mapID].layers[action.layerIndex].accessCounter =
-        //     action.accessCounter_1;
-        // } else if (action.layerIndex === "2") {
-        //   draft.maps[action.mapID].layers[action.layerIndex].accessCounter =
-        //     action.accessCounter_2;
-        //   draft.maps[action.mapID].layers[action.layerIndex].washCounter =
-        //     action.washCounter_2;
-        //   draft.maps[action.mapID].layers[action.layerIndex].socioCounter =
-        //     action.socioCounter_2;
-        //   draft.maps[action.mapID].layers[action.layerIndex].healthCounter =
-        //     action.healthCounter_2;
-        // } else if (action.layerIndex === "3") {
-        //   draft.maps[action.mapID].layers[action.layerIndex].accessCounter =
-        //     action.accessCounter_3;
-        //   draft.maps[action.mapID].layers[action.layerIndex].washCounter =
-        //     action.washCounter_3;
-        //   draft.maps[action.mapID].layers[action.layerIndex].socioCounter =
-        //     action.socioCounter_3;
-        //   draft.maps[action.mapID].layers[action.layerIndex].healthCounter =
-        //     action.healthCounter_3;
-        // }
       });
 
     case "reset.filters":

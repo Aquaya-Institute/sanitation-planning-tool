@@ -1,4 +1,11 @@
-import { useState, useEffect, useContext, useRef, Fragment } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  Fragment,
+  // useMemo,
+} from "react";
 import { MapContext } from "../state/MapState";
 import Carto from "@carto/carto.js";
 import L from "leaflet";
@@ -150,16 +157,16 @@ export const Map = () => {
       if (clickRef.current && !clickRef.current.contains(event.target)) {
         setPopup(null);
         console.log("clicked outside");
-        // if (highlightLayer.current) {
-        //   cartoClient.removeLayer(highlightLayer.current);
-        // }
+        if (highlightLayer.current && cartoClient) {
+          cartoClient.removeLayer(highlightLayer.current);
+        }
       }
     };
     document.addEventListener("click", handleClickOutside, true);
     return () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
-  }, []);
+  }, [cartoClient]);
 
   //set mapID
   useEffect(() => {
@@ -182,7 +189,7 @@ export const Map = () => {
       };
     }
   }, [dispatch, mapID]);
-
+  // load leaflet
   useEffect(() => {
     console.log("load");
 
@@ -264,15 +271,6 @@ export const Map = () => {
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
-        // if (
-        //   layer.name === "5x5km area" ||
-        //   layer.name === "Communities"
-        // ) {
-        //   setCommCalcSource(_source);
-        // } else if (layer.name === "Districts") {
-        //   setDistrictsSource(_source);
-        //   setDistrictsStyle(_style);
-        // }
         var obj1 = [];
 
         layer.filters.forEach((filter, filter_c) => {
@@ -332,14 +330,12 @@ export const Map = () => {
         const _layer = new Carto.layer.Layer(_source, _style, {
           featureClickColumns: _columns,
         });
+
         var highlight_layer = null;
         // setup feature clicks on relevant layers
-        if (_columns.length > 0) {
+        if (_columns.length > 1) {
           _layer.on("featureClicked", (featureEvent) => {
             console.log("clicked a feature", featureEvent);
-            if (highlight_layer) {
-              cartoClient.removeLayer(highlight_layer);
-            }
 
             var input = featureEvent.data.cartodb_id;
             var source = new Carto.source.SQL(
@@ -378,10 +374,7 @@ export const Map = () => {
         setlayerID(index);
 
         _layer.on("metadataChanged", function (event) {
-          // if (!executed) {
-          // executed = true;
           console.log(event);
-          // setBuckets([]);
           if (layer.name === maps[mapID].layers[activeLayer].name) {
             var obj = {};
             // get buckets
@@ -439,42 +432,9 @@ export const Map = () => {
       setPopoverColumns(objlist);
       console.log(popoverColumns);
     }
-  }, [currentMapState, cartoClient, dispatch, activeLegend, activeLayer]);
+  }, [currentMapState, activeLegend, activeLayer]);
 
-  // useEffect(() => {
-  //   if (mapID && activeLayer) {
-  //     var layer = maps[mapID].layers[activeLayer];
-  //     layer.on("featureClicked", (featureEvent) => {
-  //       console.log("clicked a feature", featureEvent);
-  //       if (highlight_layer) {
-  //         cartoClient.removeLayer(highlight_layer);
-  //       }
-
-  //       var input = featureEvent.data.cartodb_id;
-  //       var source = new Carto.source.SQL(
-  //         `SELECT * FROM ${layer.carto_tableName} where cartodb_id = ${input}`
-  //       );
-  //       let style = new Carto.style.CartoCSS(
-  //         `#layer {
-  //           polygon-fill: #FFFFFF;
-  //           polygon-opacity: 0.3;
-  //         }
-  //         #layer::outline {
-  //           line-width: 2;
-  //           line-color: #FFFFFF;
-  //           line-opacity: 1;
-  //         }`
-  //       );
-  //       highlight_layer = new Carto.layer.Layer(source, style);
-  //       cartoClient.addLayer(highlight_layer);
-  //       setHighlightLayer(highlight_layer);
-  //       setPopup([layer.name, featureEvent]);
-  //       setPopoverOpen(false);
-  //       console.log("popup", popup);
-  //     });
-  //   }
-  // }, [activeLayer, mapID]);
-
+  // popup data
   useEffect(() => {
     console.log("updated popup", popup);
     if (popup) {
@@ -533,6 +493,7 @@ export const Map = () => {
           }
         }
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       dat_popup = transformArray(dat_popup);
       var obj = {};
       obj["data"] = dat_popup;
@@ -870,6 +831,7 @@ export const Map = () => {
                 color="disabled"
                 onClick={(e) => {
                   setPopup(null);
+                  cartoClient.removeLayer(highlightLayer.current);
                 }}
               />
             </Grid>

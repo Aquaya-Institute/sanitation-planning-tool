@@ -106,20 +106,29 @@ export const MapLayers = () => {
   // }, [cartoClient, districtsSource]);
 
   return (
-    <>
+    <React.Fragment key="drawerDiv">
       <Drawer
+        key="drawer"
         className={classes.drawer}
         variant="permanent"
         classes={{
           paper: classes.drawerPaper,
         }}
       >
-        <Toolbar />
-        <div className={classes.drawerContainer}>
-          <Box mt={1.5} align="center" fontWeight="fontWeightBold">
-            <Typography color="secondary">INDICATOR THEMES</Typography>
+        <Toolbar key="toolbar" />
+        <div className={classes.drawerContainer} key="drawerContainer">
+          <Box
+            mt={1.5}
+            align="center"
+            fontWeight="fontWeightBold"
+            key="themesTitle"
+          >
+            <Typography key="themesTitleLabel" color="secondary">
+              INDICATOR THEMES
+            </Typography>
           </Box>
           <Box
+            key="themesSubtitle"
             p={1}
             variant="subtitle2"
             fontStyle="italic"
@@ -129,8 +138,9 @@ export const MapLayers = () => {
             Select to view filters:
           </Box>
           {/* {accessCounter && ( */}
-          <List className="tour-themes">
+          <List className="tour-themes" key="themeList">
             <Badge
+              key="accessBadge"
               badgeContent={maps[mapID].layers[scaleValue].accessCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
@@ -150,17 +160,24 @@ export const MapLayers = () => {
                 }}
                 style={{
                   backgroundColor: selectedMenu === 0 ? "#FFFFFF" : "#f2f2f2",
+                  // "&:hover": {
+                  //   backgroundColor: "#FFFFFF",
+                  // },
                 }}
               >
                 <div
-                  key={"accessButtonContent"}
+                  key="accessButtonContent"
                   style={{
                     minHeight: "10vh",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="subtitle2" align="center">
+                  <Typography
+                    variant="subtitle2"
+                    align="center"
+                    key="accessLabel"
+                  >
                     <img src={AccessIcon} alt="Road" />
                     <br />
                     ACCESS-IBILITY
@@ -168,6 +185,7 @@ export const MapLayers = () => {
                 </div>
                 {selectedMenu === 0 && (
                   <FilterMenu
+                    key="filterMenus"
                     anchorEl={anchorEl}
                     filterMenuOpen={filterMenuOpen}
                     setFilterMenuOpen={setFilterMenuOpen}
@@ -179,6 +197,7 @@ export const MapLayers = () => {
               </ListItem>
             </Badge>
             <Badge
+              key="washBadge"
               badgeContent={maps[mapID].layers[scaleValue].washCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
@@ -187,7 +206,7 @@ export const MapLayers = () => {
             >
               <ListItem
                 button
-                key={"washButton"}
+                key="washButton"
                 selected={selectedMenu === 1}
                 onClick={(e) => {
                   e.preventDefault();
@@ -201,14 +220,18 @@ export const MapLayers = () => {
                 }}
               >
                 <div
-                  key={"washButtonContent"}
+                  key="washButtonContent"
                   style={{
                     minHeight: "10vh",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="subtitle2" align="center">
+                  <Typography
+                    variant="subtitle2"
+                    align="center"
+                    key="washLabel"
+                  >
                     <img src={WashIcon} alt="Road" />
                     <br />
                     WATER & SANITATION
@@ -216,6 +239,7 @@ export const MapLayers = () => {
                 </div>
                 {selectedMenu === 1 && (
                   <FilterMenu
+                    key="filterMenus"
                     anchorEl={anchorEl}
                     filterMenuOpen={filterMenuOpen}
                     setFilterMenuOpen={setFilterMenuOpen}
@@ -227,6 +251,7 @@ export const MapLayers = () => {
               </ListItem>
             </Badge>
             <Badge
+              key="socioBadge"
               badgeContent={maps[mapID].layers[scaleValue].socioCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
@@ -235,8 +260,7 @@ export const MapLayers = () => {
             >
               <ListItem
                 button
-                // id={text}
-                key={"socioButton"}
+                key="socioButton"
                 selected={selectedMenu === 2}
                 onClick={(e) => {
                   e.preventDefault();
@@ -250,14 +274,18 @@ export const MapLayers = () => {
                 }}
               >
                 <div
-                  key={"socioButtonContent"}
+                  key="socioButtonContent"
                   style={{
                     minHeight: "10vh",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="subtitle2" align="center">
+                  <Typography
+                    variant="subtitle2"
+                    align="center"
+                    key="socioLabel"
+                  >
                     <img src={SocioIcon} alt="Road" />
                     <br />
                     SOCIO-ECOMONIC
@@ -265,6 +293,7 @@ export const MapLayers = () => {
                 </div>
                 {selectedMenu === 2 && (
                   <FilterMenu
+                    key="filterMenus"
                     anchorEl={anchorEl}
                     filterMenuOpen={filterMenuOpen}
                     setFilterMenuOpen={setFilterMenuOpen}
@@ -276,6 +305,7 @@ export const MapLayers = () => {
               </ListItem>
             </Badge>
             <Badge
+              key="healthBadge"
               badgeContent={maps[mapID].layers[scaleValue].healthCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
@@ -284,8 +314,7 @@ export const MapLayers = () => {
             >
               <ListItem
                 button
-                // id={text}
-                key={"healthButton"}
+                key="healthButton"
                 selected={selectedMenu === 3}
                 onClick={(e) => {
                   e.preventDefault();
@@ -299,14 +328,18 @@ export const MapLayers = () => {
                 }}
               >
                 <div
-                  key={"healthButtonContent"}
+                  key="healthButtonContent"
                   style={{
                     minHeight: "10vh",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="subtitle2" align="center">
+                  <Typography
+                    variant="subtitle2"
+                    align="center"
+                    key="healthLabel"
+                  >
                     <img src={HealthIcon} alt="Road" />
                     <br />
                     DISEASE BURDEN
@@ -314,6 +347,7 @@ export const MapLayers = () => {
                 </div>
                 {selectedMenu === 3 && (
                   <FilterMenu
+                    key="filterMenus"
                     anchorEl={anchorEl}
                     filterMenuOpen={filterMenuOpen}
                     setFilterMenuOpen={setFilterMenuOpen}
@@ -327,7 +361,7 @@ export const MapLayers = () => {
           </List>
           {/* )} */}
           <Divider />
-          <List>
+          <List key="bottomList" disablePadding={true}>
             <ListItem
               button
               key="reset"
@@ -341,18 +375,23 @@ export const MapLayers = () => {
               }}
               className="tour-reset"
             >
-              <Typography variant="subtitle2" align="center">
+              <Typography
+                variant="button"
+                align="center"
+                key="resetLabel"
+                style={{ fontSize: 14 }}
+              >
                 Reset Filters
               </Typography>
             </ListItem>
-            <ListItem>
-              <Tour style={{ justifyContent: "center" }} />
+            <ListItem key="tourButton">
+              <Tour key="tour" style={{ justifyContent: "center" }} />
             </ListItem>
           </List>
         </div>
       </Drawer>
       <Paper
-        key={"commCalculator"}
+        key="commCalculator"
         style={{
           padding: theme.spacing(1),
           position: "absolute",
@@ -372,10 +411,17 @@ export const MapLayers = () => {
         // variant="outlined"
       >
         <Toolbar />
-        <FormControl component="fieldset">
-          <FormLabel component="legend">
-            <Box mt={1} align="center" fontWeight="fontWeightBold">
-              <Typography color="secondary">MAP RESOLUTIONS</Typography>
+        <FormControl component="fieldset" key="fieldset">
+          <FormLabel component="legend" key="legend">
+            <Box
+              mt={1}
+              align="center"
+              fontWeight="fontWeightBold"
+              key="rightBox"
+            >
+              <Typography key="rightBoxLabel" color="secondary">
+                MAP RESOLUTIONS
+              </Typography>
             </Box>
             <Box
               p={1}
@@ -384,6 +430,7 @@ export const MapLayers = () => {
               fontSize={13.5}
               variant="subtitle2"
               style={{ color: "black" }}
+              key="rightBoxSubtitle"
             >
               {/* <Typography variant="subtitle2" color="black"> */}
               Select the resolution at which to explore the map:
@@ -400,6 +447,7 @@ export const MapLayers = () => {
               toggleLayerVisibility(e.target.value);
             }}
             className="tour-scale"
+            key="radioLabel"
           >
             <FormControlLabel
               value="1"
@@ -408,6 +456,7 @@ export const MapLayers = () => {
               classes={{
                 label: classes.checkboxLabel,
               }}
+              key="radio1"
             />
             <FormControlLabel
               value="2"
@@ -416,6 +465,7 @@ export const MapLayers = () => {
               classes={{
                 label: classes.checkboxLabel,
               }}
+              key="radio2"
             />
             <FormControlLabel
               value="3"
@@ -424,13 +474,11 @@ export const MapLayers = () => {
               classes={{
                 label: classes.checkboxLabel,
               }}
+              key="radio3"
             />
           </RadioGroup>
         </FormControl>
-        {/* <ReactFileReader handleFiles={handleFiles} fileTypes={".csv"}>
-          <button className="btn">Upload</button>
-        </ReactFileReader> */}
-        <UploadButton />
+        <UploadButton key="upload" />
         {/* <div
           id="avgPopulationWidget"
           class="widget widget-formula"
@@ -451,7 +499,7 @@ export const MapLayers = () => {
           </Typography> */}
         {/* </div> */}
       </Paper>
-    </>
+    </React.Fragment>
     // <div>
     //   <Paper
     //     style={{ maxHeight: "91vh", overflow: "auto" }}

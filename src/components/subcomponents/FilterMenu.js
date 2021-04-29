@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Grid, Box, Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import { useState, useEffect, useRef } from "react";
 import Popper from "@material-ui/core/Popper";
-import CloseIcon from "@material-ui/icons/Close";
+// import CloseIcon from "@material-ui/icons/Close";
 import MapLayerContent from "./MapLayerContent";
 import Divider from "@material-ui/core/Divider";
 
@@ -57,13 +57,12 @@ const FilterMenu = ({
       }}
       open={filterMenuOpen}
       onClose={(e) => {
-        e.preventDefault();
         setFilterMenuOpen(false);
         setMenuTileColor(false);
         console.log(menuTileColor);
       }}
     >
-      <Grid container justify="flex-end" pt={2} key={cat + "filterMenuHeader"}>
+      {/* <Grid container justify="flex-end" pt={2} key={cat + "filterMenuHeader"}>
         <CloseIcon
           key={cat + "filterMenuClose"}
           fontSize="small"
@@ -72,26 +71,35 @@ const FilterMenu = ({
             setFilterMenuOpen(false);
           }}
         />
-      </Grid>
-      <Typography gutterBottom align="center" variant="button" display="block">
-        {cat} VARIABLES
-      </Typography>
+      </Grid> */}
+      <Box pt={1}>
+        <Typography
+          key="filterMenuTitle"
+          gutterBottom
+          align="center"
+          variant="button"
+          display="block"
+        >
+          {cat} VARIABLES
+        </Typography>
+      </Box>
       <Divider />
       <Box
+        key="filterBox"
         style={{
           maxHeight: "450px",
           overflow: "auto",
         }}
       >
         {layerID === "1" && cat !== "accessibility" && (
-          <Box m={1} fontStyle="italic">
-            <Typography variant={"body2"}>
+          <Box m={1} fontStyle="italic" key="noFiltersBox">
+            <Typography variant={"body2"} key="noFiltersText">
               To access these indicators, select "5x5km area" resolution or
               larger from top right menu.
             </Typography>
           </Box>
         )}
-        <MapLayerContent cat={cat} layerID={layerID} />
+        <MapLayerContent key="MapLayerContent" cat={cat} layerID={layerID} />
       </Box>
     </Popper>
   );
