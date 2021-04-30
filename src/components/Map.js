@@ -510,6 +510,9 @@ export const Map = () => {
   const [myWeight, setMyWeight] = useState(2);
   useEffect(() => {
     if (mapRef.current) {
+      if (layerRef.current) {
+        mapRef.current.removeLayer(layerRef.current);
+      }
       layerRef.current = L.layerGroup().addTo(mapRef.current);
       mapRef.current.on("zoomend", function () {
         var currentZoom = mapRef.current.getZoom();
@@ -535,9 +538,9 @@ export const Map = () => {
         opacity: 1,
         fillOpacity: 0.7,
       };
-      if (layerRef.current) {
-        layerRef.current.clearLayers();
-      }
+      // if (layerRef.current) {
+      //   layerRef.current.clearLayers();
+      // }
       userData.forEach((marker, key) => {
         L.circleMarker([marker.Latitude, marker.Longitude], markerOptions)
           .addTo(layerRef.current)

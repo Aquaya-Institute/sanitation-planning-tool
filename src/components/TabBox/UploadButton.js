@@ -8,14 +8,19 @@ import { MapContext } from "../../state/MapState";
 export const UploadButton = () => {
   const [{}, dispatch] = useContext(MapContext);
 
-  const [state, setState] = useState({
-    csvfile: null,
-  });
+  const [state, setState] = useState(null);
 
   function handleChange(event) {
     setState({
       csvfile: event.target.files[0],
     });
+  }
+  function removeCSV() {
+    dispatch({
+      type: "user.upload",
+      userData: null,
+    });
+    setState(null);
   }
 
   function importCSV(e) {
@@ -31,9 +36,7 @@ export const UploadButton = () => {
   }
 
   function updateData(result) {
-    setState({
-      csvfile: null,
-    });
+    setState(null);
     var data = result.data;
     console.log(data);
     dispatch({
@@ -63,10 +66,11 @@ export const UploadButton = () => {
         className="upload-input"
         type="file"
         name="file"
-        placeholder={null}
+        placeholder={state}
         onChange={handleChange}
       />
       <button onClick={importCSV}>Upload</button>
+      <button onClick={removeCSV}>Remove</button>
     </div>
   );
 };
