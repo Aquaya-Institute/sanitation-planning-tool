@@ -13,9 +13,9 @@ const theme = createMuiTheme({
       main: "#BA0C2F",
     },
     background: {
-      default: "#f2f2f2",
-      paper: "#f2f2f2"
-    }
+      default: "#ededed",
+      selected: "#ffffff",
+    },
   },
   typography: {
     fontFamily: [
@@ -36,10 +36,11 @@ const theme = createMuiTheme({
   },
   overrides: {
     MuiTableCell: {
-        root: {  //This can be referred from Material UI API documentation. 
-            padding: '4px 8px',
-            width: '20px',
-        },
+      root: {
+        //This can be referred from Material UI API documentation.
+        padding: "4px 8px",
+        width: "20px",
+      },
     },
   },
 });

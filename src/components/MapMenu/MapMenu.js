@@ -1,28 +1,22 @@
 import * as React from "react";
-import { MapContext } from "../state/MapState";
+import { MapContext } from "../../state/MapState";
 import { Box, Typography } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
-import WashIcon from "../images/wash.png";
-import SocioIcon from "../images/socioecon.png";
-import HealthIcon from "../images/health.png";
-import AccessIcon from "../images/access.png";
+import WashIcon from "../../images/wash.png";
+import SocioIcon from "../../images/socioecon.png";
+import HealthIcon from "../../images/health.png";
+import AccessIcon from "../../images/access.png";
 import { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import FilterMenu from "./subcomponents/FilterMenu";
-import Tour from "./subcomponents/Tour";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import Paper from "@material-ui/core/Paper";
-import theme from "../theme/theme";
+import FilterMenu from "./FilterMenu";
+import Tour from "../subcomponents/Tour";
+import theme from "../../theme/theme";
 import Badge from "@material-ui/core/Badge";
-import { UploadButton } from "./subcomponents/UploadButton";
+import TabsWrappedLabel from "../TabBox/TabBox";
 // import ReactFileReader from "react-file-reader";
 
 /* Toggle button overrides */
@@ -30,12 +24,10 @@ const useStyles = makeStyles((theme) => ({
   nested: {
     paddingLeft: theme.spacing(4),
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
   drawerPaper: {
     width: drawerWidth,
+    flexShrink: 0,
+    backgroundColor: theme.palette.background.default,
   },
   drawerContainer: {
     overflow: "auto",
@@ -47,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const drawerWidth = 135;
 
-export const MapLayers = () => {
+export const MapMenu = () => {
   //pick specific states (and dispatcher) we need from mapstate
   const [{ maps, currentMapID }, dispatch] = useContext(MapContext);
   const [mapID, setMapID] = useState("ghana");
@@ -68,14 +60,6 @@ export const MapLayers = () => {
       setMapID(currentMapID);
     }
   }, [currentMapID]);
-
-  const toggleLayerVisibility = (layerID) => {
-    dispatch({
-      type: "layer.toggle",
-      mapID: mapID,
-      layerID: layerID,
-    });
-  };
 
   const resetFilter = () => {
     dispatch({
@@ -109,19 +93,25 @@ export const MapLayers = () => {
     <React.Fragment key="drawerDiv">
       <Drawer
         key="drawer"
-        className={classes.drawer}
+        // className={classes.drawer}
         variant="permanent"
         classes={{
           paper: classes.drawerPaper,
         }}
+        // style={{ borderRight: "1px solid #CFCDC9" }}
       >
         <Toolbar key="toolbar" />
-        <div className={classes.drawerContainer} key="drawerContainer">
+        <div
+          className={classes.drawerContainer}
+          key="drawerContainer"
+          // style={{ borderRight: "1px solid #CFCDC9" }}
+        >
           <Box
             mt={1.5}
             align="center"
             fontWeight="fontWeightBold"
             key="themesTitle"
+            style={{ borderRight: "1px solid #CFCDC9" }}
           >
             <Typography key="themesTitleLabel" color="secondary">
               INDICATOR THEMES
@@ -134,11 +124,16 @@ export const MapLayers = () => {
             fontStyle="italic"
             fontSize={13.5}
             fontWeight="fontWeightBold"
+            style={{ borderRight: "1px solid #CFCDC9" }}
           >
             Select to view filters:
           </Box>
           {/* {accessCounter && ( */}
-          <List className="tour-themes" key="themeList">
+          <List
+            className="tour-themes"
+            key="themeList"
+            // style={{ borderRight: "1px solid #CFCDC9" }}
+          >
             <Badge
               key="accessBadge"
               badgeContent={maps[mapID].layers[scaleValue].accessCounter.size}
@@ -159,7 +154,13 @@ export const MapLayers = () => {
                   setActive(e, 0);
                 }}
                 style={{
-                  backgroundColor: selectedMenu === 0 ? "#FFFFFF" : "#f2f2f2",
+                  borderBottom: selectedMenu === 0 ? "1px solid #CFCDC9" : null,
+                  borderTop: selectedMenu === 0 ? "1px solid #CFCDC9" : null,
+                  borderRight: selectedMenu !== 0 ? "1px solid #CFCDC9" : null,
+                  backgroundColor:
+                    selectedMenu === 0
+                      ? theme.palette.background.selected
+                      : theme.palette.background.default,
                   // "&:hover": {
                   //   backgroundColor: "#FFFFFF",
                   // },
@@ -216,7 +217,13 @@ export const MapLayers = () => {
                   setActive(e, 1);
                 }}
                 style={{
-                  backgroundColor: selectedMenu === 1 ? "#FFFFFF" : "#f2f2f2",
+                  borderBottom: selectedMenu === 1 ? "1px solid #CFCDC9" : null,
+                  borderTop: selectedMenu === 1 ? "1px solid #CFCDC9" : null,
+                  borderRight: selectedMenu !== 1 ? "1px solid #CFCDC9" : null,
+                  backgroundColor:
+                    selectedMenu === 1
+                      ? theme.palette.background.selected
+                      : theme.palette.background.default,
                 }}
               >
                 <div
@@ -270,7 +277,13 @@ export const MapLayers = () => {
                   setActive(e, 2);
                 }}
                 style={{
-                  backgroundColor: selectedMenu === 2 ? "#FFFFFF" : "#f2f2f2",
+                  borderBottom: selectedMenu === 2 ? "1px solid #CFCDC9" : null,
+                  borderTop: selectedMenu === 2 ? "1px solid #CFCDC9" : null,
+                  borderRight: selectedMenu !== 2 ? "1px solid #CFCDC9" : null,
+                  backgroundColor:
+                    selectedMenu === 2
+                      ? theme.palette.background.selected
+                      : theme.palette.background.default,
                 }}
               >
                 <div
@@ -324,7 +337,13 @@ export const MapLayers = () => {
                   setActive(e, 3);
                 }}
                 style={{
-                  backgroundColor: selectedMenu === 3 ? "#FFFFFF" : "#f2f2f2",
+                  borderBottom: selectedMenu === 3 ? "1px solid #CFCDC9" : null,
+                  borderTop: selectedMenu === 3 ? "1px solid #CFCDC9" : null,
+                  borderRight: selectedMenu !== 3 ? "1px solid #CFCDC9" : null,
+                  backgroundColor:
+                    selectedMenu === 3
+                      ? theme.palette.background.selected
+                      : theme.palette.background.default,
                 }}
               >
                 <div
@@ -361,14 +380,21 @@ export const MapLayers = () => {
           </List>
           {/* )} */}
           <Divider />
-          <List key="bottomList" disablePadding={true}>
+          <List
+            key="bottomList"
+            disablePadding={true}
+            // style={{ borderRight: "1px solid #CFCDC9" }}
+          >
             <ListItem
               button
+              // disablePadding={true}
+              // p={0}
               key="reset"
               style={{
-                minHeight: "5vh",
+                minHeight: "3vh",
                 justifyContent: "center",
                 alignItems: "center",
+                borderRight: "1px solid #CFCDC9",
               }}
               onClick={(e, newval) => {
                 resetFilter();
@@ -379,216 +405,21 @@ export const MapLayers = () => {
                 variant="button"
                 align="center"
                 key="resetLabel"
-                style={{ fontSize: 14 }}
+                style={{ fontSize: 13 }}
               >
                 Reset Filters
               </Typography>
             </ListItem>
-            <ListItem key="tourButton">
+            <ListItem
+              key="tourButton"
+              style={{ borderRight: "1px solid #CFCDC9" }}
+            >
               <Tour key="tour" style={{ justifyContent: "center" }} />
             </ListItem>
           </List>
         </div>
       </Drawer>
-      <Paper
-        key="commCalculator"
-        style={{
-          padding: theme.spacing(1),
-          position: "absolute",
-          bottom: "unset",
-          right: "0px",
-          top: "0px",
-          left: "unset",
-          height: "auto",
-          width: "240px",
-          zIndex: "1000",
-          backgroundColor: "#fff", //theme.palette.background.paper,
-          margin: "auto",
-        }}
-        elevation={2}
-        square
-
-        // variant="outlined"
-      >
-        <Toolbar />
-        <FormControl component="fieldset" key="fieldset">
-          <FormLabel component="legend" key="legend">
-            <Box
-              mt={1}
-              align="center"
-              fontWeight="fontWeightBold"
-              key="rightBox"
-            >
-              <Typography key="rightBoxLabel" color="secondary">
-                MAP RESOLUTIONS
-              </Typography>
-            </Box>
-            <Box
-              p={1}
-              fontStyle="italic"
-              fontWeight="fontWeightBold"
-              fontSize={13.5}
-              variant="subtitle2"
-              style={{ color: "black" }}
-              key="rightBoxSubtitle"
-            >
-              {/* <Typography variant="subtitle2" color="black"> */}
-              Select the resolution at which to explore the map:
-              {/* </Typography> */}
-            </Box>
-          </FormLabel>
-          <RadioGroup
-            p={1}
-            aria-label="scale"
-            name="scaleSelector"
-            value={scaleValue}
-            onChange={(e) => {
-              setScaleValue(e.target.value);
-              toggleLayerVisibility(e.target.value);
-            }}
-            className="tour-scale"
-            key="radioLabel"
-          >
-            <FormControlLabel
-              value="1"
-              control={<Radio />}
-              label="1x1km area (Classification layer only)"
-              classes={{
-                label: classes.checkboxLabel,
-              }}
-              key="radio1"
-            />
-            <FormControlLabel
-              value="2"
-              control={<Radio />}
-              label="5x5km area"
-              classes={{
-                label: classes.checkboxLabel,
-              }}
-              key="radio2"
-            />
-            <FormControlLabel
-              value="3"
-              control={<Radio />}
-              label="District area"
-              classes={{
-                label: classes.checkboxLabel,
-              }}
-              key="radio3"
-            />
-          </RadioGroup>
-        </FormControl>
-        <UploadButton key="upload" />
-        {/* <div
-          id="avgPopulationWidget"
-          class="widget widget-formula"
-          className="tour-community-calc"
-        > */}
-        {/* <Box fontSize="h7.fontSize" align="center">
-            Total Mapped Settlement Areas in Current View
-          </Box> */}
-        {/* <Box class="js-average-population result" align="center" color="secondary">[calculating]</Box> */}
-        {/* <Typography
-            variant="h5"
-            color="secondary"
-            align="center"
-            fontWeight="fontWeightBold"
-            fontSize="h6.fontSize"
-          >
-            <div class="AveragePopulation">[calculating]</div>
-          </Typography> */}
-        {/* </div> */}
-      </Paper>
+      <TabsWrappedLabel />
     </React.Fragment>
-    // <div>
-    //   <Paper
-    //     style={{ maxHeight: "91vh", overflow: "auto" }}
-    //     elevation={0}
-    //     key={"drawerPaper"}
-    //   >
-    //     <Box mt={1.5} p={2}>
-    //       {mapID && (
-    //         <Typography variant="h5" color="secondary">
-    //           <strong>{maps[mapID].name}</strong>
-    //         </Typography>
-    //       )}
-    //     </Box>
-    //     <Divider />
-    //     <Box mt={2} ml={2}>
-    //       <Typography variant="button" color="inherit">
-    //         <strong>Explore Maps of Key Contextual Factors</strong>
-    //       </Typography>
-    //     </Box>
-    //     {maps[mapID].layers.map((layer, layerIndex) => (
-    //       <List key={"collapseHeader" + layerIndex} disablePadding>
-    //         {layer.name ===
-    //           "5x5km area" ||
-    //         layer.name === "Districts"||
-    //         layer.name === "Communities" ? (
-    //           <div></div>
-    //         ) : (
-    //           <div>
-    //             <MapLayerContent layer={layer} layerIndex={layerIndex} />
-    //           </div>
-    //         )}
-    //       </List>
-    //     ))}
-    //     <Box mt={2} ml={2} mr={2}>
-    //       <Typography variant="button" color="inherit">
-    //         <strong>
-    //           Locate Settlements & Districts by Contextual Factor(s)
-    //         </strong>
-    //       </Typography>
-    //     </Box>
-    //     {maps[mapID].layers.map((layer, layerIndex) => (
-    //       <List key={"collapseHeader" + layerIndex} disablePadding>
-    //         {layer.name ===
-    //         "5x5km area"||layer.name === "Communities" ? (
-    //           <div className="tour-comm">
-    //             <MapLayerContent
-    //               layer={layer}
-    //               layerIndex={layerIndex}
-    //               id="countriesWidget"
-    //             />
-    //             {/* <Box mt={2} ml={3.5} mb={2} key={"countriesDataview"}>
-    //               <div id="countriesWidget" class="widget">
-    //                 <Typography variant="subtitle2">
-    //                   Select District from Dropdown
-    //                 </Typography> */}
-    //                 {/* <p>{JSON.stringify(selectedDistricts)}</p> */}
-    //                 {/* <Select
-    //                   labelId="demo-simple-select-disabled-label"
-    //                   id="demo-simple-select-disabled"
-    //                   value={age}
-    //                   onChange={handleChange}
-    //                   class="js-countries"
-    //                 >
-    //                   <MenuItem value="">
-    //                     <em>All Districts</em>
-    //                   </MenuItem>
-    //                   {/* {selectedDistricts.map((name) => (
-    //                     <MenuItem key={name} value={name}>
-    //                       {name}
-    //                     </MenuItem>
-    //                   ))} */}
-    //                 {/* </Select> */}
-    //                 {/* <select class="js-countries">
-    //                   <option value="">All Districts</option>
-    //                 </select>
-    //               </div>
-    //             </Box> */}
-    //           </div>
-    //         ) : layer.name === "Districts" ? (
-    //           <div className="tour-dist">
-    //             <MapLayerContent layer={layer} layerIndex={layerIndex} />
-    //           </div>
-    //         ) : (
-    //           <div></div>
-    //         )}
-    //       </List>
-    //     ))}
-    //   </Paper>
-    // </div>
-    // </div>
   );
 };

@@ -3,7 +3,7 @@ import { Box, Typography } from "@material-ui/core";
 import { useState, useEffect, useRef } from "react";
 import Popper from "@material-ui/core/Popper";
 // import CloseIcon from "@material-ui/icons/Close";
-import MapLayerContent from "./MapLayerContent";
+import FilterMenuContent from "./FilterMenuContent";
 import Divider from "@material-ui/core/Divider";
 
 const FilterMenu = ({
@@ -99,7 +99,11 @@ const FilterMenu = ({
             </Typography>
           </Box>
         )}
-        <MapLayerContent key="MapLayerContent" cat={cat} layerID={layerID} />
+        <FilterMenuContent
+          key="FilterMenuContent"
+          cat={cat}
+          layerID={layerID}
+        />
       </Box>
     </Popper>
   );

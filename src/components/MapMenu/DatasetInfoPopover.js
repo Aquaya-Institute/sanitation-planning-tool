@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     width: 550,
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(1, 1, 1, 1),
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
   },
 }));
 

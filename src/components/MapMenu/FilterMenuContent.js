@@ -12,7 +12,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import DatasetInfoPopover from "./DatasetInfoPopover";
-import { SliderNonLinear } from "./SliderNonLinear";
+import { SliderNonLinear } from "../subcomponents/SliderNonLinear";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -37,7 +37,7 @@ function createMarks(array) {
   return returnedTarget;
 }
 
-const MapLayerContent = ({ cat, layerID }) => {
+const FilterMenuContent = ({ cat, layerID }) => {
   const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
   const [mapID, setMapID] = useState("ghana");
   const classes = useStyles();
@@ -91,7 +91,7 @@ const MapLayerContent = ({ cat, layerID }) => {
   return (
     <React.Fragment key="filterListDiv">
       {maps[mapID].layers[layerID].filters.map((filter, filterIndex) => (
-        <React.Fragment key="filterListDiv2">
+        <React.Fragment key={"filterListDiv" + filterIndex}>
           {filter.subcategory === cat && (
             <List key="filterList">
               {filter.type === "categorical" ? (
@@ -130,7 +130,7 @@ const MapLayerContent = ({ cat, layerID }) => {
                                     layerIndex: layerID,
                                     filterIndex: filterIndex,
                                     filterStateObject: filter,
-                                    newValue: newval,
+                                    newValue: !category.checked,
                                     categoryFilterIndex: cat_filter_index,
                                   });
                                 }}
@@ -268,4 +268,4 @@ const MapLayerContent = ({ cat, layerID }) => {
     </React.Fragment>
   );
 };
-export default MapLayerContent;
+export default FilterMenuContent;

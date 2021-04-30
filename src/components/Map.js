@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: theme.spacing(1),
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
   },
   table: {
     width: "20px",
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     // width: 400,
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(1, 2, 1),
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
   },
   modal: {
     display: "flex",
@@ -722,7 +722,7 @@ export const Map = () => {
             height: "auto",
             width: "250px",
             zIndex: "1000",
-            backgroundColor: "#fff",
+            backgroundColor: theme.palette.background.default,
           }}
         >
           <Fragment key={"legendContent" + activeLayer}>
@@ -745,6 +745,7 @@ export const Map = () => {
                   id: "age-native-label-placeholder",
                 }}
                 className="tour-legendselect"
+                style={{ backgroundColor: theme.palette.background.selected }}
               >
                 {maps[mapID].layers[activeLayer].filters.map((filter, i) => {
                   if (filter.subcategory !== "id") {

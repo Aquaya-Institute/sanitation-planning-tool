@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MapContext } from "../state/MapState";
-import { MapLayers } from "../components/MapLayers";
+import { MapMenu } from "../components/MapMenu/MapMenu";
 import { Map } from "../components/Map";
 import { Grid } from "@material-ui/core";
 import { useParams } from "react-router-dom";
@@ -21,7 +21,7 @@ function MapDetail() {
     <Grid container style={{ height: "100%" }}>
       {/* <Grid item  style={{boxShadow:"0px 0px 10px black", zIndex: 1100}}> */}
       <Grid item>
-        <MapLayers />
+        <MapMenu />
       </Grid>
       <Grid item xs={true} md={true} lg={true}>
         <Map />
