@@ -134,7 +134,7 @@ const initialState = {
             },
             {
               name: "Population Estimate",
-              unit: "",
+              unit: "pp.",
               type: "range_non_linear",
               column_name: "pop",
               min: 0,
@@ -349,7 +349,7 @@ const initialState = {
             },
             {
               name: "Population Estimate",
-              unit: "",
+              unit: "pp.",
               type: "range",
               column_name: "pop",
               min: 27942,

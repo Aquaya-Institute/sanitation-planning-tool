@@ -128,7 +128,7 @@ export default function FullWidthTabs() {
           />
           <Tab
             className={classes.tab}
-            label="Export"
+            label="Data Export"
             {...a11yProps(2)}
             style={{
               borderLeft: value === 2 ? "1px solid #CFCDC9" : null,
