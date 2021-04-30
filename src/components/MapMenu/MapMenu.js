@@ -126,7 +126,7 @@ export const MapMenu = () => {
             fontWeight="fontWeightBold"
             style={{ borderRight: "1px solid #CFCDC9" }}
           >
-            Select to view filters:
+            Select a theme to view filters:
           </Box>
           {/* {accessCounter && ( */}
           <List
@@ -380,15 +380,9 @@ export const MapMenu = () => {
           </List>
           {/* )} */}
           <Divider />
-          <List
-            key="bottomList"
-            disablePadding={true}
-            // style={{ borderRight: "1px solid #CFCDC9" }}
-          >
+          <List key="bottomList">
             <ListItem
               button
-              // disablePadding={true}
-              // p={0}
               key="reset"
               style={{
                 minHeight: "3vh",

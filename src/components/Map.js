@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   },
   download: {
     textDecoration: "none",
-    color: "white",
+    color: "#ffffff",
   },
   checkboxLabel: {
     fontSize: 13,
@@ -114,7 +114,7 @@ function transformArray(array) {
 
 export const Map = () => {
   const [
-    { currentMapID, maps, activeLayer, activeLegend },
+    { currentMapID, maps, activeLayer, activeLegend, userData },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState();
@@ -133,6 +133,7 @@ export const Map = () => {
   const anchorRef = useRef(null);
   const classes = useStyles();
   const clickRef = useRef(null);
+  const mapRef = useRef(null);
   // const [commCalcSource, setCommCalcSource] = useState(null);
   // const [districtsSource, setDistrictsSource] = useState(null);
   // const [districtsStyle, setDistrictsStyle] = useState(null);
@@ -203,22 +204,22 @@ export const Map = () => {
       username: process.env.REACT_APP_CARTO_USERNAME,
     });
     if (maps && mapID) {
-      const map = L.map("map").setView(maps[mapID].view, maps[mapID].zoom);
+      mapRef.current = L.map("map").setView(maps[mapID].view, maps[mapID].zoom);
 
       L.tileLayer(
         "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg70?access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ"
-      ).addTo(map);
+      ).addTo(mapRef.current);
 
       setLeaflet((prevmap) => {
         if (!prevmap) {
-          return map;
+          return mapRef.current;
         } else {
           return prevmap;
         }
       });
 
       setCartoClient(client);
-      client.getLeafletLayer().addTo(map);
+      client.getLeafletLayer().addTo(mapRef.current);
       dispatch({
         type: "map.addCartoClient",
         carto_client: client,
@@ -503,18 +504,47 @@ export const Map = () => {
     }
   }, [popup]);
 
-  // Visible layer
-  // useEffect(() => {
-  //   if (maps[mapID]) {
-  //     let visibleLayer_list = [];
-  //     maps[mapID].layers.forEach((layer, index) => {
-  //       if ((index !== 0) & layer.visible) {
-  //         visibleLayer_list.push(layer.name);
-  //       }
-  //     });
-  //     setVisibleLayers(visibleLayer_list);
-  //   }
-  // }, [maps, mapID]);
+  // add layer
+  const layerRef = useRef(null);
+  const [myRadius, setMyRadius] = useState(5);
+  const [myWeight, setMyWeight] = useState(2);
+  useEffect(() => {
+    if (mapRef.current) {
+      layerRef.current = L.layerGroup().addTo(mapRef.current);
+      mapRef.current.on("zoomend", function () {
+        var currentZoom = mapRef.current.getZoom();
+        setMyRadius(currentZoom * (1 / 1)); //or whatever ratio you prefer
+        setMyWeight(currentZoom * (1 / 3)); //or whatever ratio you prefer
+        // layerRef.current.setStyle({ radius: myRadius, weight: myWeight });
+      });
+    }
+  }, [userData]);
+
+  // update markers
+
+  useEffect(() => {
+    if (userData) {
+      // var myRadius = 5;
+      // var myWeight = 2;
+
+      var markerOptions = {
+        radius: myRadius,
+        fillColor: "#ffffff",
+        color: "#ffffff",
+        weight: myWeight,
+        opacity: 1,
+        fillOpacity: 0.7,
+      };
+      if (layerRef.current) {
+        layerRef.current.clearLayers();
+      }
+      userData.forEach((marker, key) => {
+        L.circleMarker([marker.Latitude, marker.Longitude], markerOptions)
+          .addTo(layerRef.current)
+          .bindPopup("Community Name: " + marker.Community);
+      });
+    }
+  }, [myRadius, myWeight, userData]);
 
   // Community counter
   // useEffect(() => {

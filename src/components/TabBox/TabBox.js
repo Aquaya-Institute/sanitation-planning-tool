@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 50,
     fontSize: 12,
   },
+  indicator: {
+    backgroundColor: "white",
+  },
 }));
 
 function TabPanel(props) {
@@ -93,10 +96,12 @@ export default function FullWidthTabs() {
         <Tabs
           value={value}
           onChange={handleChange}
-          indicatorColor="white"
+          classes={{
+            indicator: classes.indicator,
+          }}
           textColor="secondary"
           aria-label="full width tabs example"
-          tabItemContainerStyle={{ width: "300px" }}
+          // tabItemContainerStyle={{ width: "300px" }}
         >
           <Tab
             className={classes.tab}

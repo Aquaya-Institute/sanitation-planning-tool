@@ -37,7 +37,7 @@ export const MapResolutions = () => {
   };
 
   return (
-    <FormControl component="fieldset" key="fieldset" disablePadding={true}>
+    <FormControl component="fieldset" key="fieldset">
       <FormLabel component="legend" key="legend">
         {/* <Box mt={1} align="center" fontWeight="fontWeightBold" key="rightBox">
           <Typography key="rightBoxLabel" color="secondary">

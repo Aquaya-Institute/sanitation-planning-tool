@@ -564,6 +564,7 @@ const initialState = {
   },
   activeLayer: "2",
   activeLegend: "0",
+  userData: null,
 };
 
 //the reducer is essentially the place where the state is manipulated/maintained.
@@ -606,28 +607,12 @@ const reducer = (state, action) => {
             draft.maps[mid].layers[i].carto_layer.hide();
           }
         }
-        // for (var i in legendStyles.style) {
-        //   if (
-        //     legendStyles.style[i] === draft.maps[mid].layers[action.layerID].carto_style
-        //   ) {
-        //     draft.activeLegend = i;
-        //     break;
-        //   } else {
-        //     draft.activeLegend = 0;
-        //   }
-        // };
         draft.activeLegend = legendStyles.findIndex(
           (x) => x.style === draft.maps[mid].layers[action.layerID].carto_style
         );
         if (draft.activeLegend < 0) {
           draft.activeLegend = 0;
         }
-        // function findNeedle(haystack) {
-        //   return haystack.indexOf(
-        //     draft.maps[mid].layers[action.layerID].carto_style
-        //   );
-        // }
-        // draft.activeLegend = findNeedle(legendStyles.style);
       });
 
     // case "clear.filter":
@@ -826,7 +811,10 @@ const reducer = (state, action) => {
           }
         }
       });
-
+    case "user.upload":
+      return produce(state, (draft) => {
+        draft.userData = action.userData;
+      });
     default:
       return state;
   }
