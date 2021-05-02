@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 export const MapResolutions = () => {
   const [{ maps, currentMapID }, dispatch] = useContext(MapContext);
   const [mapID, setMapID] = useState("ghana");
-  const [scaleValue, setScaleValue] = useState("2");
+  const [activeLayer, setActiveLayer] = useState("2");
 
   const classes = useStyles();
 
@@ -28,11 +28,11 @@ export const MapResolutions = () => {
     }
   }, [currentMapID]);
 
-  const toggleLayerVisibility = (layerID) => {
+  const toggleLayerVisibility = (activeLayer) => {
     dispatch({
       type: "layer.toggle",
       mapID: mapID,
-      layerID: layerID,
+      layerID: activeLayer,
     });
   };
 
@@ -61,9 +61,9 @@ export const MapResolutions = () => {
           // p={1}
           aria-label="scale"
           name="scaleSelector"
-          value={scaleValue}
+          value={activeLayer}
           onChange={(e) => {
-            setScaleValue(e.target.value);
+            setActiveLayer(e.target.value);
             toggleLayerVisibility(e.target.value);
           }}
           className="tour-scale"

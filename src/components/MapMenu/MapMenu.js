@@ -41,12 +41,14 @@ const drawerWidth = 135;
 
 export const MapMenu = () => {
   //pick specific states (and dispatcher) we need from mapstate
-  const [{ maps, currentMapID }, dispatch] = useContext(MapContext);
+  const [{ maps, currentMapID, activeLayer }, dispatch] = useContext(
+    MapContext
+  );
   const [mapID, setMapID] = useState("ghana");
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMenu, setSelectedMenu] = React.useState(null);
-  const [scaleValue, setScaleValue] = useState("2");
+  // const [scaleValue, setScaleValue] = useState("2");
 
   const setActive = (event, text) => {
     setSelectedMenu(text);
@@ -136,7 +138,7 @@ export const MapMenu = () => {
           >
             <Badge
               key="accessBadge"
-              badgeContent={maps[mapID].layers[scaleValue].accessCounter.size}
+              badgeContent={maps[mapID].layers[activeLayer].accessCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
               color="secondary"
@@ -192,14 +194,14 @@ export const MapMenu = () => {
                     setFilterMenuOpen={setFilterMenuOpen}
                     cat={"accessibility"}
                     setSelectedMenu={setSelectedMenu}
-                    layerID={scaleValue}
+                    layerID={activeLayer}
                   />
                 )}
               </ListItem>
             </Badge>
             <Badge
               key="washBadge"
-              badgeContent={maps[mapID].layers[scaleValue].washCounter.size}
+              badgeContent={maps[mapID].layers[activeLayer].washCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
               color="secondary"
@@ -252,14 +254,14 @@ export const MapMenu = () => {
                     setFilterMenuOpen={setFilterMenuOpen}
                     cat={"wash"}
                     setSelectedMenu={setSelectedMenu}
-                    layerID={scaleValue}
+                    layerID={activeLayer}
                   />
                 )}
               </ListItem>
             </Badge>
             <Badge
               key="socioBadge"
-              badgeContent={maps[mapID].layers[scaleValue].socioCounter.size}
+              badgeContent={maps[mapID].layers[activeLayer].socioCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
               color="secondary"
@@ -312,14 +314,14 @@ export const MapMenu = () => {
                     setFilterMenuOpen={setFilterMenuOpen}
                     cat={"socioeconomic"}
                     setSelectedMenu={setSelectedMenu}
-                    layerID={scaleValue}
+                    layerID={activeLayer}
                   />
                 )}
               </ListItem>
             </Badge>
             <Badge
               key="healthBadge"
-              badgeContent={maps[mapID].layers[scaleValue].healthCounter.size}
+              badgeContent={maps[mapID].layers[activeLayer].healthCounter.size}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
               showZero={false}
               color="secondary"
@@ -372,7 +374,7 @@ export const MapMenu = () => {
                     setFilterMenuOpen={setFilterMenuOpen}
                     cat={"health"}
                     setSelectedMenu={setSelectedMenu}
-                    layerID={scaleValue}
+                    layerID={activeLayer}
                   />
                 )}
               </ListItem>
