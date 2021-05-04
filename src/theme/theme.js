@@ -32,6 +32,7 @@ const theme = createMuiTheme({
       "Droid Sans",
       "Helvetica Neue",
       "sans-serif",
+      "Source Sans Pro",
     ].join(","),
   },
   overrides: {

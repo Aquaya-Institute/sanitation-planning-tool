@@ -8,6 +8,7 @@ import Link from "@material-ui/core/Link";
 import { Link as RouterLink } from "react-router-dom";
 import { CssBaseline, Container, Box } from "@material-ui/core";
 import { MapContext } from "../state/MapState";
+import { MapSelector } from "../components/MapSelector";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-    textAlign: "center",
+    textAlign: "left",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -37,22 +38,21 @@ export default function DefaultLayout(props) {
         <Toolbar>
           <Link component={RouterLink} color="inherit" to="/">
             <img
-              src="/usaid-rect.png"
+              src="/usaid-sq.png"
               alt=""
-              style={{ width: "135px", height: "50px" }}
+              style={{ width: "50px", height: "50px" }}
             ></img>
           </Link>
+
           <Typography variant="h6" className={classes.title}>
             {/* Place the logo here instead and link to home */}
             {/* <Link component={RouterLink} color="inherit" to="/" style={{textDecoration: 'none'}}> */}
-            {currentMapID ? (
-              <strong>SanPlan: {maps[currentMapID].name}</strong>
-            ) : (
-              <strong>SanPlan: The Sanitation Planning Tool</strong>
-            )}
-
+            SanPlan
             {/* </Link> */}
           </Typography>
+          {/* <MapSelector /> */}
+          <Box>{currentMapID ? <span>Change map to:</span> : null}</Box>
+          <Box ml={3}>{currentMapID ? <MapSelector /> : null}</Box>
           <Box ml={3}>
             <Button component={RouterLink} color="inherit" to="/">
               Home

@@ -12,7 +12,8 @@ const initialState = {
     ghana: {
       name: "Ghana",
       mapID: "ghana",
-      view: [8.059229627200192, -1.0546875000000002],
+      lat: 8.059229627200192,
+      long: -1.0546875000000002,
       zoom: 7,
       minzoom: 7,
       /* 
@@ -487,7 +488,9 @@ const initialState = {
     cambodia: {
       name: "Cambodia",
       mapID: "cambodia",
-      view: [12.5657, 104.991],
+      // view: [12.5657, 104.991],
+      lat: 12.5657,
+      long: 104.991,
       zoom: 7.4,
       /* 
       you can add as many layers for each indicator. 

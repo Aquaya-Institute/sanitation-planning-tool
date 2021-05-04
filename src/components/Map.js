@@ -204,7 +204,10 @@ export const Map = () => {
       username: process.env.REACT_APP_CARTO_USERNAME,
     });
     if (maps && mapID) {
-      mapRef.current = L.map("map").setView(maps[mapID].view, maps[mapID].zoom);
+      mapRef.current = L.map("map").setView(
+        [maps[mapID].lat, maps[mapID].long],
+        maps[mapID].zoom
+      );
 
       L.tileLayer(
         "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg70?access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ"
