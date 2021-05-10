@@ -44,7 +44,7 @@ export const MapMenu = () => {
   const [{ maps, currentMapID, activeLayer }, dispatch] = useContext(
     MapContext
   );
-  const [mapID, setMapID] = useState("ghana");
+  const [mapID, setMapID] = useState(null);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMenu, setSelectedMenu] = React.useState(null);
@@ -66,6 +66,7 @@ export const MapMenu = () => {
   const resetFilter = () => {
     dispatch({
       type: "reset.filters",
+      mapID: mapID,
     });
   };
 
@@ -130,257 +131,269 @@ export const MapMenu = () => {
           >
             Select a theme to view filters:
           </Box>
-          {/* {accessCounter && ( */}
-          <List
-            className="tour-themes"
-            key="themeList"
-            // style={{ borderRight: "1px solid #CFCDC9" }}
-          >
-            <Badge
-              key="accessBadge"
-              badgeContent={maps[mapID].layers[activeLayer].accessCounter.size}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              showZero={false}
-              color="secondary"
-              overlap="circle"
+          {mapID && (
+            <List
+              className="tour-themes"
+              key="themeList"
+              // style={{ borderRight: "1px solid #CFCDC9" }}
             >
-              <ListItem
-                button
-                key={"accessButton"}
-                selected={selectedMenu === 0}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setFilterMenuOpen(true);
-                  setAnchorEl(e.currentTarget);
-                  setActive(e, 0);
-                }}
-                style={{
-                  borderBottom: selectedMenu === 0 ? "1px solid #CFCDC9" : null,
-                  borderTop: selectedMenu === 0 ? "1px solid #CFCDC9" : null,
-                  borderRight: selectedMenu !== 0 ? "1px solid #CFCDC9" : null,
-                  backgroundColor:
-                    selectedMenu === 0
-                      ? theme.palette.background.selected
-                      : theme.palette.background.default,
-                  // "&:hover": {
-                  //   backgroundColor: "#FFFFFF",
-                  // },
-                }}
+              <Badge
+                key="accessBadge"
+                badgeContent={
+                  maps[mapID].layers[activeLayer].accessCounter.size
+                }
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                showZero={false}
+                color="secondary"
+                overlap="circle"
               >
-                <div
-                  key="accessButtonContent"
+                <ListItem
+                  button
+                  key={"accessButton"}
+                  selected={selectedMenu === 0}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setFilterMenuOpen(true);
+                    setAnchorEl(e.currentTarget);
+                    setActive(e, 0);
+                  }}
                   style={{
-                    minHeight: "10vh",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    borderBottom:
+                      selectedMenu === 0 ? "1px solid #CFCDC9" : null,
+                    borderTop: selectedMenu === 0 ? "1px solid #CFCDC9" : null,
+                    borderRight:
+                      selectedMenu !== 0 ? "1px solid #CFCDC9" : null,
+                    backgroundColor:
+                      selectedMenu === 0
+                        ? theme.palette.background.selected
+                        : theme.palette.background.default,
+                    // "&:hover": {
+                    //   backgroundColor: "#FFFFFF",
+                    // },
                   }}
                 >
-                  <Typography
-                    variant="subtitle2"
-                    align="center"
-                    key="accessLabel"
+                  <div
+                    key="accessButtonContent"
+                    style={{
+                      minHeight: "10vh",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    <img src={AccessIcon} alt="Road" />
-                    <br />
-                    ACCESS-IBILITY
-                  </Typography>
-                </div>
-                {selectedMenu === 0 && (
-                  <FilterMenu
-                    key="filterMenus"
-                    anchorEl={anchorEl}
-                    filterMenuOpen={filterMenuOpen}
-                    setFilterMenuOpen={setFilterMenuOpen}
-                    cat={"accessibility"}
-                    setSelectedMenu={setSelectedMenu}
-                    layerID={activeLayer}
-                  />
-                )}
-              </ListItem>
-            </Badge>
-            <Badge
-              key="washBadge"
-              badgeContent={maps[mapID].layers[activeLayer].washCounter.size}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              showZero={false}
-              color="secondary"
-              overlap="circle"
-            >
-              <ListItem
-                button
-                key="washButton"
-                selected={selectedMenu === 1}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setFilterMenuOpen(true);
-                  setAnchorEl(e.currentTarget);
-                  setActive(e, 1);
-                }}
-                style={{
-                  borderBottom: selectedMenu === 1 ? "1px solid #CFCDC9" : null,
-                  borderTop: selectedMenu === 1 ? "1px solid #CFCDC9" : null,
-                  borderRight: selectedMenu !== 1 ? "1px solid #CFCDC9" : null,
-                  backgroundColor:
-                    selectedMenu === 1
-                      ? theme.palette.background.selected
-                      : theme.palette.background.default,
-                }}
+                    <Typography
+                      variant="subtitle2"
+                      align="center"
+                      key="accessLabel"
+                    >
+                      <img src={AccessIcon} alt="Road" />
+                      <br />
+                      ACCESS-IBILITY
+                    </Typography>
+                  </div>
+                  {selectedMenu === 0 && (
+                    <FilterMenu
+                      key="filterMenus"
+                      anchorEl={anchorEl}
+                      filterMenuOpen={filterMenuOpen}
+                      setFilterMenuOpen={setFilterMenuOpen}
+                      cat={"accessibility"}
+                      setSelectedMenu={setSelectedMenu}
+                      layerID={activeLayer}
+                    />
+                  )}
+                </ListItem>
+              </Badge>
+              <Badge
+                key="washBadge"
+                badgeContent={maps[mapID].layers[activeLayer].washCounter.size}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                showZero={false}
+                color="secondary"
+                overlap="circle"
               >
-                <div
-                  key="washButtonContent"
+                <ListItem
+                  button
+                  key="washButton"
+                  selected={selectedMenu === 1}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setFilterMenuOpen(true);
+                    setAnchorEl(e.currentTarget);
+                    setActive(e, 1);
+                  }}
                   style={{
-                    minHeight: "10vh",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    borderBottom:
+                      selectedMenu === 1 ? "1px solid #CFCDC9" : null,
+                    borderTop: selectedMenu === 1 ? "1px solid #CFCDC9" : null,
+                    borderRight:
+                      selectedMenu !== 1 ? "1px solid #CFCDC9" : null,
+                    backgroundColor:
+                      selectedMenu === 1
+                        ? theme.palette.background.selected
+                        : theme.palette.background.default,
                   }}
                 >
-                  <Typography
-                    variant="subtitle2"
-                    align="center"
-                    key="washLabel"
+                  <div
+                    key="washButtonContent"
+                    style={{
+                      minHeight: "10vh",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    <img src={WashIcon} alt="Road" />
-                    <br />
-                    WATER & SANITATION
-                  </Typography>
-                </div>
-                {selectedMenu === 1 && (
-                  <FilterMenu
-                    key="filterMenus"
-                    anchorEl={anchorEl}
-                    filterMenuOpen={filterMenuOpen}
-                    setFilterMenuOpen={setFilterMenuOpen}
-                    cat={"wash"}
-                    setSelectedMenu={setSelectedMenu}
-                    layerID={activeLayer}
-                  />
-                )}
-              </ListItem>
-            </Badge>
-            <Badge
-              key="socioBadge"
-              badgeContent={maps[mapID].layers[activeLayer].socioCounter.size}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              showZero={false}
-              color="secondary"
-              overlap="circle"
-            >
-              <ListItem
-                button
-                key="socioButton"
-                selected={selectedMenu === 2}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setFilterMenuOpen(true);
-                  setAnchorEl(e.currentTarget);
-                  setActive(e, 2);
-                }}
-                style={{
-                  borderBottom: selectedMenu === 2 ? "1px solid #CFCDC9" : null,
-                  borderTop: selectedMenu === 2 ? "1px solid #CFCDC9" : null,
-                  borderRight: selectedMenu !== 2 ? "1px solid #CFCDC9" : null,
-                  backgroundColor:
-                    selectedMenu === 2
-                      ? theme.palette.background.selected
-                      : theme.palette.background.default,
-                }}
+                    <Typography
+                      variant="subtitle2"
+                      align="center"
+                      key="washLabel"
+                    >
+                      <img src={WashIcon} alt="Road" />
+                      <br />
+                      WATER & SANITATION
+                    </Typography>
+                  </div>
+                  {selectedMenu === 1 && (
+                    <FilterMenu
+                      key="filterMenus"
+                      anchorEl={anchorEl}
+                      filterMenuOpen={filterMenuOpen}
+                      setFilterMenuOpen={setFilterMenuOpen}
+                      cat={"wash"}
+                      setSelectedMenu={setSelectedMenu}
+                      layerID={activeLayer}
+                    />
+                  )}
+                </ListItem>
+              </Badge>
+              <Badge
+                key="socioBadge"
+                badgeContent={maps[mapID].layers[activeLayer].socioCounter.size}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                showZero={false}
+                color="secondary"
+                overlap="circle"
               >
-                <div
-                  key="socioButtonContent"
+                <ListItem
+                  button
+                  key="socioButton"
+                  selected={selectedMenu === 2}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setFilterMenuOpen(true);
+                    setAnchorEl(e.currentTarget);
+                    setActive(e, 2);
+                  }}
                   style={{
-                    minHeight: "10vh",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    borderBottom:
+                      selectedMenu === 2 ? "1px solid #CFCDC9" : null,
+                    borderTop: selectedMenu === 2 ? "1px solid #CFCDC9" : null,
+                    borderRight:
+                      selectedMenu !== 2 ? "1px solid #CFCDC9" : null,
+                    backgroundColor:
+                      selectedMenu === 2
+                        ? theme.palette.background.selected
+                        : theme.palette.background.default,
                   }}
                 >
-                  <Typography
-                    variant="subtitle2"
-                    align="center"
-                    key="socioLabel"
+                  <div
+                    key="socioButtonContent"
+                    style={{
+                      minHeight: "10vh",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    <img src={SocioIcon} alt="Road" />
-                    <br />
-                    SOCIO-ECOMONIC
-                  </Typography>
-                </div>
-                {selectedMenu === 2 && (
-                  <FilterMenu
-                    key="filterMenus"
-                    anchorEl={anchorEl}
-                    filterMenuOpen={filterMenuOpen}
-                    setFilterMenuOpen={setFilterMenuOpen}
-                    cat={"socioeconomic"}
-                    setSelectedMenu={setSelectedMenu}
-                    layerID={activeLayer}
-                  />
-                )}
-              </ListItem>
-            </Badge>
-            <Badge
-              key="healthBadge"
-              badgeContent={maps[mapID].layers[activeLayer].healthCounter.size}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              showZero={false}
-              color="secondary"
-              overlap="circle"
-            >
-              <ListItem
-                button
-                key="healthButton"
-                selected={selectedMenu === 3}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setFilterMenuOpen(true);
-                  setAnchorEl(e.currentTarget);
-                  setActive(e, 3);
-                }}
-                style={{
-                  borderBottom: selectedMenu === 3 ? "1px solid #CFCDC9" : null,
-                  borderTop: selectedMenu === 3 ? "1px solid #CFCDC9" : null,
-                  borderRight: selectedMenu !== 3 ? "1px solid #CFCDC9" : null,
-                  backgroundColor:
-                    selectedMenu === 3
-                      ? theme.palette.background.selected
-                      : theme.palette.background.default,
-                }}
+                    <Typography
+                      variant="subtitle2"
+                      align="center"
+                      key="socioLabel"
+                    >
+                      <img src={SocioIcon} alt="Road" />
+                      <br />
+                      SOCIO-ECOMONIC
+                    </Typography>
+                  </div>
+                  {selectedMenu === 2 && (
+                    <FilterMenu
+                      key="filterMenus"
+                      anchorEl={anchorEl}
+                      filterMenuOpen={filterMenuOpen}
+                      setFilterMenuOpen={setFilterMenuOpen}
+                      cat={"socioeconomic"}
+                      setSelectedMenu={setSelectedMenu}
+                      layerID={activeLayer}
+                    />
+                  )}
+                </ListItem>
+              </Badge>
+              <Badge
+                key="healthBadge"
+                badgeContent={
+                  maps[mapID].layers[activeLayer].healthCounter.size
+                }
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                showZero={false}
+                color="secondary"
+                overlap="circle"
               >
-                <div
-                  key="healthButtonContent"
+                <ListItem
+                  button
+                  key="healthButton"
+                  selected={selectedMenu === 3}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setFilterMenuOpen(true);
+                    setAnchorEl(e.currentTarget);
+                    setActive(e, 3);
+                  }}
                   style={{
-                    minHeight: "10vh",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    borderBottom:
+                      selectedMenu === 3 ? "1px solid #CFCDC9" : null,
+                    borderTop: selectedMenu === 3 ? "1px solid #CFCDC9" : null,
+                    borderRight:
+                      selectedMenu !== 3 ? "1px solid #CFCDC9" : null,
+                    backgroundColor:
+                      selectedMenu === 3
+                        ? theme.palette.background.selected
+                        : theme.palette.background.default,
                   }}
                 >
-                  <Typography
-                    variant="subtitle2"
-                    align="center"
-                    key="healthLabel"
+                  <div
+                    key="healthButtonContent"
+                    style={{
+                      minHeight: "10vh",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    <img src={HealthIcon} alt="Road" />
-                    <br />
-                    DISEASE BURDEN
-                  </Typography>
-                </div>
-                {selectedMenu === 3 && (
-                  <FilterMenu
-                    key="filterMenus"
-                    anchorEl={anchorEl}
-                    filterMenuOpen={filterMenuOpen}
-                    setFilterMenuOpen={setFilterMenuOpen}
-                    cat={"health"}
-                    setSelectedMenu={setSelectedMenu}
-                    layerID={activeLayer}
-                  />
-                )}
-              </ListItem>
-            </Badge>
-          </List>
-          {/* )} */}
+                    <Typography
+                      variant="subtitle2"
+                      align="center"
+                      key="healthLabel"
+                    >
+                      <img src={HealthIcon} alt="Road" />
+                      <br />
+                      DISEASE BURDEN
+                    </Typography>
+                  </div>
+                  {selectedMenu === 3 && (
+                    <FilterMenu
+                      key="filterMenus"
+                      anchorEl={anchorEl}
+                      filterMenuOpen={filterMenuOpen}
+                      setFilterMenuOpen={setFilterMenuOpen}
+                      cat={"health"}
+                      setSelectedMenu={setSelectedMenu}
+                      layerID={activeLayer}
+                    />
+                  )}
+                </ListItem>
+              </Badge>
+            </List>
+          )}
           <Divider />
           <List key="bottomList">
             <ListItem

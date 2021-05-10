@@ -31,6 +31,16 @@ const TOUR_STEPS = [
       "Select the indicator from this dropdown that you would like to see represented in the legend. Each indicator will display a unique color scale. Your selection will be saved between resolutions.",
   },
   {
+    target: ".tour-upload",
+    content:
+      "You can upload your own community locations an view them on the map.",
+  },
+  {
+    target: ".tour-export",
+    content:
+      "After identifying districts of interest, you can download data for those remaining, here.",
+  },
+  {
     target: ".tour-comm",
     content: [
       "...or settlement area.",

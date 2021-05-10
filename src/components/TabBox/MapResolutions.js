@@ -15,9 +15,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const MapResolutions = () => {
-  const [{ maps, currentMapID }, dispatch] = useContext(MapContext);
-  const [mapID, setMapID] = useState("ghana");
-  const [activeLayer, setActiveLayer] = useState("2");
+  const [{ maps, currentMapID, activeLayer }, dispatch] = useContext(
+    MapContext
+  );
+  const [mapID, setMapID] = useState(currentMapID);
+  // const [activeLayer, setActiveLayer] = useState("2");
 
   const classes = useStyles();
 
@@ -25,6 +27,7 @@ export const MapResolutions = () => {
     if (currentMapID) {
       console.log(currentMapID);
       setMapID(currentMapID);
+      // setActiveLayer(maps[currentMapID].currentLayer);
     }
   }, [currentMapID]);
 
@@ -56,48 +59,50 @@ export const MapResolutions = () => {
           Select the resolution at which to explore the map:
         </Box>
       </FormLabel>
-      <Box pl={1}>
-        <RadioGroup
-          // p={1}
-          aria-label="scale"
-          name="scaleSelector"
-          value={activeLayer}
-          onChange={(e) => {
-            setActiveLayer(e.target.value);
-            toggleLayerVisibility(e.target.value);
-          }}
-          className="tour-scale"
-          key="radioLabel"
-        >
-          <FormControlLabel
-            value="1"
-            control={<Radio />}
-            label="1x1km area (Classification layer only)"
-            classes={{
-              label: classes.checkboxLabel,
+      {mapID && (
+        <Box pl={1}>
+          <RadioGroup
+            // p={1}
+            aria-label="scale"
+            name="scaleSelector"
+            value={activeLayer}
+            onChange={(e) => {
+              // setActiveLayer(e.target.value);
+              toggleLayerVisibility(e.target.value);
             }}
-            key="radio1"
-          />
-          <FormControlLabel
-            value="2"
-            control={<Radio />}
-            label="5x5km area"
-            classes={{
-              label: classes.checkboxLabel,
-            }}
-            key="radio2"
-          />
-          <FormControlLabel
-            value="3"
-            control={<Radio />}
-            label="District area"
-            classes={{
-              label: classes.checkboxLabel,
-            }}
-            key="radio3"
-          />
-        </RadioGroup>
-      </Box>
+            className="tour-scale"
+            key="radioLabel"
+          >
+            <FormControlLabel
+              value="1"
+              control={<Radio />}
+              label="1x1km area (Classification layer only)"
+              classes={{
+                label: classes.checkboxLabel,
+              }}
+              key="radio1"
+            />
+            <FormControlLabel
+              value="2"
+              control={<Radio />}
+              label="5x5km area"
+              classes={{
+                label: classes.checkboxLabel,
+              }}
+              key="radio2"
+            />
+            <FormControlLabel
+              value="3"
+              control={<Radio />}
+              label="District area"
+              classes={{
+                label: classes.checkboxLabel,
+              }}
+              key="radio3"
+            />
+          </RadioGroup>
+        </Box>
+      )}
     </FormControl>
     // </Paper>
   );

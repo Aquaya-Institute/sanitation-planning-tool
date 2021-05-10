@@ -2,8 +2,16 @@ import React, { useState, useContext } from "react";
 import Papa from "papaparse";
 import { Box, Typography } from "@material-ui/core";
 import { MapContext } from "../../state/MapState";
+import { CSVLink } from "react-csv";
 
 // import theme from "../../theme/theme";
+const template = [
+  {
+    Community: null,
+    Latitude: null,
+    Longitude: null,
+  },
+];
 
 export const UploadButton = () => {
   const [{}, dispatch] = useContext(MapContext);
@@ -59,9 +67,17 @@ export const UploadButton = () => {
         Upload a CSV file of GPS coordinates to display them on the map:
       </Box>
       <Box style={{ fontSize: 12 }} pl={1} pb={1}>
-        To plot communitiy locations, create a CSV file with 3 specific columns,
-        1) latitiude, 2) longitude, and 3) community name or identifier.
+        To plot communitiy locations, create a CSV file with at minimum 2
+        specific columns, 1) Latitiude, and 2) Longitude. Other columns
+        including community name or identifiers may also be included.
       </Box>
+      <CSVLink
+        data={template}
+        filename={"SPT_Upload_Template.csv"}
+        style={{ fontSize: 13 }}
+      >
+        DOWNLOAD TEMPLATE UPLOAD FORM
+      </CSVLink>
       <input
         className="upload-input"
         type="file"

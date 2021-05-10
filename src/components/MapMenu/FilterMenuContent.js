@@ -39,15 +39,15 @@ function createMarks(array) {
 
 const FilterMenuContent = ({ cat, layerID }) => {
   const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
-  const [mapID, setMapID] = useState("ghana");
+  // const [mapID, setMapID] = useState(null);
   const classes = useStyles();
 
-  useEffect(() => {
-    if (currentMapID) {
-      console.log(currentMapID);
-      setMapID(currentMapID);
-    }
-  }, [currentMapID]);
+  // useEffect(() => {
+  //   if (currentMapID) {
+  //     console.log(currentMapID);
+  //     setMapID(currentMapID);
+  //   }
+  // }, [currentMapID]);
 
   const updateFilter = ({
     layerIndex,
@@ -77,7 +77,7 @@ const FilterMenuContent = ({ cat, layerID }) => {
 
     dispatch({
       type: "layer.filter",
-      mapID: mapID,
+      mapID: currentMapID,
       layerIndex: layerID,
       filterIndex: filterIndex,
       filter: {
@@ -90,7 +90,7 @@ const FilterMenuContent = ({ cat, layerID }) => {
 
   return (
     <React.Fragment key="filterListDiv">
-      {maps[mapID].layers[layerID].filters.map((filter, filterIndex) => (
+      {maps[currentMapID].layers[layerID].filters.map((filter, filterIndex) => (
         <React.Fragment key={"filterListDiv" + filterIndex}>
           {filter.subcategory === cat && (
             <List key="filterList">

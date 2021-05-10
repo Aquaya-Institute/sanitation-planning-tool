@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DefaultLayout(props) {
   const classes = useStyles();
-  const [{ currentMapID, maps }] = React.useContext(MapContext);
+  const [{ currentMapID, mapID, maps }] = React.useContext(MapContext);
 
   return (
     <div
@@ -51,8 +51,12 @@ export default function DefaultLayout(props) {
             {/* </Link> */}
           </Typography>
           {/* <MapSelector /> */}
-          <Box>{currentMapID ? <span>Change map to:</span> : null}</Box>
-          <Box ml={3}>{currentMapID ? <MapSelector /> : null}</Box>
+          <Box>
+            <span>Change map to:</span>
+          </Box>
+          <Box ml={3}>
+            <MapSelector />
+          </Box>
           <Box ml={3}>
             <Button component={RouterLink} color="inherit" to="/">
               Home

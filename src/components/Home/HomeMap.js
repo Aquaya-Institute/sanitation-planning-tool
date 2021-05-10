@@ -9,10 +9,9 @@ import { MapContext } from "../../state/MapState";
 import { useContext, useMemo } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import Select from "@material-ui/core/Select";
 
 const markers = [];
-const countries = ["Ghana", "Cambodia"];
+const countries = [];
 const geoUrl =
   "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
@@ -27,6 +26,7 @@ const MapChart = () => {
       obj["name"] = `${value.name}`;
       obj["coordinates"] = [`${value.long}`, `${value.lat}`];
       markers.push(obj);
+      countries.push(value.name);
     }
   }, [maps]);
 

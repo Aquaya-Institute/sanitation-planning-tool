@@ -8,6 +8,7 @@ import Box from "@material-ui/core/Box";
 import { UploadButton } from "./UploadButton";
 import { MapResolutions } from "./MapResolutions";
 import theme from "../../theme/theme";
+import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 const width = 300;
@@ -118,7 +119,7 @@ export default function FullWidthTabs() {
             {...a11yProps(0)}
           />
           <Tab
-            className={classes.tab}
+            className={clsx(classes.tab, "tour-upload")}
             label="Upload Communities"
             {...a11yProps(1)}
             style={{
@@ -132,7 +133,7 @@ export default function FullWidthTabs() {
             }}
           />
           <Tab
-            className={classes.tab}
+            className={clsx(classes.tab, "tour-export")}
             label="Data Export"
             {...a11yProps(2)}
             style={{

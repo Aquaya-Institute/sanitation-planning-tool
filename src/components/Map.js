@@ -176,20 +176,22 @@ export const Map = () => {
       setMapID(currentMapID);
     }
   }, [currentMapID]);
+
   //clean up
   useEffect(() => {
     if (mapID && dispatch) {
       return function cleanup() {
-        dispatch({
-          type: "map.select",
-          mapID: null,
-        });
+        // dispatch({
+        //   type: "map.select",
+        //   mapID: null,
+        // });
         dispatch({
           type: "layer.removeCartoLayers",
         });
       };
     }
   }, [dispatch, mapID]);
+
   // load leaflet
   useEffect(() => {
     console.log("load");
@@ -199,12 +201,13 @@ export const Map = () => {
       leaflet.remove();
     }
 
-    const client = new Carto.Client({
-      apiKey: process.env.REACT_APP_CARTO_DEV_API_KEY,
-      username: process.env.REACT_APP_CARTO_USERNAME,
-    });
     if (maps && mapID) {
-      mapRef.current = L.map("map").setView(
+      const client = new Carto.Client({
+        apiKey: process.env.REACT_APP_CARTO_DEV_API_KEY,
+        username: process.env.REACT_APP_CARTO_USERNAME,
+        serverUrl: process.env.REACT_APP_CARTO_SERVERURL,
+      });
+      mapRef.current = L.map("map", { minZoom: 6, maxZoom: 18 }).setView(
         [maps[mapID].lat, maps[mapID].long],
         maps[mapID].zoom
       );
@@ -213,14 +216,14 @@ export const Map = () => {
         "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg70?access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ"
       ).addTo(mapRef.current);
 
-      setLeaflet((prevmap) => {
-        if (!prevmap) {
-          return mapRef.current;
-        } else {
-          return prevmap;
-        }
-      });
-
+      // setLeaflet((prevmap) => {
+      //   if (!prevmap) {
+      //     return mapRef.current;
+      //   } else {
+      //     return prevmap;
+      //   }
+      // });
+      setLeaflet(mapRef.current);
       setCartoClient(client);
       client.getLeafletLayer().addTo(mapRef.current);
       dispatch({
@@ -271,7 +274,9 @@ export const Map = () => {
         const _source = new Carto.source.SQL(
           `SELECT * FROM ${layer.carto_tableName}`
         );
-
+        // if (index === 3) {
+        //   setDistrictsSource(_source);
+        // }
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
@@ -545,12 +550,41 @@ export const Map = () => {
       //   layerRef.current.clearLayers();
       // }
       userData.forEach((marker, key) => {
+        let popupContent = document.createElement("UL");
+        let popupContentList = document.createElement("LI");
+        Object.entries(marker).map(
+          (key) =>
+            popupContentList.appendChild(
+              document.createTextNode(key[0] + ": " + key[1])
+            ),
+          popupContent.appendChild(popupContentList)
+        );
         L.circleMarker([marker.Latitude, marker.Longitude], markerOptions)
           .addTo(layerRef.current)
-          .bindPopup("Community Name: " + marker.Community);
+          .bindPopup(popupContent);
       });
     }
   }, [myRadius, myWeight, userData]);
+
+  // Community counter
+  // useEffect(() => {
+  //   if (cartoClient && districtsSource && nativeMap) {
+  //     const commCalculator = new Carto.dataview.FormulaData(
+  //       districtsSource,
+  //       "community",
+  //       {
+  //         operation: Carto.operation.COUNT,
+  //       }
+  //     );
+  //     const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
+  //     cartoClient.addDataview(commCalculator);
+  //     commCalculator.addFilter(bboxFilter);
+
+  //     commCalculator.on("dataChanged", (data) => {
+  //       refreshCommCalculator(data.result);
+  //     });
+  //   }
+  // }, [cartoClient, commCalcSource, nativeMap]);
 
   // Community counter
   // useEffect(() => {
@@ -731,11 +765,25 @@ export const Map = () => {
 
     dispatch({
       type: "legend.select",
+      mapID: mapID,
       layerID: activeLayer,
       legendIndex: event.target.value,
       styleNew: styleNew,
     });
   };
+  useEffect(() => {
+    if (mapID && activeLegend && activeLayer) {
+      const styleNew = legendStyles[activeLegend].style;
+
+      dispatch({
+        type: "legend.select",
+        mapID: mapID,
+        layerID: activeLayer,
+        legendIndex: activeLegend,
+        styleNew: styleNew,
+      });
+    }
+  }, [activeLegend]);
 
   return (
     <div
@@ -818,9 +866,9 @@ export const Map = () => {
                       ></div>
 
                       {legend.name === undefined
-                        ? legend.min.toFixed(0).toString() +
+                        ? legend.min.toString() +
                           " - " +
-                          legend.max.toFixed(0).toString() +
+                          legend.max.toString() +
                           " " +
                           maps[mapID].layers[activeLayer].filters[activeLegend]
                             .unit
