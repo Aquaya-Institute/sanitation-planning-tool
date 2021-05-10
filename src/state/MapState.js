@@ -6,6 +6,7 @@ import { ghana } from "./ghana";
 import { liberia } from "./liberia";
 import { niger } from "./niger";
 enableMapSet();
+const legendStylesObj = legendStyles;
 //this is the "global map state". this is where state is maintained and updated
 const initialState = {
   currentMapID: null /* current country map */,
@@ -19,7 +20,6 @@ const initialState = {
   activeLayer: "2",
   activeLegend: "0",
   userData: null,
-  legendStyles: legendStyles,
 };
 
 const reducer = (state, action) => {
@@ -37,23 +37,15 @@ const reducer = (state, action) => {
           }
         }
         var i;
-        for (i = 0; i < draft.legendStyles.length; i++) {
+        for (i = 0; i < legendStylesObj.length; i++) {
           if (
-            draft.legendStyles[i].style ===
+            legendStylesObj[i].style ===
             draft.maps[action.mapID].layers[draft.activeLayer].carto_style
           ) {
             draft.activeLegend = i.toString();
             break;
           }
         }
-        // draft.activeLegend = draft.legendStyles.findIndex(
-        //   (x) =>
-        //     x.style ===
-        //     draft.maps[action.mapID].layers[draft.activeLayer].carto_style
-        // );
-        // if (draft.activeLegend < 0) {
-        //   draft.activeLegend = 0;
-        // }
       });
 
     case "map.addCartoClient":
@@ -73,19 +65,19 @@ const reducer = (state, action) => {
         draft.activeLayer = action.layerID;
         const cartoLayer = draft.maps[mid].layers[action.layerID].carto_layer;
         //update the state
-        for (var i in draft.maps[mid].layers) {
-          if (i === action.layerID || i === "0") {
+        for (var index in draft.maps[mid].layers) {
+          if (index === action.layerID || index === "0") {
             draft.maps[mid].layers[action.layerID].visible = true;
             cartoLayer.show();
           } else {
-            draft.maps[mid].layers[i].visible = false;
-            draft.maps[mid].layers[i].carto_layer.hide();
+            draft.maps[mid].layers[index].visible = false;
+            draft.maps[mid].layers[index].carto_layer.hide();
           }
         }
-        var i = draft.legendStyles.length - 1;
-        for (; i >= 0; i--) {
+        var i;
+        for (i = 0; i < legendStylesObj.length; i++) {
           if (
-            draft.legendStyles[i].style ===
+            legendStylesObj[i].style ===
             draft.maps[action.mapID].layers[draft.activeLayer].carto_style
           ) {
             draft.activeLegend = i.toString();

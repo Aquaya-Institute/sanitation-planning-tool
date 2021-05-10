@@ -149,7 +149,7 @@ export const Map = () => {
   const [regionIndex, setRegionIndex] = useState();
   const [classIndex, setClassIndex] = useState();
   const [popIndex, setPopIndex] = useState();
-
+  const legendStylesObj = legendStyles;
   // const [legendIndex, setLegendIndex] = useState(0);
 
   //click outside
@@ -384,29 +384,13 @@ export const Map = () => {
 
         _layer.on("metadataChanged", function (event) {
           console.log(event);
-          if (layer.name === maps[mapID].layers[activeLayer].name) {
+          if (
+            layer.name === maps[mapID].layers[activeLayer].name &&
+            layer.carto_style === legendStylesObj[activeLegend].style
+          ) {
             var obj = {};
             // get buckets
-            if (event.styles.length === 0) {
-              obj["variable"] = layer.name;
-              if (layer.name === "Districts") {
-                obj["legend"] = [
-                  {
-                    name: "District boundaries",
-                    value: "transparent",
-                    border: "2px solid #000",
-                  },
-                ];
-              } else {
-                obj["legend"] = [
-                  {
-                    name: "Country boundaries",
-                    value: "transparent",
-                    border: "2px solid #000",
-                  },
-                ];
-              }
-            } else if (event.styles[0]._buckets === undefined) {
+            if (event.styles[0]._buckets === undefined) {
               obj["variable"] = layer.name;
               obj["legend"] = event.styles[0]._categories;
               for (var i in obj.legend) {
@@ -771,19 +755,19 @@ export const Map = () => {
       styleNew: styleNew,
     });
   };
-  useEffect(() => {
-    if (mapID && activeLegend && activeLayer) {
-      const styleNew = legendStyles[activeLegend].style;
+  // useEffect(() => {
+  //   if (mapID && activeLegend && activeLayer) {
+  //     const styleNew = legendStyles[activeLegend].style;
 
-      dispatch({
-        type: "legend.select",
-        mapID: mapID,
-        layerID: activeLayer,
-        legendIndex: activeLegend,
-        styleNew: styleNew,
-      });
-    }
-  }, [activeLegend]);
+  //     dispatch({
+  //       type: "legend.select",
+  //       mapID: mapID,
+  //       layerID: activeLayer,
+  //       legendIndex: activeLegend,
+  //       styleNew: styleNew,
+  //     });
+  //   }
+  // }, [activeLegend]);
 
   return (
     <div
