@@ -40,7 +40,7 @@ function ProductHero(props) {
       <img
         style={{ display: "none" }}
         src={backgroundImage}
-        alt="increase priority"
+        alt="Latrine superstructures in Ghana"
       />
       <Typography color="inherit" align="center" variant="h2" marked="center">
         The Sanitation Planning Tool <br />

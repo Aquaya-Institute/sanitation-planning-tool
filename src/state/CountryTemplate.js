@@ -29,14 +29,7 @@ export const country = {
       name: "1x1km area",
       carto_tableName: "cc_class",
       carto_layer: null /* we will insert carto's layer object here */,
-      carto_style: `#layer {
-          polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);
-        }
-        #layer::outline {
-          line-width: 0;
-          line-color: #ffffff;
-          line-opacity: 0;
-        }`,
+      carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: false,
       accessCounter: new Set(null),
       washCounter: new Set(null),
@@ -78,14 +71,7 @@ export const country = {
       name: "5x5km area",
       carto_tableName: "cc_multivariable_pixel",
       carto_layer: null,
-      carto_style: `#layer {
-          polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);
-        }
-        #layer::outline {
-          line-width: 0;
-          line-color: #ffffff;
-          line-opacity: 0;
-        }`,
+      carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: true,
       accessCounter: new Set(null),
       washCounter: new Set(null),
@@ -287,20 +273,59 @@ export const country = {
           value: [null, null],
           subcategory: "socioeconomic",
         },
+        {
+          name: "Rural Remote",
+          unit: "%",
+          type: "none",
+          column_name: "rr",
+          subcategory: "accessibility",
+        },
+        {
+          name: "Rural On-road",
+          unit: "%",
+          type: "none",
+          column_name: "rrd",
+          subcategory: "accessibility",
+        },
+        {
+          name: "Rural Mixed",
+          unit: "%",
+          type: "none",
+          column_name: "rm",
+          subcategory: "accessibility",
+        },
+        {
+          name: "Urban",
+          unit: "%",
+          type: "none",
+          column_name: "u",
+          subcategory: "accessibility",
+        },
+        {
+          name: "",
+          type: "none",
+          column_name: "name_1",
+          subcategory: "id",
+        },
+        {
+          name: "",
+          type: "none",
+          column_name: "name_2",
+          subcategory: "id",
+        },
+        {
+          name: "",
+          type: "none",
+          column_name: "name_3",
+          subcategory: "id",
+        },
       ],
     },
     {
       name: "",
       carto_tableName: "cc_multivariable_dist",
       carto_layer: null,
-      carto_style: `#layer {
-          polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);
-        }
-        #layer::outline {
-          line-width: 0.5;
-          line-color: #000000;
-          line-opacity: 1;
-        }`,
+      carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: false,
       accessCounter: new Set(null),
       washCounter: new Set(null),
@@ -457,15 +482,49 @@ export const country = {
           subcategory: "socioeconomic",
         },
         {
+          name: "Rural Remote",
+          unit: "%",
+          type: "none",
+          column_name: "rr",
+          subcategory: "accessibility",
+        },
+        {
+          name: "Rural On-road",
+          unit: "%",
+          type: "none",
+          column_name: "rrd",
+          subcategory: "accessibility",
+        },
+        {
+          name: "Rural Mixed",
+          unit: "%",
+          type: "none",
+          column_name: "rm",
+          subcategory: "accessibility",
+        },
+        {
+          name: "Urban",
+          unit: "%",
+          type: "none",
+          column_name: "u",
+          subcategory: "accessibility",
+        },
+        {
           name: "",
           type: "none",
-          column_name: "",
+          column_name: "name_1",
           subcategory: "id",
         },
         {
           name: "",
           type: "none",
-          column_name: "",
+          column_name: "name_2",
+          subcategory: "id",
+        },
+        {
+          name: "",
+          type: "none",
+          column_name: "name_3",
           subcategory: "id",
         },
       ],

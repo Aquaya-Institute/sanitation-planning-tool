@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { UploadButton } from "./UploadButton";
 import { MapResolutions } from "./MapResolutions";
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
   },
   indicator: {
-    backgroundColor: "white",
+    backgroundColor: "transparent",
   },
 }));
 
@@ -52,11 +51,7 @@ function TabPanel(props) {
       className={classes.root}
       {...other}
     >
-      {value === index && (
-        <Box p={1}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box p={1}>{children}</Box>}
     </div>
   );
 }

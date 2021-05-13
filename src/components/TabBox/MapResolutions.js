@@ -15,9 +15,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const MapResolutions = () => {
-  const [{ maps, currentMapID, activeLayer }, dispatch] = useContext(
-    MapContext
-  );
+  const [{ currentMapID, activeLayer }, dispatch] = useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
   // const [activeLayer, setActiveLayer] = useState("2");
 
@@ -42,11 +40,6 @@ export const MapResolutions = () => {
   return (
     <FormControl component="fieldset" key="fieldset">
       <FormLabel component="legend" key="legend">
-        {/* <Box mt={1} align="center" fontWeight="fontWeightBold" key="rightBox">
-          <Typography key="rightBoxLabel" color="secondary">
-            MAP RESOLUTIONS
-          </Typography>
-        </Box> */}
         <Box
           p={1}
           fontStyle="italic"
@@ -104,6 +97,5 @@ export const MapResolutions = () => {
         </Box>
       )}
     </FormControl>
-    // </Paper>
   );
 };

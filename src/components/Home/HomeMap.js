@@ -7,7 +7,7 @@ import {
 } from "react-simple-maps";
 import { MapContext } from "../../state/MapState";
 import { useContext, useMemo } from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+// import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 const markers = [];
@@ -85,8 +85,8 @@ const MapChart = () => {
             })
         }
       </Geographies>
-      {markers.map(({ name, coordinates, markerOffset }) => (
-        <Marker key={name + "marker"} coordinates={coordinates}>
+      {markers.map(({ name, coordinates, markerOffset }, i) => (
+        <Marker key={name + "marker" + i} coordinates={coordinates}>
           <g
             fill="none"
             stroke="#f28399"

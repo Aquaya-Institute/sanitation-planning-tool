@@ -2,7 +2,6 @@ import * as React from "react";
 import { MapContext } from "../../state/MapState";
 import Slider from "@material-ui/core/Slider";
 import { Grid, Typography } from "@material-ui/core";
-import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";

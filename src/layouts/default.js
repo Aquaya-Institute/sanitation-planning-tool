@@ -7,7 +7,6 @@ import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import { Link as RouterLink } from "react-router-dom";
 import { CssBaseline, Container, Box } from "@material-ui/core";
-import { MapContext } from "../state/MapState";
 import { MapSelector } from "../components/MapSelector";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DefaultLayout(props) {
   const classes = useStyles();
-  const [{ currentMapID, mapID, maps }] = React.useContext(MapContext);
 
   return (
     <div
@@ -48,9 +46,7 @@ export default function DefaultLayout(props) {
             {/* Place the logo here instead and link to home */}
             {/* <Link component={RouterLink} color="inherit" to="/" style={{textDecoration: 'none'}}> */}
             SanPlan
-            {/* </Link> */}
           </Typography>
-          {/* <MapSelector /> */}
           <Box>
             <span>Change map to:</span>
           </Box>

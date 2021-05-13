@@ -5,6 +5,7 @@ import { legendStyles } from "../components/subcomponents/LegendStyles";
 import { ghana } from "./ghana";
 import { liberia } from "./liberia";
 import { niger } from "./niger";
+import { rwanda } from "./rwanda";
 enableMapSet();
 const legendStylesObj = legendStyles;
 //this is the "global map state". this is where state is maintained and updated
@@ -16,6 +17,7 @@ const initialState = {
     ghana,
     liberia,
     niger,
+    rwanda,
   },
   activeLayer: "2",
   activeLegend: "0",
@@ -29,21 +31,23 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         console.log("set current map to", action.mapID);
         draft.currentMapID = action.mapID;
-        var index = draft.maps[action.mapID].layers.length - 1;
-        for (; index >= 0; index--) {
-          if (draft.maps[action.mapID].layers[index].visible === true) {
-            draft.activeLayer = index.toString();
-            break;
+        if (action.mapID !== null) {
+          var index = draft.maps[action.mapID].layers.length - 1;
+          for (; index >= 0; index--) {
+            if (draft.maps[action.mapID].layers[index].visible === true) {
+              draft.activeLayer = index.toString();
+              break;
+            }
           }
-        }
-        var i;
-        for (i = 0; i < legendStylesObj.length; i++) {
-          if (
-            legendStylesObj[i].style ===
-            draft.maps[action.mapID].layers[draft.activeLayer].carto_style
-          ) {
-            draft.activeLegend = i.toString();
-            break;
+          var i;
+          for (i = 0; i < legendStylesObj.length; i++) {
+            if (
+              legendStylesObj[i].style ===
+              draft.maps[action.mapID].layers[draft.activeLayer].carto_style
+            ) {
+              draft.activeLegend = i.toString();
+              break;
+            }
           }
         }
       });

@@ -1,11 +1,9 @@
-export const niger = {
-  name: "Niger",
-  mapID: "niger",
-  lat: 17.6078,
-  long: 8.0817,
-  zoom: 6,
-  currentLayer: "2",
-  currentLegend: "0",
+export const rwanda = {
+  name: "Rwanda",
+  mapID: "rwanda",
+  lat: -1.878,
+  long: 30,
+  zoom: 8,
   /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
@@ -13,7 +11,7 @@ export const niger = {
   layers: [
     {
       name: "Country Border",
-      carto_tableName: "ner_adm0",
+      carto_tableName: "rwa_adm0",
       carto_layer: null /* we will insert carto's layer object here */,
       carto_style: `#layer {
             polygon-fill: #826dba;
@@ -29,7 +27,7 @@ export const niger = {
     },
     {
       name: "1x1km area",
-      carto_tableName: "ner_class",
+      carto_tableName: "rwa_class",
       carto_layer: null /* we will insert carto's layer object here */,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: false,
@@ -71,7 +69,7 @@ export const niger = {
     },
     {
       name: "5x5km area",
-      carto_tableName: "ner_multivariable_pixel",
+      carto_tableName: "rwa_multivariable_pixel",
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: true,
@@ -118,8 +116,8 @@ export const niger = {
           max: 70, //we want 7 breaks not counting start value of 0.
           value: [0, 70], //slider range will be from 0-70, which we will scale to
           scaledMin: 0,
-          scaledMax: 297361,
-          scaledValue: [0, 297361], //the actual min/max of column
+          scaledMax: 221265,
+          scaledValue: [0, 221265], //the actual min/max of column
           subcategory: "socioeconomic",
           // define 7+1 non linear marks here, note that value goes from 0-70 only
           marks: [
@@ -160,8 +158,8 @@ export const niger = {
             },
             {
               value: 70,
-              scaledValue: 300000,
-              label: "300K",
+              scaledValue: 225000,
+              label: "225K",
             },
           ],
         },
@@ -171,8 +169,8 @@ export const niger = {
           type: "range",
           column_name: "od",
           min: 0,
-          max: 99,
-          value: [0, 99],
+          max: 40,
+          value: [0, 40],
           subcategory: "wash",
         },
         {
@@ -180,9 +178,9 @@ export const niger = {
           unit: "%",
           type: "range",
           column_name: "s_unimp",
-          min: 0,
-          max: 82,
-          value: [0, 82],
+          min: 2,
+          max: 86,
+          value: [2, 86],
           subcategory: "wash",
         },
         {
@@ -191,8 +189,8 @@ export const niger = {
           type: "range",
           column_name: "w_unimp",
           min: 0,
-          max: 98,
-          value: [0, 98],
+          max: 80,
+          value: [0, 80],
           subcategory: "wash",
         },
         {
@@ -201,8 +199,8 @@ export const niger = {
           type: "range",
           column_name: "timecities",
           min: 0,
-          max: 5067,
-          value: [0, 5067],
+          max: 395,
+          value: [0, 395],
           subcategory: "accessibility",
         },
         {
@@ -210,9 +208,9 @@ export const niger = {
           unit: "km.",
           type: "range",
           column_name: "dr",
-          min: 0,
-          max: 0,
-          value: [0, 0],
+          min: 0.1,
+          max: 18.3,
+          value: [0.1, 18.3],
           subcategory: "accessibility",
         },
         {
@@ -221,8 +219,8 @@ export const niger = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 0,
-          value: [0, 0],
+          max: 32.8,
+          value: [0, 32.8],
           subcategory: "accessibility",
         },
         {
@@ -230,9 +228,9 @@ export const niger = {
           unit: "%",
           type: "range",
           column_name: "dia",
-          min: 2.8,
-          max: 6.4,
-          value: [2.8, 6.4],
+          min: 2.3,
+          max: 4.8,
+          value: [2.3, 4.8],
           subcategory: "health",
         },
         {
@@ -241,8 +239,8 @@ export const niger = {
           type: "range",
           column_name: "cholera",
           min: 0,
-          max: 1529.7,
-          value: [0, 1529.7],
+          max: 46.5,
+          value: [0, 46.5],
           subcategory: "health",
         },
         {
@@ -251,8 +249,8 @@ export const niger = {
           type: "range",
           column_name: "u5m",
           min: 4.1,
-          max: 18.5,
-          value: [4.1, 18.5],
+          max: 10.7,
+          value: [4.1, 10.7],
           subcategory: "health",
         },
         {
@@ -260,9 +258,9 @@ export const niger = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_w",
-          min: 1,
+          min: 3,
           max: 8,
-          value: [1, 8],
+          value: [3, 8],
           subcategory: "socioeconomic",
         },
         {
@@ -270,9 +268,9 @@ export const niger = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_m",
-          min: 1,
-          max: 8,
-          value: [1, 8],
+          min: 4,
+          max: 9,
+          value: [4, 9],
           subcategory: "socioeconomic",
         },
         {
@@ -304,19 +302,19 @@ export const niger = {
           subcategory: "accessibility",
         },
         {
-          name: "Commune",
+          name: "Sector",
           type: "none",
           column_name: "name_3",
           subcategory: "id",
         },
         {
-          name: "Department",
+          name: "District",
           type: "none",
           column_name: "name_2",
           subcategory: "id",
         },
         {
-          name: "Region",
+          name: "Province",
           type: "none",
           column_name: "name_1",
           subcategory: "id",
@@ -324,8 +322,8 @@ export const niger = {
       ],
     },
     {
-      name: "Commune",
-      carto_tableName: "ner_multivariable_dist",
+      name: "Sectors",
+      carto_tableName: "rwa_multivariable_dist",
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: false,
@@ -368,9 +366,9 @@ export const niger = {
           unit: "pp.",
           type: "range",
           column_name: "pop",
-          min: 4766,
-          max: 1272506,
-          value: [4766, 1272506],
+          min: 34,
+          max: 154780,
+          value: [34, 154780],
           subcategory: "socioeconomic",
         },
         {
@@ -378,9 +376,9 @@ export const niger = {
           unit: "%",
           type: "range",
           column_name: "od",
-          min: 31,
-          max: 78,
-          value: [31, 78],
+          min: 0,
+          max: 18,
+          value: [0, 18],
           subcategory: "wash",
         },
         {
@@ -389,8 +387,8 @@ export const niger = {
           type: "range",
           column_name: "s_unimp",
           min: 5,
-          max: 45,
-          value: [5, 45],
+          max: 60,
+          value: [5, 60],
           subcategory: "wash",
         },
         {
@@ -398,9 +396,9 @@ export const niger = {
           unit: "%",
           type: "range",
           column_name: "w_unimp",
-          min: 8,
-          max: 37,
-          value: [8, 37],
+          min: 1,
+          max: 40,
+          value: [1, 40],
           subcategory: "wash",
         },
         {
@@ -408,9 +406,9 @@ export const niger = {
           unit: "min.",
           type: "range",
           column_name: "timecities",
-          min: 13,
-          max: 2229,
-          value: [13, 2229],
+          min: 0,
+          max: 218,
+          value: [0, 218],
           subcategory: "accessibility",
         },
         {
@@ -419,8 +417,8 @@ export const niger = {
           type: "range",
           column_name: "dr",
           min: 0,
-          max: 0,
-          value: [0, 0],
+          max: 9.2,
+          value: [0, 9.2],
           subcategory: "accessibility",
         },
         {
@@ -429,8 +427,8 @@ export const niger = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 0,
-          value: [0, 0],
+          max: 14.4,
+          value: [0, 14.4],
           subcategory: "accessibility",
         },
         {
@@ -438,9 +436,9 @@ export const niger = {
           unit: "%",
           type: "range",
           column_name: "dia",
-          min: 3.1,
-          max: 5.6,
-          value: [3.1, 5.6],
+          min: 2.4,
+          max: 4.7,
+          value: [2.4, 4.7],
           subcategory: "health",
         },
         {
@@ -449,8 +447,8 @@ export const niger = {
           type: "range",
           column_name: "cholera",
           min: 0,
-          max: 330.8,
-          value: [0, 330.8],
+          max: 46.5,
+          value: [0, 46.5],
           subcategory: "health",
         },
         {
@@ -458,9 +456,9 @@ export const niger = {
           unit: "%",
           type: "range",
           column_name: "u5m",
-          min: 4.6,
-          max: 15.7,
-          value: [4.6, 15.7],
+          min: 4.1,
+          max: 7.2,
+          value: [4.1, 7.2],
           subcategory: "health",
         },
         {
@@ -468,9 +466,9 @@ export const niger = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_w",
-          min: 1,
-          max: 3,
-          value: [1, 3],
+          min: 4,
+          max: 9,
+          value: [4, 9],
           subcategory: "socioeconomic",
         },
         {
@@ -478,9 +476,9 @@ export const niger = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_m",
-          min: 2,
-          max: 4,
-          value: [2, 4],
+          min: 4,
+          max: 9,
+          value: [4, 9],
           subcategory: "socioeconomic",
         },
         {
@@ -512,19 +510,19 @@ export const niger = {
           subcategory: "accessibility",
         },
         {
-          name: "Commune",
+          name: "Sector",
           type: "none",
           column_name: "name_3",
           subcategory: "id",
         },
         {
-          name: "Department",
+          name: "District",
           type: "none",
           column_name: "name_2",
           subcategory: "id",
         },
         {
-          name: "Region",
+          name: "Province",
           type: "none",
           column_name: "name_1",
           subcategory: "id",

@@ -14,7 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 // eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Link } from "react-router-dom";
-import { MapContext } from "../state/MapState";
+// import { MapContext } from "../state/MapState";
 import HomeBanner from "../components/Home/HomeBanner";
 import HomeMap from "../components/Home/HomeMap";
 import HomeRelatedResearch from "../components/Home/HomeRelatedResearch";
@@ -66,7 +66,7 @@ const useCardStyles = makeStyles({
 // }
 
 function Home() {
-  const [{ maps }] = React.useContext(MapContext);
+  // const [{ maps }] = React.useContext(MapContext);
   const classes = useCardStyles();
   return (
     <>
