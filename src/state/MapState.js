@@ -12,6 +12,7 @@ const legendStylesObj = legendStyles;
 const initialState = {
   currentMapID: null /* current country map */,
   carto_client: null,
+  leafletMap: null,
   /* all the maps in the tool organised by country */
   maps: {
     ghana,
@@ -22,6 +23,7 @@ const initialState = {
   activeLayer: "2",
   activeLegend: "0",
   userData: null,
+  download: null,
 };
 
 const reducer = (state, action) => {
@@ -55,6 +57,11 @@ const reducer = (state, action) => {
     case "map.addCartoClient":
       return produce(state, (draft) => {
         draft.carto_client = action.carto_client;
+      });
+
+    case "map.saveMap":
+      return produce(state, (draft) => {
+        draft.leafletMap = action.leafletMap;
       });
 
     //when layer is toggled
@@ -213,6 +220,9 @@ const reducer = (state, action) => {
           default:
             break;
         }
+        draft.download = draft.maps[action.mapID].layers[
+          action.layerIndex
+        ].carto_layer.getSource();
       });
 
     case "reset.filters":
@@ -272,6 +282,8 @@ const reducer = (state, action) => {
         draft.currentMapID = action.mapID;
         draft.maps[action.mapID].layers[action.layerID].carto_layer =
           action.cartoLayer;
+        draft.maps[action.mapID].layers[action.layerID].carto_source =
+          action.cartoSource;
       });
 
     case "layer.removeCartoLayers":

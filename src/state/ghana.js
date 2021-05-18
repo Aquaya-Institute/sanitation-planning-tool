@@ -31,6 +31,7 @@ export const ghana = {
     {
       name: "1x1km area",
       carto_tableName: "gha_class",
+      carto_source: null,
       carto_layer: null /* we will insert carto's layer object here */,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: false,
@@ -73,6 +74,7 @@ export const ghana = {
     {
       name: "5x5km area",
       carto_tableName: "gha_multivariable_pixel",
+      carto_source: null,
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: true,
@@ -321,6 +323,7 @@ export const ghana = {
     {
       name: "Districts",
       carto_tableName: "gha_multivariable_dist",
+      carto_source: null,
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: false,

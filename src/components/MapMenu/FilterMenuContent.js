@@ -91,7 +91,7 @@ const FilterMenuContent = ({ cat, layerID }) => {
     <React.Fragment key="filterListDiv">
       {maps[currentMapID].layers[layerID].filters.map((filter, filterIndex) => (
         <React.Fragment key={"filterListDiv" + filterIndex}>
-          {filter.subcategory === cat && (
+          {filter.subcategory === cat && filter.type !== "none" && (
             <List key="filterList">
               {filter.type === "categorical" ? (
                 <ListItem key={"cat" + filterIndex} className={classes.nested}>
@@ -118,7 +118,7 @@ const FilterMenuContent = ({ cat, layerID }) => {
                       <FormGroup key={"catFilter2" + filterIndex}>
                         {filter.value.map((category, cat_filter_index) => (
                           <FormControlLabel
-                            key={cat_filter_index}
+                            key={cat_filter_index + "formcontrol"}
                             control={
                               <Checkbox
                                 key={cat_filter_index + "box"}

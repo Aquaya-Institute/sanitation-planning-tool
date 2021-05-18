@@ -28,6 +28,7 @@ export const country = {
     {
       name: "1x1km area",
       carto_tableName: "cc_class",
+      carto_source: null,
       carto_layer: null /* we will insert carto's layer object here */,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: false,
@@ -70,6 +71,7 @@ export const country = {
     {
       name: "5x5km area",
       carto_tableName: "cc_multivariable_pixel",
+      carto_source: null,
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: true,
@@ -324,6 +326,7 @@ export const country = {
     {
       name: "",
       carto_tableName: "cc_multivariable_dist",
+      carto_source: null,
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
       visible: false,

@@ -1,4 +1,11 @@
-import { useState, useEffect, useContext, useRef, Fragment } from "react";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useContext,
+  useRef,
+  Fragment,
+} from "react";
 import { MapContext } from "../state/MapState";
 import Carto from "@carto/carto.js";
 import L from "leaflet";
@@ -98,11 +105,7 @@ export const Map = () => {
   const clickRef = useRef(null);
   const mapRef = useRef(null);
   // const [commCalcSource, setCommCalcSource] = useState(null);
-  // const [districtsSource, setDistrictsSource] = useState(null);
-  // const [districtsStyle, setDistrictsStyle] = useState(null);
-  // const [selectedDistricts, setSelectedDistricts] = useState([]);
   // const [widgetLoad, setWidgetLoad] = useState();
-  // const [allDistricts, setAllDistricts] = useState([]);
 
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = {};
@@ -189,6 +192,10 @@ export const Map = () => {
         type: "map.addCartoClient",
         carto_client: client,
       });
+      dispatch({
+        type: "map.saveMap",
+        leafletMap: mapRef.current,
+      });
     }
   }, [mapID]);
 
@@ -233,9 +240,6 @@ export const Map = () => {
         const _source = new Carto.source.SQL(
           `SELECT * FROM ${layer.carto_tableName}`
         );
-        // if (index === 3) {
-        //   setDistrictsSource(_source);
-        // }
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
@@ -379,12 +383,13 @@ export const Map = () => {
           mapID: _mapID,
           layerID: index,
           cartoLayer: _layer,
+          cartoSource: _source,
         });
       });
       setPopoverColumns(objlist);
       console.log(popoverColumns);
     }
-  }, [currentMapState, activeLegend, activeLayer]);
+  }, [mapID, activeLegend, activeLayer, cartoClient]);
 
   // popup data
   useEffect(() => {
@@ -561,29 +566,6 @@ export const Map = () => {
   //   commCalculatorDom.innerText = Math.floor(avgPopulation);
   // }
 
-  // District dropdown
-  // useEffect(() => {
-  //   if (cartoClient && districtsSource) {
-  //     const countriesDataview = new Carto.dataview.Category(
-  //       districtsSource,
-  //       "district",
-  //       {
-  //         limit: 216,
-  //       }
-  //     );
-  //     cartoClient.addDataview(countriesDataview);
-
-  //     countriesDataview.on("dataChanged", (data) => {
-  //       console.log("dataChanged");
-  //       const countryNames = data.categories
-  //         .map((category) => category.name)
-  //         .sort();
-  //       refreshCountriesWidget(countryNames);
-  //       setAllDistricts(countryNames);
-  //     });
-  //   }
-  // }, [cartoClient, districtsSource]);
-
   // // useLayoutEffect(()=> {
   // //   if(widgetLoad===true) {
   // //     refreshCountriesWidget(allDistricts);
@@ -595,102 +577,6 @@ export const Map = () => {
   //   // if (widgetDom != null) {
   //   const countriesDom = widgetDom.querySelector(".js-countries");
 
-  //   countriesDom.onchange = (event) => {
-  //     // setSelectedDistricts((st) => [...st, event.target.value]);
-  //     setSelectedDistricts(event.target.value);
-  //   };
-
-  //   // Fill in the list of countries
-  //   districtNames.forEach((district) => {
-  //     const option = document.createElement("option");
-  //     option.innerHTML = district;
-  //     option.value = district;
-  //     countriesDom.appendChild(option);
-  //   });
-  //   // }
-  // }
-  // useEffect(() => {
-  //   if (selectedDistricts.length > 0) {
-  //     highlightCountry(selectedDistricts);
-  //     // filterPopulatedPlacesByCountry(selectedDistricts);
-  //     // document.getElementById('js-countries').addEventListener("change", function () {
-  //     // let input = selectedDistricts;
-  //     return fetch(
-  //       `https://karastuart.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM gha_multivariable_dist where district Ilike '${selectedDistricts}'`
-  //     )
-  //       .then((resp) => resp.json())
-  //       .then((response) => {
-  //         let geojsonLayer = L.geoJSON(response);
-  //         nativeMap.fitBounds(geojsonLayer.getBounds());
-  //       });
-  //     // });
-  //   } else if (selectedDistricts === "") {
-  //     highlightCountry(selectedDistricts);
-  //     // filterPopulatedPlacesByCountry(selectedDistricts);
-  //     nativeMap.setView(maps[mapID].view, maps[mapID].zoom);
-  //   }
-  // }, [selectedDistricts]);
-
-  // function highlightCountry(district) {
-  //   // district.forEach((district) => {
-  //   let cartoCSS = `
-  //     #layer {
-  //       polygon-fill: 'transparent';
-  //       polygon-opacity: 1;
-  //       ::outline {
-  //         line-width: 1;
-  //         line-color: #000000;
-  //         line-opacity: 0.5;
-  //       }
-  //     } `;
-  //   if (district) {
-  //     // cartoCSS = `
-  //     //   ${cartoCSS}
-  //     //   #layer[!district.includes('${district}')] {
-  //     //     polygon-fill: #808080;
-  //     //     polygon-opacity: .75;
-  //     //   }
-  //     // `;
-  //     cartoCSS = `
-  //         ${cartoCSS}
-  //         #layer[district!='${district}'] {
-  //           polygon-fill: #808080;
-  //           polygon-opacity: .75;
-  //         }
-  //       `;
-  //   }
-  //   districtsStyle.setContent(cartoCSS);
-  //   // });
-  // }
-
-  // function filterPopulatedPlacesByCountry(district) {
-  //   // district.forEach((district) => {
-  //     let query = `
-  //     SELECT *
-  //       FROM gh_gccomms
-  //       WHERE district IN (SELECT district FROM gha_multivariable_dist)
-  //     `;
-  //     if (district) {
-  //     query = `
-  //       SELECT *
-  //         FROM gh_gccomms
-  //         WHERE district='${district}'
-  //     `;
-  //   // let query = `
-  //   //     SELECT *
-  //   //       FROM gha_comms_points
-  //   //       WHERE district IN (SELECT district FROM gha_multivariable_dist)
-  //   //   `;
-  //   // if (district) {
-  //   //   query = `
-  //   //       SELECT *
-  //   //         FROM gha_comms_points
-  //   //         WHERE district='${district}'
-  //   //     `;
-  //   }
-  //   commCalcSource.setQuery(query);
-  //   // });
-  // }
   const handleChange = (event) => {
     const styleNew = legendStyles[event.target.value].style;
 
@@ -702,19 +588,7 @@ export const Map = () => {
       styleNew: styleNew,
     });
   };
-  // useEffect(() => {
-  //   if (mapID && activeLegend && activeLayer) {
-  //     const styleNew = legendStyles[activeLegend].style;
 
-  //     dispatch({
-  //       type: "legend.select",
-  //       mapID: mapID,
-  //       layerID: activeLayer,
-  //       legendIndex: activeLegend,
-  //       styleNew: styleNew,
-  //     });
-  //   }
-  // }, [activeLegend]);
   const [scroll] = useState("paper");
 
   return (
@@ -722,7 +596,12 @@ export const Map = () => {
       style={{ height: "100%", position: "relative" }}
       className={classes.content}
     >
-      <div id="map" style={{ height: "100%" }} className="tour-map"></div>
+      <div
+        id="map"
+        style={{ height: "100%" }}
+        className="tour-map"
+        alt={"map of " + mapID}
+      ></div>
       {/* Legend */}
       {mapID && activeLayer && (
         <Paper
@@ -764,7 +643,7 @@ export const Map = () => {
                 style={{ backgroundColor: theme.palette.background.selected }}
               >
                 {maps[mapID].layers[activeLayer].filters.map((filter, i) => {
-                  if (filter.subcategory !== "id") {
+                  if (filter.type !== "none") {
                     return (
                       <option key={"filter" + i} value={i}>
                         {filter.name}
@@ -1040,7 +919,7 @@ export const Map = () => {
                     <CSVLink
                       className={classes.download}
                       data={downloadData}
-                      filename={"SPT_" + popupData.data.name_3.Value + ".csv"}
+                      filename={"SPT_" + popupData.data.name_2.Value + ".csv"}
                     >
                       DOWNLOAD TABLE
                     </CSVLink>

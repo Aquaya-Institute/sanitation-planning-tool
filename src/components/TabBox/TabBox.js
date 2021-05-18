@@ -6,11 +6,12 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { UploadButton } from "./UploadButton";
 import { MapResolutions } from "./MapResolutions";
+import { Export } from "./Export";
 import theme from "../../theme/theme";
 import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-const width = 300;
+const width = 275;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,16 +74,22 @@ export default function FullWidthTabs() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const [hidden, setHidden] = React.useState(false);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    if (newValue === value) {
+      setHidden(!hidden);
+    } else {
+      setValue(newValue);
+      setHidden(false);
+    }
   };
 
   return (
     <div
       className={classes.root}
       style={{
-        height: "auto",
+        minheight: "auto",
         position: "absolute",
         right: "0px",
         zIndex: "1000",
@@ -104,10 +111,12 @@ export default function FullWidthTabs() {
             label="Map Resolutions"
             style={{
               borderLeft: "1.5px solid #CFCDC9",
-              borderRight: value === 0 ? "1px solid #CFCDC9" : null,
-              borderBottom: value !== 0 ? "1px solid #CFCDC9" : null,
+              borderRight:
+                value === 0 && hidden === false ? "1px solid #CFCDC9" : null,
+              borderBottom:
+                value !== 0 && hidden === false ? "1px solid #CFCDC9" : null,
               backgroundColor:
-                value === 0
+                value === 0 && hidden === false
                   ? theme.palette.background.selected
                   : theme.palette.background.default,
             }}
@@ -118,11 +127,14 @@ export default function FullWidthTabs() {
             label="Upload Communities"
             {...a11yProps(1)}
             style={{
-              borderLeft: value === 1 ? "1px solid #CFCDC9" : null,
-              borderRight: value === 1 ? "1px solid #CFCDC9" : null,
-              borderBottom: value !== 1 ? "1px solid #CFCDC9" : null,
+              borderLeft:
+                value === 1 && hidden === false ? "1px solid #CFCDC9" : null,
+              borderRight:
+                value === 1 && hidden === false ? "1px solid #CFCDC9" : null,
+              borderBottom:
+                value !== 1 && hidden === false ? "1px solid #CFCDC9" : null,
               backgroundColor:
-                value === 1
+                value === 1 && hidden === false
                   ? theme.palette.background.selected
                   : theme.palette.background.default,
             }}
@@ -132,26 +144,32 @@ export default function FullWidthTabs() {
             label="Data Export"
             {...a11yProps(2)}
             style={{
-              borderLeft: value === 2 ? "1px solid #CFCDC9" : null,
+              borderLeft:
+                value === 2 && hidden === false ? "1px solid #CFCDC9" : null,
               // borderRight: value === 0 ? "1px solid #CFCDC9" : null,
-              borderBottom: value !== 2 ? "1px solid #CFCDC9" : null,
+              borderBottom:
+                value !== 2 && hidden === false ? "1px solid #CFCDC9" : null,
               backgroundColor:
-                value === 2
+                value === 2 && hidden === false
                   ? theme.palette.background.selected
                   : theme.palette.background.default,
             }}
           />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0} dir={theme.direction}>
-        <MapResolutions />
-      </TabPanel>
-      <TabPanel value={value} index={1} dir={theme.direction}>
-        <UploadButton />
-      </TabPanel>
-      <TabPanel value={value} index={2} dir={theme.direction}>
-        Coming soon!
-      </TabPanel>
+      {hidden === false && (
+        <>
+          <TabPanel value={value} index={0} dir={theme.direction}>
+            <MapResolutions />
+          </TabPanel>
+          <TabPanel value={value} index={1} dir={theme.direction}>
+            <UploadButton />
+          </TabPanel>
+          <TabPanel value={value} index={2} dir={theme.direction}>
+            <Export />
+          </TabPanel>
+        </>
+      )}
     </div>
   );
 }
