@@ -126,55 +126,11 @@ export const MapResolutions = () => {
     }
   }
   useEffect(() => {
-    // function highlightCountry(district) {
-    //   // district.forEach((district) => {
-    //   let cartoCSS = `
-    //     #layer {
-    //       polygon-fill: 'transparent';
-    //       polygon-opacity: 1;
-    //       ::outline {
-    //         line-width: 1;
-    //         line-color: #000000;
-    //         line-opacity: 0.5;
-    //       }
-    //     } `;
-    //   if (district) {
-    //     // cartoCSS = `
-    //     //   ${cartoCSS}
-    //     //   #layer[!district.includes('${district}')] {
-    //     //     polygon-fill: #808080;
-    //     //     polygon-opacity: .75;
-    //     //   }
-    //     // `;
-    //     cartoCSS = `
-    //         ${cartoCSS}
-    //         #layer[district!='${district}'] {
-    //           polygon-fill: #808080;
-    //           polygon-opacity: .75;
-    //         }
-    //       `;
-    //   }
-    //   const districtsStyle = new Carto.style.CartoCSS(
-    //     maps[mapID].layers["3"].carto_style
-    //   );
-    //   districtsStyle.setContent(cartoCSS);
-    // }
-    // if (maps[mapID].layers["3"].carto_source) {
-
-    // }
-
     if (highlightDist.current) {
       carto_client.removeLayer(highlightDist.current);
     }
 
     if (leafletMap && mapID) {
-      // const _source = new Carto.source.SQL(
-      //   `SELECT * FROM ${maps[mapID].layers["3"].carto_tableName}`
-      // );
-      // const countriesDataview = new Carto.dataview.Category(_source, "name_2", {
-      //   limit: 216,
-      // });
-      // carto_client.addDataview(countriesDataview);
       if (distName.length > 0) {
         var source = new Carto.source.SQL(
           `SELECT * FROM ${
