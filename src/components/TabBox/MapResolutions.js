@@ -47,7 +47,7 @@ function extractValue(arr, prop) {
   return extractedValue;
 }
 
-export const MapResolutions = () => {
+export const MapResolutions = ({ value }) => {
   const [
     { maps, currentMapID, activeLayer, carto_client, leafletMap },
     dispatch,

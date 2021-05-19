@@ -180,9 +180,9 @@ const reducer = (state, action) => {
               action.filter.value[0] !== action.filter.min ||
               action.filter.value[1] !== action.filter.max
             ) {
-              layer.accessCounter.add(action.filter.name);
+              layer.socioCounter.add(action.filter.name);
             } else {
-              layer.accessCounter.delete(action.filter.name);
+              layer.socioCounter.delete(action.filter.name);
             }
             break;
           case "categorical":
