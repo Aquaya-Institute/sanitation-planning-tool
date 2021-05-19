@@ -26,7 +26,7 @@ export const country = {
       filters: [],
     },
     {
-      name: "1x1km area",
+      name: "1x1km areas",
       carto_tableName: "cc_class",
       carto_source: null,
       carto_layer: null /* we will insert carto's layer object here */,
@@ -69,7 +69,7 @@ export const country = {
       ],
     },
     {
-      name: "5x5km area",
+      name: "5x5km areas",
       carto_tableName: "cc_multivariable_pixel",
       carto_source: null,
       carto_layer: null,

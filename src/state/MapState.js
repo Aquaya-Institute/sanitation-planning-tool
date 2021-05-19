@@ -23,7 +23,7 @@ const initialState = {
   activeLayer: "2",
   activeLegend: "0",
   userData: null,
-  download: null,
+  query: null,
 };
 
 const reducer = (state, action) => {
@@ -38,6 +38,7 @@ const reducer = (state, action) => {
           for (; index >= 0; index--) {
             if (draft.maps[action.mapID].layers[index].visible === true) {
               draft.activeLayer = index.toString();
+              draft.query = null;
               break;
             }
           }
@@ -225,6 +226,11 @@ const reducer = (state, action) => {
         ].carto_layer.getSource();
       });
 
+    case "layer.query":
+      return produce(state, (draft) => {
+        draft.query = action.query;
+      });
+
     case "reset.filters":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
@@ -275,6 +281,7 @@ const reducer = (state, action) => {
         layer.washCounter = new Set(null);
         layer.socioCounter = new Set(null);
         layer.healthCounter = new Set(null);
+        // draft.query = layer.carto_source._query;
       });
     //when a new carto layer is added
     case "layer.addCartoLayer":

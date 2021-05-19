@@ -38,7 +38,7 @@ const TOUR_STEPS = [
   {
     target: ".tour-export",
     content:
-      "After identifying districts of interest, you can download data for those remaining, here.",
+      "After identifying areas of interest, you can download data for those remaining, here.",
   },
   {
     target: ".tour-comm",

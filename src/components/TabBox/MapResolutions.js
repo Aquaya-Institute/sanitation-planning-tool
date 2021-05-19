@@ -121,7 +121,7 @@ export const MapResolutions = () => {
     //   `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`
     // );
     // source.setQuery(query);
-    if (maps[mapID].layers[activeLayer].carto_source) {
+    if (maps[mapID].layers[activeLayer].carto_source && activeLayer !== "1") {
       maps[mapID].layers[activeLayer].carto_source.setQuery(query);
     }
   }
@@ -159,11 +159,22 @@ export const MapResolutions = () => {
     //   );
     //   districtsStyle.setContent(cartoCSS);
     // }
+    // if (maps[mapID].layers["3"].carto_source) {
+
+    // }
+
     if (highlightDist.current) {
       carto_client.removeLayer(highlightDist.current);
     }
 
     if (leafletMap && mapID) {
+      // const _source = new Carto.source.SQL(
+      //   `SELECT * FROM ${maps[mapID].layers["3"].carto_tableName}`
+      // );
+      // const countriesDataview = new Carto.dataview.Category(_source, "name_2", {
+      //   limit: 216,
+      // });
+      // carto_client.addDataview(countriesDataview);
       if (distName.length > 0) {
         var source = new Carto.source.SQL(
           `SELECT * FROM ${
@@ -242,7 +253,7 @@ export const MapResolutions = () => {
               <FormControlLabel
                 value="1"
                 control={<Radio />}
-                label="1x1km area (Classification layer only)"
+                label="1x1km areas (Classification layer only)"
                 classes={{
                   label: classes.checkboxLabel,
                 }}
@@ -251,7 +262,7 @@ export const MapResolutions = () => {
               <FormControlLabel
                 value="2"
                 control={<Radio />}
-                label="5x5km area"
+                label="5x5km areas"
                 classes={{
                   label: classes.checkboxLabel,
                 }}

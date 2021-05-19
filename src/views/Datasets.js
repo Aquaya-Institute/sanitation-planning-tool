@@ -205,7 +205,7 @@ function Datasets() {
       subcategory: "accessibility",
     },
     {
-      name: "1x1km area",
+      name: "1x1km areas",
       description:
         "This layer assigns all geographic areas of the country into one of three typologies to give an indication of accessibility and remoteness: rural mixed, rural on-road, and rural remote. These typologies were inspired by the Rethinking Rural Sanitation Guidance. Implementers enacting this guidance will be able to utilize the SanPlan classification layer to determine community classifications at once, without field visits or key informant interviews.",
       remote:

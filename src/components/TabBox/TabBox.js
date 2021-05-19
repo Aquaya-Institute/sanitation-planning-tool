@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, hidden, ...other } = props;
   const classes = useStyles();
 
   return (
@@ -45,9 +45,10 @@ function TabPanel(props) {
         right: "0px",
         backgroundColor: theme.palette.background.selected,
         zIndex: "1000",
-        borderBottom: "1.5px solid #CFCDC9",
+        borderBottom: "1.5px solid #FFFFFF",
         borderRight: "1.5px solid #CFCDC9",
         borderLeft: "1.5px solid #CFCDC9",
+        display: hidden ? "none" : "block",
       }}
       className={classes.root}
       {...other}
@@ -61,6 +62,7 @@ TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
+  hidden: PropTypes.any,
 };
 
 function a11yProps(index) {
@@ -157,19 +159,19 @@ export default function FullWidthTabs() {
           />
         </Tabs>
       </AppBar>
-      {hidden === false && (
-        <>
-          <TabPanel value={value} index={0} dir={theme.direction}>
-            <MapResolutions />
-          </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
-            <UploadButton />
-          </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
-            <Export />
-          </TabPanel>
-        </>
-      )}
+      {/* {hidden === false && ( */}
+      {/* <> */}
+      <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
+        <MapResolutions />
+      </TabPanel>
+      <TabPanel value={value} index={1} dir={theme.direction}>
+        <UploadButton />
+      </TabPanel>
+      <TabPanel value={value} index={2} dir={theme.direction}>
+        <Export />
+      </TabPanel>
+      {/* </> */}
+      {/* // )} */}
     </div>
   );
 }

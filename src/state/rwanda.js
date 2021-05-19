@@ -26,7 +26,7 @@ export const rwanda = {
       filters: [],
     },
     {
-      name: "1x1km area",
+      name: "1x1km areas",
       carto_tableName: "rwa_class",
       carto_source: null,
       carto_layer: null /* we will insert carto's layer object here */,
@@ -69,7 +69,7 @@ export const rwanda = {
       ],
     },
     {
-      name: "5x5km area",
+      name: "5x5km areas",
       carto_tableName: "rwa_multivariable_pixel",
       carto_source: null,
       carto_layer: null,

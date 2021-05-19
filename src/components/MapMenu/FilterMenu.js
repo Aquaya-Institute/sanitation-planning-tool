@@ -94,7 +94,7 @@ const FilterMenu = ({
         {layerID === "1" && cat !== "accessibility" && (
           <Box m={1} fontStyle="italic" key="noFiltersBox">
             <Typography variant={"body2"} key="noFiltersText">
-              To access these indicators, select "5x5km area" resolution or
+              To access these indicators, select "5x5km areas" resolution or
               larger from top right menu.
             </Typography>
           </Box>

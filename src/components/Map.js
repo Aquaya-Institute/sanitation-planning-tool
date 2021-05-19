@@ -134,10 +134,10 @@ export const Map = () => {
   //set mapID
   useEffect(() => {
     console.log("currentMapID", currentMapID);
-    if (currentMapID) {
+    if (currentMapID !== mapID) {
       setMapID(currentMapID);
     }
-  }, [currentMapID]);
+  }, [currentMapID, mapID]);
 
   //clean up
   useEffect(() => {
@@ -216,7 +216,7 @@ export const Map = () => {
         }
       });
     }
-  }, [maps, mapID, cartoClient]);
+  }, [maps, mapID]);
 
   /* 
   When map state is updated run this effect.
@@ -240,6 +240,12 @@ export const Map = () => {
         const _source = new Carto.source.SQL(
           `SELECT * FROM ${layer.carto_tableName}`
         );
+        _source.on("queryChanged", function (e) {
+          dispatch({
+            type: "layer.query",
+            query: e,
+          });
+        });
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
