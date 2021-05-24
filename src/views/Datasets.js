@@ -13,6 +13,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import "../index.css";
 
+var link = document.createElement("meta");
+link.setAttribute("name", "datasets page description");
+link.content =
+  "The datasets overview page lists the name, year, raw resolution, a short description, source organization, associated publication, and link the source for each dataset used within the map tool.";
+document.getElementsByTagName("head")[0].appendChild(link);
+
 const useCardStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
@@ -341,7 +347,7 @@ function Datasets() {
                     </ul>
                     <img
                       src="/class-rules.png"
-                      alt=""
+                      alt="Chart of the decision tree used to delinate areas between the various classifications, modeled after the definitions of the typologies."
                       style={{ height: "230px", width: "auto" }}
                       class="center"
                     ></img>

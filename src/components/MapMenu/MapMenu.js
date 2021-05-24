@@ -168,9 +168,6 @@ export const MapMenu = () => {
                       selectedMenu === 0
                         ? theme.palette.background.selected
                         : theme.palette.background.default,
-                    // "&:hover": {
-                    //   backgroundColor: "#FFFFFF",
-                    // },
                   }}
                 >
                   <div
@@ -186,7 +183,7 @@ export const MapMenu = () => {
                       align="center"
                       key="accessLabel"
                     >
-                      <img src={AccessIcon} alt="Road" />
+                      <img src={AccessIcon} alt="Road icon" />
                       <br />
                       ACCESS-IBILITY
                     </Typography>
@@ -248,7 +245,10 @@ export const MapMenu = () => {
                       align="center"
                       key="washLabel"
                     >
-                      <img src={WashIcon} alt="Road" />
+                      <img
+                        src={WashIcon}
+                        alt="Hand catching a water droplet icon"
+                      />
                       <br />
                       WATER & SANITATION
                     </Typography>
@@ -310,7 +310,10 @@ export const MapMenu = () => {
                       align="center"
                       key="socioLabel"
                     >
-                      <img src={SocioIcon} alt="Road" />
+                      <img
+                        src={SocioIcon}
+                        alt="Bag of money with a bowl and wheat icon"
+                      />
                       <br />
                       SOCIO-ECOMONIC
                     </Typography>
@@ -374,7 +377,7 @@ export const MapMenu = () => {
                       align="center"
                       key="healthLabel"
                     >
-                      <img src={HealthIcon} alt="Road" />
+                      <img src={HealthIcon} alt="Heart with a plus icon" />
                       <br />
                       DISEASE BURDEN
                     </Typography>

@@ -105,7 +105,7 @@ export default function FullWidthTabs() {
             indicator: classes.indicator,
           }}
           textColor="secondary"
-          aria-label="full width tabs example"
+          aria-label="Tab box labelled tabs"
           // tabItemContainerStyle={{ width: "300px" }}
         >
           <Tab

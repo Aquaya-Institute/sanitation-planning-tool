@@ -11,6 +11,12 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
+var link = document.createElement("meta");
+link.setAttribute("name", "about page description");
+link.content =
+  "The about page gives a short description of the tool and its intended use, and the organizations involved in the creation of the tool.";
+document.getElementsByTagName("head")[0].appendChild(link);
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
@@ -98,7 +104,7 @@ function About() {
               <Grid item xs={3}>
                 <img
                   src="/aquaya.png"
-                  alt=""
+                  alt="The Aquaya Institute logo"
                   style={{ width: "110px", height: "60px" }}
                 ></img>
               </Grid>
@@ -119,7 +125,7 @@ function About() {
               <Grid item xs={3}>
                 <img
                   src="/tetratech.png"
-                  alt=""
+                  alt="TetraTech company logo"
                   style={{ width: "200px", height: "60px" }}
                 ></img>
               </Grid>

@@ -39,6 +39,11 @@ export const MapSelector = () => {
     <div>
       <Select
         native
+        inputProps={{
+          name: "country",
+          id: "country-maps-dropdown",
+        }}
+        label="Filled"
         onChange={onSelectChange}
         style={{
           textTransform: "capitalize",
@@ -47,11 +52,15 @@ export const MapSelector = () => {
         }}
         value={mapID}
       >
-        <option aria-label="None" value="Select country">
+        <option aria-label="Default menu option" value="Select country">
           Select country
         </option>
         {Object.entries(maps).map((map, index) => (
-          <option key={index} value={map[0]}>
+          <option
+            aria-label={"Menu option: " + map[0]}
+            key={index}
+            value={map[0]}
+          >
             {map[1].name}
           </option>
         ))}

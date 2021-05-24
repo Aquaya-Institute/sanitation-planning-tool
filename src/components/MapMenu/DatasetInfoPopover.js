@@ -280,8 +280,8 @@ const DatasetInfoPopover = ({ filter, filterIndex }) => {
       />
       <Modal
         ref={clickRefData}
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        aria-labelledby="Popup containing details of the selected dataset"
+        aria-describedby="Popup lists the title, source, resolution, year, associated puplication, and link to the data source."
         className={classes.modal}
         open={popoverOpen}
         onClose={(e) => {

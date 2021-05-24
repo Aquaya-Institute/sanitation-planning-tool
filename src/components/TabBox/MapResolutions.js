@@ -196,8 +196,8 @@ export const MapResolutions = ({ value }) => {
           <Box pl={1}>
             <RadioGroup
               // p={1}
-              aria-label="scale"
-              name="scaleSelector"
+              aria-label="Map resolution options"
+              name="resolutionSelector"
               value={activeLayer}
               onChange={(e) => {
                 setDistName([]);

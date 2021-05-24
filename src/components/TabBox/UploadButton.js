@@ -44,7 +44,7 @@ export const UploadButton = () => {
   }
 
   function updateData(result) {
-    setState(null);
+    // setState(null);
     var data = result.data;
     console.log(data);
     dispatch({

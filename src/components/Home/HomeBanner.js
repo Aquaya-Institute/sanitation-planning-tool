@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
+import { Typography, Link } from "@material-ui/core";
 import HomeLayout from "./HomeLayout";
 import backgroundImage from "../../images/latrinebanner.jpg";
+import usaidLogo from "../../images/usaid-rect.png";
 
 const styles = (theme) => ({
   root: {
@@ -19,9 +20,9 @@ const styles = (theme) => ({
   },
   h5: {
     marginBottom: theme.spacing(4),
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(2),
     [theme.breakpoints.up("sm")]: {
-      marginTop: theme.spacing(10),
+      marginTop: theme.spacing(4),
     },
     fontFamily: "Source Sans Pro",
   },
@@ -40,14 +41,23 @@ function ProductHero(props) {
       <img
         style={{ display: "none" }}
         src={backgroundImage}
-        alt="Latrine superstructures in Ghana"
+        alt="Two complete and one partial mud and clay latrine superstructures with thatch roofs in Ghana"
       />
+      <a href="https://www.usaid.gov/">
+        <img
+          align="left"
+          style={{ height: "85px", width: "215px" }}
+          src={usaidLogo}
+          alt="USAID rectangular logo"
+        />
+      </a>
       <Typography color="inherit" align="center" variant="h2" marked="center">
         The Sanitation Planning Tool <br />
         (SanPlan)
       </Typography>
+
       <Typography color="inherit" variant="h6" className={classes.h5}>
-        Design and execute sanitation programs by exploring highly-localized,
+        Use SanPlan to design and execute sanitation programs by exploring highly-localized,
         contextual, spatial data. SanPlan harmonizes data from multiple sources
         so that you can visualize geographic patterns and local contexts from
         anywhere.

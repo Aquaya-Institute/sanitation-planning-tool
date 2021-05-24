@@ -115,7 +115,12 @@ const FilterMenuContent = ({ cat, layerID }) => {
                       />
                     </Grid>
                     <Grid item xs={12} key={"catFilter" + filterIndex}>
-                      <FormGroup key={"catFilter2" + filterIndex}>
+                      <FormGroup
+                        key={"catFilter2" + filterIndex}
+                        aria-labelledby={
+                          filter.name + " categorical checkbox filter"
+                        }
+                      >
                         {filter.value.map((category, cat_filter_index) => (
                           <FormControlLabel
                             key={cat_filter_index + "formcontrol"}
@@ -190,7 +195,7 @@ const FilterMenuContent = ({ cat, layerID }) => {
                         ]}
                         min={filter.min}
                         max={filter.max}
-                        aria-labelledby="input-slider"
+                        aria-labelledby={filter.name + " range slider"}
                         valueLabelDisplay="auto"
                         marks={createMarks([
                           Number(filter.min),
@@ -243,7 +248,7 @@ const FilterMenuContent = ({ cat, layerID }) => {
                         ]}
                         min={filter.min}
                         max={filter.max}
-                        aria-labelledby="non-linear-input-slider"
+                        aria-labelledby={filter.name + " non-linear slider"}
                         valueLabelDisplay="auto"
                         marks={filter.marks}
                         callback={(e, newval, scaledVal) => {

@@ -64,7 +64,7 @@ function ProductHeroLayout(props) {
           src={arrowIcon}
           height="50"
           width="70"
-          alt="arrow down"
+          alt="Arrow down icon"
         />
       </Container>
     </section>

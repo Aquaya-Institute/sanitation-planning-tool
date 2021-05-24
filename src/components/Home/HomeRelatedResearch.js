@@ -60,11 +60,6 @@ function ProductHowItWorks(props) {
   return (
     <section className={classes.root}>
       <Container className={classes.container}>
-        <img
-          src="/static/themes/onepirate/productCurvyLines.png"
-          className={classes.curvyLines}
-          alt="curvy lines"
-        />
         <Typography
           variant="h3"
           marked="center"
@@ -82,19 +77,14 @@ function ProductHowItWorks(props) {
           provide governments, donors, and implementing organizations with
           insights to i) target CLTS activities to areas with the highest
           likelihood of success, and ii) adapt implementation strategies to
-          maximize the chances for their success and sustainability. We divided
-          our research into two questions: (1) what is the relative importance
-          of contextual characteristics compared to program implementation for
-          CLTS success, and (2) what are the most successful implementation
-          strategies to achieve and sustain sanitation gains and promote the
-          construction of durable latrines?
+          maximize the chances for their success and sustainability.
         </Typography>
         <div>
           <Grid container spacing={5}>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <div className={classes.number}>
-                  <strong>RESEARCH QUESTION 1</strong>
+                <div className={classes.number} align="center">
+                  <strong>WHERE DOES CLTS WORK BEST?</strong>
                 </div>
                 <Link
                   href="https://pubs.acs.org/doi/full/10.1021/acs.est.0c05733"
@@ -145,8 +135,8 @@ function ProductHowItWorks(props) {
             </Grid>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <div className={classes.number}>
-                  <strong>RESEARCH QUESTION 2</strong>
+                <div className={classes.number} align="center">
+                  <strong>HOW DO COMMUNITIES SUSTAIN LATRINE COVERAGE AND USE?</strong>
                 </div>
                 <Link
                   href="#"

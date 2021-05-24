@@ -173,18 +173,22 @@ export const Map = () => {
         [maps[mapID].lat, maps[mapID].long],
         maps[mapID].zoom
       );
+      mapRef.current.createPane("labels");
+      mapRef.current.getPane("labels").style.zIndex = 650;
+      mapRef.current.getPane("labels").style.pointerEvents = "none";
 
       L.tileLayer(
         "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg70?access_token=pk.eyJ1Ijoia2FyYXN0dWFydCIsImEiOiJja2N6aGYyZWwwMTV4MnJwMGFoM3lmN2lzIn0.xr5B6ZPw0FV0iPBqokdTFQ"
       ).addTo(mapRef.current);
 
-      // setLeaflet((prevmap) => {
-      //   if (!prevmap) {
-      //     return mapRef.current;
-      //   } else {
-      //     return prevmap;
-      //   }
-      // });
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+        {
+          attribution: "©OpenStreetMap, ©CartoDB",
+          pane: "labels",
+        }
+      ).addTo(mapRef.current);
+
       setLeaflet(mapRef.current);
       setCartoClient(client);
       client.getLeafletLayer().addTo(mapRef.current);
@@ -492,15 +496,19 @@ export const Map = () => {
       //   layerRef.current.clearLayers();
       // }
       userData.forEach((marker, key) => {
-        let popupContent = document.createElement("UL");
-        let popupContentList = document.createElement("LI");
-        Object.entries(marker).map(
-          (key) =>
-            popupContentList.appendChild(
-              document.createTextNode(key[0] + ": " + key[1])
-            ),
-          popupContent.appendChild(popupContentList)
-        );
+        // let popupContent = document.createElement("UL");
+        // let popupContentList = document.createElement("LI");
+        // Object.entries(marker).map(
+        //   (key) =>
+        //     popupContentList.appendChild(
+        //       document.createTextNode(key[0] + ": " + key[1])
+        //     ),
+        //   popupContent.appendChild(popupContentList)
+        // );
+        var popupContent = '';
+        for (var key in marker) {
+          popupContent = popupContent + key + ':  ' + marker[key] + '</br>';        
+        };
         L.circleMarker([marker.Latitude, marker.Longitude], markerOptions)
           .addTo(layerRef.current)
           .bindPopup(popupContent);
@@ -606,7 +614,7 @@ export const Map = () => {
         id="map"
         style={{ height: "100%" }}
         className="tour-map"
-        alt={"map of " + mapID}
+        alt={"map of " + mapID + " which can be manipulated by the site user"}
       ></div>
       {/* Legend */}
       {mapID && activeLayer && (
@@ -701,6 +709,8 @@ export const Map = () => {
       {/* Popup */}
       {popupData && (
         <Popper
+          aria-labelledby="Small popup on data at the clicked location"
+          aria-describedby="Content of the popup changes depending on the variable selected in the legend, and also contians a link to a larger dialog box of all data a the clicked location."
           anchorEl={anchorRef.current}
           ref={clickRef}
           id={idPopper}
@@ -805,8 +815,8 @@ export const Map = () => {
               id={idPopover}
               ref={clickRef}
               key={idPopover}
-              aria-labelledby="transition-modal-title"
-              aria-describedby="transition-modal-description"
+              aria-labelledby="Popup diaglog box containing data at clicked location"
+              aria-describedby="Popup diaglog box containing data values for all variables the at clicked location, aggregated at the level of resolution of the clicked layer."
               className={classes.modal}
               open={popoverOpen}
               onClose={(e) => {
@@ -845,7 +855,10 @@ export const Map = () => {
                 </Box>
               </DialogTitle>
               <DialogContent dividers={scroll === "paper"}>
-                <Table key={"popoverTable"}>
+                <Table
+                  key={"popoverTable"}
+                  aria-label="Data table of values from each variable at the clicked location."
+                >
                   {cat.map((category, i) => {
                     return (
                       <Fragment key={"popoverTableRow" + category}>

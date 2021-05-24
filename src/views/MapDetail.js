@@ -5,6 +5,11 @@ import { Map } from "../components/Map";
 import { Grid } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 
+var link = document.createElement("meta");
+link.setAttribute("name", "map page description");
+link.content = "The map page consists of the interactive map tool.";
+document.getElementsByTagName("head")[0].appendChild(link);
+
 function MapDetail() {
   // eslint-disable-next-line no-empty-pattern
   const [{}, dispatch] = React.useContext(MapContext);
