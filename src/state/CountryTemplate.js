@@ -328,7 +328,7 @@ export const country = {
       carto_tableName: "cc_multivariable_dist",
       carto_source: null,
       carto_layer: null,
-      carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+      carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
       visible: false,
       accessCounter: new Set(null),
       washCounter: new Set(null),

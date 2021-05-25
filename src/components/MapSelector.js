@@ -25,9 +25,11 @@ export const MapSelector = () => {
       setMapID(event.target.value);
     } else if (event.target.value !== undefined) {
       history.push(`/maps/${event.target.value.toLowerCase()}`);
+      window.location.reload();
       dispatch({
         type: "layer.removeCartoLayers",
       });
+      console.log("selectorRemove");
       dispatch({
         type: "map.select",
         mapID: event.target.value,

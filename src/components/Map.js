@@ -20,6 +20,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Tooltip from "@material-ui/core/Tooltip";
 import theme from "../theme/theme";
 import CloseIcon from "@material-ui/icons/Close";
 import SaveIcon from "@material-ui/icons/Save";
@@ -121,7 +122,7 @@ export const Map = () => {
         setPopup(null);
         console.log("clicked outside");
         if (highlightLayer.current && cartoClient) {
-          cartoClient.removeLayer(highlightLayer.current);
+          mapRef.current.removeLayer(highlightLayer.current);
         }
       }
     };
@@ -141,6 +142,7 @@ export const Map = () => {
 
   //clean up
   useEffect(() => {
+    console.log("mapClean");
     if (mapID && dispatch) {
       return function cleanup() {
         dispatch({
@@ -325,31 +327,30 @@ export const Map = () => {
           featureClickColumns: _columns,
         });
 
-        var highlight_layer = null;
         // setup feature clicks on relevant layers
         if (_columns.length > 1) {
           _layer.on("featureClicked", (featureEvent) => {
             console.log("clicked a feature", featureEvent);
-
+            var result = null;
             var input = featureEvent.data.cartodb_id;
-            var source = new Carto.source.SQL(
-              `SELECT * FROM ${layer.carto_tableName} where cartodb_id = ${input}`
-            );
-            let style = new Carto.style.CartoCSS(
-              `#layer {
-                polygon-fill: #FFFFFF;
-                polygon-opacity: 0.3;
-              }
-              #layer::outline {
-                line-width: 2;
-                line-color: #FFFFFF;
-                line-opacity: 1;
-              }`
-            );
-            highlight_layer = new Carto.layer.Layer(source, style);
-            cartoClient.addLayer(highlight_layer);
-            highlightLayer.current = highlight_layer;
-            // setHighlightLayer(highlight_layer);
+            fetch(
+              `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${layer.carto_tableName} where cartodb_id = ${input}`
+            )
+              .then((resp) => resp.json())
+              .then((response) => {
+                var myStyle = {
+                  color: "#FFFFFF",
+                  fillColor: "#FFFFFF",
+                  fillOpacity: 0.3,
+                  weight: 1,
+                };
+                result = L.geoJson(
+                  JSON.parse(response.rows[0].the_geom),
+                  myStyle
+                );
+                highlightLayer.current = result;
+                result.addTo(mapRef.current);
+              });
             setPopup([layer.name, featureEvent]);
             setPopoverOpen(false);
             console.log("popup", popup);
@@ -509,15 +510,6 @@ export const Map = () => {
       //   layerRef.current.clearLayers();
       // }
       userData.forEach((marker, key) => {
-        // let popupContent = document.createElement("UL");
-        // let popupContentList = document.createElement("LI");
-        // Object.entries(marker).map(
-        //   (key) =>
-        //     popupContentList.appendChild(
-        //       document.createTextNode(key[0] + ": " + key[1])
-        //     ),
-        //   popupContent.appendChild(popupContentList)
-        // );
         var popupContent = "";
         for (var key in marker) {
           popupContent = popupContent + key + ":  " + marker[key] + "</br>";
@@ -532,8 +524,8 @@ export const Map = () => {
   const handleChange = (event) => {
     let styleNew = null;
     if (
-      maps[mapID].layers[activeLayer].name === "5x5km areas" ||
-      maps[mapID].layers[activeLayer].name === "1x1km areas"
+      maps[mapID].layers[activeLayer].name === "5x5km area" ||
+      maps[mapID].layers[activeLayer].name === "1x1km area"
     ) {
       styleNew = legendStyles[event.target.value].style_pixel;
     } else {
@@ -582,7 +574,7 @@ export const Map = () => {
         >
           <Fragment key={"legendContent" + activeLayer}>
             <Box variant="subtitle2" fontSize={12} fontWeight="light">
-              Selected resolution: {maps[mapID].layers[activeLayer].name}
+              Selected resolution: {maps[mapID].layers[activeLayer].name + "s"}
             </Box>
             <FormControl className={classes.formControl}>
               <Box
@@ -689,7 +681,7 @@ export const Map = () => {
                 color="disabled"
                 onClick={(e) => {
                   setPopup(null);
-                  cartoClient.removeLayer(highlightLayer.current);
+                  mapRef.current.removeLayer(highlightLayer.current);
                 }}
               />
             </Grid>

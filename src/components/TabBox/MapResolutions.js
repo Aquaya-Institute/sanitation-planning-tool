@@ -73,6 +73,7 @@ export const MapResolutions = ({ value }) => {
   }, [currentMapID, mapID]);
 
   const toggleLayerVisibility = (activeLayer) => {
+    console.log("radio");
     dispatch({
       type: "layer.toggle",
       mapID: mapID,
@@ -130,29 +131,12 @@ export const MapResolutions = ({ value }) => {
   }
   useEffect(() => {
     if (highlightDist.current) {
-      carto_client.removeLayer(highlightDist.current);
+      leafletMap.removeLayer(highlightDist.current);
     }
 
     if (leafletMap && mapID) {
       if (distName.length > 0) {
-        var source = new Carto.source.SQL(
-          `SELECT * FROM ${
-            maps[mapID].layers["3"].carto_tableName
-          } where ${column} IN (${distName
-            .map((x) => "'" + x + "'")
-            .toString()})`
-        );
-        let style = new Carto.style.CartoCSS(
-          `#layer::outline {
-            line-width: 2;
-            line-color: #FFFFFF;
-            line-opacity: 1;
-          }`
-        );
-        var highlight_dist = new Carto.layer.Layer(source, style);
-        highlightDist.current = highlight_dist;
-        carto_client.addLayer(highlight_dist);
-        return fetch(
+        fetch(
           `https://zebra.geodb.host/user/admin/api/v2/sql?format=GeoJSON&q=SELECT * FROM ${
             maps[mapID].layers["3"].carto_tableName
           } where ${column} IN (${distName
@@ -161,9 +145,17 @@ export const MapResolutions = ({ value }) => {
         )
           .then((resp) => resp.json())
           .then((response) => {
-            let geojsonLayer = L.geoJSON(response);
+            var myStyle = {
+              color: "#FFFFFF",
+              fillColor: "#FFFFFF",
+              fillOpacity: 0,
+              weight: 2,
+            };
+            let geojsonLayer = L.geoJSON(response, myStyle);
+            highlightDist.current = geojsonLayer;
             leafletMap.fitBounds(geojsonLayer.getBounds());
             filterPopulatedPlacesByCountry(distName);
+            geojsonLayer.addTo(leafletMap);
           });
       } else if (distName.length === 0) {
         filterPopulatedPlacesByCountry(distName);
@@ -181,10 +173,112 @@ export const MapResolutions = ({ value }) => {
 
   return (
     <div style={{ height: "200px", overflow: "auto" }}>
-      <FormControl component="fieldset" key="fieldset">
-        <FormLabel component="legend" key="legend">
+      {mapID && (
+        <>
+          <FormControl component="fieldset" key="fieldset">
+            <FormLabel component="legend" key="legend">
+              <Box
+                pb={1}
+                fontStyle="italic"
+                fontWeight="fontWeightBold"
+                fontSize={13.5}
+                variant="subtitle2"
+                style={{ color: "black" }}
+                key="rightBoxSubtitle"
+              >
+                Select the resolution at which to explore the map:
+              </Box>
+            </FormLabel>
+            {mapID && (
+              <Box pl={1}>
+                <RadioGroup
+                  // p={1}
+                  aria-label="Map resolution options"
+                  name="resolutionSelector"
+                  value={activeLayer}
+                  onChange={(e) => {
+                    setDistName([]);
+                    toggleLayerVisibility(e.target.value);
+                  }}
+                  className="tour-scale"
+                  key="radioLabel"
+                >
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="1x1km areas (Classification layer only)"
+                    classes={{
+                      label: classes.checkboxLabel,
+                    }}
+                    key="radio1"
+                  />
+                  <FormControlLabel
+                    value="2"
+                    control={<Radio />}
+                    label="5x5km areas"
+                    classes={{
+                      label: classes.checkboxLabel,
+                    }}
+                    key="radio2"
+                  />
+                  <FormControlLabel
+                    value="3"
+                    control={<Radio />}
+                    label={maps[mapID].layers["3"].name + "s"}
+                    classes={{
+                      label: classes.checkboxLabel,
+                    }}
+                    key="radio3"
+                  />
+                  {maps[mapID].layers["4"] && (
+                    <>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            key="consent"
+                            checked={!disabled}
+                            name="consent"
+                            onChange={() => {
+                              setDisabled(!disabled);
+                            }}
+                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                            checkedIcon={<CheckBoxIcon fontSize="small" />}
+                            color="primary"
+                          />
+                        }
+                        label={
+                          <Typography
+                            key="filterListItemLabel"
+                            variant="body2"
+                            style={{ fontSize: 11 }}
+                          >
+                            I understand the settlements layer is an estimation
+                            and still under development. Some settlements may
+                            not be captured and values are estimated from data
+                            of lower resolution and therefore not precise.
+                          </Typography>
+                        }
+                        size="small"
+                      />
+                      <FormControlLabel
+                        value="4"
+                        disabled={disabled}
+                        control={<Radio />}
+                        label={maps[mapID].layers["4"].name + "s"}
+                        classes={{
+                          label: classes.checkboxLabel,
+                        }}
+                        key="radio4"
+                      />
+                    </>
+                  )}
+                </RadioGroup>
+              </Box>
+            )}
+          </FormControl>
+          <Divider />
           <Box
-            pb={1}
+            pt={1}
             fontStyle="italic"
             fontWeight="fontWeightBold"
             fontSize={13.5}
@@ -192,135 +286,38 @@ export const MapResolutions = ({ value }) => {
             style={{ color: "black" }}
             key="rightBoxSubtitle"
           >
-            Select the resolution at which to explore the map:
+            Optionally, select specific{" "}
+            {maps[mapID].layers["3"].name.toLowerCase()}(s) to explore:
           </Box>
-        </FormLabel>
-        {mapID && (
-          <Box pl={1}>
-            <RadioGroup
-              // p={1}
-              aria-label="Map resolution options"
-              name="resolutionSelector"
-              value={activeLayer}
-              onChange={(e) => {
-                setDistName([]);
-                toggleLayerVisibility(e.target.value);
-              }}
-              className="tour-scale"
-              key="radioLabel"
-            >
-              <FormControlLabel
-                value="1"
-                control={<Radio />}
-                label="1x1km areas (Classification layer only)"
-                classes={{
-                  label: classes.checkboxLabel,
-                }}
-                key="radio1"
-              />
-              <FormControlLabel
-                value="2"
-                control={<Radio />}
-                label="5x5km areas"
-                classes={{
-                  label: classes.checkboxLabel,
-                }}
-                key="radio2"
-              />
-              <FormControlLabel
-                value="3"
-                control={<Radio />}
-                label={maps[mapID].layers["3"].name}
-                classes={{
-                  label: classes.checkboxLabel,
-                }}
-                key="radio3"
-              />
-              {maps[mapID].layers["4"] && (
-                <>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        key="consent"
-                        checked={!disabled}
-                        name="consent"
-                        onChange={() => {
-                          setDisabled(!disabled);
-                        }}
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        color="primary"
-                      />
-                    }
-                    label={
-                      <Typography
-                        key="filterListItemLabel"
-                        variant="body2"
-                        style={{ fontSize: 11 }}
-                      >
-                        I understand the settlements layer is an estimation and
-                        still under development. Some settlements may not be
-                        captured and values are estimated from data of lower
-                        resolution and therefore not precise.
-                      </Typography>
-                    }
-                    size="small"
-                  />
-                  <FormControlLabel
-                    value="4"
-                    disabled={disabled}
-                    control={<Radio />}
-                    label={maps[mapID].layers["4"].name}
-                    classes={{
-                      label: classes.checkboxLabel,
-                    }}
-                    key="radio4"
-                  />
-                </>
-              )}
-            </RadioGroup>
-          </Box>
-        )}
-      </FormControl>
-      <Divider />
-      <Box
-        pt={1}
-        fontStyle="italic"
-        fontWeight="fontWeightBold"
-        fontSize={13.5}
-        variant="subtitle2"
-        style={{ color: "black" }}
-        key="rightBoxSubtitle"
-      >
-        Optionally, select specific region(s) to explore:
-      </Box>
-      <FormControl className={classes.formControl} pl={1}>
-        {mapID && (
-          <Box pl={1}>
-            <InputLabel pl={1} id="demo-mutiple-checkbox-label">
-              Select {maps[mapID].layers["3"].name}
-            </InputLabel>
-            <Select
-              labelId="demo-mutiple-checkbox-label"
-              id="demo-mutiple-checkbox"
-              multiple
-              value={distName}
-              onChange={handleChange}
-              input={<Input />}
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={MenuProps}
-              className={classes.formControl}
-            >
-              {allDistricts.map((name, i) => (
-                <MenuItem key={i} value={name} className={classes.menu}>
-                  <Checkbox checked={distName.indexOf(name) > -1} />
-                  <ListItemText primary={name} />
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
-        )}
-      </FormControl>
+          <FormControl className={classes.formControl} pl={1}>
+            {mapID && (
+              <Box pl={1}>
+                <InputLabel pl={1} id="demo-mutiple-checkbox-label">
+                  Select {maps[mapID].layers["3"].name}(s)
+                </InputLabel>
+                <Select
+                  labelId="demo-mutiple-checkbox-label"
+                  id="demo-mutiple-checkbox"
+                  multiple
+                  value={distName}
+                  onChange={handleChange}
+                  input={<Input />}
+                  renderValue={(selected) => selected.join(", ")}
+                  MenuProps={MenuProps}
+                  className={classes.formControl}
+                >
+                  {allDistricts.map((name, i) => (
+                    <MenuItem key={i} value={name} className={classes.menu}>
+                      <Checkbox checked={distName.indexOf(name) > -1} />
+                      <ListItemText primary={name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+            )}
+          </FormControl>
+        </>
+      )}
     </div>
   );
 };

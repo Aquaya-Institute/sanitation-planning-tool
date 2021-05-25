@@ -76,7 +76,7 @@ const reducer = (state, action) => {
       immutable manner easily, see immer lib doc 
       */
       return produce(state, (draft) => {
-        draft.currentMapID = action.mapID;
+        // draft.currentMapID = action.mapID;
         const mid = action.mapID;
         draft.activeLayer = action.layerID;
         const cartoLayer = draft.maps[mid].layers[action.layerID].carto_layer;
@@ -85,9 +85,11 @@ const reducer = (state, action) => {
           if (index === action.layerID || index === "0") {
             draft.maps[mid].layers[action.layerID].visible = true;
             cartoLayer.show();
+            console.log("vistoggle");
           } else {
             draft.maps[mid].layers[index].visible = false;
             draft.maps[mid].layers[index].carto_layer.hide();
+            console.log("vistoggle");
           }
         }
         var i;
@@ -303,9 +305,9 @@ const reducer = (state, action) => {
     case "layer.removeCartoLayers":
       return produce(state, (draft) => {
         if (state.currentMapID !== null && draft.carto_client) {
-          const prevmap = state.maps[state.currentMapID];
+          // const prevmap = state.maps[state.currentMapID];
           const layerstoremove = [];
-          prevmap.layers.forEach((layer) => {
+          draft.maps[draft.currentMapID].layers.forEach((layer) => {
             if (layer.carto_layer) {
               layerstoremove.push(layer.carto_layer);
             }

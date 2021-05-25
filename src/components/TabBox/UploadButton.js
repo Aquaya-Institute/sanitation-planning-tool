@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import Papa from "papaparse";
-import { Box, Divider } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import { MapContext } from "../../state/MapState";
 import { CSVLink } from "react-csv";
-import { Settlements } from "./Settlements";
+// import { Settlements } from "./Settlements";
 
 // import theme from "../../theme/theme";
 const template = [

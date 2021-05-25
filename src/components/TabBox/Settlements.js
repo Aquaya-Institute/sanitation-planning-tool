@@ -1,20 +1,16 @@
 import { MapContext } from "../../state/MapState";
-import { useState, useContext, useMemo, useEffect } from "react";
-import { Box, Button } from "@material-ui/core";
-import { CSVLink } from "react-csv";
-import SaveIcon from "@material-ui/icons/Save";
-import { makeStyles } from "@material-ui/core/styles";
+import { useState, useContext, useEffect } from "react";
+// import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    margin: theme.spacing(1),
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   button: {
+//     margin: theme.spacing(1),
+//   },
+// }));
 
 export const Settlements = () => {
-  const [{ maps, currentMapID, activeLayer, query }, dispatch] =
-    useContext(MapContext);
-  const classes = useStyles();
+  const [{ maps, currentMapID, activeLayer, query }] = useContext(MapContext);
+  // const classes = useStyles();
   const [geoms, setGeoms] = useState(null);
   const [mapID, setMapID] = useState(currentMapID);
 
@@ -46,7 +42,7 @@ export const Settlements = () => {
           setGeoms(result);
         });
     }
-  }, [mapID, query]);
+  }, [activeLayer, mapID, maps, query]);
   //   useEffect(() => {
   //     if (geoms) {
   //       let queryURL = null;
