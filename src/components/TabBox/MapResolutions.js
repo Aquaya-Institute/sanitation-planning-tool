@@ -5,7 +5,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import { Box } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import { MapContext } from "../../state/MapState";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -16,6 +16,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
 import L from "leaflet";
 import Carto from "@carto/carto.js";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 
 const useStyles = makeStyles((theme) => ({
   checkboxLabel: {
@@ -57,6 +59,7 @@ export const MapResolutions = ({ value }) => {
   const [distName, setDistName] = useState([]);
   const [allDistricts, setAllDistricts] = useState([]);
   const [column, setColumn] = useState("");
+  const [disabled, setDisabled] = useState(true);
   const classes = useStyles();
   const highlightDist = useRef();
 
@@ -233,6 +236,48 @@ export const MapResolutions = ({ value }) => {
                 }}
                 key="radio3"
               />
+              {maps[mapID].layers["4"] && (
+                <>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        key="consent"
+                        checked={!disabled}
+                        name="consent"
+                        onChange={() => {
+                          setDisabled(!disabled);
+                        }}
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        color="primary"
+                      />
+                    }
+                    label={
+                      <Typography
+                        key="filterListItemLabel"
+                        variant="body2"
+                        style={{ fontSize: 11 }}
+                      >
+                        I understand the settlements layer is an estimation and
+                        still under development. Some settlements may not be
+                        captured and values are estimated from data of lower
+                        resolution and therefore not precise.
+                      </Typography>
+                    }
+                    size="small"
+                  />
+                  <FormControlLabel
+                    value="4"
+                    disabled={disabled}
+                    control={<Radio />}
+                    label={maps[mapID].layers["4"].name}
+                    classes={{
+                      label: classes.checkboxLabel,
+                    }}
+                    key="radio4"
+                  />
+                </>
+              )}
             </RadioGroup>
           </Box>
         )}

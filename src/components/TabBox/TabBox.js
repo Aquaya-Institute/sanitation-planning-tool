@@ -11,7 +11,7 @@ import theme from "../../theme/theme";
 import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-const width = 275;
+const width = 280;
 
 const useStyles = makeStyles((theme) => ({
   root: {

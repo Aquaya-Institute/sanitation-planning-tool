@@ -266,18 +266,26 @@ export const Map = () => {
           objlist.push(obj1);
           switch (filter.type) {
             case "range":
-              const _filter = new Carto.filter.Range(filter.column_name, {
-                gte: filter.value[0],
-                lte: filter.value[1],
-              });
+              const _filter = new Carto.filter.Range(
+                filter.column_name,
+                {
+                  gte: filter.value[0],
+                  lte: filter.value[1],
+                },
+                { includeNull: true }
+              );
               _filters.push(_filter);
               _columns.push(filter.column_name);
               break;
             case "range_non_linear":
-              const _filter_non = new Carto.filter.Range(filter.column_name, {
-                gte: filter.scaledValue[0],
-                lte: filter.scaledValue[1],
-              });
+              const _filter_non = new Carto.filter.Range(
+                filter.column_name,
+                {
+                  gte: filter.scaledValue[0],
+                  lte: filter.scaledValue[1],
+                },
+                { includeNull: true }
+              );
               _filters.push(_filter_non);
               _columns.push(filter.column_name);
               break;
@@ -289,9 +297,13 @@ export const Map = () => {
                 if (category.checked === true)
                   col_vals_tofilter.push(category.value);
               });
-              const _filter_c = new Carto.filter.Category(filter.column_name, {
-                in: col_vals_tofilter,
-              });
+              const _filter_c = new Carto.filter.Category(
+                filter.column_name,
+                {
+                  in: col_vals_tofilter,
+                },
+                { includeNull: true }
+              );
               _filters.push(_filter_c);
               _columns.push(filter.column_name);
               break;
@@ -359,7 +371,8 @@ export const Map = () => {
           console.log(event);
           if (
             layer.name === maps[mapID].layers[activeLayer].name &&
-            layer.carto_style === legendStylesObj[activeLegend].style
+            (layer.carto_style === legendStylesObj[activeLegend].style_pixel ||
+              layer.carto_style === legendStylesObj[activeLegend].style_bounds)
           ) {
             var obj = {};
             // get buckets
@@ -505,10 +518,10 @@ export const Map = () => {
         //     ),
         //   popupContent.appendChild(popupContentList)
         // );
-        var popupContent = '';
+        var popupContent = "";
         for (var key in marker) {
-          popupContent = popupContent + key + ':  ' + marker[key] + '</br>';        
-        };
+          popupContent = popupContent + key + ":  " + marker[key] + "</br>";
+        }
         L.circleMarker([marker.Latitude, marker.Longitude], markerOptions)
           .addTo(layerRef.current)
           .bindPopup(popupContent);
@@ -516,83 +529,16 @@ export const Map = () => {
     }
   }, [myRadius, myWeight, userData]);
 
-  // Community counter
-  // useEffect(() => {
-  //   if (cartoClient && districtsSource && nativeMap) {
-  //     const commCalculator = new Carto.dataview.FormulaData(
-  //       districtsSource,
-  //       "community",
-  //       {
-  //         operation: Carto.operation.COUNT,
-  //       }
-  //     );
-  //     const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
-  //     cartoClient.addDataview(commCalculator);
-  //     commCalculator.addFilter(bboxFilter);
-
-  //     commCalculator.on("dataChanged", (data) => {
-  //       refreshCommCalculator(data.result);
-  //     });
-  //   }
-  // }, [cartoClient, commCalcSource, nativeMap]);
-
-  // Community counter
-  // useEffect(() => {
-  //   if (cartoClient && commCalcSource && nativeMap) {
-  //     if(mapID==="GhanaUU"){
-  //       const commCalculator = new Carto.dataview.Formula(
-  //         commCalcSource,
-  //         "community",
-  //         {
-  //           operation: Carto.operation.COUNT,
-  //         }
-  //       );
-  //       const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
-  //       cartoClient.addDataview(commCalculator);
-  //       commCalculator.addFilter(bboxFilter);
-
-  //       commCalculator.on("dataChanged", (data) => {
-  //         refreshCommCalculator(data.result);
-  //       });
-  //     }else {
-  //       const commCalculator = new Carto.dataview.Formula(
-  //         commCalcSource,
-  //         "community",
-  //         {
-  //           operation: Carto.operation.COUNT,
-  //         }
-  //       );
-  //       const bboxFilter = new Carto.filter.BoundingBoxLeaflet(nativeMap);
-  //       cartoClient.addDataview(commCalculator);
-  //       commCalculator.addFilter(bboxFilter);
-
-  //       commCalculator.on("dataChanged", (data) => {
-  //         refreshCommCalculator(data.result);
-  //       });
-  //     }
-
-  //   }
-  // }, [cartoClient, commCalcSource, nativeMap]);
-
-  // function refreshCommCalculator(avgPopulation) {
-  //   const widgetDom = document.querySelector("#avgPopulationWidget");
-  //   const commCalculatorDom = widgetDom.querySelector(".AveragePopulation");
-  //   commCalculatorDom.innerText = Math.floor(avgPopulation);
-  // }
-
-  // // useLayoutEffect(()=> {
-  // //   if(widgetLoad===true) {
-  // //     refreshCountriesWidget(allDistricts);
-  // //   }
-  // // }, [widgetLoad])
-
-  // function refreshCountriesWidget(districtNames) {
-  //   const widgetDom = document.querySelector("#countriesWidget");
-  //   // if (widgetDom != null) {
-  //   const countriesDom = widgetDom.querySelector(".js-countries");
-
   const handleChange = (event) => {
-    const styleNew = legendStyles[event.target.value].style;
+    let styleNew = null;
+    if (
+      maps[mapID].layers[activeLayer].name === "5x5km areas" ||
+      maps[mapID].layers[activeLayer].name === "1x1km areas"
+    ) {
+      styleNew = legendStyles[event.target.value].style_pixel;
+    } else {
+      styleNew = legendStyles[event.target.value].style_bounds;
+    }
 
     dispatch({
       type: "legend.select",
@@ -629,7 +575,7 @@ export const Map = () => {
             top: "unset",
             left: "unset",
             height: "auto",
-            width: "250px",
+            width: "280px",
             zIndex: "1000",
             backgroundColor: theme.palette.background.default,
           }}

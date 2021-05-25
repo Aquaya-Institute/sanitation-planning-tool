@@ -34,7 +34,8 @@ const reducer = (state, action) => {
         console.log("set current map to", action.mapID);
         draft.currentMapID = action.mapID;
         if (action.mapID !== null) {
-          var index = draft.maps[action.mapID].layers.length - 1;
+          // var index = draft.maps[action.mapID].layers.length - 1;
+          var index = 3;
           for (; index >= 0; index--) {
             if (draft.maps[action.mapID].layers[index].visible === true) {
               draft.activeLayer = index.toString();
@@ -45,8 +46,11 @@ const reducer = (state, action) => {
           var i;
           for (i = 0; i < legendStylesObj.length; i++) {
             if (
-              legendStylesObj[i].style ===
-              draft.maps[action.mapID].layers[draft.activeLayer].carto_style
+              legendStylesObj[i].style_pixel ===
+                draft.maps[action.mapID].layers[draft.activeLayer]
+                  .carto_style ||
+              legendStylesObj[i].style_bounds ===
+                draft.maps[action.mapID].layers[draft.activeLayer].carto_style
             ) {
               draft.activeLegend = i.toString();
               break;
@@ -89,8 +93,10 @@ const reducer = (state, action) => {
         var i;
         for (i = 0; i < legendStylesObj.length; i++) {
           if (
-            legendStylesObj[i].style ===
-            draft.maps[action.mapID].layers[draft.activeLayer].carto_style
+            legendStylesObj[i].style_pixel ===
+              draft.maps[action.mapID].layers[draft.activeLayer].carto_style ||
+            legendStylesObj[i].style_bounds ===
+              draft.maps[action.mapID].layers[draft.activeLayer].carto_style
           ) {
             draft.activeLegend = i.toString();
             break;
@@ -221,9 +227,10 @@ const reducer = (state, action) => {
           default:
             break;
         }
-        draft.download = draft.maps[action.mapID].layers[
-          action.layerIndex
-        ].carto_layer.getSource();
+        draft.download =
+          draft.maps[action.mapID].layers[
+            action.layerIndex
+          ].carto_layer.getSource();
       });
 
     case "layer.query":
