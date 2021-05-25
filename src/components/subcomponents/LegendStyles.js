@@ -45,10 +45,10 @@ export const legendStyles = [
   },
   {
     name: "Women's Educational Attainment",
-    style: `#layer {polygon-fill: ramp([edu_w], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), quantiles);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style: `#layer {polygon-fill: ramp([edu_w], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
   },
   {
     name: "Men's Educational Attainment",
-    style: `#layer {polygon-fill: ramp([edu_m], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), quantiles);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style: `#layer {polygon-fill: ramp([edu_m], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
   },
 ];
