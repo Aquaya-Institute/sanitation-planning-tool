@@ -212,9 +212,9 @@ export const niger = {
           unit: "km.",
           type: "range",
           column_name: "dr",
-          min: 0,
-          max: 0,
-          value: [0, 0],
+          min: 0.1,
+          max: 309.1,
+          value: [0.1, 309.1],
           subcategory: "accessibility",
         },
         {
@@ -223,8 +223,8 @@ export const niger = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 0,
-          value: [0, 0],
+          max: 984.1,
+          value: [0, 984.1],
           subcategory: "accessibility",
         },
         {
