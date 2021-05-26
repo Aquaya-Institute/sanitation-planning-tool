@@ -594,20 +594,20 @@ export const Map = () => {
       {/* Legend */}
       {mapID && activeLayer && (
         <div
-          style={{
-            padding: theme.spacing(1),
-            position: "absolute",
-            bottom: "16px",
-            right: "0px",
-            top: "unset",
-            left: "unset",
-            height: "auto",
-            width: "280px",
-            zIndex: "1000",
-            backgroundColor: "transparent",
-          }}
+        // style={{
+        //   padding: theme.spacing(1),
+        //   position: "absolute",
+        //   bottom: "10px",
+        //   right: "0px",
+        //   top: "unset",
+        //   left: "unset",
+        //   height: "auto",
+        //   width: "280px",
+        //   zIndex: "1000",
+        //   backgroundColor: "transparent",
+        // }}
         >
-          <Paper
+          {/* <Paper
             square
             pb={2}
             style={{
@@ -634,20 +634,20 @@ export const Map = () => {
           </Paper>
           <Paper
             style={{ height: "10px", backgroundColor: "transparent" }}
-          ></Paper>
+          ></Paper> */}
           <Paper
             square
             key={"legendContainer"}
             style={{
               padding: theme.spacing(1),
-              // position: "absolute",
-              // bottom: "16px",
-              // right: "0px",
-              // top: "unset",
-              // left: "unset",
-              // height: "auto",
-              // width: "280px",
-              // zIndex: "1000",
+              position: "absolute",
+              bottom: "16px",
+              right: "0px",
+              top: "unset",
+              left: "unset",
+              height: "auto",
+              width: "280px",
+              zIndex: "1000",
               backgroundColor: theme.palette.background.default,
             }}
           >

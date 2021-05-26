@@ -120,8 +120,10 @@ const reducer = (state, action) => {
 
     case "layer.opacity":
       return produce(state, (draft) => {
-        draft.maps[draft.currentMapID].layers[draft.activeLayer].carto_style =
-          action.styleNew;
+        draft.currentMapID = action.mapID;
+        const mid = action.mapID;
+        const lid = draft.activeLayer;
+        draft.maps[mid].layers[lid].carto_style = action.styleNew;
         // draft.maps[action.mapID].layers[
         //   action.layerID
         // ].carto_layer._style._content = action.styleNew;
