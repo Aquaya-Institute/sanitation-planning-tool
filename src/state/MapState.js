@@ -118,6 +118,16 @@ const reducer = (state, action) => {
         draft.activeLegend = action.legendIndex;
       });
 
+    case "layer.opacity":
+      return produce(state, (draft) => {
+        draft.maps[draft.currentMapID].layers[draft.activeLayer].carto_style =
+          action.styleNew;
+        // draft.maps[action.mapID].layers[
+        //   action.layerID
+        // ].carto_layer._style._content = action.styleNew;
+        // console.log(action.styleNew);
+      });
+
     //when a filter is manipulated
     case "layer.filter":
       return produce(state, (draft) => {

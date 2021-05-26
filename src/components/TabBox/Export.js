@@ -93,7 +93,9 @@ export const Export = () => {
                 fontSize={16}
                 color="#BA0C2F"
               >
-                {download.length} {maps[currentMapID].layers[activeLayer].name}
+                {download.length}{" "}
+                {maps[currentMapID].layers[activeLayer].name.toLowerCase() +
+                  "s"}
               </Box>{" "}
               in{" "}
               <Box

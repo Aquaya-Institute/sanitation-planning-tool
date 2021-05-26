@@ -12,13 +12,23 @@ const TOUR_STEPS = [
   {
     target: ".tour-scale",
     content:
-      "Select the resolution at which you would like to explore and filter the map. If you select 5km or larger resolution, you are able to explore 13 contextual indicators across the country. Only the Community Classification data is available is availble at the 1km resolution. You are free to move back and forth between resolutions.",
+      "Select the resolution at which you would like to explore and filter the map. If you select the 5km or larger resolution, you are able to explore 13 contextual indicators across the country. Only the Community Classification data is available is availble at the 1km resolution. You are free to move back and forth between resolutions.",
     disableBeacon: true, // This makes the tour to start automatically without clicking
+  },
+  {
+    target: ".tour-comms",
+    content:
+      "We have included a layer of pre-defined settlement areas to help estimate the number and location of communities, based on satellite imagery. These areas may not represent administratively recognized communities.",
+  },
+  {
+    target: ".tour-dropdown",
+    content:
+      "To explore one or more boundary areas by name, you can select them from this dropdown before beginning.",
   },
   {
     target: ".tour-themes",
     content:
-      "Click on a theme to open a menu of filters for contextual indicators associated with that theme. Manipulate the filters to locate areas of interest on the map. You can use multiple filters at once, and combine filters from multiple themes. Your selections are saved if you move between resolutions.",
+      "Click on a theme to open a menu of filters for contextual indicators associated with that theme. Manipulate the filters to locate areas of interest on the map. You can use multiple filters at once, and combine filters from multiple themes. Your selections will be saved as you move between resolutions.",
   },
   {
     target: ".tour-reset",
@@ -33,24 +43,12 @@ const TOUR_STEPS = [
   {
     target: ".tour-upload",
     content:
-      "You can upload your own community locations an view them on the map.",
+      "Within this menu you can upload your own community locations and view them on the map.",
   },
   {
     target: ".tour-export",
     content:
-      "After identifying areas of interest, you can download data for those remaining, here.",
-  },
-  {
-    target: ".tour-comm",
-    content: [
-      "...or settlement area.",
-      <br key="space"></br>,
-      <p style={{ fontSize: "13px" }} key="disclaimer">
-        *Settlements mapped in this manner do not represent administratively
-        recognized communities. It is highly likely that multiple communities in
-        close proximity were combined graphically into a single settlement.*
-      </p>,
-    ],
+      "After identifying areas of interest, you can download the associated data for those remaining areas, here.",
   },
   {
     target: ".tour-map",

@@ -564,19 +564,10 @@ export const ghana = {
       ],
     },
     {
-      name: "Settlement",
+      name: "Estimated settlement",
       carto_tableName: "gha_multivariable_comms",
       carto_layer: null /* we will insert carto's layer object here */,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
-      // carto_style: `#layer {
-      //     polygon-fill: #826dba;
-      //     polygon-opacity: 0;
-      //   }
-      //   #layer::outline {
-      //     line-width: 1.75;
-      //     line-color: #000000;
-      //     line-opacity: 1;
-      //   }`,
       accessCounter: new Set(null),
       washCounter: new Set(null),
       socioCounter: new Set(null),
@@ -621,8 +612,8 @@ export const ghana = {
           max: 70, //we want 7 breaks not counting start value of 0.
           value: [0, 70], //slider range will be from 0-70, which we will scale to
           scaledMin: 0,
-          scaledMax: 5722638,
-          scaledValue: [0, 5722638], //the actual min/max of column
+          scaledMax: 5722595,
+          scaledValue: [0, 5722595], //the actual min/max of column
           subcategory: "socioeconomic",
           // define 7+1 non linear marks here, note that value goes from 0-70 only
           marks: [
@@ -704,8 +695,8 @@ export const ghana = {
           type: "range",
           column_name: "timecities",
           min: 0,
-          max: 526,
-          value: [0, 526],
+          max: 546,
+          value: [0, 546],
           subcategory: "accessibility",
         },
         {
@@ -713,9 +704,9 @@ export const ghana = {
           unit: "km.",
           type: "range",
           column_name: "dr",
-          min: 0.1,
-          max: 36.2,
-          value: [0.1, 36.2],
+          min: 0,
+          max: 37.1,
+          value: [0, 37.1],
           subcategory: "accessibility",
         },
         {
@@ -753,9 +744,9 @@ export const ghana = {
           unit: "%",
           type: "range",
           column_name: "u5m",
-          min: 4.4,
-          max: 11.8,
-          value: [4.4, 11.8],
+          min: 4.3,
+          max: 12.7,
+          value: [4.3, 12.7],
           subcategory: "health",
         },
         {
@@ -763,9 +754,9 @@ export const ghana = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_w",
-          min: 2,
+          min: 1,
           max: 10,
-          value: [2, 10],
+          value: [1, 10],
           subcategory: "socioeconomic",
         },
         {

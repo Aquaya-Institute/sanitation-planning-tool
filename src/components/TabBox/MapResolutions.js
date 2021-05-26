@@ -18,6 +18,7 @@ import L from "leaflet";
 import Carto from "@carto/carto.js";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
   checkboxLabel: {
@@ -231,7 +232,18 @@ export const MapResolutions = ({ value }) => {
                     key="radio3"
                   />
                   {maps[mapID].layers["4"] && (
-                    <>
+                    <div className="tour-comms">
+                      <Divider />
+                      <FormControlLabel
+                        value="4"
+                        disabled={disabled}
+                        control={<Radio />}
+                        label="Estimated settlement areas (Beta)"
+                        classes={{
+                          label: classes.checkboxLabel,
+                        }}
+                        key="radio4"
+                      />
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -251,6 +263,7 @@ export const MapResolutions = ({ value }) => {
                             key="filterListItemLabel"
                             variant="body2"
                             style={{ fontSize: 11 }}
+                            gutterBottom
                           >
                             I understand the settlements layer is an estimation
                             and still under development. Some settlements may
@@ -260,17 +273,7 @@ export const MapResolutions = ({ value }) => {
                         }
                         size="small"
                       />
-                      <FormControlLabel
-                        value="4"
-                        disabled={disabled}
-                        control={<Radio />}
-                        label={maps[mapID].layers["4"].name + "s"}
-                        classes={{
-                          label: classes.checkboxLabel,
-                        }}
-                        key="radio4"
-                      />
-                    </>
+                    </div>
                   )}
                 </RadioGroup>
               </Box>
@@ -289,7 +292,10 @@ export const MapResolutions = ({ value }) => {
             Optionally, select specific{" "}
             {maps[mapID].layers["3"].name.toLowerCase()}(s) to explore:
           </Box>
-          <FormControl className={classes.formControl} pl={1}>
+          <FormControl
+            className={clsx(classes.formControl, "tour-dropdown")}
+            pl={1}
+          >
             {mapID && (
               <Box pl={1}>
                 <InputLabel pl={1} id="demo-mutiple-checkbox-label">

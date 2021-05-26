@@ -10,7 +10,7 @@ import { MapContext } from "../state/MapState";
 import Carto from "@carto/carto.js";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Link, Grid, Button, Box } from "@material-ui/core";
+import { Link, Grid, Button, Box, Typography, Slider } from "@material-ui/core";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles } from "@material-ui/core/styles";
 import "../App.css";
@@ -105,6 +105,7 @@ export const Map = () => {
   const classes = useStyles();
   const clickRef = useRef(null);
   const mapRef = useRef(null);
+  const [value, setValue] = useState(100);
   // const [commCalcSource, setCommCalcSource] = useState(null);
   // const [widgetLoad, setWidgetLoad] = useState();
 
@@ -484,8 +485,11 @@ export const Map = () => {
       layerRef.current = L.layerGroup().addTo(mapRef.current);
       mapRef.current.on("zoomend", function () {
         var currentZoom = mapRef.current.getZoom();
-        setMyRadius(currentZoom * (1 / 1)); //or whatever ratio you prefer
-        setMyWeight(currentZoom * (1 / 3)); //or whatever ratio you prefer
+        if (currentZoom > 6) {
+          setMyRadius(2); //or whatever ratio you prefer
+        }
+        setMyRadius(currentZoom * (1 / 2.5)); //or whatever ratio you prefer
+        // setMyWeight(currentZoom * (1 / 4)); //or whatever ratio you prefer
         // layerRef.current.setStyle({ radius: myRadius, weight: myWeight });
       });
     }
@@ -504,7 +508,7 @@ export const Map = () => {
         color: "#ffffff",
         weight: myWeight,
         opacity: 1,
-        fillOpacity: 0.7,
+        fillOpacity: 0.3,
       };
       // if (layerRef.current) {
       //   layerRef.current.clearLayers();
@@ -540,6 +544,38 @@ export const Map = () => {
       styleNew: styleNew,
     });
   };
+  const handleOpacityChange = (e, newval) => {
+    setValue(newval);
+    let styleNew = null;
+    if (
+      maps[mapID].layers[activeLayer].name === "5x5km area" ||
+      maps[mapID].layers[activeLayer].name === "1x1km area"
+    ) {
+      styleNew = legendStyles[activeLegend].style_pixel.concat(
+        ` #layer {polygon-opacity: ${newval / 100};}`
+      );
+    } else {
+      styleNew = legendStyles[activeLegend].style_bounds.concat(
+        ` #layer {polygon-opacity: ${newval / 100};}`
+      );
+    }
+    // let styleNew2 = maps[mapID].layers[activeLayer].carto_style.concat(
+    //   `#layer {polygon-opacity: ${newval / 100};}`
+    // );
+
+    // let styleNew = new Carto.layer.Layer(
+    //   maps[mapID].layers[activeLayer].carto_source,
+    //   styleNew2
+    // );
+    // cartoClient.addLayer(styleNew);
+
+    dispatch({
+      type: "layer.opacity",
+      styleNew: styleNew,
+      mapID: mapID,
+      layerID: activeLayer,
+    });
+  };
 
   const [scroll] = useState("paper");
 
@@ -554,11 +590,10 @@ export const Map = () => {
         className="tour-map"
         alt={"map of " + mapID + " which can be manipulated by the site user"}
       ></div>
+
       {/* Legend */}
       {mapID && activeLayer && (
-        <Paper
-          square
-          key={"legendContainer"}
+        <div
           style={{
             padding: theme.spacing(1),
             position: "absolute",
@@ -569,80 +604,127 @@ export const Map = () => {
             height: "auto",
             width: "280px",
             zIndex: "1000",
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: "transparent",
           }}
         >
-          <Fragment key={"legendContent" + activeLayer}>
-            <Box variant="subtitle2" fontSize={12} fontWeight="light">
-              Selected resolution: {maps[mapID].layers[activeLayer].name + "s"}
-            </Box>
-            <FormControl className={classes.formControl}>
-              <Box
-                variant="subtitle2"
-                fontStyle="italic"
-                fontWeight="fontWeightBold"
-              >
-                Select the indicator to visualize:
+          <Paper
+            square
+            pb={2}
+            style={{
+              padding: theme.spacing(0.5),
+              backgroundColor: theme.palette.background.default,
+            }}
+          >
+            <Grid container spacing={0}>
+              <Box>
+                <Typography variant="subtitle2">Change opacity</Typography>
               </Box>
-              <NativeSelect
-                value={activeLegend}
-                onChange={handleChange}
-                inputProps={{
-                  name: "age",
-                  id: "age-native-label-placeholder",
-                }}
-                className="tour-legendselect"
-                style={{ backgroundColor: theme.palette.background.selected }}
-              >
-                {maps[mapID].layers[activeLayer].filters.map((filter, i) => {
-                  if (filter.type !== "none") {
+              <Box mx="auto" width="210px" height="45px">
+                <Slider
+                  value={value}
+                  aria-labelledby={"Opacity range slider"}
+                  marks={[
+                    { value: 0, label: "0%" },
+                    { value: 100, label: "100%" },
+                  ]}
+                  onChange={handleOpacityChange}
+                />
+              </Box>
+            </Grid>
+          </Paper>
+          <Paper
+            style={{ height: "10px", backgroundColor: "transparent" }}
+          ></Paper>
+          <Paper
+            square
+            key={"legendContainer"}
+            style={{
+              padding: theme.spacing(1),
+              // position: "absolute",
+              // bottom: "16px",
+              // right: "0px",
+              // top: "unset",
+              // left: "unset",
+              // height: "auto",
+              // width: "280px",
+              // zIndex: "1000",
+              backgroundColor: theme.palette.background.default,
+            }}
+          >
+            <Fragment key={"legendContent" + activeLayer}>
+              <Box variant="subtitle2" fontSize={12} fontWeight="light">
+                Selected resolution:{" "}
+                {maps[mapID].layers[activeLayer].name + "s"}
+              </Box>
+              <FormControl className={classes.formControl}>
+                <Box
+                  variant="subtitle2"
+                  fontStyle="italic"
+                  fontWeight="fontWeightBold"
+                >
+                  Select the indicator to visualize:
+                </Box>
+                <NativeSelect
+                  value={activeLegend}
+                  onChange={handleChange}
+                  inputProps={{
+                    name: "age",
+                    id: "age-native-label-placeholder",
+                  }}
+                  className="tour-legendselect"
+                  style={{ backgroundColor: theme.palette.background.selected }}
+                >
+                  {maps[mapID].layers[activeLayer].filters.map((filter, i) => {
+                    if (filter.type !== "none") {
+                      return (
+                        <option key={"filter" + i} value={i}>
+                          {filter.name}
+                        </option>
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
+                </NativeSelect>
+                <FormHelperText> </FormHelperText>
+              </FormControl>
+              {maps[mapID].layers[activeLayer].name === buckets.variable && (
+                <Fragment key={"legendContent" + buckets.variable}>
+                  {buckets.legend.map((legend, j) => {
                     return (
-                      <option key={"filter" + i} value={i}>
-                        {filter.name}
-                      </option>
-                    );
-                  } else {
-                    return null;
-                  }
-                })}
-              </NativeSelect>
-              <FormHelperText> </FormHelperText>
-            </FormControl>
-            {maps[mapID].layers[activeLayer].name === buckets.variable && (
-              <Fragment key={"legendContent" + buckets.variable}>
-                {buckets.legend.map((legend, j) => {
-                  return (
-                    <Grid
-                      container
-                      direction="row"
-                      alignItems="center"
-                      className={classes.element}
-                      key={"bucket" + j}
-                    >
-                      <div
-                        className={classes.dot}
-                        style={{
-                          backgroundColor: legend.value,
-                          border: legend.border,
-                        }}
-                        key={legend.value.toString()}
-                      ></div>
+                      <Grid
+                        container
+                        direction="row"
+                        alignItems="center"
+                        className={classes.element}
+                        key={"bucket" + j}
+                      >
+                        <div
+                          className={classes.dot}
+                          style={{
+                            backgroundColor: legend.value,
+                            border: legend.border,
+                          }}
+                          key={legend.value.toString()}
+                        ></div>
 
-                      {legend.name === undefined
-                        ? legend.min.toString() +
-                          " - " +
-                          legend.max.toString() +
-                          " " +
-                          maps[mapID].layers[activeLayer].filters[activeLegend]
-                            .unit
-                        : legend.name}
-                    </Grid>
-                  );
-                })}
-              </Fragment>
-            )}
-          </Fragment>
-        </Paper>
+                        {legend.name === undefined
+                          ? legend.min.toString() +
+                            " - " +
+                            legend.max.toString() +
+                            " " +
+                            maps[mapID].layers[activeLayer].filters[
+                              activeLegend
+                            ].unit
+                          : legend.name}
+                      </Grid>
+                    );
+                  })}
+                </Fragment>
+              )}
+            </Fragment>
+          </Paper>
+        </div>
       )}
       {/* Popup */}
       {popupData && (
