@@ -125,17 +125,11 @@ export const MapResolutions = ({ value }) => {
   function filterPopulatedPlacesByCountry(distName) {
     let query = null;
     if (distName.length > 0) {
-      query = `
-        SELECT *
-          FROM ${maps[mapID].layers[activeLayer].carto_tableName}
-          WHERE ${column} IN (${distName
-        .map((x) => "'" + x + "'")
-        .toString()})`;
+      query = `SELECT * FROM ${
+        maps[mapID].layers[activeLayer].carto_tableName
+      } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
     } else {
-      query = `
-        SELECT *
-          FROM ${maps[mapID].layers[activeLayer].carto_tableName}
-      `;
+      query = `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`;
     }
     // const source = new Carto.source.SQL(
     //   `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`
@@ -186,7 +180,7 @@ export const MapResolutions = ({ value }) => {
         );
       }
     }
-  }, [distName, activeLayer]);
+  }, [distName]);
 
   useLayoutEffect(() => {
     if (distName && mapID) {

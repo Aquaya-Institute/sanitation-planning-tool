@@ -147,7 +147,7 @@ export const Map = () => {
   }, [cartoClient]);
 
   //set mapID
-  useEffect(() => {
+  useMemo(() => {
     console.log("currentMapID", currentMapID);
     if (currentMapID !== mapID) {
       setMapID(currentMapID);
@@ -155,7 +155,7 @@ export const Map = () => {
   }, [currentMapID, mapID]);
 
   //clean up
-  useEffect(() => {
+  useMemo(() => {
     console.log("mapClean");
     if (mapID && dispatch) {
       return function cleanup() {
@@ -249,6 +249,23 @@ export const Map = () => {
     console.log("Selected Map Changed", currentMapState);
 
     if (cartoClient && mapID) {
+      // maps[mapID].layers.forEach((layer, i) => {
+      //   if (layer.carto_layer && i > 1 && activeLayer) {
+      //     var _source = new Carto.source.SQL(
+      //       `SELECT * FROM ${layer.carto_tableName}`
+      //     );
+      //     const _style = new Carto.style.CartoCSS(layer.carto_style);
+      //     const _layer = new Carto.layer.Layer(_source, _style, {});
+      //     dispatch({
+      //       type: "layer.addCartoLayer",
+      //       mapID: mapID,
+      //       layerID: i,
+      //       cartoLayer: _layer,
+      //       cartoSource: _source,
+      //     });
+      //     // layerstoremove.push(layer.carto_layer);
+      //   }
+      // });
       dispatch({
         type: "layer.removeCartoLayers",
       });
@@ -257,19 +274,20 @@ export const Map = () => {
 
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
-        var _source = null;
-        if (queryDist && index > 1) {
-          _source = new Carto.source.SQL(
-            `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist
-          );
-        } else {
-          _source = new Carto.source.SQL(
-            `SELECT * FROM ${layer.carto_tableName}`
-          );
-        }
-        // var _source = new Carto.source.SQL(
-        //   `SELECT * FROM ${layer.carto_tableName}`
-        // );
+        // var _source = null;
+        // if (queryDist && index > 1) {
+        //   let queryedit =
+        //     `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist;
+        //   // let queryedit2 = queryedit.replace(/\s/g, " ");
+        //   _source = new Carto.source.SQL(queryedit);
+        // } else {
+        //   _source = new Carto.source.SQL(
+        //     `SELECT * FROM ${layer.carto_tableName}`
+        //   );
+        // }
+        var _source = new Carto.source.SQL(
+          `SELECT * FROM ${layer.carto_tableName}`
+        );
         _source.on("queryChanged", function (e) {
           dispatch({
             type: "layer.query",
@@ -440,7 +458,7 @@ export const Map = () => {
   }, [mapID, activeLegend, activeLayer, cartoClient]);
 
   // popup data
-  useEffect(() => {
+  useMemo(() => {
     console.log("updated popup", popup);
     if (popup) {
       var dat = [];

@@ -328,6 +328,11 @@ const reducer = (state, action) => {
         draft.maps[action.mapID].layers[action.layerID].carto_source =
           action.cartoSource;
       });
+    case "layer.refresh":
+      return produce(state, (draft) => {
+        draft.maps[action.mapID].layers[action.layerID].carto_source =
+          action.source;
+      });
 
     case "layer.removeCartoLayers":
       return produce(state, (draft) => {
@@ -336,6 +341,7 @@ const reducer = (state, action) => {
           const layerstoremove = [];
           draft.maps[draft.currentMapID].layers.forEach((layer) => {
             if (layer.carto_layer) {
+              // layer.carto_layer._source = `SELECT * FROM ${layer.carto_tableName}`;
               layerstoremove.push(layer.carto_layer);
             }
           });

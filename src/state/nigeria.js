@@ -433,9 +433,9 @@ export const nigeria = {
           unit: "%",
           type: "range",
           column_name: "dia",
-          min: 5.8,
-          max: 20.1,
-          value: [5.8, 20.1],
+          min: 1.5,
+          max: 5.2,
+          value: [1.5, 5.2],
           subcategory: "health",
         },
         {
