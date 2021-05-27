@@ -260,11 +260,16 @@ const reducer = (state, action) => {
 
     case "layer.queryDist":
       return produce(state, (draft) => {
-        var clause = action.queryDist.substr(
-          action.queryDist.indexOf("WHERE") + "WHERE".length,
-          action.queryDist.length
-        );
-        draft.queryDist = clause;
+        if (action.queryDist.indexOf("WHERE") > 0) {
+          var clause = action.queryDist.substr(
+            action.queryDist.indexOf("WHERE") + "WHERE".length,
+            action.queryDist.length
+          );
+          console.log(clause);
+          draft.queryDist = clause;
+        } else {
+          draft.queryDist = null;
+        }
       });
 
     case "reset.filters":

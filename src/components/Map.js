@@ -274,20 +274,22 @@ export const Map = () => {
 
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
-        // var _source = null;
-        // if (queryDist && index > 1) {
-        //   let queryedit =
-        //     `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist;
-        //   // let queryedit2 = queryedit.replace(/\s/g, " ");
-        //   _source = new Carto.source.SQL(queryedit);
-        // } else {
-        //   _source = new Carto.source.SQL(
-        //     `SELECT * FROM ${layer.carto_tableName}`
-        //   );
-        // }
-        var _source = new Carto.source.SQL(
-          `SELECT * FROM ${layer.carto_tableName}`
-        );
+        var _source = null;
+        // var _source = new Carto.source.SQL(
+        //   `SELECT * FROM ${layer.carto_tableName}`
+        // );
+        if (queryDist && index > 1) {
+          let queryedit =
+            `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist;
+          // let queryedit2 = queryedit.replace(/\s/g, " ");
+          _source = new Carto.source.SQL(queryedit);
+          // _source = maps[mapID].layers[layer].carto_source;
+        } else {
+          _source = new Carto.source.SQL(
+            `SELECT * FROM ${layer.carto_tableName}`
+          );
+        }
+
         _source.on("queryChanged", function (e) {
           dispatch({
             type: "layer.query",

@@ -172,12 +172,12 @@ export const MapResolutions = ({ value }) => {
             filterPopulatedPlacesByCountry(distName);
             geojsonLayer.addTo(leafletMap);
           });
-      } else if (distName.length === 0) {
-        filterPopulatedPlacesByCountry(distName);
-        leafletMap.setView(
-          [maps[mapID].lat, maps[mapID].long],
-          maps[mapID].zoom
-        );
+        // } else if (distName.length === 0) {
+        //   filterPopulatedPlacesByCountry(distName);
+        //   leafletMap.setView(
+        //     [maps[mapID].lat, maps[mapID].long],
+        //     maps[mapID].zoom
+        //   );
       }
     }
   }, [distName]);
@@ -342,6 +342,11 @@ export const MapResolutions = ({ value }) => {
                 <button
                   onClick={() => {
                     setDistName([]);
+                    filterPopulatedPlacesByCountry([]);
+                    leafletMap.setView(
+                      [maps[mapID].lat, maps[mapID].long],
+                      maps[mapID].zoom
+                    );
                   }}
                 >
                   Clear
