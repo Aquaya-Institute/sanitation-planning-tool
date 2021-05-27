@@ -144,7 +144,10 @@ export const MapResolutions = ({ value }) => {
     // source.setQuery(query);
     if (maps[mapID].layers[activeLayer].carto_source && activeLayer !== "1") {
       maps[mapID].layers[activeLayer].carto_source.setQuery(query);
-      maps[mapID].layers[activeLayer].carto_layer._source.setQuery(query);
+      dispatch({
+        type: "layer.queryDist",
+        queryDist: query,
+      });
     }
   }
 

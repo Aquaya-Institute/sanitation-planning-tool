@@ -26,7 +26,7 @@ const initialState = {
   activeLegend: "0",
   userData: null,
   query: null,
-  selectedDists: false,
+  queryDist: null,
 };
 
 const reducer = (state, action) => {
@@ -240,32 +240,7 @@ const reducer = (state, action) => {
             });
 
             break;
-          case "dropdown":
-            const filter_d = draft.maps[action.mapID].layers[
-              action.layerIndex
-            ].carto_layer
-              .getSource()
-              .getFilters()[0] //since this is a filtercollection
-              .getFilters()[action.filterIndex];
 
-            // let col_vals_tofilter = [];
-            //get the category filter state and create an array
-            //of checked=true col values to filter
-            // let changed = false;
-            // action.filter.value.forEach((category) => {
-            //   if (category.checked === true) {
-            //     col_vals_tofilter.push(category.value);
-            //   } else if (category.checked === false) {
-            //     changed = true;
-            //   }
-            // });
-
-            //this is how you set the filter. this is specific to range filter
-            filter_d.setFilters({
-              in: action.selectedDists,
-            });
-
-            break;
           case "none":
             break;
           default:
@@ -281,6 +256,11 @@ const reducer = (state, action) => {
     case "layer.query":
       return produce(state, (draft) => {
         draft.query = action.query;
+      });
+
+    case "layer.queryDist":
+      return produce(state, (draft) => {
+        draft.queryDist = action.queryDist;
       });
 
     case "reset.filters":
@@ -368,11 +348,6 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         draft.maps[action.mapID].layers[action.layerID].distNames =
           action.distNames;
-      });
-
-    case "dropdown.selection":
-      return produce(state, (draft) => {
-        draft.selectedDists = true;
       });
 
     case "user.upload":

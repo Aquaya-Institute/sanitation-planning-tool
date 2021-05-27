@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Map = () => {
   const [
-    { currentMapID, maps, activeLayer, activeLegend, userData, selectedDists },
+    { currentMapID, maps, activeLayer, activeLegend, userData, queryDist },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState();
@@ -250,16 +250,12 @@ export const Map = () => {
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
         var _source = null;
-        if (
-          // maps[mapID].layers[index].carto_source === null ||
-          index === 0 ||
-          selectedDists === false
-        ) {
+        if (queryDist && index > 0) {
+          _source = new Carto.source.SQL(queryDist);
+        } else {
           _source = new Carto.source.SQL(
             `SELECT * FROM ${layer.carto_tableName}`
           );
-        } else {
-          _source = maps[mapID].layers[index].carto_source;
         }
         // var _source = new Carto.source.SQL(
         //   `SELECT * FROM ${layer.carto_tableName}`
