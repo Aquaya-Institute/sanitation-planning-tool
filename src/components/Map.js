@@ -33,6 +33,10 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -578,6 +582,7 @@ export const Map = () => {
   };
 
   const [scroll] = useState("paper");
+  const [hideLayer, setHideLayer] = useState(false);
 
   return (
     <div
@@ -594,19 +599,59 @@ export const Map = () => {
       {/* Legend */}
       {mapID && activeLayer && (
         <div
-        // style={{
-        //   padding: theme.spacing(1),
-        //   position: "absolute",
-        //   bottom: "10px",
-        //   right: "0px",
-        //   top: "unset",
-        //   left: "unset",
-        //   height: "auto",
-        //   width: "280px",
-        //   zIndex: "1000",
-        //   backgroundColor: "transparent",
-        // }}
+          style={{
+            padding: theme.spacing(1),
+            position: "absolute",
+            bottom: "10px",
+            right: "0px",
+            top: "unset",
+            left: "unset",
+            height: "auto",
+            width: "280px",
+            zIndex: "1000",
+            backgroundColor: "transparent",
+          }}
         >
+          <Paper
+            square
+            pb={2}
+            style={{
+              padding: theme.spacing(0.5),
+              backgroundColor: theme.palette.background.default,
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={hideLayer}
+                  onChange={() => {
+                    setHideLayer(!hideLayer);
+                    if (!hideLayer === true) {
+                      maps[mapID].layers[activeLayer].carto_layer.hide();
+                    } else {
+                      maps[mapID].layers[activeLayer].carto_layer.show();
+                    }
+
+                    // dispatch({
+                    //   type: "layer.hide",
+                    //   hide: hideLayer,
+                    //   mapID: mapID,
+                    //   layerID: activeLayer,
+                    // });
+                  }}
+                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography key="filterListItemLabel" variant="body2">
+                  Remove layer to view underlying satellite imagery
+                </Typography>
+              }
+              size="small"
+            />
+          </Paper>
           {/* <Paper
             square
             pb={2}
@@ -631,23 +676,23 @@ export const Map = () => {
                 />
               </Box>
             </Grid>
-          </Paper>
+          </Paper> */}
           <Paper
             style={{ height: "10px", backgroundColor: "transparent" }}
-          ></Paper> */}
+          ></Paper>
           <Paper
             square
             key={"legendContainer"}
             style={{
               padding: theme.spacing(1),
-              position: "absolute",
-              bottom: "16px",
-              right: "0px",
-              top: "unset",
-              left: "unset",
-              height: "auto",
-              width: "280px",
-              zIndex: "1000",
+              // position: "absolute",
+              // bottom: "16px",
+              // right: "0px",
+              // top: "unset",
+              // left: "unset",
+              // height: "auto",
+              // width: "280px",
+              // zIndex: "1000",
               backgroundColor: theme.palette.background.default,
             }}
           >

@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Link";
+import { Link as RouterLink } from "react-router-dom";
 
 const styles = (theme) => ({
   root: {
@@ -41,6 +43,9 @@ function ProductHowItWorks(props) {
           of the U.S. Agency for International Development or the U.S.
           Government.
         </Typography>
+        <Link component={RouterLink} color="inherit" to="/privacy">
+          <Typography align="left">PRIVACY</Typography>
+        </Link>
       </Container>
     </section>
   );

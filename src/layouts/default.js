@@ -8,8 +8,8 @@ import Link from "@material-ui/core/Link";
 import { Link as RouterLink } from "react-router-dom";
 import { CssBaseline, Container, Box, Menu, MenuItem } from "@material-ui/core";
 import { MapSelector } from "../components/MapSelector";
-import MoreIcon from '@material-ui/icons/MoreVert';
-import IconButton from '@material-ui/core/IconButton';
+import MoreIcon from "@material-ui/icons/MoreVert";
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,15 +24,15 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
   sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
     },
   },
   sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
+    display: "flex",
+    [theme.breakpoints.up("md")]: {
+      display: "none",
     },
   },
   grow: {
@@ -44,12 +44,10 @@ export default function DefaultLayout(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-
+  const mobileMenuId = "primary-search-account-menu-mobile";
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -66,10 +64,10 @@ export default function DefaultLayout(props) {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
@@ -94,24 +92,18 @@ export default function DefaultLayout(props) {
       <AppBar position="sticky" className={classes.appBar}>
         <Toolbar>
           <Link component={RouterLink} color="inherit" to="/">
-            <img
-              src="/usaid-sq.png"
-              alt="USAID circle seal logo"
-              style={{ width: "50px", height: "50px" }}
-            ></img>
+            <Typography variant="h6" className={classes.title}>
+              SanPlan
+            </Typography>
           </Link>
-
-          <Typography variant="h6" className={classes.title}>
-            {/* <Link component={RouterLink} color="inherit" to="/" style={{textDecoration: 'none'}}> */}
-            SanPlan
-          </Typography>
+          <div className={classes.grow} />
           <Box>
             <span>Change map to:</span>
           </Box>
           <Box ml={3}>
             <MapSelector />
           </Box>
-          <div className={classes.grow} />
+
           <div className={classes.sectionDesktop}>
             <Box ml={3}>
               <Button component={RouterLink} color="inherit" to="/">
@@ -126,6 +118,11 @@ export default function DefaultLayout(props) {
             <Box ml={3}>
               <Button component={RouterLink} color="inherit" to="/about">
                 About
+              </Button>
+            </Box>
+            <Box ml={3}>
+              <Button component={RouterLink} color="inherit" to="/faq">
+                FAQ
               </Button>
             </Box>
           </div>

@@ -71,11 +71,11 @@ function ProductHowItWorks(props) {
         <Typography variant="body1" marked="center" className={classes.title}>
           This tool was built as a follow-on to USAID's Water, Sanitation and
           Hygiene Partnerships and Learning for Sustainability (WASHPaLS)
-          project. The WASHPaLS Performance Envelope work sought to examine how
-          local context and program implementation strategies affect CLTS
-          outcomes across multiple countries. The aim of this research is to
-          provide governments, donors, and implementing organizations with
-          insights to i) target CLTS activities to areas with the highest
+          Performance Envelope research, which sought to examine how local
+          context and program implementation strategies affect CLTS outcomes
+          across multiple countries. The aim of this research is to provide
+          governments, donors, and implementing organizations with insights to
+          i) target rural sanitation activities to areas with the highest
           likelihood of success, and ii) adapt implementation strategies to
           maximize the chances for their success and sustainability.
         </Typography>
@@ -136,10 +136,12 @@ function ProductHowItWorks(props) {
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
                 <div className={classes.number} align="center">
-                  <strong>HOW DO COMMUNITIES SUSTAIN LATRINE COVERAGE AND USE?</strong>
+                  <strong>
+                    HOW DO COMMUNITIES SUSTAIN LATRINE COVERAGE AND USE?
+                  </strong>
                 </div>
                 <Link
-                  href="#"
+                  href="https://www.mdpi.com/2071-1050/13/10/5440/htm"
                   onClick={preventDefault}
                   variant="h6"
                   align="center"

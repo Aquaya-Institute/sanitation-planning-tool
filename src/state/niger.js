@@ -6,6 +6,7 @@ export const niger = {
   zoom: 6,
   currentLayer: "2",
   currentLegend: "0",
+  distNames: null,
   /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
@@ -40,7 +41,7 @@ export const niger = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Community Classification",
+          name: "Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -83,7 +84,7 @@ export const niger = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Community Classification",
+          name: "Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -113,7 +114,7 @@ export const niger = {
         },
         {
           name: "Population Estimate",
-          unit: "pp.",
+          unit: "people",
           type: "range_non_linear",
           column_name: "pop",
           min: 0,
@@ -338,7 +339,7 @@ export const niger = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Predominant Community Classification",
+          name: "Predominant Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -368,7 +369,7 @@ export const niger = {
         },
         {
           name: "Population Estimate",
-          unit: "pp.",
+          unit: "people",
           type: "range",
           column_name: "pop",
           min: 4766,

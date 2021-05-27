@@ -4,6 +4,7 @@ export const rwanda = {
   lat: -1.878,
   long: 30,
   zoom: 8,
+  distNames: null,
   /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
@@ -38,7 +39,7 @@ export const rwanda = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Community Classification",
+          name: "Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -81,7 +82,7 @@ export const rwanda = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Community Classification",
+          name: "Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -111,7 +112,7 @@ export const rwanda = {
         },
         {
           name: "Population Estimate",
-          unit: "pp.",
+          unit: "people",
           type: "range_non_linear",
           column_name: "pop",
           min: 0,
@@ -336,7 +337,7 @@ export const rwanda = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Predominant Community Classification",
+          name: "Predominant Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -366,7 +367,7 @@ export const rwanda = {
         },
         {
           name: "Population Estimate",
-          unit: "pp.",
+          unit: "people",
           type: "range",
           column_name: "pop",
           min: 34,

@@ -12,7 +12,7 @@ const TOUR_STEPS = [
   {
     target: ".tour-scale",
     content:
-      "Select the resolution at which you would like to explore and filter the map. If you select the 5km or larger resolution, you are able to explore 13 contextual indicators across the country. Only the Community Classification data is available is availble at the 1km resolution. You are free to move back and forth between resolutions.",
+      "Select the resolution at which you would like to explore and filter the map. If you select the 5km or larger resolution, you are able to explore 13 contextual indicators across the country. Only the Rural Typology data is available is availble at the 1km resolution. You are free to move back and forth between resolutions.",
     disableBeacon: true, // This makes the tour to start automatically without clicking
   },
   {

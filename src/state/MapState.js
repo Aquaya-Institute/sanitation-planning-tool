@@ -6,6 +6,7 @@ import { ghana } from "./ghana";
 import { liberia } from "./liberia";
 import { niger } from "./niger";
 import { rwanda } from "./rwanda";
+import { nigeria } from "./nigeria";
 enableMapSet();
 const legendStylesObj = legendStyles;
 //this is the "global map state". this is where state is maintained and updated
@@ -19,11 +20,13 @@ const initialState = {
     liberia,
     niger,
     rwanda,
+    nigeria,
   },
   activeLayer: "2",
   activeLegend: "0",
   userData: null,
   query: null,
+  selectedDists: null,
 };
 
 const reducer = (state, action) => {
@@ -33,6 +36,7 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         console.log("set current map to", action.mapID);
         draft.currentMapID = action.mapID;
+        draft.selectedDists = null;
         if (action.mapID !== null) {
           // var index = draft.maps[action.mapID].layers.length - 1;
           var index = 3;
@@ -330,10 +334,26 @@ const reducer = (state, action) => {
           }
         }
       });
+
+    case "layer.hide":
+      return produce(state, (draft) => {
+        draft.maps[action.mapID].layers[action.layerID].visible = !action.hide;
+      });
+    case "dropdown.names":
+      return produce(state, (draft) => {
+        draft.maps[action.mapID].distNames = action.distNames;
+      });
+
+    case "dropdown.selection":
+      return produce(state, (draft) => {
+        draft.selectedDists = action.selectedDists;
+      });
+
     case "user.upload":
       return produce(state, (draft) => {
         draft.userData = action.userData;
       });
+
     default:
       return state;
   }

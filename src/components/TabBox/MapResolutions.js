@@ -52,7 +52,14 @@ function extractValue(arr, prop) {
 
 export const MapResolutions = ({ value }) => {
   const [
-    { maps, currentMapID, activeLayer, carto_client, leafletMap },
+    {
+      maps,
+      currentMapID,
+      activeLayer,
+      carto_client,
+      leafletMap,
+      selectedDists,
+    },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
@@ -63,12 +70,13 @@ export const MapResolutions = ({ value }) => {
   const [disabled, setDisabled] = useState(true);
   const classes = useStyles();
   const highlightDist = useRef();
+  var selectedDistList = [];
 
   useEffect(() => {
     if (currentMapID !== mapID) {
       console.log(currentMapID);
       setMapID(currentMapID);
-      setDistName([]);
+      // setDistName([]);
       // setActiveLayer(maps[currentMapID].currentLayer);
     }
   }, [currentMapID, mapID]);
@@ -84,6 +92,10 @@ export const MapResolutions = ({ value }) => {
 
   useMemo(() => {
     if (carto_client && mapID) {
+      // if (
+      //   maps[mapID].layers[activeLayer].distNames === null ||
+      //   maps[mapID].layers[activeLayer].distNames === undefined
+      // ) {
       var column_name = null;
       if (
         maps[mapID].layers["3"].filters.some(
@@ -104,7 +116,14 @@ export const MapResolutions = ({ value }) => {
           // setAllDistricts(response.rows);
           const result = extractValue(response.rows, column_name);
           setAllDistricts(result);
+          // dispatch({
+          //   type: "dropdown.names",
+          //   distNames: result,
+          //   mapID: mapID,
+          //   layerID: activeLayer,
+          // });
         });
+      // }
     }
   }, [carto_client, mapID, maps]);
 
@@ -170,6 +189,11 @@ export const MapResolutions = ({ value }) => {
 
   const handleChange = (event) => {
     setDistName(event.target.value);
+    // selectedDistList.push(event.target.value);
+    // dispatch({
+    //   type: "dropdown.selection",
+    //   selectedDists: selectedDistList,
+    // });
   };
 
   return (
@@ -198,7 +222,7 @@ export const MapResolutions = ({ value }) => {
                   name="resolutionSelector"
                   value={activeLayer}
                   onChange={(e) => {
-                    setDistName([]);
+                    // setDistName([]);
                     toggleLayerVisibility(e.target.value);
                   }}
                   className="tour-scale"

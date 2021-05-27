@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography, Link } from "@material-ui/core";
+import { Typography, Link, Grid } from "@material-ui/core";
 import HomeLayout from "./HomeLayout";
 import backgroundImage from "../../images/latrinebanner.jpg";
 import usaidLogo from "../../images/usaid-rect.png";
@@ -43,24 +43,38 @@ function ProductHero(props) {
         src={backgroundImage}
         alt="Two complete and one partial mud and clay latrine superstructures with thatch roofs in Ghana"
       />
-      <a href="https://www.usaid.gov/">
-        <img
-          align="left"
-          style={{ height: "85px", width: "215px" }}
-          src={usaidLogo}
-          alt="USAID rectangular logo"
-        />
-      </a>
+
       <Typography color="inherit" align="center" variant="h2" marked="center">
         The Sanitation Planning Tool <br />
         (SanPlan)
       </Typography>
-
+      <div display="flex">
+        <Grid>
+          <Typography
+            color="inherit"
+            align="center"
+            variant="h6"
+            marked="center"
+          >
+            Funded By
+          </Typography>
+        </Grid>
+        <Grid>
+          <a href="https://www.usaid.gov/">
+            <img
+              align="left"
+              style={{ height: "85px", width: "215px" }}
+              src={usaidLogo}
+              alt="USAID rectangular logo"
+            />
+          </a>
+        </Grid>
+      </div>
       <Typography color="inherit" variant="h6" className={classes.h5}>
-        Use SanPlan to design and execute sanitation programs by exploring highly-localized,
-        contextual, spatial data. SanPlan harmonizes data from multiple sources
-        so that you can visualize geographic patterns and local contexts from
-        anywhere.
+        Use SanPlan to design and execute sanitation programs by exploring
+        highly-localized, contextual, spatial data. SanPlan harmonizes data from
+        multiple sources so that you can visualize geographic patterns and local
+        contexts from anywhere.
       </Typography>
 
       <Typography variant="body2" color="inherit" className={classes.more}>

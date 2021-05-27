@@ -45,7 +45,7 @@ export const cambodia = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Community Classification",
+          name: "Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -95,7 +95,7 @@ export const cambodia = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Community Classification",
+          name: "Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -125,7 +125,7 @@ export const cambodia = {
         },
         {
           name: "Population Estimate",
-          unit: "pp.",
+          unit: "people",
           type: "range_non_linear",
           column_name: "pop",
           min: 0,
@@ -311,7 +311,7 @@ export const cambodia = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Predominant Community Classification",
+          name: "Predominant Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -341,7 +341,7 @@ export const cambodia = {
         },
         {
           name: "Population Estimate",
-          unit: "pp.",
+          unit: "people",
           type: "range",
           column_name: "pop",
           min: null,

@@ -26,7 +26,7 @@ export const country = {
       filters: [],
     },
     {
-      name: "1x1km areas",
+      name: "1x1km area",
       carto_tableName: "cc_class",
       carto_source: null,
       carto_layer: null /* we will insert carto's layer object here */,
@@ -38,7 +38,7 @@ export const country = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Community Classification",
+          name: "Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -69,7 +69,7 @@ export const country = {
       ],
     },
     {
-      name: "5x5km areas",
+      name: "5x5km area",
       carto_tableName: "cc_multivariable_pixel",
       carto_source: null,
       carto_layer: null,
@@ -81,7 +81,7 @@ export const country = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Community Classification",
+          name: "Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -111,7 +111,7 @@ export const country = {
         },
         {
           name: "Population Estimate",
-          unit: "pp.",
+          unit: "people",
           type: "range_non_linear",
           column_name: "pop",
           min: 0,
@@ -336,7 +336,7 @@ export const country = {
       healthCounter: new Set(null),
       filters: [
         {
-          name: "Predominant Community Classification",
+          name: "Predominant Rural Typology",
           unit: "",
           type: "categorical",
           column_name: "classes",
@@ -366,7 +366,7 @@ export const country = {
         },
         {
           name: "Population Estimate",
-          unit: "pp.",
+          unit: "people",
           type: "range",
           column_name: "pop",
           min: null,

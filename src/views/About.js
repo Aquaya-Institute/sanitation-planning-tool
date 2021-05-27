@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
+import HomeFooter from "../components/Home/HomeFooter";
 
 var link = document.createElement("meta");
 link.setAttribute("name", "about page description");
@@ -141,6 +142,7 @@ function About() {
         </Card>
         <Divider />
       </Container>
+      <HomeFooter />
     </>
   );
 }
