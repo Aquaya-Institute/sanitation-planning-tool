@@ -144,6 +144,7 @@ export const MapResolutions = ({ value }) => {
     // source.setQuery(query);
     if (maps[mapID].layers[activeLayer].carto_source && activeLayer !== "1") {
       maps[mapID].layers[activeLayer].carto_source.setQuery(query);
+      maps[mapID].layers[activeLayer].carto_layer._source.setQuery(query);
     }
   }
 
@@ -185,11 +186,11 @@ export const MapResolutions = ({ value }) => {
     }
   }, [distName, activeLayer]);
 
-  // useLayoutEffect(() => {
-  //   if (distName && mapID) {
-  //     filterPopulatedPlacesByCountry(distName);
-  //   }
-  // }, [activeLegend]);
+  useLayoutEffect(() => {
+    if (distName && mapID) {
+      filterPopulatedPlacesByCountry(distName);
+    }
+  }, [activeLegend]);
 
   const updateFilter = ({
     layerIndex,

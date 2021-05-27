@@ -271,6 +271,7 @@ const reducer = (state, action) => {
           default:
             break;
         }
+        // layer.carto_source._hasFiltersApplied = true;
         draft.download =
           draft.maps[action.mapID].layers[
             action.layerIndex
@@ -329,6 +330,7 @@ const reducer = (state, action) => {
             });
           }
         });
+        // layer.carto_source._hasFiltersApplied = false;
         layer.accessCounter = new Set(null);
         layer.washCounter = new Set(null);
         layer.socioCounter = new Set(null);
