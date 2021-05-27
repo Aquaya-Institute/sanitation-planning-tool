@@ -228,10 +228,10 @@ export const MapResolutions = ({ value }) => {
   const handleChange = (event) => {
     setDistName(event.target.value);
     selectedDistList.push(event.target.value);
-    // dispatch({
-    //   type: "dropdown.selection",
-    //   selectedDists: selectedDistList,
-    // });
+    dispatch({
+      type: "dropdown.selection",
+      selectedDists: true,
+    });
     // updateFilter({
     //   layerIndex: activeLayer,
     //   filterIndex: 19,

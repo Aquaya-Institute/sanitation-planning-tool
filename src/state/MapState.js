@@ -26,7 +26,7 @@ const initialState = {
   activeLegend: "0",
   userData: null,
   query: null,
-  selectedDists: null,
+  selectedDists: false,
 };
 
 const reducer = (state, action) => {
@@ -36,7 +36,6 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         console.log("set current map to", action.mapID);
         draft.currentMapID = action.mapID;
-        draft.selectedDists = null;
         if (action.mapID !== null) {
           // var index = draft.maps[action.mapID].layers.length - 1;
           var index = 3;
@@ -137,6 +136,7 @@ const reducer = (state, action) => {
     //when a filter is manipulated
     case "layer.filter":
       return produce(state, (draft) => {
+        // draft.reset = false;
         draft.currentMapID = action.mapID;
         draft.maps[action.mapID].layers[action.layerIndex].filters[
           action.filterIndex
@@ -284,6 +284,7 @@ const reducer = (state, action) => {
 
     case "reset.filters":
       return produce(state, (draft) => {
+        // draft.reset = true;
         draft.currentMapID = action.mapID;
         const layer = draft.maps[action.mapID].layers[draft.activeLayer];
         layer.filters.forEach((filter, filterIndex) => {
@@ -369,7 +370,7 @@ const reducer = (state, action) => {
 
     case "dropdown.selection":
       return produce(state, (draft) => {
-        draft.selectedDists = action.selectedDists;
+        draft.selectedDists = true;
       });
 
     case "user.upload":

@@ -37,6 +37,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import { TrainRounded } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -88,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Map = () => {
   const [
-    { currentMapID, maps, activeLayer, activeLegend, userData },
+    { currentMapID, maps, activeLayer, activeLegend, userData, selectedDists },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState();
@@ -249,13 +250,20 @@ export const Map = () => {
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
         var _source = null;
-        if (maps[mapID].layers[index].carto_source === null || index === 0) {
+        if (
+          // maps[mapID].layers[index].carto_source === null ||
+          index === 0 ||
+          selectedDists === false
+        ) {
           _source = new Carto.source.SQL(
             `SELECT * FROM ${layer.carto_tableName}`
           );
         } else {
           _source = maps[mapID].layers[index].carto_source;
         }
+        // var _source = new Carto.source.SQL(
+        //   `SELECT * FROM ${layer.carto_tableName}`
+        // );
         _source.on("queryChanged", function (e) {
           dispatch({
             type: "layer.query",
@@ -757,8 +765,9 @@ export const Map = () => {
                           }}
                           key={legend.value.toString()}
                         ></div>
-
-                        {legend.name === undefined
+                        {legend.min === null
+                          ? "No data remaining"
+                          : legend.name === undefined
                           ? legend.min.toString() +
                             " - " +
                             legend.max.toString() +
