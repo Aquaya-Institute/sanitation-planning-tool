@@ -27,6 +27,7 @@ const initialState = {
   userData: null,
   query: null,
   queryDist: null,
+  skip: true,
 };
 
 const reducer = (state, action) => {
@@ -127,6 +128,7 @@ const reducer = (state, action) => {
         const mid = action.mapID;
         const lid = draft.activeLayer;
         draft.maps[mid].layers[lid].carto_style = action.styleNew;
+        draft.skip = true;
         // draft.maps[action.mapID].layers[
         //   action.layerID
         // ].carto_layer._style._content = action.styleNew;
@@ -238,7 +240,6 @@ const reducer = (state, action) => {
             filter_c.setFilters({
               in: col_vals_tofilter,
             });
-
             break;
 
           case "none":
@@ -246,7 +247,6 @@ const reducer = (state, action) => {
           default:
             break;
         }
-        // layer.carto_source._hasFiltersApplied = true;
         draft.download =
           draft.maps[action.mapID].layers[
             action.layerIndex
@@ -260,7 +260,11 @@ const reducer = (state, action) => {
 
     case "layer.queryDist":
       return produce(state, (draft) => {
-        draft.queryDist = action.queryDist;
+        var clause = action.queryDist.substr(
+          action.queryDist.indexOf("WHERE") + "WHERE".length,
+          action.queryDist.length
+        );
+        draft.queryDist = clause;
       });
 
     case "reset.filters":
@@ -310,12 +314,10 @@ const reducer = (state, action) => {
             });
           }
         });
-        // layer.carto_source._hasFiltersApplied = false;
         layer.accessCounter = new Set(null);
         layer.washCounter = new Set(null);
         layer.socioCounter = new Set(null);
         layer.healthCounter = new Set(null);
-        // draft.query = layer.carto_source._query;
       });
     //when a new carto layer is added
     case "layer.addCartoLayer":

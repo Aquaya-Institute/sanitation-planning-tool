@@ -22,7 +22,6 @@ import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
 import L from "leaflet";
-import Carto from "@carto/carto.js";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import clsx from "clsx";
@@ -70,7 +69,6 @@ export const MapResolutions = ({ value }) => {
   const [disabled, setDisabled] = useState(true);
   const classes = useStyles();
   const highlightDist = useRef();
-  var selectedDistList = [];
 
   useEffect(() => {
     if (currentMapID !== mapID) {
@@ -125,11 +123,7 @@ export const MapResolutions = ({ value }) => {
   }, [carto_client, mapID, maps]);
 
   function filterPopulatedPlacesByCountry(distName) {
-    let query = `
-        SELECT *
-          FROM ${maps[mapID].layers[activeLayer].carto_tableName}
-          WHERE ${column} IN (SELECT ${column} FROM ${maps[mapID].layers["3"].carto_tableName})
-      `;
+    let query = null;
     if (distName.length > 0) {
       query = `
         SELECT *
@@ -137,6 +131,11 @@ export const MapResolutions = ({ value }) => {
           WHERE ${column} IN (${distName
         .map((x) => "'" + x + "'")
         .toString()})`;
+    } else {
+      query = `
+        SELECT *
+          FROM ${maps[mapID].layers[activeLayer].carto_tableName}
+      `;
     }
     // const source = new Carto.source.SQL(
     //   `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`
@@ -195,54 +194,8 @@ export const MapResolutions = ({ value }) => {
     }
   }, [activeLegend]);
 
-  const updateFilter = ({
-    layerIndex,
-    filterIndex,
-    newValue,
-    scaledValue,
-    filterStateObject,
-    categoryFilterIndex,
-  }) => {
-    // if (
-    //   filterStateObject.type === "categorical" &&
-    //   categoryFilterIndex !== undefined
-    // ) {
-    //   let new_cat_obj = {
-    //     ...filterStateObject.value[categoryFilterIndex],
-    //     checked: newValue,
-    //   };
-    //   newValue = [...filterStateObject.value];
-    //   newValue[categoryFilterIndex] = new_cat_obj;
-    // }
-
-    dispatch({
-      type: "layer.filter",
-      mapID: currentMapID,
-      layerIndex: activeLayer,
-      filterIndex: filterIndex,
-      filter: {
-        ...filterStateObject,
-        // value: newValue,
-        // scaledValue: scaledValue,
-      },
-      selectedDists: newValue,
-    });
-  };
-
   const handleChange = (event) => {
     setDistName(event.target.value);
-    selectedDistList.push(event.target.value);
-    dispatch({
-      type: "dropdown.selection",
-      selectedDists: true,
-    });
-    // updateFilter({
-    //   layerIndex: activeLayer,
-    //   filterIndex: 19,
-    //   filterStateObject: maps[currentMapID].layers[activeLayer].filters[19],
-    //   newValue: selectedDistList,
-    //   categoryFilterIndex: 2,
-    // });
   };
 
   return (
