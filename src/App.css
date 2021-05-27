@@ -34,3 +34,4 @@
     color: #2D3C43;
     margin-bottom: 6px;
   }
+  .leaflet-control-container { position: absolute; left: 150px }
