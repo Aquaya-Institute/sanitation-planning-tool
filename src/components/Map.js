@@ -248,9 +248,14 @@ export const Map = () => {
 
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
-        const _source = new Carto.source.SQL(
-          `SELECT * FROM ${layer.carto_tableName}`
-        );
+        var _source = null;
+        if (maps[mapID].layers[index].carto_source === null || index === 0) {
+          _source = new Carto.source.SQL(
+            `SELECT * FROM ${layer.carto_tableName}`
+          );
+        } else {
+          _source = maps[mapID].layers[index].carto_source;
+        }
         _source.on("queryChanged", function (e) {
           dispatch({
             type: "layer.query",

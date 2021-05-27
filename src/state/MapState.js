@@ -240,6 +240,32 @@ const reducer = (state, action) => {
             });
 
             break;
+          case "dropdown":
+            const filter_d = draft.maps[action.mapID].layers[
+              action.layerIndex
+            ].carto_layer
+              .getSource()
+              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[action.filterIndex];
+
+            // let col_vals_tofilter = [];
+            //get the category filter state and create an array
+            //of checked=true col values to filter
+            // let changed = false;
+            // action.filter.value.forEach((category) => {
+            //   if (category.checked === true) {
+            //     col_vals_tofilter.push(category.value);
+            //   } else if (category.checked === false) {
+            //     changed = true;
+            //   }
+            // });
+
+            //this is how you set the filter. this is specific to range filter
+            filter_d.setFilters({
+              in: action.selectedDists,
+            });
+
+            break;
           case "none":
             break;
           default:
@@ -335,13 +361,10 @@ const reducer = (state, action) => {
         }
       });
 
-    case "layer.hide":
-      return produce(state, (draft) => {
-        draft.maps[action.mapID].layers[action.layerID].visible = !action.hide;
-      });
     case "dropdown.names":
       return produce(state, (draft) => {
-        draft.maps[action.mapID].distNames = action.distNames;
+        draft.maps[action.mapID].layers[action.layerID].distNames =
+          action.distNames;
       });
 
     case "dropdown.selection":

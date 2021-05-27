@@ -1,4 +1,11 @@
-import { useState, useEffect, useContext, useMemo, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -52,14 +59,7 @@ function extractValue(arr, prop) {
 
 export const MapResolutions = ({ value }) => {
   const [
-    {
-      maps,
-      currentMapID,
-      activeLayer,
-      carto_client,
-      leafletMap,
-      selectedDists,
-    },
+    { maps, currentMapID, activeLayer, carto_client, leafletMap, activeLegend },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
@@ -89,41 +89,38 @@ export const MapResolutions = ({ value }) => {
       layerID: activeLayer,
     });
   };
-
+  //Set all districts
   useMemo(() => {
     if (carto_client && mapID) {
-      // if (
-      //   maps[mapID].layers[activeLayer].distNames === null ||
-      //   maps[mapID].layers[activeLayer].distNames === undefined
-      // ) {
-      var column_name = null;
-      if (
-        maps[mapID].layers["3"].filters.some(
-          (el) => el.column_name === "name_3"
-        )
-      ) {
-        column_name = "name_3";
-      } else {
-        column_name = "name_2";
-      }
-      setColumn(column_name);
+      if (allDistricts.length === 0) {
+        var column_name = null;
+        if (
+          maps[mapID].layers["3"].filters.some(
+            (el) => el.column_name === "name_3"
+          )
+        ) {
+          column_name = "name_3";
+        } else {
+          column_name = "name_2";
+        }
+        setColumn(column_name);
 
-      return fetch(
-        `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${maps[mapID].layers["3"].carto_tableName}`
-      )
-        .then((resp) => resp.json())
-        .then((response) => {
-          // setAllDistricts(response.rows);
-          const result = extractValue(response.rows, column_name);
-          setAllDistricts(result);
-          // dispatch({
-          //   type: "dropdown.names",
-          //   distNames: result,
-          //   mapID: mapID,
-          //   layerID: activeLayer,
-          // });
-        });
-      // }
+        return fetch(
+          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${maps[mapID].layers["3"].carto_tableName}`
+        )
+          .then((resp) => resp.json())
+          .then((response) => {
+            // setAllDistricts(response.rows);
+            const result = extractValue(response.rows, column_name);
+            setAllDistricts(result);
+            // dispatch({
+            //   type: "dropdown.names",
+            //   distNames: result,
+            //   mapID: mapID,
+            //   layerID: activeLayer,
+            // });
+          });
+      }
     }
   }, [carto_client, mapID, maps]);
 
@@ -149,6 +146,7 @@ export const MapResolutions = ({ value }) => {
       maps[mapID].layers[activeLayer].carto_source.setQuery(query);
     }
   }
+
   useEffect(() => {
     if (highlightDist.current) {
       leafletMap.removeLayer(highlightDist.current);
@@ -187,12 +185,59 @@ export const MapResolutions = ({ value }) => {
     }
   }, [distName, activeLayer]);
 
+  // useLayoutEffect(() => {
+  //   if (distName && mapID) {
+  //     filterPopulatedPlacesByCountry(distName);
+  //   }
+  // }, [activeLegend]);
+
+  const updateFilter = ({
+    layerIndex,
+    filterIndex,
+    newValue,
+    scaledValue,
+    filterStateObject,
+    categoryFilterIndex,
+  }) => {
+    // if (
+    //   filterStateObject.type === "categorical" &&
+    //   categoryFilterIndex !== undefined
+    // ) {
+    //   let new_cat_obj = {
+    //     ...filterStateObject.value[categoryFilterIndex],
+    //     checked: newValue,
+    //   };
+    //   newValue = [...filterStateObject.value];
+    //   newValue[categoryFilterIndex] = new_cat_obj;
+    // }
+
+    dispatch({
+      type: "layer.filter",
+      mapID: currentMapID,
+      layerIndex: activeLayer,
+      filterIndex: filterIndex,
+      filter: {
+        ...filterStateObject,
+        // value: newValue,
+        // scaledValue: scaledValue,
+      },
+      selectedDists: newValue,
+    });
+  };
+
   const handleChange = (event) => {
     setDistName(event.target.value);
-    // selectedDistList.push(event.target.value);
+    selectedDistList.push(event.target.value);
     // dispatch({
     //   type: "dropdown.selection",
     //   selectedDists: selectedDistList,
+    // });
+    // updateFilter({
+    //   layerIndex: activeLayer,
+    //   filterIndex: 19,
+    //   filterStateObject: maps[currentMapID].layers[activeLayer].filters[19],
+    //   newValue: selectedDistList,
+    //   categoryFilterIndex: 2,
     // });
   };
 
@@ -343,6 +388,13 @@ export const MapResolutions = ({ value }) => {
                     </MenuItem>
                   ))}
                 </Select>
+                <button
+                  onClick={() => {
+                    setDistName([]);
+                  }}
+                >
+                  Clear
+                </button>
               </Box>
             )}
           </FormControl>

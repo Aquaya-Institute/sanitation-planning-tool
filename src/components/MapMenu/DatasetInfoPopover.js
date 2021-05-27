@@ -70,17 +70,6 @@ const datasetsInfo = [
     link: "https://www.worldpop.org/",
   },
   {
-    name: "Estimated Settlement",
-    description:
-      "The location and geographic extents of settlement areas estimated from satellite imagery.",
-    year: 2020,
-    resolution: "vector",
-    source: "GRID3",
-    subcategory: "layer",
-    note: "The raw dataset only includes the settlement area polygons. We manipulated the dataset to aggregated indicator values and administrative boundary names to each settlement area. The dataset divides settlement areas into three categories (ordered from large to small): built up areas, small settlement areas, and hamlets. We removed the smallest hamlets from the dataset prior to loading to the tool.",
-    link: "https://grid3.org/",
-  },
-  {
     name: "Women's Educational Attainment",
     description:
       "The average years of education for women ages 15-49 in the selected location.",
@@ -208,6 +197,19 @@ const datasetsInfo = [
     source: "SanPlan",
     subcategory: "accessibility",
     link: "/Datasets/#class",
+  },
+  {
+    name: "Estimated Settlement",
+    description:
+      "The location and geographic extents of settlement areas estimated from satellite imagery.",
+    year: 2020,
+    resolution: "vector",
+    source: "GRID3",
+    subcategory: "layer",
+    note: "The raw dataset only includes the settlement area polygons. We manipulated the dataset to aggregated indicator values and administrative boundary names to each settlement area. The dataset divides settlement areas into three categories (ordered from large to small): built up areas, small settlement areas, and hamlets. We removed the smallest hamlets from the dataset prior to loading to the tool.",
+    link: "https://grid3.org/",
+    citation:
+      "Jochem WC, Leasure DR, Pannell O, Chamberlain HR, Jones P, Tatem AJ. Classifying settlement types from multi-scale spatial patterns of building footprints. Environment and Planning B: Urban Analytics and City Science. 2020:1–19.",
   },
   // {
   //   name: "Settlement Areas and Estimated Population",

@@ -524,6 +524,7 @@ export const nigeria = {
       name: "Estimated settlement",
       carto_tableName: "nga_multivariable_comms",
       carto_layer: null /* we will insert carto's layer object here */,
+      carto_source: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
       accessCounter: new Set(null),
       washCounter: new Set(null),

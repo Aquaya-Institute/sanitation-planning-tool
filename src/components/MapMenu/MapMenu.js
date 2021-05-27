@@ -41,9 +41,8 @@ const drawerWidth = 135;
 
 export const MapMenu = () => {
   //pick specific states (and dispatcher) we need from mapstate
-  const [{ maps, currentMapID, activeLayer }, dispatch] = useContext(
-    MapContext
-  );
+  const [{ maps, currentMapID, activeLayer }, dispatch] =
+    useContext(MapContext);
   const [mapID, setMapID] = useState(null);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -315,7 +314,7 @@ export const MapMenu = () => {
                         alt="Bag of money with a bowl and wheat icon"
                       />
                       <br />
-                      SOCIO-ECOMONIC
+                      SOCIO-ECONOMIC
                     </Typography>
                   </div>
                   {selectedMenu === 2 && (

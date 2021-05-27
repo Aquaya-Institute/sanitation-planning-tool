@@ -320,9 +320,10 @@ export const liberia = {
         },
         {
           name: "Clan",
-          type: "none",
+          type: "dropdown",
           column_name: "name_3",
           subcategory: "id",
+          value: null,
         },
       ],
     },
@@ -529,7 +530,7 @@ export const liberia = {
         },
         {
           name: "Clan",
-          type: "none",
+          type: "dropdown",
           column_name: "name_3",
           subcategory: "id",
         },
@@ -738,7 +739,7 @@ export const liberia = {
         },
         {
           name: "Clan",
-          type: "none",
+          type: "dropdown",
           column_name: "name_3",
           subcategory: "id",
         },
