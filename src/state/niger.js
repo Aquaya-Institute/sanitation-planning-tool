@@ -678,8 +678,8 @@ export const niger = {
           type: "range",
           column_name: "dr",
           min: 0,
-          max: 0,
-          value: [0, 0],
+          max: 229,
+          value: [0, 229],
           subcategory: "accessibility",
         },
         {
@@ -688,8 +688,8 @@ export const niger = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 0,
-          value: [0, 0],
+          max: 876.5,
+          value: [0, 876.5],
           subcategory: "accessibility",
         },
         {

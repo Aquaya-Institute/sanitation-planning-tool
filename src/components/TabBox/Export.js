@@ -39,6 +39,7 @@ export const Export = () => {
     showLoader();
     if (activeLayer === "1") {
       setDownload(null);
+      hideLoader();
     } else if (query && mapID) {
       let queryURL = query.replace(/\s/g, " ");
       return fetch(
@@ -107,7 +108,7 @@ export const Export = () => {
                 {maps[currentMapID].name}
               </Box>
               . The downloaded file will represent the regions remaining after
-              filtering. Use the "Map Resolutions" tab to select the resoltion
+              filtering. Use the "Map Resolutions" tab to select the resolution
               of the regions to download.
             </Box>
             <Button
