@@ -10,47 +10,32 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
-import theme from "../theme/theme";
+import HomeFooter from "../components/Home/HomeFooter";
+
+var link = document.createElement("meta");
+link.setAttribute("name", "about page description");
+link.content =
+  "The about page gives a short description of the tool and its intended use, and the organizations involved in the creation of the tool.";
+document.getElementsByTagName("head")[0].appendChild(link);
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   paper: {
     padding: theme.spacing(2),
     textAlign: "left",
-  },
-  box: {
-    backgroundImage: `url(/banner.png)`,
-    // backgroundPosition: 'center',
-    // // backgroundSize: 'cover',
-    // backgroundRepeat: 'no-repeat',
-    height: "25vh",
-    width: "100vw",
-    // display: 'flex',
   },
 }));
 function About() {
   const classes = useStyles();
   return (
     <>
-      {/* <Box >
-        <img src="/banner.png"
-          alt=""
-          style={{width:"99vw"}}
-        >
-          
-        </img>
-      </Box> */}
       <Container m={2}>
-        <br></br>
+        <br />
         <Paper elevation={0}>
           <Box p={2}>
             <Typography variant="h5" color="secondary">
               <strong>What</strong> is the SanPlan tool?
             </Typography>
-            <br></br>
+            <br />
             SanPlan saves sanitation practitioners the time and challenges of
             collecting, analyzing, and mapping data to inform their program
             design by giving them access to key contextual data required for
@@ -66,7 +51,7 @@ function About() {
             <Typography variant="h5" color="secondary" p={2}>
               <strong>Who</strong> should use this tool?
             </Typography>
-            <br></br>
+            <br />
             The tool is designed for anyone in the planning or budgeting phase
             of a sanitation project at the national, regional or local scale.
             Typical users might include government agencies, program funders,
@@ -81,7 +66,7 @@ function About() {
             <Typography variant="h5" color="secondary">
               <strong>How</strong> does the tool work?
             </Typography>
-            <br></br>
+            <br />
             SanPlan uses existing publicly available data and links it to a
             specific location on the map. This allows users to click anywhere on
             the map and access information on key contextual factors. Because
@@ -120,7 +105,7 @@ function About() {
               <Grid item xs={3}>
                 <img
                   src="/aquaya.png"
-                  alt=""
+                  alt="The Aquaya Institute logo"
                   style={{ width: "110px", height: "60px" }}
                 ></img>
               </Grid>
@@ -141,7 +126,7 @@ function About() {
               <Grid item xs={3}>
                 <img
                   src="/tetratech.png"
-                  alt=""
+                  alt="TetraTech company logo"
                   style={{ width: "200px", height: "60px" }}
                 ></img>
               </Grid>
@@ -157,8 +142,8 @@ function About() {
         </Card>
         <Divider />
       </Container>
+      <HomeFooter />
     </>
   );
 }
-
 export default About;
