@@ -11,6 +11,7 @@ import theme from "../../theme/theme";
 import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { Settlements } from "./Settlements";
 const width = 280;
 
 const useStyles = makeStyles((theme) => ({
@@ -166,6 +167,7 @@ export default function FullWidthTabs() {
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction} hidden={hidden}>
         <UploadButton />
+        <Settlements />
       </TabPanel>
       <TabPanel value={value} index={2} dir={theme.direction} hidden={hidden}>
         <Export />
