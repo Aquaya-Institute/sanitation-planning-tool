@@ -11,7 +11,7 @@ import theme from "../../theme/theme";
 import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-const width = 280;
+const width = 265;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
     width: width,
   },
   tab: {
-    maxWidth: width / 3,
-    width: width / 3,
+    maxWidth: width / 2,
+    width: width / 2,
     minWidth: 50,
     fontSize: 12,
   },
@@ -43,6 +43,7 @@ function TabPanel(props) {
         height: "auto",
         position: "absolute",
         right: "0px",
+        bottom: "300px",
         backgroundColor: theme.palette.background.selected,
         zIndex: "1000",
         borderBottom: "1.5px solid #FFFFFF",
@@ -76,7 +77,7 @@ export default function FullWidthTabs() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-  const [hidden, setHidden] = React.useState(false);
+  const [hidden, setHidden] = React.useState(true);
 
   const handleChange = (event, newValue) => {
     if (newValue === value) {
@@ -93,7 +94,8 @@ export default function FullWidthTabs() {
       style={{
         minheight: "auto",
         position: "absolute",
-        right: "0px",
+        right: "8px",
+        bottom: "272px",
         zIndex: "1000",
       }}
     >
@@ -104,11 +106,11 @@ export default function FullWidthTabs() {
           classes={{
             indicator: classes.indicator,
           }}
-          textColor="secondary"
+          textColor="default"
           aria-label="Tab box labelled tabs"
           // tabItemContainerStyle={{ width: "300px" }}
         >
-          <Tab
+          {/* <Tab
             className={classes.tab}
             label="Map Resolutions"
             style={{
@@ -123,7 +125,7 @@ export default function FullWidthTabs() {
                   : theme.palette.background.default,
             }}
             {...a11yProps(0)}
-          />
+          /> */}
           <Tab
             className={clsx(classes.tab, "tour-upload")}
             label="Upload Communities"
@@ -161,9 +163,9 @@ export default function FullWidthTabs() {
       </AppBar>
       {/* {hidden === false && ( */}
       {/* <> */}
-      <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
-        <MapResolutions />
-      </TabPanel>
+      {/* <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
+        <MapResolutions /> */}
+      {/* </TabPanel> */}
       <TabPanel value={value} index={1} dir={theme.direction} hidden={hidden}>
         <UploadButton />
       </TabPanel>

@@ -57,15 +57,17 @@ export const MapSelector = () => {
         <option aria-label="Default menu option" value="Select country">
           Select country
         </option>
-        {Object.entries(maps).map((map, index) => (
-          <option
-            aria-label={"Menu option: " + map[0]}
-            key={index}
-            value={map[0]}
-          >
-            {map[1].name}
-          </option>
-        ))}
+        {Object.entries(maps)
+          .sort()
+          .map((map, index) => (
+            <option
+              aria-label={"Menu option: " + map[0]}
+              key={index}
+              value={map[0]}
+            >
+              {map[1].name}
+            </option>
+          ))}
       </Select>
     </div>
   );

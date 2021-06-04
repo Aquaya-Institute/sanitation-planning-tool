@@ -1,12 +1,14 @@
 import * as React from "react";
 import { MapContext } from "../../state/MapState";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography, Button } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
 import WashIcon from "../../images/wash.png";
 import SocioIcon from "../../images/socioecon.png";
 import HealthIcon from "../../images/health.png";
 import AccessIcon from "../../images/access.png";
+import resolutionIcon from "../../images/resolution.png";
+import boundaryIcon from "../../images/boundaryselect.png";
 import { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Divider from "@material-ui/core/Divider";
@@ -37,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 13,
   },
 }));
-const drawerWidth = 135;
+const drawerWidth = 175;
 
 export const MapMenu = () => {
   //pick specific states (and dispatcher) we need from mapstate
@@ -112,6 +114,166 @@ export const MapMenu = () => {
             mt={1.5}
             align="center"
             fontWeight="fontWeightBold"
+            key="scalesTitle"
+            style={{ borderRight: "1px solid #CFCDC9" }}
+          >
+            <Typography key="scalesTitleLabel" color="secondary">
+              MAP SCALES
+            </Typography>
+          </Box>
+          <Box
+            key="scalesSubtitle"
+            p={1}
+            variant="subtitle2"
+            fontStyle="italic"
+            fontSize={13.5}
+            fontWeight="fontWeightBold"
+            style={{ borderRight: "1px solid #CFCDC9" }}
+          >
+            Change resolution and focus of map:
+          </Box>
+          <ListItem
+            button
+            key={"resButton"}
+            selected={selectedMenu === 4}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setFilterMenuOpen(true);
+              setAnchorEl(e.currentTarget);
+              setActive(e, 0);
+            }}
+            style={{
+              width: drawerWidth - 1,
+              borderBottom: selectedMenu === 4 ? "1px solid #CFCDC9" : null,
+              borderTop: selectedMenu === 4 ? "1px solid #CFCDC9" : null,
+              borderRight: selectedMenu !== 4 ? "1px solid #CFCDC9" : null,
+              backgroundColor:
+                selectedMenu === 4
+                  ? theme.palette.background.selected
+                  : theme.palette.background.default,
+            }}
+          >
+            <Box
+              key="resButtonContent"
+              mx="auto"
+              my="auto"
+              style={{
+                minHeight: "5vh",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                justify="center"
+                startIcon={
+                  <img
+                    src={resolutionIcon}
+                    alt="square with outward facing arrows icon"
+                    height="25px"
+                  />
+                }
+                style={{ fontSize: 13, padding: 0 }}
+              >
+                SET RESOLUTION
+              </Button>
+              {/* <Typography
+                variant="subtitle2"
+                align="center"
+                key="resLabel"
+                style={{ fontSize: 13 }}
+              >
+                <img src={AccessIcon} alt="Road icon" height="20px" />
+                <br />
+                SET RESOLUTION
+              </Typography> */}
+            </Box>
+            {selectedMenu === 5 && (
+              <FilterMenu
+                key="filterMenus"
+                anchorEl={anchorEl}
+                filterMenuOpen={filterMenuOpen}
+                setFilterMenuOpen={setFilterMenuOpen}
+                cat={"scale"}
+                setSelectedMenu={setSelectedMenu}
+                layerID={activeLayer}
+              />
+            )}
+          </ListItem>
+          <ListItem
+            button
+            key={"dropButton"}
+            selected={selectedMenu === 5}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setFilterMenuOpen(true);
+              setAnchorEl(e.currentTarget);
+              setActive(e, 0);
+            }}
+            style={{
+              width: drawerWidth - 1,
+              borderBottom: selectedMenu === 5 ? "1px solid #CFCDC9" : null,
+              borderTop: selectedMenu === 5 ? "1px solid #CFCDC9" : null,
+              borderRight: selectedMenu !== 5 ? "1px solid #CFCDC9" : null,
+              backgroundColor:
+                selectedMenu === 5
+                  ? theme.palette.background.selected
+                  : theme.palette.background.default,
+            }}
+          >
+            <Box
+              key="dropButtonContent"
+              mx="auto"
+              my="auto"
+              style={{
+                minHeight: "5vh",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                justify="center"
+                startIcon={
+                  <img
+                    src={boundaryIcon}
+                    alt="map with dropped pin icon"
+                    height="25px"
+                  />
+                }
+                style={{ fontSize: 13, padding: 0 }}
+              >
+                SELECT CLAN(S)
+              </Button>
+              {/* <Typography
+                variant="subtitle2"
+                align="center"
+                key="dropLabel"
+                style={{ fontSize: 13 }}
+              >
+                <img src={AccessIcon} alt="Road icon" height="20px" />
+                <br />
+                SELECT CLAN(S)
+              </Typography> */}
+            </Box>
+
+            {selectedMenu === 5 && (
+              <FilterMenu
+                key="filterMenus"
+                anchorEl={anchorEl}
+                filterMenuOpen={filterMenuOpen}
+                setFilterMenuOpen={setFilterMenuOpen}
+                cat={"drop"}
+                setSelectedMenu={setSelectedMenu}
+                layerID={activeLayer}
+              />
+            )}
+          </ListItem>
+          <Divider />
+          <Box
+            mt={1.5}
+            align="center"
+            fontWeight="fontWeightBold"
             key="themesTitle"
             style={{ borderRight: "1px solid #CFCDC9" }}
           >
@@ -158,6 +320,7 @@ export const MapMenu = () => {
                     setActive(e, 0);
                   }}
                   style={{
+                    width: drawerWidth - 1,
                     borderBottom:
                       selectedMenu === 0 ? "1px solid #CFCDC9" : null,
                     borderTop: selectedMenu === 0 ? "1px solid #CFCDC9" : null,
@@ -169,24 +332,37 @@ export const MapMenu = () => {
                         : theme.palette.background.default,
                   }}
                 >
-                  <div
+                  <Box
                     key="accessButtonContent"
+                    // mx="auto"
+                    my="auto"
                     style={{
-                      minHeight: "10vh",
+                      minHeight: "5vh",
                       justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
-                    <Typography
+                    <Button
+                      justify="center"
+                      startIcon={
+                        <img src={AccessIcon} alt="Road icon" height="20px" />
+                      }
+                      // onClick={startTour}
+                      style={{ fontSize: 13, padding: 0 }}
+                    >
+                      ACCESSIBILITY & REMOTENESS
+                    </Button>
+                    {/* <Typography
                       variant="subtitle2"
                       align="center"
                       key="accessLabel"
+                      style={{ fontSize: 12 }}
                     >
-                      <img src={AccessIcon} alt="Road icon" />
+                      <img src={AccessIcon} alt="Road icon" height="20px" />
                       <br />
-                      ACCESS-IBILITY
-                    </Typography>
-                  </div>
+                      ACCESSIBILITY
+                    </Typography> */}
+                  </Box>
                   {selectedMenu === 0 && (
                     <FilterMenu
                       key="filterMenus"
@@ -220,6 +396,7 @@ export const MapMenu = () => {
                     setActive(e, 1);
                   }}
                   style={{
+                    width: drawerWidth - 1,
                     borderBottom:
                       selectedMenu === 1 ? "1px solid #CFCDC9" : null,
                     borderTop: selectedMenu === 1 ? "1px solid #CFCDC9" : null,
@@ -231,27 +408,45 @@ export const MapMenu = () => {
                         : theme.palette.background.default,
                   }}
                 >
-                  <div
+                  <Box
                     key="washButtonContent"
+                    // mx="auto"
+                    my="auto"
                     style={{
-                      minHeight: "10vh",
+                      minHeight: "5vh",
                       justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
-                    <Typography
+                    <Button
+                      justify="center"
+                      startIcon={
+                        <img
+                          src={WashIcon}
+                          alt="Hand catching a water droplet icon"
+                          height="27px"
+                        />
+                      }
+                      // onClick={startTour}
+                      style={{ fontSize: 13, padding: 0 }}
+                    >
+                      WATER & SANITATION
+                    </Button>
+                    {/* <Typography
                       variant="subtitle2"
                       align="center"
                       key="washLabel"
+                      style={{ fontSize: 12 }}
                     >
                       <img
                         src={WashIcon}
                         alt="Hand catching a water droplet icon"
+                        height="30px"
                       />
                       <br />
                       WATER & SANITATION
-                    </Typography>
-                  </div>
+                    </Typography> */}
+                  </Box>
                   {selectedMenu === 1 && (
                     <FilterMenu
                       key="filterMenus"
@@ -285,6 +480,7 @@ export const MapMenu = () => {
                     setActive(e, 2);
                   }}
                   style={{
+                    width: drawerWidth - 1,
                     borderBottom:
                       selectedMenu === 2 ? "1px solid #CFCDC9" : null,
                     borderTop: selectedMenu === 2 ? "1px solid #CFCDC9" : null,
@@ -296,27 +492,45 @@ export const MapMenu = () => {
                         : theme.palette.background.default,
                   }}
                 >
-                  <div
+                  <Box
+                    // mx="auto"
+                    my="auto"
                     key="socioButtonContent"
                     style={{
-                      minHeight: "10vh",
+                      minHeight: "5vh",
                       justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
-                    <Typography
+                    <Button
+                      justify="center"
+                      startIcon={
+                        <img
+                          src={SocioIcon}
+                          alt="Bag of money with a bowl and wheat icon"
+                          height="35px"
+                        />
+                      }
+                      // onClick={startTour}
+                      style={{ fontSize: 13, padding: 0 }}
+                    >
+                      SOCIO-ECONOMIC
+                    </Button>
+                    {/* <Typography
                       variant="subtitle2"
                       align="center"
                       key="socioLabel"
+                      style={{ fontSize: 12 }}
                     >
                       <img
                         src={SocioIcon}
                         alt="Bag of money with a bowl and wheat icon"
+                        height="30px"
                       />
                       <br />
-                      SOCIO-ECONOMIC
-                    </Typography>
-                  </div>
+                      SOCIOECONOMIC
+                    </Typography> */}
+                  </Box>
                   {selectedMenu === 2 && (
                     <FilterMenu
                       key="filterMenus"
@@ -352,6 +566,7 @@ export const MapMenu = () => {
                     setActive(e, 3);
                   }}
                   style={{
+                    width: drawerWidth - 1,
                     borderBottom:
                       selectedMenu === 3 ? "1px solid #CFCDC9" : null,
                     borderTop: selectedMenu === 3 ? "1px solid #CFCDC9" : null,
@@ -363,24 +578,46 @@ export const MapMenu = () => {
                         : theme.palette.background.default,
                   }}
                 >
-                  <div
+                  <Box
                     key="healthButtonContent"
+                    // mx="auto"
+                    my="auto"
                     style={{
-                      minHeight: "10vh",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      minHeight: "5vh",
+                      // justifyContent: "center",
+                      // alignItems: "center",
                     }}
                   >
-                    <Typography
+                    <Button
+                      justify="center"
+                      my="auto"
+                      startIcon={
+                        <img
+                          src={HealthIcon}
+                          alt="Heart with a plus icon"
+                          height="27px"
+                        />
+                      }
+                      // onClick={startTour}
+                      style={{ fontSize: 13, padding: 0 }}
+                    >
+                      DISEASE BURDEN
+                    </Button>
+                    {/* <Typography
                       variant="subtitle2"
                       align="center"
                       key="healthLabel"
+                      style={{ fontSize: 12 }}
                     >
-                      <img src={HealthIcon} alt="Heart with a plus icon" />
+                      <img
+                        src={HealthIcon}
+                        alt="Heart with a plus icon"
+                        height="30px"
+                      />
                       <br />
-                      DISEASE BURDEN
-                    </Typography>
-                  </div>
+                      HEALTH
+                    </Typography> */}
+                  </Box>
                   {selectedMenu === 3 && (
                     <FilterMenu
                       key="filterMenus"
@@ -402,6 +639,7 @@ export const MapMenu = () => {
               button
               key="reset"
               style={{
+                width: drawerWidth - 1,
                 minHeight: "3vh",
                 justifyContent: "center",
                 alignItems: "center",
@@ -423,7 +661,10 @@ export const MapMenu = () => {
             </ListItem>
             <ListItem
               key="tourButton"
-              style={{ borderRight: "1px solid #CFCDC9" }}
+              style={{
+                width: drawerWidth - 1,
+                borderRight: "1px solid #CFCDC9",
+              }}
             >
               <Tour key="tour" style={{ justifyContent: "center" }} />
             </ListItem>
