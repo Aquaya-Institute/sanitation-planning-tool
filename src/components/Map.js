@@ -10,7 +10,7 @@ import { MapContext } from "../state/MapState";
 import Carto from "@carto/carto.js";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Link, Grid, Button, Box, Typography, Slider } from "@material-ui/core";
+import { Link, Grid, Button, Box, Typography } from "@material-ui/core";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles } from "@material-ui/core/styles";
 import "../App.css";
@@ -20,7 +20,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Tooltip from "@material-ui/core/Tooltip";
 import theme from "../theme/theme";
 import CloseIcon from "@material-ui/icons/Close";
 import SaveIcon from "@material-ui/icons/Save";
@@ -37,7 +36,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import { TrainRounded } from "@material-ui/icons";
+import TabsWrappedLabel from "../components/TabBox/TabBox";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -89,15 +88,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Map = () => {
   const [
-    {
-      currentMapID,
-      maps,
-      activeLayer,
-      activeLegend,
-      userData,
-      queryDist,
-      skip,
-    },
+    { currentMapID, maps, activeLayer, activeLegend, userData, queryDist },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState();
@@ -118,7 +109,7 @@ export const Map = () => {
   const classes = useStyles();
   const clickRef = useRef(null);
   const mapRef = useRef(null);
-  const [value, setValue] = useState(100);
+  // const [value, setValue] = useState(100);
   // const [commCalcSource, setCommCalcSource] = useState(null);
   // const [widgetLoad, setWidgetLoad] = useState();
 
@@ -274,10 +265,10 @@ export const Map = () => {
 
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
-        var _source = null;
         // var _source = new Carto.source.SQL(
         //   `SELECT * FROM ${layer.carto_tableName}`
         // );
+        var _source = null;
         if (queryDist && index > 1) {
           let queryedit =
             `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist;
@@ -587,38 +578,38 @@ export const Map = () => {
       styleNew: styleNew,
     });
   };
-  const handleOpacityChange = (e, newval) => {
-    setValue(newval);
-    let styleNew = null;
-    if (
-      maps[mapID].layers[activeLayer].name === "5x5km area" ||
-      maps[mapID].layers[activeLayer].name === "1x1km area"
-    ) {
-      styleNew = legendStyles[activeLegend].style_pixel.concat(
-        ` #layer {polygon-opacity: ${newval / 100};}`
-      );
-    } else {
-      styleNew = legendStyles[activeLegend].style_bounds.concat(
-        ` #layer {polygon-opacity: ${newval / 100};}`
-      );
-    }
-    // let styleNew2 = maps[mapID].layers[activeLayer].carto_style.concat(
-    //   `#layer {polygon-opacity: ${newval / 100};}`
-    // );
+  // const handleOpacityChange = (e, newval) => {
+  //   setValue(newval);
+  //   let styleNew = null;
+  //   if (
+  //     maps[mapID].layers[activeLayer].name === "5x5km area" ||
+  //     maps[mapID].layers[activeLayer].name === "1x1km area"
+  //   ) {
+  //     styleNew = legendStyles[activeLegend].style_pixel.concat(
+  //       ` #layer {polygon-opacity: ${newval / 100};}`
+  //     );
+  //   } else {
+  //     styleNew = legendStyles[activeLegend].style_bounds.concat(
+  //       ` #layer {polygon-opacity: ${newval / 100};}`
+  //     );
+  //   }
+  //   // let styleNew2 = maps[mapID].layers[activeLayer].carto_style.concat(
+  //   //   `#layer {polygon-opacity: ${newval / 100};}`
+  //   // );
 
-    // let styleNew = new Carto.layer.Layer(
-    //   maps[mapID].layers[activeLayer].carto_source,
-    //   styleNew2
-    // );
-    // cartoClient.addLayer(styleNew);
+  //   // let styleNew = new Carto.layer.Layer(
+  //   //   maps[mapID].layers[activeLayer].carto_source,
+  //   //   styleNew2
+  //   // );
+  //   // cartoClient.addLayer(styleNew);
 
-    dispatch({
-      type: "layer.opacity",
-      styleNew: styleNew,
-      mapID: mapID,
-      layerID: activeLayer,
-    });
-  };
+  //   dispatch({
+  //     type: "layer.opacity",
+  //     styleNew: styleNew,
+  //     mapID: mapID,
+  //     layerID: activeLayer,
+  //   });
+  // };
 
   const [scroll] = useState("paper");
   const [hideLayer, setHideLayer] = useState(false);
@@ -651,6 +642,10 @@ export const Map = () => {
             backgroundColor: "transparent",
           }}
         >
+          <TabsWrappedLabel />
+          <Paper
+            style={{ height: "10px", backgroundColor: "transparent" }}
+          ></Paper>
           <Paper
             square
             pb={2}
@@ -670,13 +665,6 @@ export const Map = () => {
                     } else {
                       maps[mapID].layers[activeLayer].carto_layer.show();
                     }
-
-                    // dispatch({
-                    //   type: "layer.hide",
-                    //   hide: hideLayer,
-                    //   mapID: mapID,
-                    //   layerID: activeLayer,
-                    // });
                   }}
                   icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                   checkedIcon={<CheckBoxIcon fontSize="small" />}

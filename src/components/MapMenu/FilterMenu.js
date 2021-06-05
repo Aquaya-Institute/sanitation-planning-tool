@@ -43,9 +43,9 @@ const FilterMenu = ({
       placement={
         cat === "health"
           ? "left-end"
-          : cat === "socioeconomic"
-          ? "left"
-          : "left-start"
+          : // : cat === "socioeconomic"
+            "left"
+        // : "left-start"
       }
       style={{
         height: "auto",

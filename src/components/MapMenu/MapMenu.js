@@ -18,7 +18,8 @@ import FilterMenu from "./FilterMenu";
 import Tour from "../subcomponents/Tour";
 import theme from "../../theme/theme";
 import Badge from "@material-ui/core/Badge";
-import TabsWrappedLabel from "../TabBox/TabBox";
+import { MapResolutions } from "./MapResolutions";
+import { DropdownMenu } from "./DropdownMenu";
 // import ReactFileReader from "react-file-reader";
 
 /* Toggle button overrides */
@@ -133,6 +134,7 @@ export const MapMenu = () => {
             Change resolution and focus of map:
           </Box>
           <ListItem
+            className="tour-scale"
             button
             key={"resButton"}
             selected={selectedMenu === 4}
@@ -141,7 +143,7 @@ export const MapMenu = () => {
               e.stopPropagation();
               setFilterMenuOpen(true);
               setAnchorEl(e.currentTarget);
-              setActive(e, 0);
+              setActive(e, 4);
             }}
             style={{
               width: drawerWidth - 1,
@@ -177,30 +179,19 @@ export const MapMenu = () => {
               >
                 SET RESOLUTION
               </Button>
-              {/* <Typography
-                variant="subtitle2"
-                align="center"
-                key="resLabel"
-                style={{ fontSize: 13 }}
-              >
-                <img src={AccessIcon} alt="Road icon" height="20px" />
-                <br />
-                SET RESOLUTION
-              </Typography> */}
             </Box>
-            {selectedMenu === 5 && (
-              <FilterMenu
-                key="filterMenus"
+            {selectedMenu === 4 && (
+              <MapResolutions
                 anchorEl={anchorEl}
                 filterMenuOpen={filterMenuOpen}
                 setFilterMenuOpen={setFilterMenuOpen}
-                cat={"scale"}
+                cat={"drop"}
                 setSelectedMenu={setSelectedMenu}
-                layerID={activeLayer}
               />
             )}
           </ListItem>
           <ListItem
+            className="tour-dropdown"
             button
             key={"dropButton"}
             selected={selectedMenu === 5}
@@ -209,7 +200,7 @@ export const MapMenu = () => {
               e.stopPropagation();
               setFilterMenuOpen(true);
               setAnchorEl(e.currentTarget);
-              setActive(e, 0);
+              setActive(e, 5);
             }}
             style={{
               width: drawerWidth - 1,
@@ -232,40 +223,29 @@ export const MapMenu = () => {
                 alignItems: "center",
               }}
             >
-              <Button
-                justify="center"
-                startIcon={
-                  <img
-                    src={boundaryIcon}
-                    alt="map with dropped pin icon"
-                    height="25px"
-                  />
-                }
-                style={{ fontSize: 13, padding: 0 }}
-              >
-                SELECT CLAN(S)
-              </Button>
-              {/* <Typography
-                variant="subtitle2"
-                align="center"
-                key="dropLabel"
-                style={{ fontSize: 13 }}
-              >
-                <img src={AccessIcon} alt="Road icon" height="20px" />
-                <br />
-                SELECT CLAN(S)
-              </Typography> */}
+              {mapID && (
+                <Button
+                  justify="center"
+                  startIcon={
+                    <img
+                      src={boundaryIcon}
+                      alt="map with dropped pin icon"
+                      height="25px"
+                    />
+                  }
+                  style={{ fontSize: 13, padding: 0 }}
+                >
+                  SELECT {maps[mapID].layers["3"].name}(S)
+                </Button>
+              )}
             </Box>
-
             {selectedMenu === 5 && (
-              <FilterMenu
-                key="filterMenus"
+              <DropdownMenu
                 anchorEl={anchorEl}
                 filterMenuOpen={filterMenuOpen}
                 setFilterMenuOpen={setFilterMenuOpen}
                 cat={"drop"}
                 setSelectedMenu={setSelectedMenu}
-                layerID={activeLayer}
               />
             )}
           </ListItem>
@@ -344,6 +324,7 @@ export const MapMenu = () => {
                   >
                     <Button
                       justify="center"
+                      mx="auto"
                       startIcon={
                         <img src={AccessIcon} alt="Road icon" height="20px" />
                       }
@@ -514,7 +495,7 @@ export const MapMenu = () => {
                       // onClick={startTour}
                       style={{ fontSize: 13, padding: 0 }}
                     >
-                      SOCIO-ECONOMIC
+                      SOCIOECONOMIC
                     </Button>
                     {/* <Typography
                       variant="subtitle2"
@@ -671,7 +652,6 @@ export const MapMenu = () => {
           </List>
         </div>
       </Drawer>
-      <TabsWrappedLabel />
     </React.Fragment>
   );
 };

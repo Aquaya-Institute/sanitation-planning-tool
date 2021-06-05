@@ -5,7 +5,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { UploadButton } from "./UploadButton";
-import { MapResolutions } from "./MapResolutions";
+import { MapResolutions } from "../MapMenu/MapResolutions";
 import { Export } from "./Export";
 import theme from "../../theme/theme";
 import clsx from "clsx";
@@ -41,13 +41,14 @@ function TabPanel(props) {
       aria-labelledby={`full-width-tab-${index}`}
       style={{
         height: "auto",
-        position: "absolute",
+        position: "relative",
         right: "0px",
-        bottom: "300px",
+        bottom: "0px",
         backgroundColor: theme.palette.background.selected,
         zIndex: "1000",
         borderBottom: "1.5px solid #FFFFFF",
         borderRight: "1.5px solid #CFCDC9",
+        // borderTop: "1.5px solid #CFCDC9",
         borderLeft: "1.5px solid #CFCDC9",
         display: hidden ? "none" : "block",
       }}
@@ -91,14 +92,23 @@ export default function FullWidthTabs() {
   return (
     <div
       className={classes.root}
-      style={{
-        minheight: "auto",
-        position: "absolute",
-        right: "8px",
-        bottom: "272px",
-        zIndex: "1000",
-      }}
+      // style={{
+      //   minheight: "auto",
+      //   position: "absolute",
+      //   right: "8px",
+      //   bottom: "272px",
+      //   zIndex: "1000",
+      // }}
     >
+      {/* <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
+        <MapResolutions /> */}
+      {/* </TabPanel> */}
+      <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
+        <UploadButton />
+      </TabPanel>
+      <TabPanel value={value} index={1} dir={theme.direction} hidden={hidden}>
+        <Export />
+      </TabPanel>
       <AppBar position="static" color="default">
         <Tabs
           value={value}
@@ -106,7 +116,7 @@ export default function FullWidthTabs() {
           classes={{
             indicator: classes.indicator,
           }}
-          textColor="default"
+          textColor="inherit"
           aria-label="Tab box labelled tabs"
           // tabItemContainerStyle={{ width: "300px" }}
         >
@@ -129,16 +139,16 @@ export default function FullWidthTabs() {
           <Tab
             className={clsx(classes.tab, "tour-upload")}
             label="Upload Communities"
-            {...a11yProps(1)}
+            {...a11yProps(0)}
             style={{
-              borderLeft:
-                value === 1 && hidden === false ? "1px solid #CFCDC9" : null,
+              borderBottom: "1px solid #CFCDC9",
+              borderLeft: "1px solid #CFCDC9",
               borderRight:
-                value === 1 && hidden === false ? "1px solid #CFCDC9" : null,
-              borderBottom:
-                value !== 1 && hidden === false ? "1px solid #CFCDC9" : null,
+                value === 0 && hidden === false ? "1px solid #CFCDC9" : null,
+              borderTop:
+                value !== 0 && hidden === false ? "1px solid #CFCDC9" : null,
               backgroundColor:
-                value === 1 && hidden === false
+                value === 0 && hidden === false
                   ? theme.palette.background.selected
                   : theme.palette.background.default,
             }}
@@ -146,15 +156,16 @@ export default function FullWidthTabs() {
           <Tab
             className={clsx(classes.tab, "tour-export")}
             label="Data Export"
-            {...a11yProps(2)}
+            {...a11yProps(1)}
             style={{
+              borderBottom: "1px solid #CFCDC9",
               borderLeft:
-                value === 2 && hidden === false ? "1px solid #CFCDC9" : null,
-              // borderRight: value === 0 ? "1px solid #CFCDC9" : null,
-              borderBottom:
-                value !== 2 && hidden === false ? "1px solid #CFCDC9" : null,
+                value === 1 && hidden === false ? "1px solid #CFCDC9" : null,
+              borderRight: "1px solid #CFCDC9",
+              borderTop:
+                value !== 1 && hidden === false ? "1px solid #CFCDC9" : null,
               backgroundColor:
-                value === 2 && hidden === false
+                value === 1 && hidden === false
                   ? theme.palette.background.selected
                   : theme.palette.background.default,
             }}
@@ -163,15 +174,7 @@ export default function FullWidthTabs() {
       </AppBar>
       {/* {hidden === false && ( */}
       {/* <> */}
-      {/* <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
-        <MapResolutions /> */}
-      {/* </TabPanel> */}
-      <TabPanel value={value} index={1} dir={theme.direction} hidden={hidden}>
-        <UploadButton />
-      </TabPanel>
-      <TabPanel value={value} index={2} dir={theme.direction} hidden={hidden}>
-        <Export />
-      </TabPanel>
+
       {/* </> */}
       {/* // )} */}
     </div>
