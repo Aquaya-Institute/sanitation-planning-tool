@@ -233,10 +233,10 @@ const datasetsInfo = [
   // },
 ];
 
-const DatasetInfoPopover = ({ filter, filterIndex }) => {
+const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [hover, setHover] = useState(false);
-  const clickRefData = useRef(null);
+  // const clickRefData = useRef(null);
   const classes = useStyles();
   const [datasetName, setDatasetName] = useState();
   const [selectedDataset, setSelectedDataset] = useState();

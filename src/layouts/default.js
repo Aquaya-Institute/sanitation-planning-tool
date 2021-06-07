@@ -10,6 +10,7 @@ import { CssBaseline, Container, Box, Menu, MenuItem } from "@material-ui/core";
 import { MapSelector } from "../components/MapSelector";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import IconButton from "@material-ui/core/IconButton";
+import { MapContext } from "../state/MapState";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +46,7 @@ export default function DefaultLayout(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const mobileMenuId = "primary-search-account-menu-mobile";
+  const [{}, dispatch] = React.useContext(MapContext);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -71,14 +73,57 @@ export default function DefaultLayout(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem component={RouterLink} color="inherit" to="/">
+      <MenuItem
+        component={RouterLink}
+        color="inherit"
+        to="/"
+        onClick={() => {
+          dispatch({
+            type: "map.select",
+            mapID: null,
+          });
+        }}
+      >
         Home
       </MenuItem>
-      <MenuItem component={RouterLink} color="inherit" to="/datasets">
+      <MenuItem
+        component={RouterLink}
+        color="inherit"
+        to="/datasets"
+        onClick={() => {
+          dispatch({
+            type: "map.select",
+            mapID: null,
+          });
+        }}
+      >
         Datasets Overview
       </MenuItem>
-      <MenuItem component={RouterLink} color="inherit" to="/about">
+      <MenuItem
+        component={RouterLink}
+        color="inherit"
+        to="/about"
+        onClick={() => {
+          dispatch({
+            type: "map.select",
+            mapID: null,
+          });
+        }}
+      >
         About
+      </MenuItem>
+      <MenuItem
+        component={RouterLink}
+        color="inherit"
+        to="/faq"
+        onClick={() => {
+          dispatch({
+            type: "map.select",
+            mapID: null,
+          });
+        }}
+      >
+        FAQ
       </MenuItem>
     </Menu>
   );
@@ -106,22 +151,62 @@ export default function DefaultLayout(props) {
 
           <div className={classes.sectionDesktop}>
             <Box ml={3}>
-              <Button component={RouterLink} color="inherit" to="/">
+              <Button
+                component={RouterLink}
+                color="inherit"
+                to="/"
+                onClick={() => {
+                  dispatch({
+                    type: "map.select",
+                    mapID: null,
+                  });
+                }}
+              >
                 Home
               </Button>
             </Box>
             <Box ml={3}>
-              <Button component={RouterLink} color="inherit" to="/datasets">
+              <Button
+                component={RouterLink}
+                color="inherit"
+                to="/datasets"
+                onClick={() => {
+                  dispatch({
+                    type: "map.select",
+                    mapID: null,
+                  });
+                }}
+              >
                 Datasets Overview
               </Button>
             </Box>
             <Box ml={3}>
-              <Button component={RouterLink} color="inherit" to="/about">
+              <Button
+                component={RouterLink}
+                color="inherit"
+                to="/about"
+                onClick={() => {
+                  dispatch({
+                    type: "map.select",
+                    mapID: null,
+                  });
+                }}
+              >
                 About
               </Button>
             </Box>
             <Box ml={3}>
-              <Button component={RouterLink} color="inherit" to="/faq">
+              <Button
+                component={RouterLink}
+                color="inherit"
+                to="/faq"
+                onClick={() => {
+                  dispatch({
+                    type: "map.select",
+                    mapID: null,
+                  });
+                }}
+              >
                 FAQ
               </Button>
             </Box>

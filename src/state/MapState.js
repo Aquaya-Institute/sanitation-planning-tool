@@ -28,6 +28,8 @@ const initialState = {
   query: null,
   queryDist: null,
   skip: true,
+  selectedDistName: [],
+  highlightLayer: null,
 };
 
 const reducer = (state, action) => {
@@ -333,6 +335,7 @@ const reducer = (state, action) => {
         draft.maps[action.mapID].layers[action.layerID].carto_source =
           action.cartoSource;
       });
+
     case "layer.refresh":
       return produce(state, (draft) => {
         draft.maps[action.mapID].layers[action.layerID].carto_source =
@@ -357,10 +360,14 @@ const reducer = (state, action) => {
         }
       });
 
-    case "dropdown.names":
+    case "dropdown.selection":
       return produce(state, (draft) => {
-        draft.maps[action.mapID].layers[action.layerID].distNames =
-          action.distNames;
+        draft.selectedDistName = action.distName;
+      });
+
+    case "dropdown.highlight":
+      return produce(state, (draft) => {
+        draft.highlightLayer = action.highlightLayer;
       });
 
     case "user.upload":

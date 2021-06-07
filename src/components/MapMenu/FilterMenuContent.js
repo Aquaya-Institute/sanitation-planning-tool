@@ -36,7 +36,7 @@ function createMarks(array) {
   return returnedTarget;
 }
 
-const FilterMenuContent = ({ cat, layerID }) => {
+const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
   const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
   // const [mapID, setMapID] = useState(null);
   const classes = useStyles();
@@ -112,6 +112,8 @@ const FilterMenuContent = ({ cat, layerID }) => {
                       <DatasetInfoPopover
                         filter={filter}
                         filterIndex={filterIndex}
+                        clickRefData={clickRefData}
+                        // setPopoverOpen={setPopoverOpen}
                       />
                     </Grid>
                     <Grid item xs={12} key={"catFilter" + filterIndex}>
@@ -183,6 +185,8 @@ const FilterMenuContent = ({ cat, layerID }) => {
                       <DatasetInfoPopover
                         filter={filter}
                         filterIndex={filterIndex}
+                        clickRefData={clickRefData}
+                        // setPopoverOpen={setPopoverOpen}
                       />
                     </Grid>
                     <Grid item xs={11} key={"sliderGrid" + filterIndex}>
@@ -236,6 +240,8 @@ const FilterMenuContent = ({ cat, layerID }) => {
                       <DatasetInfoPopover
                         filter={filter}
                         filterIndex={filterIndex}
+                        clickRefData={clickRefData}
+                        // setPopoverOpen={setPopoverOpen}
                       />
                     </Grid>
                     <Grid item xs={11} key={"NLsliderGrid" + filterIndex}>
