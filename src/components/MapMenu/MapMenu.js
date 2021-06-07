@@ -20,7 +20,6 @@ import theme from "../../theme/theme";
 import Badge from "@material-ui/core/Badge";
 import { MapResolutions } from "./MapResolutions";
 import { DropdownMenu } from "./DropdownMenu";
-// import ReactFileReader from "react-file-reader";
 
 /* Toggle button overrides */
 const useStyles = makeStyles((theme) => ({
@@ -71,28 +70,6 @@ export const MapMenu = () => {
       mapID: mapID,
     });
   };
-
-  // // District dropdown
-  // useEffect(() => {
-  //   if (cartoClient && districtsSource) {
-  //     const legendDropdown = new Carto.dataview.Category(
-  //       districtsSource,
-  //       "district",
-  //       {
-  //         limit: 216,
-  //       }
-  //     );
-  //     cartoClient.addDataview(legendDropdown);
-
-  //     legendDropdown.on("dataChanged", (data) => {
-  //       console.log("dataChanged");
-  //       const countryNames = data.categories
-  //         .map((category) => category.name)
-  //         .sort();
-  //       setAllDistricts(countryNames);
-  //     });
-  //   }
-  // }, [cartoClient, districtsSource]);
 
   return (
     <React.Fragment key="drawerDiv">
@@ -333,16 +310,6 @@ export const MapMenu = () => {
                     >
                       ACCESSIBILITY & REMOTENESS
                     </Button>
-                    {/* <Typography
-                      variant="subtitle2"
-                      align="center"
-                      key="accessLabel"
-                      style={{ fontSize: 12 }}
-                    >
-                      <img src={AccessIcon} alt="Road icon" height="20px" />
-                      <br />
-                      ACCESSIBILITY
-                    </Typography> */}
                   </Box>
                   {selectedMenu === 0 && (
                     <FilterMenu
@@ -413,20 +380,6 @@ export const MapMenu = () => {
                     >
                       WATER & SANITATION
                     </Button>
-                    {/* <Typography
-                      variant="subtitle2"
-                      align="center"
-                      key="washLabel"
-                      style={{ fontSize: 12 }}
-                    >
-                      <img
-                        src={WashIcon}
-                        alt="Hand catching a water droplet icon"
-                        height="30px"
-                      />
-                      <br />
-                      WATER & SANITATION
-                    </Typography> */}
                   </Box>
                   {selectedMenu === 1 && (
                     <FilterMenu
@@ -497,20 +450,6 @@ export const MapMenu = () => {
                     >
                       SOCIOECONOMIC
                     </Button>
-                    {/* <Typography
-                      variant="subtitle2"
-                      align="center"
-                      key="socioLabel"
-                      style={{ fontSize: 12 }}
-                    >
-                      <img
-                        src={SocioIcon}
-                        alt="Bag of money with a bowl and wheat icon"
-                        height="30px"
-                      />
-                      <br />
-                      SOCIOECONOMIC
-                    </Typography> */}
                   </Box>
                   {selectedMenu === 2 && (
                     <FilterMenu
@@ -584,20 +523,6 @@ export const MapMenu = () => {
                     >
                       DISEASE BURDEN
                     </Button>
-                    {/* <Typography
-                      variant="subtitle2"
-                      align="center"
-                      key="healthLabel"
-                      style={{ fontSize: 12 }}
-                    >
-                      <img
-                        src={HealthIcon}
-                        alt="Heart with a plus icon"
-                        height="30px"
-                      />
-                      <br />
-                      HEALTH
-                    </Typography> */}
                   </Box>
                   {selectedMenu === 3 && (
                     <FilterMenu

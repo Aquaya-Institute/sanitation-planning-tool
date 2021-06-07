@@ -89,24 +89,6 @@ export const DropdownMenu = ({
     }
   }, [currentMapID, mapID]);
 
-  //   //click outside
-  //   useEffect(() => {
-  //     const handleClickOutside = (event) => {
-  //       if (
-  //         clickRefMenu.current &&
-  //         !clickRefMenu.current.contains(event.target)
-  //       ) {
-  //         setFilterMenuOpen(false);
-  //         setSelectedMenu(null);
-  //         console.log("clicked outside");
-  //       }
-  //     };
-  //     document.addEventListener("click", handleClickOutside, true);
-  //     return () => {
-  //       document.removeEventListener("click", handleClickOutside, true);
-  //     };
-  //   }, [setFilterMenuOpen, setSelectedMenu]);
-
   //Set all districts
   useMemo(() => {
     if (carto_client && mapID) {
@@ -189,12 +171,6 @@ export const DropdownMenu = ({
               highlightLayer: geojsonLayer,
             });
           });
-        // } else if (distName.length === 0) {
-        //   filterPopulatedPlacesByCountry(distName);
-        //   leafletMap.setView(
-        //     [maps[mapID].lat, maps[mapID].long],
-        //     maps[mapID].zoom
-        //   );
       }
     }
   }, [distName]);

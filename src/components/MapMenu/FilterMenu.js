@@ -16,6 +16,9 @@ const FilterMenu = ({
 }) => {
   const [menuTileColor, setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
+  const clickRefData = useRef(null);
+  // const [popoverOpen, setPopoverOpen] = useState(false);
+
   //click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -23,9 +26,21 @@ const FilterMenu = ({
         clickRefMenu.current &&
         !clickRefMenu.current.contains(event.target)
       ) {
-        setFilterMenuOpen(false);
-        setSelectedMenu(null);
-        console.log("clicked outside");
+        if (
+          clickRefData.current &&
+          !clickRefData.current.contains(event.target)
+        ) {
+          // setPopoverOpen(null);
+          console.log("clicked outside");
+        } else if (
+          clickRefData.current &&
+          clickRefData.current.contains(event.target)
+        ) {
+        } else {
+          setFilterMenuOpen(false);
+          setSelectedMenu(null);
+          console.log("clicked outside");
+        }
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -103,6 +118,8 @@ const FilterMenu = ({
           key="FilterMenuContent"
           cat={cat}
           layerID={layerID}
+          clickRefData={clickRefData}
+          // setPopoverOpen={setPopoverOpen}
         />
       </Box>
     </Popper>

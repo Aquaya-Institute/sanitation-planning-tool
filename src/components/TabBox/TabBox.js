@@ -5,7 +5,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { UploadButton } from "./UploadButton";
-import { MapResolutions } from "../MapMenu/MapResolutions";
+// import { MapResolutions } from "../MapMenu/MapResolutions";
 import { Export } from "./Export";
 import theme from "../../theme/theme";
 import clsx from "clsx";
@@ -116,7 +116,7 @@ export default function FullWidthTabs() {
           classes={{
             indicator: classes.indicator,
           }}
-          textColor="inherit"
+          // textColor="inherit"
           aria-label="Tab box labelled tabs"
           // tabItemContainerStyle={{ width: "300px" }}
         >
@@ -172,11 +172,6 @@ export default function FullWidthTabs() {
           />
         </Tabs>
       </AppBar>
-      {/* {hidden === false && ( */}
-      {/* <> */}
-
-      {/* </> */}
-      {/* // )} */}
     </div>
   );
 }

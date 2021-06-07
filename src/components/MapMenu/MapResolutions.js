@@ -5,12 +5,16 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import { Box, Typography, Popper } from "@material-ui/core";
+import { Box, Typography, Popper, Dialog, Grid } from "@material-ui/core";
 import { MapContext } from "../../state/MapState";
 import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   checkboxLabel: {
@@ -23,6 +27,12 @@ const useStyles = makeStyles((theme) => ({
   },
   menu: {
     height: "25px",
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "scroll",
   },
 }));
 
@@ -37,10 +47,14 @@ export const MapResolutions = ({
     useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
   // const [activeLayer, setActiveLayer] = useState("2");
-  const [disabled, setDisabled] = useState(true);
+  const [checked, setChecked] = useState(false);
   const classes = useStyles();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const idPopover = popoverOpen ? "simple-popover" : undefined;
+  const clickRef = useRef(null);
+  const [scroll] = useState("paper");
 
   useEffect(() => {
     if (currentMapID !== mapID) {
@@ -58,9 +72,18 @@ export const MapResolutions = ({
         clickRefMenu.current &&
         !clickRefMenu.current.contains(event.target)
       ) {
-        setFilterMenuOpen(false);
-        setSelectedMenu(null);
         console.log("clicked outside");
+        if (clickRef.current && !clickRef.current.contains(event.target)) {
+          setPopoverOpen(null);
+          console.log("clicked outside");
+        } else if (
+          clickRef.current &&
+          clickRef.current.contains(event.target)
+        ) {
+        } else {
+          setFilterMenuOpen(false);
+          setSelectedMenu(null);
+        }
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -124,7 +147,12 @@ export const MapResolutions = ({
                   value={activeLayer}
                   onChange={(e) => {
                     // setDistName([]);
-                    toggleLayerVisibility(e.target.value);
+
+                    if (e.target.value === "4" && checked === false) {
+                      setPopoverOpen(true);
+                    } else {
+                      toggleLayerVisibility(e.target.value);
+                    }
                   }}
                   className="tour-scale"
                   key="radioLabel"
@@ -161,7 +189,7 @@ export const MapResolutions = ({
                       <Divider />
                       <FormControlLabel
                         value="4"
-                        disabled={disabled}
+                        // disabled={disabled}
                         control={<Radio />}
                         label="Estimated settlement areas (Beta)"
                         classes={{
@@ -169,35 +197,88 @@ export const MapResolutions = ({
                         }}
                         key="radio4"
                       />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            key="consent"
-                            checked={!disabled}
-                            name="consent"
-                            onChange={() => {
-                              setDisabled(!disabled);
+
+                      <Dialog
+                        id={idPopover}
+                        ref={clickRef}
+                        key={idPopover}
+                        aria-labelledby="Popup diaglog box containing data at clicked location"
+                        aria-describedby="Popup diaglog box containing data values for all variables the at clicked location, aggregated at the level of resolution of the clicked layer."
+                        className={classes.modal}
+                        open={popoverOpen}
+                        onClose={(e) => {
+                          setPopoverOpen(false);
+                        }}
+                        scroll={"paper"}
+                      >
+                        <Grid
+                          container
+                          justify="flex-end"
+                          key={"popoverHeader"}
+                        >
+                          <CloseIcon
+                            key={"popoverClose"}
+                            fontSize="small"
+                            color="disabled"
+                            onClick={(e) => {
+                              setPopoverOpen(false);
                             }}
-                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                            checkedIcon={<CheckBoxIcon fontSize="small" />}
-                            color="primary"
                           />
-                        }
-                        label={
+                        </Grid>
+                        <DialogTitle>
+                          Estimated Settlements Layer (Beta)
+                        </DialogTitle>
+                        <DialogContent dividers={scroll === "paper"}>
                           <Typography
                             key="filterListItemLabel"
                             variant="body2"
-                            style={{ fontSize: 11 }}
+                            // style={{ fontSize: 11 }}
                             gutterBottom
                           >
-                            I understand the settlements layer is an estimation
-                            and still under development. Some settlements may
-                            not be captured and values are estimated from data
-                            of lower resolution and therefore not precise.
+                            The settlements layer is an estimation and still
+                            under development. Some settlements may not be
+                            captured and values are estimated from data of lower
+                            resolution and therefore not precise.
                           </Typography>
-                        }
-                        size="small"
-                      />
+                          <DialogActions>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  key="consent"
+                                  checked={checked}
+                                  name="consent"
+                                  onChange={() => {
+                                    setChecked(!checked);
+                                    if (!checked === true) {
+                                      toggleLayerVisibility("4");
+                                    } else {
+                                      toggleLayerVisibility("2");
+                                    }
+                                  }}
+                                  icon={
+                                    <CheckBoxOutlineBlankIcon fontSize="small" />
+                                  }
+                                  checkedIcon={
+                                    <CheckBoxIcon fontSize="small" />
+                                  }
+                                  color="primary"
+                                />
+                              }
+                              label={
+                                <Typography
+                                  key="filterListItemLabel"
+                                  variant="body2"
+                                  // style={{ fontSize: 11 }}
+                                  gutterBottom
+                                >
+                                  I understand, turn on the layer.
+                                </Typography>
+                              }
+                              size="small"
+                            />
+                          </DialogActions>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   )}
                 </RadioGroup>

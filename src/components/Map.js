@@ -108,6 +108,7 @@ export const Map = () => {
   const anchorRef = useRef(null);
   const classes = useStyles();
   const clickRef = useRef(null);
+  const clickRefPop = useRef(null);
   const mapRef = useRef(null);
   // const [value, setValue] = useState(100);
   // const [commCalcSource, setCommCalcSource] = useState(null);
@@ -124,7 +125,22 @@ export const Map = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (clickRef.current && !clickRef.current.contains(event.target)) {
-        setPopup(null);
+        if (clickRef.current && !clickRef.current.contains(event.target)) {
+          console.log("clicked outside");
+          if (
+            clickRefPop.current &&
+            !clickRefPop.current.contains(event.target)
+          ) {
+            setPopoverOpen(null);
+            console.log("clicked outside");
+          } else if (
+            clickRefPop.current &&
+            clickRefPop.current.contains(event.target)
+          ) {
+          } else {
+            setPopup(null);
+          }
+        }
         console.log("clicked outside");
         if (highlightLayer.current && cartoClient) {
           mapRef.current.removeLayer(highlightLayer.current);
@@ -906,7 +922,7 @@ export const Map = () => {
             {/* Popover */}
             <Dialog
               id={idPopover}
-              ref={clickRef}
+              ref={clickRefPop}
               key={idPopover}
               aria-labelledby="Popup diaglog box containing data at clicked location"
               aria-describedby="Popup diaglog box containing data values for all variables the at clicked location, aggregated at the level of resolution of the clicked layer."
