@@ -281,6 +281,7 @@ export const Map = () => {
 
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
+        // if (index < 4) {
         // var _source = new Carto.source.SQL(
         //   `SELECT * FROM ${layer.carto_tableName}`
         // );
@@ -417,6 +418,7 @@ export const Map = () => {
 
         //add the layer to carto client
         cartoClient.addLayer(_layer);
+        // _layer.bringToBack();
         // setlayerID(index);
 
         _layer.on("metadataChanged", function (event) {
@@ -460,6 +462,7 @@ export const Map = () => {
           cartoLayer: _layer,
           cartoSource: _source,
         });
+        // }
       });
       setPopoverColumns(objlist);
       console.log(popoverColumns);

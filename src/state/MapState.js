@@ -30,6 +30,9 @@ const initialState = {
   skip: true,
   selectedDistName: [],
   highlightLayer: null,
+  settlementBoundary: null,
+  showSettlements: false,
+  showSettlementsLayer: false,
 };
 
 const reducer = (state, action) => {
@@ -110,6 +113,10 @@ const reducer = (state, action) => {
             break;
           }
         }
+        // if (draft.showSettlements === true) {
+        //   draft.carto_client.removeLayer(draft.settlementBoundary);
+        //   draft.carto_client.addLayer(draft.settlementBoundary);
+        // }
       });
 
     // case "clear.filter":
@@ -334,6 +341,7 @@ const reducer = (state, action) => {
           action.cartoLayer;
         draft.maps[action.mapID].layers[action.layerID].carto_source =
           action.cartoSource;
+        action.cartoLayer.bringToBack();
       });
 
     case "layer.refresh":
@@ -368,6 +376,21 @@ const reducer = (state, action) => {
     case "dropdown.highlight":
       return produce(state, (draft) => {
         draft.highlightLayer = action.highlightLayer;
+      });
+
+    case "settlement.boundary":
+      return produce(state, (draft) => {
+        draft.settlementBoundary = action.settlementBoundary;
+      });
+
+    case "show.settlements":
+      return produce(state, (draft) => {
+        draft.showSettlements = action.showSettlements;
+      });
+
+    case "show.settlementsLayer":
+      return produce(state, (draft) => {
+        draft.showSettlementsLayer = action.showSettlementsLayer;
       });
 
     case "user.upload":

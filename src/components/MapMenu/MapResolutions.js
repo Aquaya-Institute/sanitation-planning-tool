@@ -43,7 +43,7 @@ export const MapResolutions = ({
   cat,
   setSelectedMenu,
 }) => {
-  const [{ maps, currentMapID, activeLayer }, dispatch] =
+  const [{ maps, currentMapID, activeLayer, showSettlementsLayer }, dispatch] =
     useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
   // const [activeLayer, setActiveLayer] = useState("2");
@@ -148,7 +148,10 @@ export const MapResolutions = ({
                   onChange={(e) => {
                     // setDistName([]);
 
-                    if (e.target.value === "4" && checked === false) {
+                    if (
+                      (e.target.value === "4" || e.target.value === "5") &&
+                      showSettlementsLayer === false
+                    ) {
                       setPopoverOpen(true);
                     } else {
                       toggleLayerVisibility(e.target.value);
@@ -197,7 +200,18 @@ export const MapResolutions = ({
                         }}
                         key="radio4"
                       />
-
+                      {maps[mapID].layers["5"] && (
+                        <FormControlLabel
+                          value="5"
+                          // disabled={disabled}
+                          control={<Radio />}
+                          label="Limited: Estimated settlement areas (Beta)"
+                          classes={{
+                            label: classes.checkboxLabel,
+                          }}
+                          key="radio5"
+                        />
+                      )}
                       <Dialog
                         id={idPopover}
                         ref={clickRef}
@@ -254,6 +268,10 @@ export const MapResolutions = ({
                                     } else {
                                       toggleLayerVisibility("2");
                                     }
+                                    dispatch({
+                                      type: "show.settlementsLayer",
+                                      showSettlementsLayer: !checked,
+                                    });
                                   }}
                                   icon={
                                     <CheckBoxOutlineBlankIcon fontSize="small" />

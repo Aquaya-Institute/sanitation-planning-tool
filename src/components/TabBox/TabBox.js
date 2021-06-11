@@ -138,7 +138,7 @@ export default function FullWidthTabs() {
           /> */}
           <Tab
             className={clsx(classes.tab, "tour-upload")}
-            label="Upload Communities"
+            label="Settlements/ Communities"
             {...a11yProps(0)}
             style={{
               borderBottom: "1px solid #CFCDC9",

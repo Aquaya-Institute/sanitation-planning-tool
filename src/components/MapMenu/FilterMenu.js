@@ -114,6 +114,14 @@ const FilterMenu = ({
             </Typography>
           </Box>
         )}
+        {layerID === "5" && cat !== "accessibility" && cat !== "socioeconomic" && (
+          <Box m={1} fontStyle="italic" key="noFiltersBox">
+            <Typography variant={"body2"} key="noFiltersText">
+              To access these indicators, select "5x5km areas" resolution or
+              larger from top right menu.
+            </Typography>
+          </Box>
+        )}
         <FilterMenuContent
           key="FilterMenuContent"
           cat={cat}
