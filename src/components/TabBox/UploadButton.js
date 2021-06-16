@@ -13,7 +13,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import Carto from "@carto/carto.js";
-// import { Settlements } from "./Settlements";
+import L from "leaflet";
+import { Settlements } from "./Settlements";
 
 // import theme from "../../theme/theme";
 const template = [
@@ -36,8 +37,21 @@ export const UploadButton = () => {
   const [state, setState] = useState(null);
   const [showLayer, setShowLayer] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [popup, setPopup] = useState();
+  const [popupData, setPopupData] = useState();
+  const [downloadData, setDownloadData] = useState();
   const [
-    { maps, currentMapID, settlementBoundary, carto_client, showSettlements },
+    {
+      maps,
+      currentMapID,
+      settlementBoundary,
+      carto_client,
+      query,
+      activeLayer,
+      showSettlements,
+      allowSettlements,
+      leafletMap,
+    },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState(null);
@@ -46,6 +60,7 @@ export const UploadButton = () => {
   const clickRef = useRef(null);
   const [scroll] = useState("paper");
   const classes = useStyles();
+  const selectedSettlement = useRef();
   function handleChange(event) {
     setState({
       csvfile: event.target.files[0],
@@ -87,22 +102,154 @@ export const UploadButton = () => {
     }
   }, [currentMapID]);
 
+  // //click outside
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (clickRef.current && !clickRef.current.contains(event.target)) {
+  //       if (clickRef.current && !clickRef.current.contains(event.target)) {
+  //         console.log("clicked outside");
+  //         if (
+  //           clickRefPop.current &&
+  //           !clickRefPop.current.contains(event.target)
+  //         ) {
+  //           setPopoverOpen(null);
+  //           console.log("clicked outside");
+  //         } else if (
+  //           clickRefPop.current &&
+  //           clickRefPop.current.contains(event.target)
+  //         ) {
+  //         } else {
+  //           setPopup(null);
+  //         }
+  //       }
+  //       console.log("clicked outside");
+  //       if (selectedSettlement.current) {
+  //         leafletMap.removeLayer(selectedSettlement.current);
+  //       }
+  //     }
+  //   };
+  //   document.addEventListener("click", handleClickOutside, true);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside, true);
+  //   };
+  // }, [leafletMap]);
+
+  // useEffect(() => {
+  //   if (mapID) {
+  //     var _source = new Carto.source.SQL(
+  //       `SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`
+  //     );
+  //     const _style = new Carto.style.CartoCSS(
+  //       `#layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
+  //     );
+  //     const settlementBoundaryset = new Carto.layer.Layer(_source, _style, {});
+
+  //     dispatch({
+  //       type: "settlement.boundary",
+  //       settlementBoundary: settlementBoundaryset,
+  //     });
+  //   }
+  // }, [mapID]);
+
   useEffect(() => {
     if (mapID) {
-      var _source = new Carto.source.SQL(
-        `SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`
-      );
-      const _style = new Carto.style.CartoCSS(
-        `#layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
-      );
-      const settlementBoundaryset = new Carto.layer.Layer(_source, _style, {});
+      let queryURL = null;
+      if (query) {
+        if (settlementBoundary) {
+          carto_client.removeLayer(settlementBoundary);
+        }
+        var clause = query.substr(query.indexOf(" WHERE"), query.length);
+        queryURL =
+          `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}` +
+          clause;
+        var _style = null;
+        var _source = null;
+        var settlementBoundaryset = null;
+        //   _source = new Carto.source.SQL(
+        //     `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
+        //   );
+        //   _style = new Carto.style.CartoCSS(
+        //     `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
+        //   );
+        //   settlementBoundaryset = new Carto.layer.Layer(_source, _style, {
+        //     visible: showLayer === true ? true : false,
+        //     featureClickColumns: [
+        //       "classes",
+        //       "dt",
+        //       "dr",
+        //       "timecities",
+        //       "pop",
+        //       "rr",
+        //       "rrd",
+        //       "rm",
+        //       "u",
+        //       "name_1",
+        //       "name_2",
+        //     ],
+        //   });
+        //   settlementBoundaryset.on("featureClicked", (featureEvent) => {
+        //     console.log("clicked a feature", featureEvent);
+        //     var result = null;
+        //     var input = featureEvent.data.cartodb_id;
+        //     fetch(
+        //       `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers["4"].carto_tableName} where cartodb_id = ${input}`
+        //     )
+        //       .then((resp) => resp.json())
+        //       .then((response) => {
+        //         var myStyle = {
+        //           color: "#FFFFFF",
+        //           fillColor: "#FFFFFF",
+        //           fillOpacity: 0.3,
+        //           weight: 1,
+        //         };
+        //         result = L.geoJson(
+        //           JSON.parse(response.rows[0].the_geom),
+        //           myStyle
+        //         );
+        //         selectedSettlement.current = result;
+        //         result.addTo(leafletMap);
+        //       });
+        //     setPopup([maps[mapID].layers["4"].carto_tableName, featureEvent]);
+        //     setPopoverOpen(false);
+        //     console.log("popup", popup);
+        //   });
+        //   carto_client.addLayer(settlementBoundaryset);
+        //   dispatch({
+        //     type: "settlement.boundary",
+        //     settlementBoundary: settlementBoundaryset,
+        //   });
 
-      dispatch({
-        type: "settlement.boundary",
-        settlementBoundary: settlementBoundaryset,
-      });
+        //   // let queryURL2 = `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`;
+        //   // maps[mapID].layers["5"].carto_source.setQuery(queryURL2);
+        //   // query.replace(/\s/g, " ");
+        //   // queryURL2 = encodeURIComponent(queryURL2);
+
+        //   // queryURL = `SELECT the_geom FROM ${queryURL2}`;
+        // } else {
+        // queryURL = `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`;
+        // maps[mapID].layers["4"].carto_source.setQuery(
+        //   `SELECT * FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
+        // );
+        // _source = new Carto.source.SQL(
+        //   `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
+        // );
+        _source = new Carto.source.SQL(
+          `SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`
+        );
+        _style = new Carto.style.CartoCSS(
+          `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
+        );
+        settlementBoundaryset = new Carto.layer.Layer(_source, _style, {
+          visible: showLayer === true ? true : false,
+        });
+        carto_client.addLayer(settlementBoundaryset);
+        dispatch({
+          type: "settlement.boundary",
+          settlementBoundary: settlementBoundaryset,
+        });
+      }
     }
-  }, [mapID]);
+  }, [query, mapID]);
 
   return (
     <div>
@@ -155,12 +302,14 @@ export const UploadButton = () => {
           <Checkbox
             checked={showLayer}
             onChange={() => {
-              if (showLayer === false && showSettlements === false) {
+              if (showLayer === false && allowSettlements === false) {
                 setPopoverOpen(true);
               } else {
                 setShowLayer(!showLayer);
-                if (!showLayer === true) {
+                if (showLayer === false) {
                   settlementBoundary.show();
+                  // maps[mapID].layers["4"].carto_layer.show();
+                  // maps[mapID].layers["4"].carto_layer.bringToFront();
                   // carto_client.addLayer(settlementBoundary);
                   // maps[mapID].layers["4"].carto_layer.show();
                 } else {
@@ -226,19 +375,23 @@ export const UploadButton = () => {
                   name="consent"
                   onChange={() => {
                     setShowLayer(!showLayer);
+                    dispatch({
+                      type: "show.settlements",
+                      showSettlements: !showLayer,
+                    });
                     if (!showLayer === true) {
                       // maps[mapID].layers["4"].carto_layer.show();
-                      // settlementBoundary.show();
-                      carto_client.addLayer(settlementBoundary);
+                      settlementBoundary.show();
+                      // carto_client.addLayer(settlementBoundary);
                       setChecked(true);
                       dispatch({
-                        type: "show.settlements",
-                        showSettlements: !checked,
+                        type: "allow.settlements",
+                        allowSettlements: !checked,
                       });
                     } else {
                       // maps[mapID].layers["4"].carto_layer.hide();
-                      // settlementBoundary.hide();
-                      carto_client.removeLayer(settlementBoundary);
+                      settlementBoundary.hide();
+                      // carto_client.removeLayer(settlementBoundary);
                     }
                   }}
                   icon={<CheckBoxOutlineBlankIcon fontSize="small" />}

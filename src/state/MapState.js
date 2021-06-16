@@ -32,6 +32,7 @@ const initialState = {
   highlightLayer: null,
   settlementBoundary: null,
   showSettlements: false,
+  allowSettlements: false,
   showSettlementsLayer: false,
 };
 
@@ -386,6 +387,11 @@ const reducer = (state, action) => {
     case "show.settlements":
       return produce(state, (draft) => {
         draft.showSettlements = action.showSettlements;
+      });
+
+    case "allow.settlements":
+      return produce(state, (draft) => {
+        draft.allowSettlements = action.allowSettlements;
       });
 
     case "show.settlementsLayer":

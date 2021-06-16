@@ -147,15 +147,15 @@ export const MapResolutions = ({
                   value={activeLayer}
                   onChange={(e) => {
                     // setDistName([]);
-
-                    if (
-                      (e.target.value === "4" || e.target.value === "5") &&
-                      showSettlementsLayer === false
-                    ) {
-                      setPopoverOpen(true);
-                    } else {
-                      toggleLayerVisibility(e.target.value);
-                    }
+                    toggleLayerVisibility(e.target.value);
+                    // if (
+                    //   (e.target.value === "4" || e.target.value === "5") &&
+                    //   showSettlementsLayer === false
+                    // ) {
+                    //   setPopoverOpen(true);
+                    // } else {
+                    //   toggleLayerVisibility(e.target.value);
+                    // }
                   }}
                   className="tour-scale"
                   key="radioLabel"
@@ -187,7 +187,7 @@ export const MapResolutions = ({
                     }}
                     key="radio3"
                   />
-                  {maps[mapID].layers["4"] && (
+                  {/* {maps[mapID].layers["4"] && (
                     <div className="tour-comms">
                       <Divider />
                       <FormControlLabel
@@ -298,7 +298,7 @@ export const MapResolutions = ({
                         </DialogContent>
                       </Dialog>
                     </div>
-                  )}
+                  )} */}
                 </RadioGroup>
               </Box>
             )}

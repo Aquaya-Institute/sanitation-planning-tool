@@ -102,7 +102,7 @@ const FilterMenu = ({
       <Box
         key="filterBox"
         style={{
-          maxHeight: "450px",
+          maxHeight: "400px",
           overflow: "auto",
         }}
       >
