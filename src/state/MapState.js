@@ -33,7 +33,8 @@ const initialState = {
   settlementBoundary: null,
   showSettlements: false,
   allowSettlements: false,
-  showSettlementsLayer: false,
+  settlementHighlight: null,
+  settlementPopup: null,
 };
 
 const reducer = (state, action) => {
@@ -342,7 +343,9 @@ const reducer = (state, action) => {
           action.cartoLayer;
         draft.maps[action.mapID].layers[action.layerID].carto_source =
           action.cartoSource;
-        action.cartoLayer.bringToBack();
+        if (action.layerID !== "0") {
+          action.cartoLayer.bringToBack();
+        }
       });
 
     case "layer.refresh":
@@ -394,11 +397,11 @@ const reducer = (state, action) => {
         draft.allowSettlements = action.allowSettlements;
       });
 
-    case "show.settlementsLayer":
+    case "settlement.popup":
       return produce(state, (draft) => {
-        draft.showSettlementsLayer = action.showSettlementsLayer;
+        draft.settlementPopup = action.settlementPopup;
+        draft.settlementHighlight = action.settlementHighlight;
       });
-
     case "user.upload":
       return produce(state, (draft) => {
         draft.userData = action.userData;

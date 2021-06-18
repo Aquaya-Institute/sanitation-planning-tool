@@ -1,15 +1,8 @@
-import {
-  useState,
-  useMemo,
-  useEffect,
-  useContext,
-  useRef,
-  Fragment,
-} from "react";
+import { useState, useContext, Fragment } from "react";
 import { MapContext } from "../../state/MapState";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Link, Grid, Button, Box, Typography } from "@material-ui/core";
+import { Link, Grid, Button, Box } from "@material-ui/core";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles } from "@material-ui/core/styles";
 // import "../App.css";
@@ -74,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export const MapPopper = ({
-  popup,
+  popupData,
   clickRef,
   openPopper,
   setPopup,
@@ -83,74 +76,77 @@ export const MapPopper = ({
   setPopoverOpen,
   popoverOpen,
   clickRefPop,
+  anchorPopper,
+  downloadData,
 }) => {
   const [{ maps, activeLayer, activeLegend, leafletMap }, dispatch] =
     useContext(MapContext);
   const classes = useStyles();
   const idPopper = "transitions-popper";
   const idPopover = "simple-popover";
-  const anchorRef = useRef(null);
+  // const anchorRef = useRef(null);
   const [scroll] = useState("paper");
   const cat = ["accessibility", "wash", "health", "socioeconomic"];
-  const [downloadData, setDownloadData] = useState();
-  const [popupData, setPopupData] = useState();
-  var dat_popup = {};
-  // popup data
-  useMemo(() => {
-    console.log("updated popup", popup);
-    if (popup) {
-      var dat = [];
-      maps[mapID].layers[activeLayer].filters.forEach(function (element) {
-        dat.push([
-          element.column_name,
-          element.name,
-          element.subcategory,
-          element.unit,
-        ]);
-      });
-      dat.sort();
-      var dat_loc = [];
-      if (popup[1].data.classes !== undefined) {
-        if (popup[1].data.classes === 1) {
-          popup[1].data.classes = "Rural Remote";
-        } else if (popup[1].data.classes === 2) {
-          popup[1].data.classes = "Rural On-road";
-        } else if (popup[1].data.classes === 3) {
-          popup[1].data.classes = "Rural Mixed";
-        } else if (popup[1].data.classes === 4) {
-          popup[1].data.classes = "Urban";
-        }
-      }
-      Object.entries(popup[1].data)
-        .slice(1)
-        .map((keyName) => {
-          return dat_loc.push([keyName[0], keyName[1]]);
-        });
-      dat_loc.sort();
+  const cat_lim = ["accessibility", "socioeconomic"];
+  // const [downloadData, setDownloadData] = useState();
+  //   const [popupData, setPopupData] = useState();
+  // var dat_popup = {};
+  //   // popup data
+  //   useMemo(() => {
+  //     console.log("updated popup", popup);
+  //     if (popup) {
+  //       var dat = [];
+  //       maps[mapID].layers[activeLayer].filters.forEach(function (element) {
+  //         dat.push([
+  //           element.column_name,
+  //           element.name,
+  //           element.subcategory,
+  //           element.unit,
+  //         ]);
+  //       });
+  //       dat.sort();
+  //       var dat_loc = [];
+  //         if (popup[1].data.classes !== undefined) {
+  //           if (popup[1].data.classes === 1) {
+  //             popup[1].data.classes = "Rural Remote";
+  //           } else if (popup[1].data.classes === 2) {
+  //             popup[1].data.classes = "Rural On-road";
+  //           } else if (popup[1].data.classes === 3) {
+  //             popup[1].data.classes = "Rural Mixed";
+  //           } else if (popup[1].data.classes === 4) {
+  //             popup[1].data.classes = "Urban";
+  //           }
+  //         }
+  //       Object.entries(popup[1].data)
+  //         .slice(1)
+  //         .map((keyName) => {
+  //           return dat_loc.push([keyName[0], keyName[1]]);
+  //         });
+  //       dat_loc.sort();
 
-      for (let j = 0; j < dat.length; j++) {
-        for (let i = 0; i < dat_loc.length; i++) {
-          if (dat[j][0] === dat_loc[i][0]) {
-            dat_popup[dat[j][0]] = {
-              Name: dat[j][1],
-              Category: dat[j][2],
-              Unit: dat[j][3],
-              Value: dat_loc[i][1],
-            };
-          }
-        }
-      }
-      var obj = {};
-      obj["data"] = dat_popup;
-      obj["latLng"] = popup[1].latLng;
-      obj["position"] = popup[1].position;
-      setPopupData(obj);
-      var myData = Object.keys(dat_popup).map((key) => {
-        return dat_popup[key];
-      });
-      setDownloadData(myData);
-    }
-  }, [popup]);
+  //       for (let j = 0; j < dat.length; j++) {
+  //         for (let i = 0; i < dat_loc.length; i++) {
+  //           if (dat[j][0] === dat_loc[i][0]) {
+  //             dat_popup[dat[j][0]] = {
+  //               Name: dat[j][1],
+  //               Category: dat[j][2],
+  //               Unit: dat[j][3],
+  //               Value: dat_loc[i][1],
+  //             };
+  //           }
+  //         }
+  //       }
+  //       var obj = {};
+  //       obj["data"] = dat_popup;
+  //       obj["latLng"] = popup[1].latLng;
+  //       obj["position"] = popup[1].position;
+  //       setPopupData(obj);
+  //       var myData = Object.keys(dat_popup).map((key) => {
+  //         return dat_popup[key];
+  //       });
+  //       setDownloadData(myData);
+  //     }
+  //   }, [popup]);
 
   return (
     <>
@@ -158,7 +154,7 @@ export const MapPopper = ({
         <Popper
           aria-labelledby="Small popup on data at the clicked location"
           aria-describedby="Content of the popup changes depending on the variable selected in the legend, and also contians a link to a larger dialog box of all data a the clicked location."
-          anchorEl={anchorRef.current}
+          anchorEl={anchorPopper}
           ref={clickRef}
           id={idPopper}
           key={idPopper}
@@ -196,7 +192,7 @@ export const MapPopper = ({
             </Grid>
 
             {/* <Fragment key={"popper"}> */}
-            {activeLegend !== "0" ? (
+            {activeLegend !== "0" && popupData.data.cholera ? (
               <Box>
                 <Box fontWeight="fontWeightBold">
                   {
@@ -284,7 +280,11 @@ export const MapPopper = ({
                 />
               </Grid>
               <DialogTitle>
-                {maps[mapID].layers[activeLayer].name}
+                {popupData.data.cholera ? (
+                  <>{maps[mapID].layers[activeLayer].name}</>
+                ) : (
+                  "Estimated Settlement Area"
+                )}
                 <Box fontStyle="italic" fontSize={13}>
                   Location: {popupData.latLng.lat.toFixed(5).toString()},{" "}
                   {popupData.latLng.lng.toFixed(5).toString()}
@@ -306,49 +306,99 @@ export const MapPopper = ({
                   key={"popoverTable"}
                   aria-label="Data table of values from each variable at the clicked location."
                 >
-                  {cat.map((category, i) => {
-                    return (
-                      <Fragment key={"popoverTableRow" + category}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell style={{ width: "70%" }}>
-                              <Box fontWeight="fontWeightBold" pt={1}>
-                                {category.toUpperCase()}
-                              </Box>
-                            </TableCell>
-                            <TableCell
-                              style={{ width: "30%" }}
-                              align="right"
-                            ></TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {Object.entries(popupData.data).map(
-                            (anObjectMapped, j) => {
-                              if (anObjectMapped[1].Category === category) {
-                                return (
-                                  <TableRow key={"popoverTableRow" + j}>
-                                    <TableCell style={{ width: "75%" }}>
-                                      {anObjectMapped[1].Name}
-                                    </TableCell>
-                                    <TableCell
-                                      style={{ width: "25%" }}
-                                      align="right"
-                                    >
-                                      {anObjectMapped[1].Value}{" "}
-                                      {anObjectMapped[1].Unit}
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              } else {
-                                return null;
-                              }
-                            }
-                          )}
-                        </TableBody>
-                      </Fragment>
-                    );
-                  })}
+                  {popupData.data.cholera ? (
+                    <>
+                      {cat.map((category, i) => {
+                        return (
+                          <Fragment key={"popoverTableRow" + category}>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell style={{ width: "70%" }}>
+                                  <Box fontWeight="fontWeightBold" pt={1}>
+                                    {category.toUpperCase()}
+                                  </Box>
+                                </TableCell>
+                                <TableCell
+                                  style={{ width: "30%" }}
+                                  align="right"
+                                ></TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {Object.entries(popupData.data).map(
+                                (anObjectMapped, j) => {
+                                  if (anObjectMapped[1].Category === category) {
+                                    return (
+                                      <TableRow key={"popoverTableRow" + j}>
+                                        <TableCell style={{ width: "75%" }}>
+                                          {anObjectMapped[1].Name}
+                                        </TableCell>
+                                        <TableCell
+                                          style={{ width: "25%" }}
+                                          align="right"
+                                        >
+                                          {anObjectMapped[1].Value}{" "}
+                                          {anObjectMapped[1].Unit}
+                                        </TableCell>
+                                      </TableRow>
+                                    );
+                                  } else {
+                                    return null;
+                                  }
+                                }
+                              )}
+                            </TableBody>
+                          </Fragment>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    <>
+                      {cat_lim.map((category, i) => {
+                        return (
+                          <Fragment key={"popoverTableRow" + category}>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell style={{ width: "70%" }}>
+                                  <Box fontWeight="fontWeightBold" pt={1}>
+                                    {category.toUpperCase()}
+                                  </Box>
+                                </TableCell>
+                                <TableCell
+                                  style={{ width: "30%" }}
+                                  align="right"
+                                ></TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {Object.entries(popupData.data).map(
+                                (anObjectMapped, j) => {
+                                  if (anObjectMapped[1].Category === category) {
+                                    return (
+                                      <TableRow key={"popoverTableRow" + j}>
+                                        <TableCell style={{ width: "75%" }}>
+                                          {anObjectMapped[1].Name}
+                                        </TableCell>
+                                        <TableCell
+                                          style={{ width: "25%" }}
+                                          align="right"
+                                        >
+                                          {anObjectMapped[1].Value}{" "}
+                                          {anObjectMapped[1].Unit}
+                                        </TableCell>
+                                      </TableRow>
+                                    );
+                                  } else {
+                                    return null;
+                                  }
+                                }
+                              )}
+                            </TableBody>
+                          </Fragment>
+                        );
+                      })}
+                    </>
+                  )}
                 </Table>
               </DialogContent>
               <DialogActions>
