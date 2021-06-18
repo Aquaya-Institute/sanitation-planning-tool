@@ -131,9 +131,11 @@ export const Map = () => {
             setPopup(null);
             if (highlightLayer.current && cartoClient) {
               mapRef.current.removeLayer(highlightLayer.current);
+              highlightLayer.current.clearLayers();
             }
             if (settlementHighlight.current && cartoClient) {
               mapRef.current.removeLayer(settlementHighlight.current);
+              settlementHighlight.current.clearLayers();
               settlementHighlight.current = undefined;
             }
             // settlementPopup=null
@@ -384,6 +386,7 @@ export const Map = () => {
                   popup !== null
                 ) {
                   mapRef.current.removeLayer(settlementHighlight.current);
+                  settlementHighlight.current.clearLayers();
                   result.addTo(mapRef.current);
                 } else if (
                   // settlementHighlight.current === null ||
@@ -544,6 +547,7 @@ export const Map = () => {
                 settlementHighlight.current = result;
                 if (highlightLayer.current) {
                   mapRef.current.removeLayer(highlightLayer.current);
+                  highlightLayer.current.clearLayers();
                 }
                 result.addTo(mapRef.current);
               });

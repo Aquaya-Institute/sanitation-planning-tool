@@ -90,7 +90,7 @@ export default function FullWidthTabs() {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} elevation={0}>
       <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
         <UploadButton />
       </TabPanel>

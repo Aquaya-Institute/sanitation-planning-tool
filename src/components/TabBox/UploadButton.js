@@ -107,37 +107,37 @@ export const UploadButton = () => {
     }
   }, [currentMapID]);
 
-  //click outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (clickRef.current && !clickRef.current.contains(event.target)) {
-        if (clickRef.current && !clickRef.current.contains(event.target)) {
-          console.log("clicked outside");
-          if (
-            clickRefPop.current &&
-            !clickRefPop.current.contains(event.target)
-          ) {
-            setPopoverOpen(null);
-            console.log("clicked outside");
-          } else if (
-            clickRefPop.current &&
-            clickRefPop.current.contains(event.target)
-          ) {
-          } else {
-            setPopup(null);
-          }
-        }
-        console.log("clicked outside");
-        if (selectedSettlement.current) {
-          leafletMap.removeLayer(selectedSettlement.current);
-        }
-      }
-    };
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, [leafletMap]);
+  // //click outside
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (clickRef.current && !clickRef.current.contains(event.target)) {
+  //       if (clickRef.current && !clickRef.current.contains(event.target)) {
+  //         console.log("clicked outside");
+  //         if (
+  //           clickRefPop.current &&
+  //           !clickRefPop.current.contains(event.target)
+  //         ) {
+  //           setPopoverOpen(null);
+  //           console.log("clicked outside");
+  //         } else if (
+  //           clickRefPop.current &&
+  //           clickRefPop.current.contains(event.target)
+  //         ) {
+  //         } else {
+  //           setPopup(null);
+  //         }
+  //       }
+  //       console.log("clicked outside");
+  //       if (selectedSettlement.current) {
+  //         leafletMap.removeLayer(selectedSettlement.current);
+  //       }
+  //     }
+  //   };
+  //   document.addEventListener("click", handleClickOutside, true);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside, true);
+  //   };
+  // }, [leafletMap]);
 
   // useEffect(() => {
   //   if (mapID) {
@@ -260,67 +260,67 @@ export const UploadButton = () => {
   //   }
   // }, [query, mapID]);
 
-  // popup data
-  useEffect(() => {
-    console.log("updated popup", popup);
-    if (popup) {
-      var dat = [];
-      maps[mapID].layers[activeLayer].filters.forEach(function (element) {
-        dat.push([
-          element.column_name,
-          element.name,
-          element.subcategory,
-          element.unit,
-        ]);
-      });
-      dat.sort();
-      var dat_loc = [];
-      if (popup[1].data.classes !== undefined) {
-        if (popup[1].data.classes === 1) {
-          popup[1].data.classes = "Rural Remote";
-        } else if (popup[1].data.classes === 2) {
-          popup[1].data.classes = "Rural On-road";
-        } else if (popup[1].data.classes === 3) {
-          popup[1].data.classes = "Rural Mixed";
-        } else if (popup[1].data.classes === 4) {
-          popup[1].data.classes = "Urban";
-        }
-      }
-      Object.entries(popup[1].data)
-        .slice(1)
-        .map((keyName) => {
-          return dat_loc.push([keyName[0], keyName[1]]);
-        });
-      dat_loc.sort();
+  // // popup data
+  // useEffect(() => {
+  //   console.log("updated popup", popup);
+  //   if (popup) {
+  //     var dat = [];
+  //     maps[mapID].layers[activeLayer].filters.forEach(function (element) {
+  //       dat.push([
+  //         element.column_name,
+  //         element.name,
+  //         element.subcategory,
+  //         element.unit,
+  //       ]);
+  //     });
+  //     dat.sort();
+  //     var dat_loc = [];
+  //     if (popup[1].data.classes !== undefined) {
+  //       if (popup[1].data.classes === 1) {
+  //         popup[1].data.classes = "Rural Remote";
+  //       } else if (popup[1].data.classes === 2) {
+  //         popup[1].data.classes = "Rural On-road";
+  //       } else if (popup[1].data.classes === 3) {
+  //         popup[1].data.classes = "Rural Mixed";
+  //       } else if (popup[1].data.classes === 4) {
+  //         popup[1].data.classes = "Urban";
+  //       }
+  //     }
+  //     Object.entries(popup[1].data)
+  //       .slice(1)
+  //       .map((keyName) => {
+  //         return dat_loc.push([keyName[0], keyName[1]]);
+  //       });
+  //     dat_loc.sort();
 
-      for (let j = 0; j < dat.length; j++) {
-        for (let i = 0; i < dat_loc.length; i++) {
-          if (dat[j][0] === dat_loc[i][0]) {
-            dat_popup[dat[j][0]] = {
-              Name: dat[j][1],
-              Category: dat[j][2],
-              Unit: dat[j][3],
-              Value: dat_loc[i][1],
-            };
-          }
-        }
-      }
-      var obj = {};
-      obj["data"] = dat_popup;
-      obj["latLng"] = popup[1].latLng;
-      obj["position"] = popup[1].position;
-      setPopupData(obj);
-      var myData = Object.keys(dat_popup).map((key) => {
-        return dat_popup[key];
-      });
-      setDownloadData(myData);
-      dispatch({
-        type: "settlement.popup",
-        settlementPopup: obj,
-        settlementHighlight: selectedSettlement.current,
-      });
-    }
-  }, [popup]);
+  //     for (let j = 0; j < dat.length; j++) {
+  //       for (let i = 0; i < dat_loc.length; i++) {
+  //         if (dat[j][0] === dat_loc[i][0]) {
+  //           dat_popup[dat[j][0]] = {
+  //             Name: dat[j][1],
+  //             Category: dat[j][2],
+  //             Unit: dat[j][3],
+  //             Value: dat_loc[i][1],
+  //           };
+  //         }
+  //       }
+  //     }
+  //     var obj = {};
+  //     obj["data"] = dat_popup;
+  //     obj["latLng"] = popup[1].latLng;
+  //     obj["position"] = popup[1].position;
+  //     setPopupData(obj);
+  //     var myData = Object.keys(dat_popup).map((key) => {
+  //       return dat_popup[key];
+  //     });
+  //     setDownloadData(myData);
+  //     dispatch({
+  //       type: "settlement.popup",
+  //       settlementPopup: obj,
+  //       settlementHighlight: selectedSettlement.current,
+  //     });
+  //   }
+  // }, [popup]);
 
   return (
     <div>

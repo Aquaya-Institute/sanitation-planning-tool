@@ -186,7 +186,7 @@ export const MapPopper = ({
                 color="disabled"
                 onClick={(e) => {
                   setPopup(null);
-                  leafletMap.removeLayer(highlightLayer.current);
+                  leafletMap.removeLayer(highlightLayer);
                 }}
               />
             </Grid>
