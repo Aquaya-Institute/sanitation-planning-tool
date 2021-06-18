@@ -12,10 +12,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import Carto from "@carto/carto.js";
-import L from "leaflet";
-import { Settlements } from "./Settlements";
-import { MapPopper } from "../subcomponents/MapPopper";
+// import Carto from "@carto/carto.js";
+// import L from "leaflet";
+// import { Settlements } from "./Settlements";
+// import { MapPopper } from "../subcomponents/MapPopper";
 
 // import theme from "../../theme/theme";
 const template = [
@@ -41,7 +41,6 @@ export const UploadButton = () => {
   const [popup, setPopup] = useState();
   const [popupData, setPopupData] = useState();
   const [downloadData, setDownloadData] = useState();
-  const [anchorPopper, setAnchorPopper] = useState();
   const [
     {
       maps,
