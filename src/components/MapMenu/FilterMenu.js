@@ -102,11 +102,19 @@ const FilterMenu = ({
       <Box
         key="filterBox"
         style={{
-          maxHeight: "450px",
+          maxHeight: "400px",
           overflow: "auto",
         }}
       >
         {layerID === "1" && cat !== "accessibility" && (
+          <Box m={1} fontStyle="italic" key="noFiltersBox">
+            <Typography variant={"body2"} key="noFiltersText">
+              To access these indicators, select "5x5km areas" resolution or
+              larger from top right menu.
+            </Typography>
+          </Box>
+        )}
+        {layerID === "5" && cat !== "accessibility" && cat !== "socioeconomic" && (
           <Box m={1} fontStyle="italic" key="noFiltersBox">
             <Typography variant={"body2"} key="noFiltersText">
               To access these indicators, select "5x5km areas" resolution or

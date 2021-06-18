@@ -319,7 +319,7 @@ export const nigeria = {
     },
     {
       name: "Local Gov Area",
-      carto_tableName: "nga_multivariable_dist",
+      carto_tableName: "nga_multivariable_dist_pov",
       carto_source: null,
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
@@ -477,6 +477,56 @@ export const nigeria = {
           max: 12,
           value: [3, 12],
           subcategory: "socioeconomic",
+        },
+        {
+          name: "Average Relative Wealth Index",
+          unit: "index",
+          type: "range_non_linear",
+          column_name: "rwi",
+          scaledMin: -0.77,
+          scaledMax: 1.53,
+          scaledValue: [-0.77, 1.53],
+          subcategory: "socioeconomic",
+          min: 0,
+          max: 60,
+          value: [0, 60], //the actual min/max of column
+          marks: [
+            {
+              value: 0,
+              scaledValue: -0.8,
+              label: "-0.8",
+            },
+            {
+              value: 10,
+              scaledValue: -0.4,
+              label: "-0.25",
+            },
+            {
+              value: 20,
+              scaledValue: 0,
+              label: "0",
+            },
+            {
+              value: 30,
+              scaledValue: 0.4,
+              label: "0.25",
+            },
+            {
+              value: 40,
+              scaledValue: 0.8,
+              label: "0.6",
+            },
+            {
+              value: 50,
+              scaledValue: 1.2,
+              label: "1.3",
+            },
+            {
+              value: 60,
+              scaledValue: 1.6,
+              label: "1.6",
+            },
+          ],
         },
         {
           name: "Rural Remote",

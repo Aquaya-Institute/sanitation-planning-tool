@@ -30,6 +30,11 @@ const initialState = {
   skip: true,
   selectedDistName: [],
   highlightLayer: null,
+  settlementBoundary: null,
+  showSettlements: false,
+  allowSettlements: false,
+  settlementHighlight: null,
+  settlementPopup: null,
 };
 
 const reducer = (state, action) => {
@@ -110,6 +115,10 @@ const reducer = (state, action) => {
             break;
           }
         }
+        // if (draft.showSettlements === true) {
+        //   draft.carto_client.removeLayer(draft.settlementBoundary);
+        //   draft.carto_client.addLayer(draft.settlementBoundary);
+        // }
       });
 
     // case "clear.filter":
@@ -334,6 +343,9 @@ const reducer = (state, action) => {
           action.cartoLayer;
         draft.maps[action.mapID].layers[action.layerID].carto_source =
           action.cartoSource;
+        if (action.layerID !== "0") {
+          action.cartoLayer.bringToBack();
+        }
       });
 
     case "layer.refresh":
@@ -370,6 +382,26 @@ const reducer = (state, action) => {
         draft.highlightLayer = action.highlightLayer;
       });
 
+    case "settlement.boundary":
+      return produce(state, (draft) => {
+        draft.settlementBoundary = action.settlementBoundary;
+      });
+
+    case "show.settlements":
+      return produce(state, (draft) => {
+        draft.showSettlements = action.showSettlements;
+      });
+
+    case "allow.settlements":
+      return produce(state, (draft) => {
+        draft.allowSettlements = action.allowSettlements;
+      });
+
+    case "settlement.popup":
+      return produce(state, (draft) => {
+        draft.settlementPopup = action.settlementPopup;
+        draft.settlementHighlight = action.settlementHighlight;
+      });
     case "user.upload":
       return produce(state, (draft) => {
         draft.userData = action.userData;

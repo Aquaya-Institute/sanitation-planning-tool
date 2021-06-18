@@ -6,8 +6,8 @@ export const legendStyles = [
   },
   {
     name: "Population Estimate",
-    style_pixel: `#layer {polygon-fill: ramp([pop], (#355070, #6d597a, #b56576, #e56b6f, #eaac8b), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([pop], (#355070, #6d597a, #b56576, #e56b6f, #eaac8b), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([pop], (#355070, #6d597a, #b56576, #e56b6f, #eaac8b), quantiles);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([pop], (#355070, #6d597a, #b56576, #e56b6f, #eaac8b), quantiles);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name: "Population Practicing Open Defecation",
@@ -63,5 +63,10 @@ export const legendStyles = [
     name: "Men's Educational Attainment",
     style_pixel: `#layer {polygon-fill: ramp([edu_m], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
     style_bounds: `#layer {polygon-fill: ramp([edu_m], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+  },
+  {
+    name: "Relative Wealth Index",
+    style_pixel: `#layer {polygon-fill: ramp([rwi], (#feebe2, #fbb4b9, #f768a1, #c51b8a, #7a0177), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([rwi], (#feebe2, #fbb4b9, #f768a1, #c51b8a, #7a0177), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
 ];

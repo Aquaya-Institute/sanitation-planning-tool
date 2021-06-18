@@ -90,19 +90,7 @@ export default function FullWidthTabs() {
   };
 
   return (
-    <div
-      className={classes.root}
-      // style={{
-      //   minheight: "auto",
-      //   position: "absolute",
-      //   right: "8px",
-      //   bottom: "272px",
-      //   zIndex: "1000",
-      // }}
-    >
-      {/* <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
-        <MapResolutions /> */}
-      {/* </TabPanel> */}
+    <div className={classes.root}>
       <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
         <UploadButton />
       </TabPanel>
@@ -116,29 +104,11 @@ export default function FullWidthTabs() {
           classes={{
             indicator: classes.indicator,
           }}
-          // textColor="inherit"
           aria-label="Tab box labelled tabs"
-          // tabItemContainerStyle={{ width: "300px" }}
         >
-          {/* <Tab
-            className={classes.tab}
-            label="Map Resolutions"
-            style={{
-              borderLeft: "1.5px solid #CFCDC9",
-              borderRight:
-                value === 0 && hidden === false ? "1px solid #CFCDC9" : null,
-              borderBottom:
-                value !== 0 && hidden === false ? "1px solid #CFCDC9" : null,
-              backgroundColor:
-                value === 0 && hidden === false
-                  ? theme.palette.background.selected
-                  : theme.palette.background.default,
-            }}
-            {...a11yProps(0)}
-          /> */}
           <Tab
             className={clsx(classes.tab, "tour-upload")}
-            label="Upload Communities"
+            label="Settlements/ Communities"
             {...a11yProps(0)}
             style={{
               borderBottom: "1px solid #CFCDC9",

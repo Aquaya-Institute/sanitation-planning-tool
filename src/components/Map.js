@@ -10,34 +10,21 @@ import { MapContext } from "../state/MapState";
 import Carto from "@carto/carto.js";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Link, Grid, Button, Box, Typography } from "@material-ui/core";
-import Popper from "@material-ui/core/Popper";
+import { Grid, Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import "../App.css";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import theme from "../theme/theme";
-import CloseIcon from "@material-ui/icons/Close";
-import SaveIcon from "@material-ui/icons/Save";
-import { CSVLink } from "react-csv";
 import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { legendStyles } from "./subcomponents/LegendStyles";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import TabsWrappedLabel from "../components/TabBox/TabBox";
-
+import { MapPopper } from "./subcomponents/MapPopper";
 const useStyles = makeStyles((theme) => ({
   grid: {
     height: 40,
@@ -77,10 +64,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     overflow: "scroll",
   },
-  download: {
-    textDecoration: "none",
-    color: "#ffffff",
-  },
   checkboxLabel: {
     fontSize: 13,
   },
@@ -88,7 +71,17 @@ const useStyles = makeStyles((theme) => ({
 
 export const Map = () => {
   const [
-    { currentMapID, maps, activeLayer, activeLegend, userData, queryDist },
+    {
+      currentMapID,
+      maps,
+      activeLayer,
+      activeLegend,
+      userData,
+      queryDist,
+      query,
+      showSettlements,
+      settlementBoundary,
+    },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState();
@@ -101,11 +94,8 @@ export const Map = () => {
   const [downloadData, setDownloadData] = useState();
   const [buckets, setBuckets] = useState([]);
   const openPopper = Boolean(popup);
-  const idPopper = openPopper ? "transitions-popper" : undefined;
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const idPopover = popoverOpen ? "simple-popover" : undefined;
   const [popoverColumns, setPopoverColumns] = useState([]);
-  const anchorRef = useRef(null);
   const classes = useStyles();
   const clickRef = useRef(null);
   const clickRefPop = useRef(null);
@@ -114,9 +104,9 @@ export const Map = () => {
   // const [commCalcSource, setCommCalcSource] = useState(null);
   // const [widgetLoad, setWidgetLoad] = useState();
 
-  const cat = ["accessibility", "wash", "health", "socioeconomic"];
   var dat_popup = {};
   const highlightLayer = useRef();
+  const settlementHighlight = useRef();
   // const [highlightLayer, setHighlightLayer] = useState();
   const legendStylesObj = legendStyles;
   // const [legendIndex, setLegendIndex] = useState(0);
@@ -139,12 +129,17 @@ export const Map = () => {
           ) {
           } else {
             setPopup(null);
+            if (highlightLayer.current && cartoClient) {
+              mapRef.current.removeLayer(highlightLayer.current);
+            }
+            if (settlementHighlight.current && cartoClient) {
+              mapRef.current.removeLayer(settlementHighlight.current);
+              settlementHighlight.current = undefined;
+            }
+            // settlementPopup=null
           }
         }
         console.log("clicked outside");
-        if (highlightLayer.current && cartoClient) {
-          mapRef.current.removeLayer(highlightLayer.current);
-        }
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -256,23 +251,6 @@ export const Map = () => {
     console.log("Selected Map Changed", currentMapState);
 
     if (cartoClient && mapID) {
-      // maps[mapID].layers.forEach((layer, i) => {
-      //   if (layer.carto_layer && i > 1 && activeLayer) {
-      //     var _source = new Carto.source.SQL(
-      //       `SELECT * FROM ${layer.carto_tableName}`
-      //     );
-      //     const _style = new Carto.style.CartoCSS(layer.carto_style);
-      //     const _layer = new Carto.layer.Layer(_source, _style, {});
-      //     dispatch({
-      //       type: "layer.addCartoLayer",
-      //       mapID: mapID,
-      //       layerID: i,
-      //       cartoLayer: _layer,
-      //       cartoSource: _source,
-      //     });
-      //     // layerstoremove.push(layer.carto_layer);
-      //   }
-      // });
       dispatch({
         type: "layer.removeCartoLayers",
       });
@@ -281,10 +259,8 @@ export const Map = () => {
 
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
-        // var _source = new Carto.source.SQL(
-        //   `SELECT * FROM ${layer.carto_tableName}`
-        // );
         var _source = null;
+        let queryURL = null;
         if (queryDist && index > 1) {
           let queryedit =
             `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist;
@@ -376,6 +352,8 @@ export const Map = () => {
         //create the carto layer and add feature clicks
         const _layer = new Carto.layer.Layer(_source, _style, {
           featureClickColumns: _columns,
+          // visible:
+          //   (showSettlements && index > 3) === true ? true : layer.visible,
         });
 
         // setup feature clicks on relevant layers
@@ -400,7 +378,19 @@ export const Map = () => {
                   myStyle
                 );
                 highlightLayer.current = result;
-                result.addTo(mapRef.current);
+                if (
+                  settlementHighlight.current &&
+                  popup !== undefined &&
+                  popup !== null
+                ) {
+                  mapRef.current.removeLayer(settlementHighlight.current);
+                  result.addTo(mapRef.current);
+                } else if (
+                  // settlementHighlight.current === null ||
+                  settlementHighlight.current === undefined
+                ) {
+                  result.addTo(mapRef.current);
+                }
               });
             setPopup([layer.name, featureEvent]);
             setPopoverOpen(false);
@@ -417,6 +407,7 @@ export const Map = () => {
 
         //add the layer to carto client
         cartoClient.addLayer(_layer);
+        // _layer.bringToBack();
         // setlayerID(index);
 
         _layer.on("metadataChanged", function (event) {
@@ -460,12 +451,123 @@ export const Map = () => {
           cartoLayer: _layer,
           cartoSource: _source,
         });
+        // }
       });
       setPopoverColumns(objlist);
       console.log(popoverColumns);
     }
   }, [mapID, activeLegend, activeLayer, cartoClient]);
 
+  useEffect(() => {
+    if (mapID) {
+      if (cartoClient) {
+        if (query) {
+          if (settlementBoundary) {
+            cartoClient.removeLayer(settlementBoundary);
+          }
+          // var clause = query.substr(query.indexOf(" WHERE"), query.length);
+          // queryURL =
+          //   `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}` +
+          //   clause;
+          let queryURL = query.replace(/\s/g, " ");
+          var settlement_style = null;
+          var settlement_source = null;
+          var settlementBoundaryset = null;
+          settlement_source = new Carto.source.SQL(
+            `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
+          );
+          settlement_style = new Carto.style.CartoCSS(
+            `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
+          );
+
+          // let queryURL2 = `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`;
+          // maps[mapID].layers["5"].carto_source.setQuery(queryURL2);
+          // query.replace(/\s/g, " ");
+          // queryURL2 = encodeURIComponent(queryURL2);
+
+          // queryURL = `SELECT the_geom FROM ${queryURL2}`;
+        } else {
+          // queryURL = `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`;
+          // maps[mapID].layers["4"].carto_source.setQuery(
+          //   `SELECT * FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
+          // );
+          // _source = new Carto.source.SQL(
+          //   `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
+          // );
+          settlement_source = new Carto.source.SQL(
+            `SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`
+          );
+          settlement_style = new Carto.style.CartoCSS(
+            `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
+          );
+        }
+        if (settlement_source) {
+          settlementBoundaryset = new Carto.layer.Layer(
+            settlement_source,
+            settlement_style,
+            {
+              visible: showSettlements === true ? true : false,
+              featureClickColumns: [
+                "classes",
+                "dt",
+                "dr",
+                "timecities",
+                "pop",
+                "rr",
+                "rrd",
+                "rm",
+                "u",
+                "name_1",
+                "name_2",
+              ],
+            }
+          );
+          settlementBoundaryset.on("featureClicked", (featureEvent) => {
+            console.log("clicked a feature", featureEvent);
+            var result = null;
+            var input = featureEvent.data.cartodb_id;
+            fetch(
+              `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers["4"].carto_tableName} where cartodb_id = ${input}`
+            )
+              .then((resp) => resp.json())
+              .then((response) => {
+                var myStyle = {
+                  color: "#FFFFFF",
+                  fillColor: "#FFFFFF",
+                  fillOpacity: 0.3,
+                  weight: 1,
+                };
+                result = L.geoJson(
+                  JSON.parse(response.rows[0].the_geom),
+                  myStyle
+                );
+                settlementHighlight.current = result;
+                if (highlightLayer.current) {
+                  mapRef.current.removeLayer(highlightLayer.current);
+                }
+                result.addTo(mapRef.current);
+              });
+            setPopup([maps[mapID].layers["4"].carto_tableName, featureEvent]);
+            setPopoverOpen(false);
+            console.log("popup", popup);
+            // dispatch({
+            //   type: "settlement.popup",
+            //   settlementPopup: [
+            //     maps[mapID].layers["4"].carto_tableName,
+            //     featureEvent,
+            //   ],
+            //   settlementHighlight: selectedSettlement.current,
+            // });
+          });
+          cartoClient.addLayer(settlementBoundaryset);
+          dispatch({
+            type: "settlement.boundary",
+            settlementBoundary: settlementBoundaryset,
+          });
+        }
+      }
+    }
+  }, [query, mapID, cartoClient]);
   // popup data
   useMemo(() => {
     console.log("updated popup", popup);
@@ -627,7 +729,6 @@ export const Map = () => {
   //   });
   // };
 
-  const [scroll] = useState("paper");
   const [hideLayer, setHideLayer] = useState(false);
 
   return (
@@ -660,7 +761,7 @@ export const Map = () => {
         >
           <TabsWrappedLabel />
           <Paper
-            style={{ height: "10px", backgroundColor: "transparent" }}
+            style={{ height: "5px", backgroundColor: "transparent" }}
           ></Paper>
           <Paper
             square
@@ -721,7 +822,7 @@ export const Map = () => {
             </Grid>
           </Paper> */}
           <Paper
-            style={{ height: "10px", backgroundColor: "transparent" }}
+            style={{ height: "5px", backgroundColor: "transparent" }}
           ></Paper>
           <Paper
             square
@@ -817,249 +918,22 @@ export const Map = () => {
       )}
       {/* Popup */}
       {popupData && (
-        <Popper
-          aria-labelledby="Small popup on data at the clicked location"
-          aria-describedby="Content of the popup changes depending on the variable selected in the legend, and also contians a link to a larger dialog box of all data a the clicked location."
-          anchorEl={anchorRef.current}
-          ref={clickRef}
-          id={idPopper}
-          key={idPopper}
-          open={openPopper}
-          disablePortal={true}
-          modifiers={{
-            flip: {
-              enabled: true,
-            },
-            preventOverflow: {
-              enabled: true,
-              boundariesElement: "scrollParent",
-            },
-          }}
-          style={{
-            position: "absolute",
-            left: popupData.position.x,
-            top: popupData.position.y,
-            zIndex: "1300",
-            // backgroundColor: "#fff",
-            width: "200px",
-          }}
-        >
-          <div className={classes.paper}>
-            <Grid container justify="flex-end" pt={2} key={"popperHeader"}>
-              <CloseIcon
-                key={"popperClose"}
-                fontSize="small"
-                color="disabled"
-                onClick={(e) => {
-                  setPopup(null);
-                  mapRef.current.removeLayer(highlightLayer.current);
-                }}
-              />
-            </Grid>
-
-            {/* <Fragment key={"popper"}> */}
-            {activeLegend !== "0" ? (
-              <Box>
-                <Box fontWeight="fontWeightBold">
-                  {
-                    popupData.data[
-                      maps[mapID].layers[activeLayer].filters[activeLegend]
-                        .column_name
-                    ].Name
-                  }
-                  :{" "}
-                </Box>
-                <Box>
-                  {
-                    popupData.data[
-                      maps[mapID].layers[activeLayer].filters[activeLegend]
-                        .column_name
-                    ].Value
-                  }
-                  {
-                    popupData.data[
-                      maps[mapID].layers[activeLayer].filters[activeLegend]
-                        .column_name
-                    ].Unit
-                  }
-                </Box>
-              </Box>
-            ) : (
-              <Box>
-                <Box fontWeight="fontWeightBold">
-                  {popupData.data.classes.Name}:{" "}
-                </Box>
-                {popupData.data.classes.Value}
-                <Box fontWeight="fontWeightLight" fontSize={11}>
-                  {popupData.data.rr.Name}: {popupData.data.rr.Value}
-                  {popupData.data.rr.Unit}
-                </Box>
-                <Box fontWeight="fontWeightLight" fontSize={11}>
-                  {popupData.data["rrd"].Name}: {popupData.data.rrd.Value}
-                  {popupData.data.rrd.Unit}
-                </Box>
-                <Box fontWeight="fontWeightLight" fontSize={11}>
-                  {popupData.data["rm"].Name}: {popupData.data.rm.Value}
-                  {popupData.data.rm.Unit}
-                </Box>
-                <Box fontWeight="fontWeightLight" fontSize={11}>
-                  {popupData.data.u.Name}: {popupData.data.u.Value}
-                  {popupData.data.u.Unit}
-                </Box>
-              </Box>
-            )}
-            <Link
-              key={"seeMore"}
-              component="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setPopoverOpen(true);
-              }}
-            >
-              SEE MORE
-            </Link>
-            {/* Popover */}
-            <Dialog
-              id={idPopover}
-              ref={clickRefPop}
-              key={idPopover}
-              aria-labelledby="Popup diaglog box containing data at clicked location"
-              aria-describedby="Popup diaglog box containing data values for all variables the at clicked location, aggregated at the level of resolution of the clicked layer."
-              className={classes.modal}
-              open={popoverOpen}
-              onClose={(e) => {
-                setPopoverOpen(false);
-              }}
-              scroll={"paper"}
-            >
-              {/* <Fade in={popoverOpen}>
-                  <div className={classes.popover}> */}
-              <Grid container justify="flex-end" key={"popoverHeader"}>
-                <CloseIcon
-                  key={"popoverClose"}
-                  fontSize="small"
-                  color="disabled"
-                  onClick={(e) => {
-                    setPopoverOpen(false);
-                  }}
-                />
-              </Grid>
-              <DialogTitle>
-                {maps[mapID].layers[activeLayer].name}
-                <Box fontStyle="italic" fontSize={13}>
-                  Location: {popupData.latLng.lat.toFixed(5).toString()},{" "}
-                  {popupData.latLng.lng.toFixed(5).toString()}
-                  <br />
-                  {popupData.data.name_1.Name}: {popupData.data.name_1.Value}{" "}
-                  <br />
-                  {popupData.data.name_2.Name}: {popupData.data.name_2.Value}
-                  {popupData.data.name_3 !== undefined && (
-                    <span>
-                      <br />
-                      {popupData.data.name_3.Name}:{" "}
-                      {popupData.data.name_3.Value}
-                    </span>
-                  )}
-                </Box>
-              </DialogTitle>
-              <DialogContent dividers={scroll === "paper"}>
-                <Table
-                  key={"popoverTable"}
-                  aria-label="Data table of values from each variable at the clicked location."
-                >
-                  {cat.map((category, i) => {
-                    return (
-                      <Fragment key={"popoverTableRow" + category}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell style={{ width: "70%" }}>
-                              <Box fontWeight="fontWeightBold" pt={1}>
-                                {category.toUpperCase()}
-                              </Box>
-                            </TableCell>
-                            <TableCell
-                              style={{ width: "30%" }}
-                              align="right"
-                            ></TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {Object.entries(popupData.data).map(
-                            (anObjectMapped, j) => {
-                              if (anObjectMapped[1].Category === category) {
-                                return (
-                                  <TableRow key={"popoverTableRow" + j}>
-                                    <TableCell style={{ width: "75%" }}>
-                                      {anObjectMapped[1].Name}
-                                    </TableCell>
-                                    <TableCell
-                                      style={{ width: "25%" }}
-                                      align="right"
-                                    >
-                                      {anObjectMapped[1].Value}{" "}
-                                      {anObjectMapped[1].Unit}
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              } else {
-                                return null;
-                              }
-                            }
-                          )}
-                        </TableBody>
-                      </Fragment>
-                    );
-                  })}
-                </Table>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                >
-                  {maps[mapID].layers[activeLayer].name === "5x5km area" ? (
-                    <CSVLink
-                      className={classes.download}
-                      data={downloadData}
-                      filename={
-                        "SPT_" +
-                        popupData.latLng.lat.toFixed(5).toString() +
-                        "_" +
-                        popupData.latLng.lng.toFixed(5).toString() +
-                        ".csv"
-                      }
-                    >
-                      DOWNLOAD TABLE
-                    </CSVLink>
-                  ) : popupData.data.name_3 !== undefined ? (
-                    <CSVLink
-                      className={classes.download}
-                      data={downloadData}
-                      filename={"SPT_" + popupData.data.name_3.Value + ".csv"}
-                    >
-                      DOWNLOAD TABLE
-                    </CSVLink>
-                  ) : (
-                    <CSVLink
-                      className={classes.download}
-                      data={downloadData}
-                      filename={"SPT_" + popupData.data.name_2.Value + ".csv"}
-                    >
-                      DOWNLOAD TABLE
-                    </CSVLink>
-                  )}
-                </Button>
-              </DialogActions>
-              {/* </div>
-                </Fade> */}
-            </Dialog>
-            {/* </Fragment> */}
-          </div>
-        </Popper>
+        <MapPopper
+          popupData={popupData}
+          clickRef={clickRef}
+          openPopper={openPopper}
+          setPopup={setPopup}
+          highlightLayer={
+            popupData.data.cholera
+              ? highlightLayer.current
+              : settlementHighlight.current
+          }
+          mapID={mapID}
+          setPopoverOpen={setPopoverOpen}
+          popoverOpen={popoverOpen}
+          clickRefPop={clickRefPop}
+          downloadData={downloadData}
+        />
       )}
     </div>
   );
