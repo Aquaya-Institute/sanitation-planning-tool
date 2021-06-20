@@ -4,7 +4,7 @@ import { Box, Button } from "@material-ui/core";
 import { CSVLink } from "react-csv";
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
-import Loader_2 from "../subcomponents/Loader_2";
+import { Loader_2, Loader2_2 } from "../subcomponents/Loader_2";
 import ReactExport from "react-export-excel";
 
 const ExcelFile = ReactExport.ExcelFile;
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Export = () => {
   const [
-    { maps, currentMapID, activeLayer, query, showSettlements },
+    { maps, currentMapID, currentLayerID, query, showSettlements },
     dispatch,
   ] = useContext(MapContext);
   const classes = useStyles();
@@ -34,6 +34,7 @@ export const Export = () => {
   const [downloadSettlements, setDownloadSettlements] = useState(null);
   const [mapID, setMapID] = useState(currentMapID);
   const [loader, showLoader, hideLoader] = Loader_2();
+  const [loader2, showLoader2, hideLoader2] = Loader2_2();
 
   useEffect(() => {
     if (currentMapID !== mapID) {
@@ -44,7 +45,7 @@ export const Export = () => {
 
   useEffect(() => {
     showLoader();
-    if (activeLayer === "1") {
+    if (currentLayerID === "1") {
       setDownload(null);
       hideLoader();
     } else if (query && mapID) {
@@ -58,9 +59,9 @@ export const Export = () => {
           hideLoader();
         });
     } else if (mapID) {
-      //   let queryURL = `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`;
+      //   let queryURL = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
       return fetch(
-        `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`
+        `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`
       )
         .then((resp) => resp.json())
         .then((response) => {
@@ -72,7 +73,7 @@ export const Export = () => {
 
   useEffect(() => {
     if (showSettlements === true) {
-      showLoader();
+      showLoader2();
       if (query && mapID) {
         let queryURL = query.replace(/\s/g, " ");
         return fetch(
@@ -81,7 +82,7 @@ export const Export = () => {
           .then((resp) => resp.json())
           .then((response) => {
             setDownloadSettlements(response.rows);
-            hideLoader();
+            hideLoader2();
           });
       } else if (mapID) {
         return fetch(
@@ -90,7 +91,7 @@ export const Export = () => {
           .then((resp) => resp.json())
           .then((response) => {
             setDownloadSettlements(response.rows);
-            hideLoader();
+            hideLoader2();
           });
       }
     }
@@ -99,7 +100,7 @@ export const Export = () => {
   // useEffect(() => {
   //   if (download) {
   //     var dat = [];
-  //     maps[mapID].layers[activeLayer].filters.forEach(function (element) {
+  //     maps[mapID].layers[currentLayerID].filters.forEach(function (element) {
   //       dat.push([
   //         element.column_name,
   //         element.name,
@@ -153,7 +154,7 @@ export const Export = () => {
     <div>
       <div align="center">{loader}</div>
       <div>
-        {activeLayer === "1" && (
+        {currentLayerID === "1" && (
           <div>
             Data downloads are not available for this layer, please select a
             larger resolution from "Map Resolutions".{" "}
@@ -186,7 +187,7 @@ export const Export = () => {
                 color="#BA0C2F"
               >
                 {download.length}{" "}
-                {maps[currentMapID].layers[activeLayer].name.toLowerCase() +
+                {maps[currentMapID].layers[currentLayerID].name.toLowerCase() +
                   "s"}
               </Box>{" "}
               in{" "}

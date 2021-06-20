@@ -63,17 +63,18 @@ export const DropdownMenu = ({
     {
       maps,
       currentMapID,
-      activeLayer,
+      currentLayerID,
       carto_client,
       leafletMap,
       activeLegend,
       selectedDistName,
       highlightLayer,
+      currentCountry,
     },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
-  // const [activeLayer, setActiveLayer] = useState("2");
+  // const [currentLayerID, setcurrentLayerID] = useState("2");
   const [distName, setDistName] = useState(selectedDistName);
   const [allDistricts, setAllDistricts] = useState([]);
   const [column, setColumn] = useState("");
@@ -121,17 +122,20 @@ export const DropdownMenu = ({
     let query = null;
     if (distName.length > 0) {
       query = `SELECT * FROM ${
-        maps[mapID].layers[activeLayer].carto_tableName
+        maps[mapID].layers[currentLayerID].carto_tableName
       } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
     } else {
-      query = `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`;
+      query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
     }
     // const source = new Carto.source.SQL(
-    //   `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`
+    //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`
     // );
     // source.setQuery(query);
-    if (maps[mapID].layers[activeLayer].carto_source && activeLayer !== "1") {
-      maps[mapID].layers[activeLayer].carto_source.setQuery(query);
+    if (
+      maps[mapID].layers[currentLayerID].carto_source &&
+      currentLayerID !== "1"
+    ) {
+      currentCountry.current_source.setQuery(query);
       dispatch({
         type: "layer.queryDist",
         queryDist: query,

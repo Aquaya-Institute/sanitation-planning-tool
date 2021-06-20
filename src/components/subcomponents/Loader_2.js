@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Loader from "./Loader";
+import { Loader, Loader2 } from "./Loader";
 
-const Loader_2 = () => {
+export const Loader_2 = () => {
   const [loading, setLoading] = useState(false);
 
   return [
@@ -11,4 +11,12 @@ const Loader_2 = () => {
   ];
 };
 
-export default Loader_2;
+export const Loader2_2 = () => {
+  const [loading2, setLoading2] = useState(false);
+
+  return [
+    loading2 ? <Loader2 /> : null,
+    () => setLoading2(true), //Show loader
+    () => setLoading2(false), //Hide Loader
+  ];
+};

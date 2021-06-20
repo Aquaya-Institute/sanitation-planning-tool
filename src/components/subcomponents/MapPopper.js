@@ -79,7 +79,7 @@ export const MapPopper = ({
   anchorPopper,
   downloadData,
 }) => {
-  const [{ maps, activeLayer, activeLegend, leafletMap }, dispatch] =
+  const [{ maps, currentLayerID, activeLegend, leafletMap }, dispatch] =
     useContext(MapContext);
   const classes = useStyles();
   const idPopper = "transitions-popper";
@@ -96,7 +96,7 @@ export const MapPopper = ({
   //     console.log("updated popup", popup);
   //     if (popup) {
   //       var dat = [];
-  //       maps[mapID].layers[activeLayer].filters.forEach(function (element) {
+  //       maps[mapID].layers[currentLayerID].filters.forEach(function (element) {
   //         dat.push([
   //           element.column_name,
   //           element.name,
@@ -197,7 +197,7 @@ export const MapPopper = ({
                 <Box fontWeight="fontWeightBold">
                   {
                     popupData.data[
-                      maps[mapID].layers[activeLayer].filters[activeLegend]
+                      maps[mapID].layers[currentLayerID].filters[activeLegend]
                         .column_name
                     ].Name
                   }
@@ -206,13 +206,13 @@ export const MapPopper = ({
                 <Box>
                   {
                     popupData.data[
-                      maps[mapID].layers[activeLayer].filters[activeLegend]
+                      maps[mapID].layers[currentLayerID].filters[activeLegend]
                         .column_name
                     ].Value
                   }
                   {
                     popupData.data[
-                      maps[mapID].layers[activeLayer].filters[activeLegend]
+                      maps[mapID].layers[currentLayerID].filters[activeLegend]
                         .column_name
                     ].Unit
                   }
@@ -281,7 +281,7 @@ export const MapPopper = ({
               </Grid>
               <DialogTitle>
                 {popupData.data.cholera ? (
-                  <>{maps[mapID].layers[activeLayer].name}</>
+                  <>{maps[mapID].layers[currentLayerID].name}</>
                 ) : (
                   "Estimated Settlement Area"
                 )}
@@ -409,7 +409,7 @@ export const MapPopper = ({
                   className={classes.button}
                   startIcon={<SaveIcon />}
                 >
-                  {maps[mapID].layers[activeLayer].name === "5x5km area" ? (
+                  {maps[mapID].layers[currentLayerID].name === "5x5km area" ? (
                     <CSVLink
                       className={classes.download}
                       data={downloadData}

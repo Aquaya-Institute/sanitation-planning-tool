@@ -43,7 +43,7 @@ const drawerWidth = 175;
 
 export const MapMenu = () => {
   //pick specific states (and dispatcher) we need from mapstate
-  const [{ maps, currentMapID, activeLayer }, dispatch] =
+  const [{ maps, currentMapID, currentLayerID, badges }, dispatch] =
     useContext(MapContext);
   const [mapID, setMapID] = useState(null);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
@@ -257,9 +257,7 @@ export const MapMenu = () => {
             >
               <Badge
                 key="accessBadge"
-                badgeContent={
-                  maps[mapID].layers[activeLayer].accessCounter.size
-                }
+                badgeContent={badges[currentLayerID].accessCounter.size}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 showZero={false}
                 color="secondary"
@@ -319,14 +317,14 @@ export const MapMenu = () => {
                       setFilterMenuOpen={setFilterMenuOpen}
                       cat={"accessibility"}
                       setSelectedMenu={setSelectedMenu}
-                      layerID={activeLayer}
+                      layerID={currentLayerID}
                     />
                   )}
                 </ListItem>
               </Badge>
               <Badge
                 key="washBadge"
-                badgeContent={maps[mapID].layers[activeLayer].washCounter.size}
+                badgeContent={badges[currentLayerID].washCounter.size}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 showZero={false}
                 color="secondary"
@@ -389,14 +387,14 @@ export const MapMenu = () => {
                       setFilterMenuOpen={setFilterMenuOpen}
                       cat={"wash"}
                       setSelectedMenu={setSelectedMenu}
-                      layerID={activeLayer}
+                      layerID={currentLayerID}
                     />
                   )}
                 </ListItem>
               </Badge>
               <Badge
                 key="socioBadge"
-                badgeContent={maps[mapID].layers[activeLayer].socioCounter.size}
+                badgeContent={badges[currentLayerID].socioCounter.size}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 showZero={false}
                 color="secondary"
@@ -459,16 +457,14 @@ export const MapMenu = () => {
                       setFilterMenuOpen={setFilterMenuOpen}
                       cat={"socioeconomic"}
                       setSelectedMenu={setSelectedMenu}
-                      layerID={activeLayer}
+                      layerID={currentLayerID}
                     />
                   )}
                 </ListItem>
               </Badge>
               <Badge
                 key="healthBadge"
-                badgeContent={
-                  maps[mapID].layers[activeLayer].healthCounter.size
-                }
+                badgeContent={badges[currentLayerID].healthCounter.size}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 showZero={false}
                 color="secondary"
@@ -532,7 +528,7 @@ export const MapMenu = () => {
                       setFilterMenuOpen={setFilterMenuOpen}
                       cat={"health"}
                       setSelectedMenu={setSelectedMenu}
-                      layerID={activeLayer}
+                      layerID={currentLayerID}
                     />
                   )}
                 </ListItem>

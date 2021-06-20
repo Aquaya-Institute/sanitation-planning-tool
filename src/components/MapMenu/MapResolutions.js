@@ -35,7 +35,7 @@ export const MapResolutions = ({
   cat,
   setSelectedMenu,
 }) => {
-  const [{ maps, currentMapID, activeLayer }, dispatch] =
+  const [{ maps, currentMapID, currentLayerID }, dispatch] =
     useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
   const classes = useStyles();
@@ -49,7 +49,7 @@ export const MapResolutions = ({
       console.log(currentMapID);
       setMapID(currentMapID);
       // setDistName([]);
-      // setActiveLayer(maps[currentMapID].currentLayer);
+      // setcurrentLayerID(maps[currentMapID].currentLayer);
     }
   }, [currentMapID, mapID]);
 
@@ -80,12 +80,12 @@ export const MapResolutions = ({
     };
   }, [setFilterMenuOpen, setSelectedMenu]);
 
-  const toggleLayerVisibility = (activeLayer) => {
+  const toggleLayerVisibility = (currentLayerID) => {
     console.log("radio");
     dispatch({
       type: "layer.toggle",
       mapID: mapID,
-      layerID: activeLayer,
+      newLayerID: currentLayerID,
     });
   };
 
@@ -132,7 +132,7 @@ export const MapResolutions = ({
                   // p={1}
                   aria-label="Map resolution options"
                   name="resolutionSelector"
-                  value={activeLayer}
+                  value={currentLayerID}
                   onChange={(e) => {
                     // setDistName([]);
                     toggleLayerVisibility(e.target.value);

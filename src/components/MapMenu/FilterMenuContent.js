@@ -37,7 +37,10 @@ function createMarks(array) {
 }
 
 const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
-  const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
+  const [
+    { currentMapID, currentCountry, showSettlements, settlementBoundary },
+    dispatch,
+  ] = React.useContext(MapContext);
   // const [mapID, setMapID] = useState(null);
   const classes = useStyles();
 
@@ -74,6 +77,11 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
       newValue[categoryFilterIndex] = new_cat_obj;
     }
 
+    // if (showSettlements === true) {
+    //   currentCountry.current_layer.hide();
+    //   settlementBoundary.hide();
+    // }
+
     dispatch({
       type: "layer.filter",
       mapID: currentMapID,
@@ -89,7 +97,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
 
   return (
     <React.Fragment key="filterListDiv">
-      {maps[currentMapID].layers[layerID].filters.map((filter, filterIndex) => (
+      {currentCountry.current_filters.map((filter, filterIndex) => (
         <React.Fragment key={"filterListDiv" + filterIndex}>
           {filter.subcategory === cat && filter.type !== "none" && (
             <List key="filterList">

@@ -12,7 +12,7 @@ import Carto from "@carto/carto.js";
 // }));
 
 export const Settlements = () => {
-  const [{ maps, currentMapID, activeLayer, query, leafletMap }, dispatch] =
+  const [{ maps, currentMapID, currentLayerID, query, leafletMap }, dispatch] =
     useContext(MapContext);
   // const classes = useStyles();
   const [geoms, setGeoms] = useState(null);
@@ -31,7 +31,7 @@ export const Settlements = () => {
       if (query) {
         var clause = query.substr(query.indexOf("WHERE"), query.length);
         queryURL =
-          `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}` +
+          `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}` +
           clause;
         // maps[mapID].layers["4"].carto_source.setQuery(
         //   `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
@@ -41,7 +41,7 @@ export const Settlements = () => {
 
         // queryURL = `SELECT the_geom FROM ${queryURL2}`;
       } else {
-        queryURL = `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`;
+        queryURL = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
         // maps[mapID].layers["4"].carto_source.setQuery(
         //   `SELECT * FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
         // );
@@ -92,7 +92,7 @@ export const Settlements = () => {
 
   //         queryURL = `SELECT the_geom FROM ${queryURL2}`;
   //       } else {
-  //         queryURL = `SELECT the_geom FROM ${maps[mapID].layers[activeLayer].carto_tableName}`;
+  //         queryURL = `SELECT the_geom FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
   //       }
   //       return fetch(
   //         // `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT the_geom FROM (SELECT * FROM gha_multivariable_pixel) as originalQuery WHERE (classes IN (2,3,4) AND (pop >= 0 AND pop <= 442720) AND (od >= 0 AND od <= 99) AND (s_unimp >= 0 AND s_unimp <= 90) AND (w_unimp >= 0 AND w_unimp <= 73) AND (timecities >= 0 AND timecities <= 592) AND (dr >= 0.1 AND dr <= 37.8) AND (dt >= 0 AND dt <= 76.2) AND (dia >= 2.4 AND dia <= 6.5) AND (cholera >= 0 AND cholera <= 6410.7) AND (u5m >= 4.4 AND u5m <= 13.3) AND (edu_w >= 2 AND edu_w <= 10) AND (edu_m >= 3 AND edu_m <= 11))`

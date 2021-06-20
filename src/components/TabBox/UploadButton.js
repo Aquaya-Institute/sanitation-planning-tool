@@ -48,7 +48,7 @@ export const UploadButton = () => {
       settlementBoundary,
       carto_client,
       query,
-      activeLayer,
+      currentLayerID,
       showSettlements,
       allowSettlements,
       leafletMap,
@@ -165,7 +165,7 @@ export const UploadButton = () => {
   //       }
   //       // var clause = query.substr(query.indexOf(" WHERE"), query.length);
   //       // queryURL =
-  //       //   `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}` +
+  //       //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}` +
   //       //   clause;
   //       let queryURL = query.replace(/\s/g, " ");
   //       var _style = null;
@@ -185,7 +185,7 @@ export const UploadButton = () => {
 
   //       // queryURL = `SELECT the_geom FROM ${queryURL2}`;
   //     } else {
-  //       // queryURL = `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`;
+  //       // queryURL = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
   //       // maps[mapID].layers["4"].carto_source.setQuery(
   //       //   `SELECT * FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
   //       // );
@@ -265,7 +265,7 @@ export const UploadButton = () => {
   //   console.log("updated popup", popup);
   //   if (popup) {
   //     var dat = [];
-  //     maps[mapID].layers[activeLayer].filters.forEach(function (element) {
+  //     maps[mapID].layers[currentLayerID].filters.forEach(function (element) {
   //       dat.push([
   //         element.column_name,
   //         element.name,
@@ -358,137 +358,152 @@ export const UploadButton = () => {
       <button onClick={removeCSV}>Remove</button>
       <Divider />
       {/* <Settlements /> */}
-      {settlementBoundary && (
+      {mapID && (
         <>
-          <Box
-            p={1}
-            fontStyle="italic"
-            fontWeight="fontWeightBold"
-            fontSize={13.5}
-            variant="subtitle2"
-            style={{ color: "black" }}
-          >
-            Display all estimated settlement boundary areas on the map:
-          </Box>
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showLayer}
-                onChange={() => {
-                  if (showLayer === false && allowSettlements === false) {
-                    setPopoverOpen(true);
-                  } else {
-                    setShowLayer(!showLayer);
-                    if (showLayer === false) {
-                      settlementBoundary.show();
-                      // maps[mapID].layers["4"].carto_layer.show();
-                      // maps[mapID].layers["4"].carto_layer.bringToFront();
-                      // carto_client.addLayer(settlementBoundary);
-                      // maps[mapID].layers["4"].carto_layer.show();
-                    } else {
-                      // maps[mapID].layers["4"].carto_layer.hide();
-                      settlementBoundary.hide();
-                      // carto_client.removeLayer(settlementBoundary);
-                    }
-                  }
-                }}
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                color="primary"
-              />
-            }
-            label={
-              <Typography key="filterListItemLabel" variant="body2">
-                Show estimated settlement boundaries
-              </Typography>
-            }
-            size="small"
-          />
-          <Dialog
-            id={idPopover}
-            ref={clickRef}
-            key={idPopover}
-            aria-labelledby="Popup diaglog box containing data at clicked location"
-            aria-describedby="Popup diaglog box containing data values for all variables the at clicked location, aggregated at the level of resolution of the clicked layer."
-            className={classes.modal}
-            open={popoverOpen}
-            onClose={(e) => {
-              setPopoverOpen(false);
-            }}
-            scroll={"paper"}
-          >
-            <Grid container justify="flex-end" key={"popoverHeader"}>
-              <CloseIcon
-                key={"popoverClose"}
-                fontSize="small"
-                color="disabled"
-                onClick={(e) => {
-                  setPopoverOpen(false);
-                }}
-              />
-            </Grid>
-            <DialogTitle>Estimated Settlements Layer (Beta)</DialogTitle>
-            <DialogContent dividers={scroll === "paper"}>
-              <Typography
-                key="filterListItemLabel"
-                variant="body2"
-                // style={{ fontSize: 11 }}
-                gutterBottom
+          {" "}
+          {maps[mapID].layers["4"] && (
+            <>
+              <Box
+                p={1}
+                fontStyle="italic"
+                fontWeight="fontWeightBold"
+                fontSize={13.5}
+                variant="subtitle2"
+                style={{ color: "black" }}
               >
-                The settlements layer is an estimation and still under
-                development. Some settlements may not be captured and values are
-                estimated from data of lower resolution and therefore not
-                precise.
-              </Typography>
-              <DialogActions>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      key="consent"
-                      checked={showLayer}
-                      name="consent"
-                      onChange={() => {
+                Display all estimated settlement boundary areas on the map:
+              </Box>
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showLayer}
+                    onChange={() => {
+                      if (showLayer === false && allowSettlements === false) {
+                        setPopoverOpen(true);
+                      } else {
                         setShowLayer(!showLayer);
                         dispatch({
                           type: "show.settlements",
                           showSettlements: !showLayer,
                         });
-                        if (!showLayer === true) {
+                        if (showLayer === false) {
+                          if (settlementBoundary) {
+                            settlementBoundary.show();
+                          }
                           // maps[mapID].layers["4"].carto_layer.show();
-                          settlementBoundary.show();
+                          // maps[mapID].layers["4"].carto_layer.bringToFront();
                           // carto_client.addLayer(settlementBoundary);
-                          setChecked(true);
-                          dispatch({
-                            type: "allow.settlements",
-                            allowSettlements: !checked,
-                          });
+                          // maps[mapID].layers["4"].carto_layer.show();
                         } else {
                           // maps[mapID].layers["4"].carto_layer.hide();
-                          settlementBoundary.hide();
+                          if (settlementBoundary) {
+                            settlementBoundary.hide();
+                          }
                           // carto_client.removeLayer(settlementBoundary);
                         }
-                      }}
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      color="primary"
+                      }
+                    }}
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    color="primary"
+                  />
+                }
+                label={
+                  <Typography key="filterListItemLabel" variant="body2">
+                    Show estimated settlement boundaries
+                  </Typography>
+                }
+                size="small"
+              />
+              <Dialog
+                id={idPopover}
+                ref={clickRef}
+                key={idPopover}
+                aria-labelledby="Popup diaglog box containing data at clicked location"
+                aria-describedby="Popup diaglog box containing data values for all variables the at clicked location, aggregated at the level of resolution of the clicked layer."
+                className={classes.modal}
+                open={popoverOpen}
+                onClose={(e) => {
+                  setPopoverOpen(false);
+                }}
+                scroll={"paper"}
+              >
+                <Grid container justify="flex-end" key={"popoverHeader"}>
+                  <CloseIcon
+                    key={"popoverClose"}
+                    fontSize="small"
+                    color="disabled"
+                    onClick={(e) => {
+                      setPopoverOpen(false);
+                    }}
+                  />
+                </Grid>
+                <DialogTitle>Estimated Settlements Layer (Beta)</DialogTitle>
+                <DialogContent dividers={scroll === "paper"}>
+                  <Typography
+                    key="filterListItemLabel"
+                    variant="body2"
+                    // style={{ fontSize: 11 }}
+                    gutterBottom
+                  >
+                    The settlements layer is an estimation and still under
+                    development. Some settlements may not be captured and values
+                    are estimated from data of lower resolution and therefore
+                    not precise.
+                  </Typography>
+                  <DialogActions>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          key="consent"
+                          checked={showLayer}
+                          name="consent"
+                          onChange={() => {
+                            setShowLayer(!showLayer);
+                            dispatch({
+                              type: "show.settlements",
+                              showSettlements: !showLayer,
+                            });
+                            if (!showLayer === true) {
+                              // maps[mapID].layers["4"].carto_layer.show();
+                              if (settlementBoundary) {
+                                settlementBoundary.show();
+                              }
+                              // carto_client.addLayer(settlementBoundary);
+                              setChecked(true);
+                              dispatch({
+                                type: "allow.settlements",
+                                allowSettlements: !checked,
+                              });
+                            } else {
+                              // maps[mapID].layers["4"].carto_layer.hide();
+                              settlementBoundary.hide();
+                              // carto_client.removeLayer(settlementBoundary);
+                            }
+                          }}
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          color="primary"
+                        />
+                      }
+                      label={
+                        <Typography
+                          key="filterListItemLabel"
+                          variant="body2"
+                          // style={{ fontSize: 11 }}
+                          gutterBottom
+                        >
+                          I understand, turn on the layer.
+                        </Typography>
+                      }
+                      size="small"
                     />
-                  }
-                  label={
-                    <Typography
-                      key="filterListItemLabel"
-                      variant="body2"
-                      // style={{ fontSize: 11 }}
-                      gutterBottom
-                    >
-                      I understand, turn on the layer.
-                    </Typography>
-                  }
-                  size="small"
-                />
-              </DialogActions>
-            </DialogContent>
-          </Dialog>
+                  </DialogActions>
+                </DialogContent>
+              </Dialog>
+            </>
+          )}
         </>
       )}
       {/* <MapPopper
