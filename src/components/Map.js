@@ -463,7 +463,7 @@ export const Map = () => {
 
   useEffect(() => {
     if (mapID) {
-      if (cartoClient) {
+      if (maps[mapID].layers["4"] && cartoClient) {
         if (query) {
           if (settlementBoundary) {
             cartoClient.removeLayer(settlementBoundary);
