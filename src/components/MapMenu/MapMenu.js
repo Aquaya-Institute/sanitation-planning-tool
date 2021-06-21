@@ -43,7 +43,7 @@ const drawerWidth = 175;
 
 export const MapMenu = () => {
   //pick specific states (and dispatcher) we need from mapstate
-  const [{ maps, currentMapID, currentLayerID, badges }, dispatch] =
+  const [{ maps, currentMapID, currentLayerID, currentCountry }, dispatch] =
     useContext(MapContext);
   const [mapID, setMapID] = useState(null);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
@@ -257,7 +257,7 @@ export const MapMenu = () => {
             >
               <Badge
                 key="accessBadge"
-                badgeContent={badges[currentLayerID].accessCounter.size}
+                badgeContent={currentCountry[currentLayerID].accessCounter.size}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 showZero={false}
                 color="secondary"
@@ -324,7 +324,7 @@ export const MapMenu = () => {
               </Badge>
               <Badge
                 key="washBadge"
-                badgeContent={badges[currentLayerID].washCounter.size}
+                badgeContent={currentCountry[currentLayerID].washCounter.size}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 showZero={false}
                 color="secondary"
@@ -394,7 +394,7 @@ export const MapMenu = () => {
               </Badge>
               <Badge
                 key="socioBadge"
-                badgeContent={badges[currentLayerID].socioCounter.size}
+                badgeContent={currentCountry[currentLayerID].socioCounter.size}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 showZero={false}
                 color="secondary"
@@ -464,7 +464,7 @@ export const MapMenu = () => {
               </Badge>
               <Badge
                 key="healthBadge"
-                badgeContent={badges[currentLayerID].healthCounter.size}
+                badgeContent={currentCountry[currentLayerID].healthCounter.size}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
                 showZero={false}
                 color="secondary"

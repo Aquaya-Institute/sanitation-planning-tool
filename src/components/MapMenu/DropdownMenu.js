@@ -135,7 +135,7 @@ export const DropdownMenu = ({
       maps[mapID].layers[currentLayerID].carto_source &&
       currentLayerID !== "1"
     ) {
-      currentCountry.current_source.setQuery(query);
+      currentCountry[currentLayerID].source.setQuery(query);
       dispatch({
         type: "layer.queryDist",
         queryDist: query,

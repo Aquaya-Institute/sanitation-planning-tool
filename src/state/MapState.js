@@ -1,5 +1,5 @@
 import * as React from "react";
-import Carto from "@carto/carto.js";
+import Carto, { active } from "@carto/carto.js";
 import produce from "immer";
 import { enableMapSet } from "immer";
 import { legendStyles } from "../components/subcomponents/LegendStyles";
@@ -8,6 +8,7 @@ import { liberia } from "./liberia";
 import { niger } from "./niger";
 import { rwanda } from "./rwanda";
 import { nigeria } from "./nigeria";
+import { DragHandleTwoTone } from "@material-ui/icons";
 enableMapSet();
 const legendStylesObj = legendStyles;
 //this is the "global map state". this is where state is maintained and updated
@@ -26,7 +27,7 @@ const initialState = {
   currentLayerID: "2",
   activeLegend: "0",
   userData: null,
-  query: null,
+  // query: null,
   queryDist: null,
   skip: true,
   selectedDistName: [],
@@ -36,37 +37,67 @@ const initialState = {
   allowSettlements: false,
   settlementHighlight: null,
   settlementPopup: null,
-  currentCountry: {
-    current_source: null,
-    current_style: null,
-    current_layer: null,
-    current_filters: null,
-    current_columns: null,
-    accessCounter: new Set(null),
-    washCounter: new Set(null),
-    socioCounter: new Set(null),
-    healthCounter: new Set(null),
-  },
-  badges: [
+  currentCountry: [
     {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
       accessCounter: new Set(null),
       washCounter: new Set(null),
       socioCounter: new Set(null),
       healthCounter: new Set(null),
     },
     {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
       accessCounter: new Set(null),
       washCounter: new Set(null),
       socioCounter: new Set(null),
       healthCounter: new Set(null),
     },
     {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
       accessCounter: new Set(null),
       washCounter: new Set(null),
       socioCounter: new Set(null),
       healthCounter: new Set(null),
     },
     {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
       accessCounter: new Set(null),
       washCounter: new Set(null),
       socioCounter: new Set(null),
@@ -88,7 +119,8 @@ const reducer = (state, action) => {
           for (; index >= 0; index--) {
             if (draft.maps[action.mapID].layers[index].visible === true) {
               draft.currentLayerID = index.toString();
-              draft.query = null;
+              // draft.currentCountry[index].query = null;
+              // draft.filters[index].filter = null;
               break;
             }
           }
@@ -96,9 +128,9 @@ const reducer = (state, action) => {
           for (i = 0; i < legendStylesObj.length; i++) {
             if (
               legendStylesObj[i].style_pixel ===
-                draft.currentCountry.current_style ||
+                draft.currentCountry[draft.currentLayerID].style ||
               legendStylesObj[i].style_bounds ===
-                draft.currentCountry.current_style
+                draft.currentCountry[draft.currentLayerID].style
             ) {
               draft.activeLegend = i.toString();
               break;
@@ -109,27 +141,36 @@ const reducer = (state, action) => {
 
     case "current.layer":
       return produce(state, (draft) => {
-        if (draft.currentCountry.current_layer) {
-          draft.carto_client.removeLayer(draft.currentCountry.current_layer);
-        }
-        // draft.currentCountry.current_layer = action.currentLayer;
-        draft.currentCountry.current_source = action.currentSource;
-        draft.currentCountry.current_style = action.currentStyle;
-        draft.currentCountry.current_filters = action.currentFilters;
+        // if (draft.currentCountry[draft.currentLayerID].layer) {
+        //   draft.carto_client.removeLayer(
+        //     draft.currentCountry[draft.currentLayerID].layer
+        //   );
+        // }
+        // draft.currentCountry[draft.currentLayerID].layer = action.currentLayer;
+        draft.currentCountry[draft.currentLayerID].source =
+          action.currentSource;
+        draft.currentCountry[draft.currentLayerID].style = action.currentStyle;
+        draft.currentCountry[draft.currentLayerID].filters =
+          action.currentFilters;
         const columns = [];
         action.currentFilters.forEach((filter) => {
           columns.push(filter.column_name);
         });
-        draft.currentCountry.current_columns = columns;
-        draft.currentCountry.current_layer = new Carto.layer.Layer(
-          draft.currentCountry.current_source,
-          new Carto.style.CartoCSS(draft.currentCountry.current_style),
-          { featureClickColumns: columns }
+        draft.currentCountry[draft.currentLayerID].columns = columns;
+        draft.currentCountry[draft.currentLayerID].layer =
+          new Carto.layer.Layer(
+            draft.currentCountry[draft.currentLayerID].source,
+            new Carto.style.CartoCSS(
+              draft.currentCountry[draft.currentLayerID].style
+            ),
+            { featureClickColumns: columns }
+          );
+        draft.carto_client.addLayer(
+          draft.currentCountry[draft.currentLayerID].layer
         );
-        draft.carto_client.addLayer(draft.currentCountry.current_layer);
-        draft.currentCountry.current_layer.show();
+        draft.currentCountry[draft.currentLayerID].layer.show();
         if (draft.showSettlements === true) {
-          draft.currentCountry.current_layer.bringToBack();
+          draft.currentCountry[draft.currentLayerID].layer.bringToBack();
         }
       });
 
@@ -151,9 +192,20 @@ const reducer = (state, action) => {
       */
       return produce(state, (draft) => {
         // draft.currentMapID = action.mapID;
-        const mid = action.mapID;
+        // const mid = action.mapID;
+        // draft.currentCountry[draft.currentLayerID].filters =
+        //   draft.currentCountry[draft.currentLayerID].source.getFilters();
+        draft.currentCountry[draft.currentLayerID].layer.hide();
         draft.currentLayerID = action.newLayerID;
-        const cartoLayer = draft.currentCountry.current_layer;
+        draft.currentCountry[draft.currentLayerID].layer.show();
+        // if (draft.settlementBoundary === true) {
+        //   draft.draft.carto_client.removeLayer(draft.settlementBoundary);
+        // }
+        // draft.query[draft.currentLayerID] = null;
+        // draft.currentCountry.carto_layer =
+        //   draft.currentCountry[draft.currentLayerID].layer.setFilters(
+        //     draft.currentCountry[draft.currentLayerID].filters
+        //   );
         //update the state
         // for (var index in draft.maps[mid].layers) {
         //   if (index === action.layerID || index === "0") {
@@ -170,9 +222,9 @@ const reducer = (state, action) => {
         for (i = 0; i < legendStylesObj.length; i++) {
           if (
             legendStylesObj[i].style_pixel ===
-              draft.currentCountry.current_style ||
+              draft.currentCountry[draft.currentLayerID].style ||
             legendStylesObj[i].style_bounds ===
-              draft.currentCountry.current_style
+              draft.currentCountry[draft.currentLayerID].style
           ) {
             draft.activeLegend = i.toString();
             break;
@@ -190,22 +242,30 @@ const reducer = (state, action) => {
     case "legend.select":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
-        if (draft.currentCountry.current_layer) {
-          draft.carto_client.removeLayer(draft.currentCountry.current_layer);
-        }
-        const mid = action.mapID;
-        const lid = draft.currentLayerID;
-        draft.currentCountry.current_style = action.styleNew;
+        // if (draft.currentCountry[draft.currentLayerID].layer) {
+        //   draft.carto_client.removeLayer(
+        //     draft.currentCountry[draft.currentLayerID].layer
+        //   );
+        // }
+        draft.currentCountry[draft.currentLayerID].style = action.styleNew;
+        draft.currentCountry[draft.currentLayerID].layer
+          .getStyle()
+          .setContent(action.styleNew);
         draft.activeLegend = action.legendIndex;
-        draft.currentCountry.current_layer = new Carto.layer.Layer(
-          draft.currentCountry.current_source,
-          new Carto.style.CartoCSS(draft.currentCountry.current_style),
-          { featureClickColumns: draft.currentCountry.current_columns }
-        );
-        draft.carto_client.addLayer(draft.currentCountry.current_layer);
-        draft.currentCountry.current_layer.show();
+        // draft.currentCountry[draft.currentLayerID].layer =
+        //   new Carto.layer.Layer(
+        //     draft.currentCountry[draft.currentLayerID].source,
+        //     new Carto.style.CartoCSS(
+        //       draft.currentCountry[draft.currentLayerID].style
+        //     ),
+        //     { featureClickColumns: draft.currentCountry.current_columns }
+        //   );
+        // draft.carto_client.addLayer(
+        //   draft.currentCountry[draft.currentLayerID].layer
+        // );
+        draft.currentCountry[draft.currentLayerID].layer.show();
         if (draft.showSettlements === true) {
-          draft.currentCountry.current_layer.bringToBack();
+          draft.currentCountry[draft.currentLayerID].layer.bringToBack();
         }
       });
 
@@ -227,16 +287,19 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         // draft.reset = false;
         draft.currentMapID = action.mapID;
-        draft.currentCountry.current_filters[action.filterIndex] =
+        draft.currentCountry[draft.currentLayerID].filters[action.filterIndex] =
           action.filter;
         const layer = draft.currentCountry;
 
         //TODO: based on the type of filter (range, categorical)
         //use Switch statement to apply appropriate filters
-        switch (draft.currentCountry.current_filters[action.filterIndex].type) {
+        switch (
+          draft.currentCountry[draft.currentLayerID].filters[action.filterIndex]
+            .type
+        ) {
           case "range":
             //this is how you get the filter out of the carto layer
-            const filter = draft.currentCountry.current_layer
+            const filter = draft.currentCountry[draft.currentLayerID].layer
               .getSource()
               .getFilters()[0] //since this is a filtercollection
               .getFilters()[action.filterIndex];
@@ -250,37 +313,37 @@ const reducer = (state, action) => {
               action.filter.value[1] !== action.filter.max
             ) {
               if (action.filter.subcategory === "accessibility") {
-                draft.badges[draft.currentLayerID].accessCounter.add(
+                draft.currentCountry[draft.currentLayerID].accessCounter.add(
                   action.filter.name
                 );
               } else if (action.filter.subcategory === "socioeconomic") {
-                draft.badges[draft.currentLayerID].socioCounter.add(
+                draft.currentCountry[draft.currentLayerID].socioCounter.add(
                   action.filter.name
                 );
               } else if (action.filter.subcategory === "wash") {
-                draft.badges[draft.currentLayerID].washCounter.add(
+                draft.currentCountry[draft.currentLayerID].washCounter.add(
                   action.filter.name
                 );
               } else if (action.filter.subcategory === "health") {
-                draft.badges[draft.currentLayerID].healthCounter.add(
+                draft.currentCountry[draft.currentLayerID].healthCounter.add(
                   action.filter.name
                 );
               }
             } else {
               if (action.filter.subcategory === "accessibility") {
-                draft.badges[draft.currentLayerID].accessCounter.delete(
+                draft.currentCountry[draft.currentLayerID].accessCounter.delete(
                   action.filter.name
                 );
               } else if (action.filter.subcategory === "socioeconomic") {
-                draft.badges[draft.currentLayerID].socioCounter.delete(
+                draft.currentCountry[draft.currentLayerID].socioCounter.delete(
                   action.filter.name
                 );
               } else if (action.filter.subcategory === "wash") {
-                draft.badges[draft.currentLayerID].washCounter.delete(
+                draft.currentCountry[draft.currentLayerID].washCounter.delete(
                   action.filter.name
                 );
               } else if (action.filter.subcategory === "health") {
-                draft.badges[draft.currentLayerID].healthCounter.delete(
+                draft.currentCountry[draft.currentLayerID].healthCounter.delete(
                   action.filter.name
                 );
               }
@@ -288,7 +351,7 @@ const reducer = (state, action) => {
             break;
           case "range_non_linear":
             //this is how you get the filter out of the carto layer
-            const filter_non = draft.currentCountry.current_layer
+            const filter_non = draft.currentCountry[draft.currentLayerID].layer
               .getSource()
               .getFilters()[0] //since this is a filtercollection
               .getFilters()[action.filterIndex];
@@ -301,17 +364,17 @@ const reducer = (state, action) => {
               action.filter.value[0] !== action.filter.min ||
               action.filter.value[1] !== action.filter.max
             ) {
-              draft.badges[draft.currentLayerID].socioCounter.add(
+              draft.currentCountry[draft.currentLayerID].socioCounter.add(
                 action.filter.name
               );
             } else {
-              draft.badges[draft.currentLayerID].socioCounter.delete(
+              draft.currentCountry[draft.currentLayerID].socioCounter.delete(
                 action.filter.name
               );
             }
             break;
           case "categorical":
-            const filter_c = draft.currentCountry.current_layer
+            const filter_c = draft.currentCountry[draft.currentLayerID].layer
               .getSource()
               .getFilters()[0] //since this is a filtercollection
               .getFilters()[action.filterIndex];
@@ -329,11 +392,11 @@ const reducer = (state, action) => {
             });
 
             if (changed === true) {
-              draft.badges[draft.currentLayerID].accessCounter.add(
+              draft.currentCountry[draft.currentLayerID].accessCounter.add(
                 action.filter.name
               );
             } else {
-              draft.badges[draft.currentLayerID].accessCounter.delete(
+              draft.currentCountry[draft.currentLayerID].accessCounter.delete(
                 action.filter.name
               );
             }
@@ -348,12 +411,13 @@ const reducer = (state, action) => {
           default:
             break;
         }
-        draft.download = draft.currentCountry.current_layer.getSource();
+        draft.download =
+          draft.currentCountry[draft.currentLayerID].layer.getSource();
       });
 
     case "layer.query":
       return produce(state, (draft) => {
-        draft.query = action.query;
+        draft.currentCountry[draft.currentLayerID].query = action.query;
       });
 
     case "layer.queryDist":
@@ -375,64 +439,90 @@ const reducer = (state, action) => {
         // draft.reset = true;
         draft.currentMapID = action.mapID;
         const layer = draft.currentCountry;
-        layer.current_filters.forEach((filter, filterIndex) => {
-          if (filter.type === "categorical") {
-            const cartofilter_c = layer.current_layer
-              .getSource()
-              .getFilters()[0] //since this is a filtercollection
-              .getFilters()[filterIndex];
+        draft.filters[draft.currentMapID].filter.forEach(
+          (filter, filterIndex) => {
+            if (filter.type === "categorical") {
+              const cartofilter_c = layer.current_layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()[filterIndex];
 
-            let col_vals_tofilter = [];
-            //get the category filter state and create an array
-            //of checked=true col values to filter
-            filter.value.forEach((category) => {
-              category.checked = true;
-              col_vals_tofilter.push(category.value);
-            });
-            cartofilter_c.setFilters({
-              in: col_vals_tofilter,
-            });
-          } else if (filter.type === "range") {
-            filter.value = [filter.min, filter.max];
-            const cartofilter = layer.current_layer
-              .getSource()
-              .getFilters()[0] //since this is a filtercollection
-              .getFilters()[filterIndex];
-            //this is how you set the filter. this is specific to range filter
-            cartofilter.setFilters({
-              gte: filter.min,
-              lte: filter.max,
-            });
-          } else if (filter.type === "range_non_linear") {
-            filter.scaledValue = [filter.scaledMin, filter.scaledMax];
-            filter.value = [filter.min, filter.max];
-            const cartofilter_non = layer.current_layer
-              .getSource()
-              .getFilters()[0] //since this is a filtercollection
-              .getFilters()[filterIndex];
-            //this is how you set the filter. this is specific to range filter
-            cartofilter_non.setFilters({
-              gte: filter.scaledMin,
-              lte: filter.scaledMax,
-            });
+              let col_vals_tofilter = [];
+              //get the category filter state and create an array
+              //of checked=true col values to filter
+              filter.value.forEach((category) => {
+                category.checked = true;
+                col_vals_tofilter.push(category.value);
+              });
+              cartofilter_c.setFilters({
+                in: col_vals_tofilter,
+              });
+            } else if (filter.type === "range") {
+              filter.value = [filter.min, filter.max];
+              const cartofilter = layer.current_layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()[filterIndex];
+              //this is how you set the filter. this is specific to range filter
+              cartofilter.setFilters({
+                gte: filter.min,
+                lte: filter.max,
+              });
+            } else if (filter.type === "range_non_linear") {
+              filter.scaledValue = [filter.scaledMin, filter.scaledMax];
+              filter.value = [filter.min, filter.max];
+              const cartofilter_non = layer.current_layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()[filterIndex];
+              //this is how you set the filter. this is specific to range filter
+              cartofilter_non.setFilters({
+                gte: filter.scaledMin,
+                lte: filter.scaledMax,
+              });
+            }
           }
-        });
-        draft.badges[draft.currentLayerID].accessCounter = new Set(null);
-        draft.badges[draft.currentLayerID].washCounter = new Set(null);
-        draft.badges[draft.currentLayerID].socioCounter = new Set(null);
-        draft.badges[draft.currentLayerID].healthCounter = new Set(null);
+        );
+        draft.currentCountry[draft.currentLayerID].accessCounter = new Set(
+          null
+        );
+        draft.currentCountry[draft.currentLayerID].washCounter = new Set(null);
+        draft.currentCountry[draft.currentLayerID].socioCounter = new Set(null);
+        draft.currentCountry[draft.currentLayerID].healthCounter = new Set(
+          null
+        );
       });
 
     //when a new carto layer is added
     case "layer.addCartoLayer":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
-        draft.maps[action.mapID].layers[action.layerID].carto_layer =
-          action.cartoLayer;
-        draft.maps[action.mapID].layers[action.layerID].carto_source =
-          action.cartoSource;
+        // draft.maps[action.mapID].layers[action.layerID].carto_layer =
+        //   action.cartoLayer;
+        // draft.maps[action.mapID].layers[action.layerID].carto_source =
+        //   action.cartoSource;
+        // var add = false;
+        // if (draft.currentCountry[action.layerID].layer === null) {
+        //   add = true;
+        // }
+        draft.currentCountry[action.layerID].layer = action.cartoLayer;
+        draft.currentCountry[action.layerID].source = action.cartoSource;
+        draft.currentCountry[action.layerID].style =
+          draft.maps[draft.currentMapID].layers[action.layerID].carto_style;
+        draft.currentCountry[action.layerID].filters =
+          draft.maps[draft.currentMapID].layers[action.layerID].filters;
+        // if (add === true) {
+        draft.carto_client.addLayer(draft.currentCountry[action.layerID].layer);
+        //   add = false;
+        // }
         if (action.layerID !== "0") {
           action.cartoLayer.bringToBack();
+        }
+        //set default visibility as set in map state
+        if (draft.maps[draft.currentMapID].layers[action.layerID].visible) {
+          draft.currentCountry[action.layerID].layer.show();
+        } else {
+          draft.currentCountry[action.layerID].layer.hide();
         }
       });
 

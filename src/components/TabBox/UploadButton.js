@@ -47,7 +47,7 @@ export const UploadButton = () => {
       currentMapID,
       settlementBoundary,
       carto_client,
-      query,
+      queries,
       currentLayerID,
       showSettlements,
       allowSettlements,

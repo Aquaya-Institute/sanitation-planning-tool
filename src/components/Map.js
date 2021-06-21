@@ -78,7 +78,7 @@ export const Map = () => {
       activeLegend,
       userData,
       queryDist,
-      query,
+      queries,
       showSettlements,
       settlementBoundary,
       currentCountry,
@@ -135,11 +135,11 @@ export const Map = () => {
             setPopup(null);
             if (highlightLayer.current && cartoClient) {
               mapRef.current.removeLayer(highlightLayer.current);
-              highlightLayer.current.clearLayers();
+              // highlightLayer.current.clearLayers();
             }
             if (settlementHighlight.current && cartoClient) {
               mapRef.current.removeLayer(settlementHighlight.current);
-              settlementHighlight.current.clearLayers();
+              // settlementHighlight.current.clearLayers();
               settlementHighlight.current = undefined;
             }
             // settlementPopup=null
@@ -363,58 +363,62 @@ export const Map = () => {
           //   (showSettlements && index > 3) === true ? true : layer.visible,
         });
 
+        dispatch({
+          type: "layer.addCartoLayer",
+          mapID: _mapID,
+          layerID: index,
+          cartoLayer: _layer,
+          cartoSource: _source,
+          cartoStyle: _style,
+          cartoFilters: _filters,
+        });
+
         // setup feature clicks on relevant layers
-        if (_columns.length > 1) {
-          _layer.on("featureClicked", (featureEvent) => {
-            console.log("clicked a feature", featureEvent);
-            var result = null;
-            var input = featureEvent.data.cartodb_id;
-            fetch(
-              `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${layer.carto_tableName} where cartodb_id = ${input}`
-            )
-              .then((resp) => resp.json())
-              .then((response) => {
-                var myStyle = {
-                  color: "#FFFFFF",
-                  fillColor: "#FFFFFF",
-                  fillOpacity: 0.3,
-                  weight: 1,
-                };
-                result = L.geoJson(
-                  JSON.parse(response.rows[0].the_geom),
-                  myStyle
-                );
-                highlightLayer.current = result;
-                if (
-                  settlementHighlight.current &&
-                  popup !== undefined &&
-                  popup !== null
-                ) {
-                  mapRef.current.removeLayer(settlementHighlight.current);
-                  settlementHighlight.current.clearLayers();
-                  result.addTo(mapRef.current);
-                } else if (
-                  // settlementHighlight.current === null ||
-                  settlementHighlight.current === undefined
-                ) {
-                  result.addTo(mapRef.current);
-                }
-              });
-            setPopup([layer.name, featureEvent]);
-            setPopoverOpen(false);
-            console.log("popup", popup);
-          });
-        }
+        // if (_columns.length > 1) {
+        //   _layer.on("featureClicked", (featureEvent) => {
+        //     console.log("clicked a feature", featureEvent);
+        //     var result = null;
+        //     var input = featureEvent.data.cartodb_id;
+        //     fetch(
+        //       `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${layer.carto_tableName} where cartodb_id = ${input}`
+        //     )
+        //       .then((resp) => resp.json())
+        //       .then((response) => {
+        //         var myStyle = {
+        //           color: "#FFFFFF",
+        //           fillColor: "#FFFFFF",
+        //           fillOpacity: 0.3,
+        //           weight: 1,
+        //         };
+        //         result = L.geoJson(
+        //           JSON.parse(response.rows[0].the_geom),
+        //           myStyle
+        //         );
+        //         highlightLayer.current = result;
+        //         if (
+        //           settlementHighlight.current &&
+        //           popup !== undefined &&
+        //           popup !== null
+        //         ) {
+        //           mapRef.current.removeLayer(settlementHighlight.current);
+        //           // settlementHighlight.current.clearLayers();
+        //           result.addTo(mapRef.current);
+        //         } else if (
+        //           // settlementHighlight.current === null ||
+        //           settlementHighlight.current === undefined
+        //         ) {
+        //           result.addTo(mapRef.current);
+        //         }
+        //       });
+        //     setPopup([layer.name, featureEvent]);
+        //     setPopoverOpen(false);
+        //     console.log("popup", popup);
+        //   });
+        // }
         console.log("cycle");
-        //set default visibility as set in map state
-        if (index === 0) {
-          _layer.show();
-        } else {
-          _layer.hide();
-        }
 
         //add the layer to carto client
-        cartoClient.addLayer(_layer);
+        // cartoClient.addLayer(_layer);
         // _layer.bringToBack();
         // setlayerID(index);
 
@@ -452,13 +456,7 @@ export const Map = () => {
         // });
 
         //add the carto layer to global state
-        dispatch({
-          type: "layer.addCartoLayer",
-          mapID: _mapID,
-          layerID: index,
-          cartoLayer: _layer,
-          cartoSource: _source,
-        });
+
         initialLoad.current = true;
         // }
       });
@@ -467,107 +465,125 @@ export const Map = () => {
     }
   }, [mapID, cartoClient]);
 
-  useEffect(() => {
-    if (initialLoad.current === true) {
-      console.log("currentlayer");
+  // useEffect(() => {
+  //   if (initialLoad.current === true) {
+  //     console.log("currentlayer");
 
-      dispatch({
-        type: "current.layer",
-        currentLayer: maps[mapID].layers[currentLayerID].carto_layer,
-        currentSource: maps[mapID].layers[currentLayerID].carto_source,
-        currentStyle: maps[mapID].layers[currentLayerID].carto_style,
-        currentFilters: maps[mapID].layers[currentLayerID].filters,
-      });
-    }
-  }, [currentLayerID, dispatch, mapID, maps]);
+  //     dispatch({
+  //       type: "current.layer",
+  //       // currentLayer: maps[mapID].layers[currentLayerID].carto_layer,
+  //       // currentSource: maps[mapID].layers[currentLayerID].carto_source,
+  //       // currentStyle: maps[mapID].layers[currentLayerID].carto_style,
+  //       // currentFilters: maps[mapID].layers[currentLayerID].filters,
+  //     });
+  //   }
+  // }, [currentLayerID, dispatch, mapID, maps]);
 
   useEffect(() => {
-    if (initialLoad.current === true && currentCountry.current_layer !== null) {
+    if (
+      initialLoad.current === true &&
+      currentCountry[currentLayerID].layer !== null
+    ) {
       const layer = maps[mapID].layers[currentLayerID];
-      currentCountry.current_layer.on("metadataChanged", function (event) {
-        console.log(event);
-        if (
-          layer.name === maps[mapID].layers[currentLayerID].name &&
-          (currentCountry.current_style ===
-            legendStylesObj[activeLegend].style_pixel ||
-            currentCountry.current_style ===
-              legendStylesObj[activeLegend].style_bounds)
-        ) {
-          var obj = {};
-          // get buckets
-          if (event.styles[0]._buckets === undefined) {
-            obj["variable"] = layer.name;
-            obj["legend"] = event.styles[0]._categories;
-            for (var i in obj.legend) {
-              if (obj.legend[i].name === 1) {
-                obj.legend[i].name = "Rural Remote";
-              } else if (obj.legend[i].name === 2) {
-                obj.legend[i].name = "Rural On-road";
-              } else if (obj.legend[i].name === 3) {
-                obj.legend[i].name = "Rural Mixed";
-              } else if (obj.legend[i].name === 4) {
-                obj.legend[i].name = "Urban";
+      currentCountry[currentLayerID].layer.on(
+        "metadataChanged",
+        function (event) {
+          console.log(event);
+          if (
+            layer.name === maps[mapID].layers[currentLayerID].name &&
+            (currentCountry[currentLayerID].style ===
+              legendStylesObj[activeLegend].style_pixel ||
+              currentCountry[currentLayerID].style ===
+                legendStylesObj[activeLegend].style_bounds)
+          ) {
+            var obj = {};
+            // get buckets
+            if (event.styles[0]._buckets === undefined) {
+              obj["variable"] = layer.name;
+              obj["legend"] = event.styles[0]._categories;
+              for (var i in obj.legend) {
+                if (obj.legend[i].name === 1) {
+                  obj.legend[i].name = "Rural Remote";
+                } else if (obj.legend[i].name === 2) {
+                  obj.legend[i].name = "Rural On-road";
+                } else if (obj.legend[i].name === 3) {
+                  obj.legend[i].name = "Rural Mixed";
+                } else if (obj.legend[i].name === 4) {
+                  obj.legend[i].name = "Urban";
+                }
               }
+            } else {
+              obj["variable"] = layer.name;
+              obj["legend"] = event.styles[0]._buckets;
             }
-          } else {
-            obj["variable"] = layer.name;
-            obj["legend"] = event.styles[0]._buckets;
+            setBuckets(obj);
+            // setBuckets((st) => [...st, obj]);
+            // }
           }
-          setBuckets(obj);
-          // setBuckets((st) => [...st, obj]);
-          // }
         }
-      });
+      );
     }
-  }, [currentCountry.current_layer, currentLayerID, activeLegend]);
+  }, [currentCountry[currentLayerID].layer, currentLayerID, activeLegend]);
 
   useEffect(() => {
-    if (initialLoad.current === true && currentCountry.current_layer !== null) {
-      currentCountry.current_layer.on("featureClicked", (featureEvent) => {
-        console.log("clicked a feature", featureEvent);
-        var result = null;
-        var input = featureEvent.data.cartodb_id;
-        fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[currentLayerID].carto_tableName} where cartodb_id = ${input}`
-        )
-          .then((resp) => resp.json())
-          .then((response) => {
-            var myStyle = {
-              color: "#FFFFFF",
-              fillColor: "#FFFFFF",
-              fillOpacity: 0.3,
-              weight: 1,
-            };
-            result = L.geoJson(JSON.parse(response.rows[0].the_geom), myStyle);
-            highlightLayer.current = result;
-            if (
-              settlementHighlight.current &&
-              popup !== undefined &&
-              popup !== null
-            ) {
-              mapRef.current.removeLayer(settlementHighlight.current);
-              settlementHighlight.current.clearLayers();
-              result.addTo(mapRef.current);
-            } else if (
-              // settlementHighlight.current === null ||
-              settlementHighlight.current === undefined
-            ) {
-              result.addTo(mapRef.current);
-            }
-          });
-        setPopup([maps[mapID].layers[currentLayerID].name, featureEvent]);
-        setPopoverOpen(false);
-        console.log("popup", popup);
-      });
+    if (
+      initialLoad.current === true &&
+      currentCountry[currentLayerID].layer !== null
+    ) {
+      currentCountry[currentLayerID].layer.on(
+        "featureClicked",
+        (featureEvent) => {
+          console.log("clicked a feature", featureEvent);
+          if (highlightLayer.current) {
+            mapRef.current.removeLayer(highlightLayer.current);
+          }
+          var result = null;
+          var input = featureEvent.data.cartodb_id;
+          fetch(
+            `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[currentLayerID].carto_tableName} where cartodb_id = ${input}`
+          )
+            .then((resp) => resp.json())
+            .then((response) => {
+              var myStyle = {
+                color: "#FFFFFF",
+                fillColor: "#FFFFFF",
+                fillOpacity: 0.3,
+                weight: 1,
+              };
+              result = L.geoJson(
+                JSON.parse(response.rows[0].the_geom),
+                myStyle
+              );
+              highlightLayer.current = result;
+              if (
+                settlementHighlight.current &&
+                popup !== undefined &&
+                popup !== null
+              ) {
+                mapRef.current.removeLayer(settlementHighlight.current);
+                // settlementHighlight.current.clearLayers();
+                result.addTo(mapRef.current);
+              } else if (
+                // settlementHighlight.current === null ||
+                settlementHighlight.current === undefined
+              ) {
+                result.addTo(mapRef.current);
+              }
+            });
+          setPopup([maps[mapID].layers[currentLayerID].name, featureEvent]);
+          setPopoverOpen(false);
+          console.log("popup", popup);
+        }
+      );
     }
-  }, [currentCountry.current_layer, currentLayerID, mapID, maps]);
+  }, [currentCountry[currentLayerID].layer, currentLayerID, mapID, maps]);
 
   useEffect(() => {
-    if (allowSettlements === true) {
+    if (allowSettlements === true && mapID) {
       if (showSettlements === true) {
         if (maps[mapID].layers["4"] && cartoClient) {
           console.log("3");
-          if (query) {
+          if (currentCountry[currentLayerID].query) {
             if (settlementBoundary) {
               cartoClient.removeLayer(settlementBoundary);
             }
@@ -575,7 +591,10 @@ export const Map = () => {
             // queryURL =
             //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}` +
             //   clause;
-            let queryURL = query.replace(/\s/g, " ");
+            let queryURL = currentCountry[currentLayerID].query.replace(
+              /\s/g,
+              " "
+            );
             var settlement_style = null;
             var settlement_source = null;
             var settlementBoundaryset = null;
@@ -650,7 +669,7 @@ export const Map = () => {
                   settlementHighlight.current = result;
                   if (highlightLayer.current) {
                     mapRef.current.removeLayer(highlightLayer.current);
-                    highlightLayer.current.clearLayers();
+                    // highlightLayer.current.clearLayers();
                   }
                   result.addTo(mapRef.current);
                 });
@@ -667,7 +686,7 @@ export const Map = () => {
               // });
             });
             cartoClient.addLayer(settlementBoundaryset);
-            currentCountry.current_layer.show();
+            currentCountry[currentLayerID].layer.show();
             dispatch({
               type: "settlement.boundary",
               settlementBoundary: settlementBoundaryset,
@@ -676,7 +695,12 @@ export const Map = () => {
         }
       }
     }
-  }, [query, allowSettlements, showSettlements]);
+  }, [
+    currentCountry[currentLayerID].query,
+    allowSettlements,
+    showSettlements,
+    currentLayerID,
+  ]);
 
   // popup data
   useMemo(() => {
@@ -893,9 +917,9 @@ export const Map = () => {
                   onChange={() => {
                     setHideLayer(!hideLayer);
                     if (!hideLayer === true) {
-                      currentCountry.current_layer.hide();
+                      currentCountry[currentLayerID].layer.hide();
                     } else {
-                      currentCountry.current_layer.show();
+                      currentCountry[currentLayerID].layer.show();
                     }
                   }}
                   icon={<CheckBoxOutlineBlankIcon fontSize="small" />}

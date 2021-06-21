@@ -26,7 +26,14 @@ const useStyles = makeStyles((theme) => ({
 
 export const Export = () => {
   const [
-    { maps, currentMapID, currentLayerID, query, showSettlements },
+    {
+      maps,
+      currentMapID,
+      currentLayerID,
+      queries,
+      showSettlements,
+      currentCountry,
+    },
     dispatch,
   ] = useContext(MapContext);
   const classes = useStyles();
@@ -48,8 +55,8 @@ export const Export = () => {
     if (currentLayerID === "1") {
       setDownload(null);
       hideLoader();
-    } else if (query && mapID) {
-      let queryURL = query.replace(/\s/g, " ");
+    } else if (currentCountry[currentLayerID].query && mapID) {
+      let queryURL = currentCountry[currentLayerID].query.replace(/\s/g, " ");
       return fetch(
         `https://zebra.geodb.host/user/admin/api/v2/sql?q=${queryURL}`
       )
@@ -69,13 +76,13 @@ export const Export = () => {
           hideLoader();
         });
     }
-  }, [mapID, query]);
+  }, [mapID, currentCountry[currentLayerID].query]);
 
   useEffect(() => {
     if (showSettlements === true) {
       showLoader2();
-      if (query && mapID) {
-        let queryURL = query.replace(/\s/g, " ");
+      if (currentCountry[currentLayerID].query && mapID) {
+        let queryURL = currentCountry[currentLayerID].query.replace(/\s/g, " ");
         return fetch(
           `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
         )
@@ -95,7 +102,7 @@ export const Export = () => {
           });
       }
     }
-  }, [query, showSettlements]);
+  }, [currentCountry[currentLayerID].query, showSettlements]);
 
   // useEffect(() => {
   //   if (download) {
