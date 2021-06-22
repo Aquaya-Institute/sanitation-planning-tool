@@ -131,11 +131,9 @@ export const DropdownMenu = ({
     //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`
     // );
     // source.setQuery(query);
-    if (
-      maps[mapID].layers[currentLayerID].carto_source &&
-      currentLayerID !== "1"
-    ) {
+    if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
       currentCountry[currentLayerID].source.setQuery(query);
+      currentCountry[currentLayerID].layer.getSource().setQuery(query);
       dispatch({
         type: "layer.queryDist",
         queryDist: query,
