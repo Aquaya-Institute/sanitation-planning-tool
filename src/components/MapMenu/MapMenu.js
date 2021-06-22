@@ -139,8 +139,9 @@ export const MapMenu = () => {
               my="auto"
               style={{
                 minHeight: "5vh",
-                justifyContent: "center",
+                // justifyContent: "center",
                 alignItems: "center",
+                display: "flex",
               }}
             >
               <Button
@@ -152,7 +153,7 @@ export const MapMenu = () => {
                     height="25px"
                   />
                 }
-                style={{ fontSize: 13, padding: 0 }}
+                style={{ fontSize: 13, padding: 0, textAlign: "left" }}
               >
                 SET RESOLUTION
               </Button>
@@ -196,13 +197,14 @@ export const MapMenu = () => {
               my="auto"
               style={{
                 minHeight: "5vh",
-                justifyContent: "center",
+                // justifyContent: "center",
                 alignItems: "center",
+                display: "flex",
               }}
             >
               {mapID && (
                 <Button
-                  justify="center"
+                  // justify="center"
                   startIcon={
                     <img
                       src={boundaryIcon}
@@ -210,7 +212,11 @@ export const MapMenu = () => {
                       height="25px"
                     />
                   }
-                  style={{ fontSize: 13, padding: 0 }}
+                  style={{
+                    fontSize: 13,
+                    padding: 0,
+                    textAlign: "left",
+                  }}
                 >
                   SELECT {maps[mapID].layers["3"].name}(S)
                 </Button>
@@ -289,24 +295,21 @@ export const MapMenu = () => {
                 >
                   <Box
                     key="accessButtonContent"
-                    // mx="auto"
-                    my="auto"
                     style={{
                       minHeight: "5vh",
-                      justifyContent: "center",
+                      // justifyContent: "center",
                       alignItems: "center",
+                      display: "flex",
                     }}
                   >
                     <Button
-                      justify="center"
-                      mx="auto"
                       startIcon={
                         <img src={AccessIcon} alt="Road icon" height="20px" />
                       }
                       // onClick={startTour}
-                      style={{ fontSize: 13, padding: 0 }}
+                      style={{ fontSize: 13, padding: 0, textAlign: "left" }}
                     >
-                      ACCESSIBILITY & REMOTENESS
+                      ACCESSIBILITY
                     </Button>
                   </Box>
                   {selectedMenu === 0 && (
@@ -356,12 +359,11 @@ export const MapMenu = () => {
                 >
                   <Box
                     key="washButtonContent"
-                    // mx="auto"
-                    my="auto"
                     style={{
                       minHeight: "5vh",
-                      justifyContent: "center",
+                      justifyContent: "left",
                       alignItems: "center",
+                      display: "flex",
                     }}
                   >
                     <Button
@@ -373,8 +375,7 @@ export const MapMenu = () => {
                           height="27px"
                         />
                       }
-                      // onClick={startTour}
-                      style={{ fontSize: 13, padding: 0 }}
+                      style={{ fontSize: 13, padding: 0, textAlign: "left" }}
                     >
                       WATER & SANITATION
                     </Button>
@@ -430,8 +431,9 @@ export const MapMenu = () => {
                     key="socioButtonContent"
                     style={{
                       minHeight: "5vh",
-                      justifyContent: "center",
+                      // justifyContent: "center",
                       alignItems: "center",
+                      display: "flex",
                     }}
                   >
                     <Button
@@ -443,8 +445,7 @@ export const MapMenu = () => {
                           height="35px"
                         />
                       }
-                      // onClick={startTour}
-                      style={{ fontSize: 13, padding: 0 }}
+                      style={{ fontSize: 13, padding: 0, textAlign: "left" }}
                     >
                       SOCIOECONOMIC
                     </Button>
@@ -496,17 +497,14 @@ export const MapMenu = () => {
                 >
                   <Box
                     key="healthButtonContent"
-                    // mx="auto"
-                    my="auto"
                     style={{
                       minHeight: "5vh",
-                      // justifyContent: "center",
-                      // alignItems: "center",
+                      alignItems: "center",
+                      display: "flex",
                     }}
                   >
                     <Button
-                      justify="center"
-                      my="auto"
+                      justify="left"
                       startIcon={
                         <img
                           src={HealthIcon}
@@ -515,9 +513,9 @@ export const MapMenu = () => {
                         />
                       }
                       // onClick={startTour}
-                      style={{ fontSize: 13, padding: 0 }}
+                      style={{ fontSize: 13, padding: 0, textAlign: "left" }}
                     >
-                      DISEASE BURDEN
+                      HEALTH
                     </Button>
                   </Box>
                   {selectedMenu === 3 && (

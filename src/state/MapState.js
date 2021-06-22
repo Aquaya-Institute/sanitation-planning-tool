@@ -438,11 +438,11 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         // draft.reset = true;
         draft.currentMapID = action.mapID;
-        const layer = draft.currentCountry;
-        draft.filters[draft.currentMapID].filter.forEach(
+        const layer = draft.currentCountry[draft.currentLayerID];
+        draft.currentCountry[draft.currentLayerID].filters.forEach(
           (filter, filterIndex) => {
             if (filter.type === "categorical") {
-              const cartofilter_c = layer.current_layer
+              const cartofilter_c = layer.layer
                 .getSource()
                 .getFilters()[0] //since this is a filtercollection
                 .getFilters()[filterIndex];
@@ -459,7 +459,7 @@ const reducer = (state, action) => {
               });
             } else if (filter.type === "range") {
               filter.value = [filter.min, filter.max];
-              const cartofilter = layer.current_layer
+              const cartofilter = layer.layer
                 .getSource()
                 .getFilters()[0] //since this is a filtercollection
                 .getFilters()[filterIndex];
@@ -471,7 +471,7 @@ const reducer = (state, action) => {
             } else if (filter.type === "range_non_linear") {
               filter.scaledValue = [filter.scaledMin, filter.scaledMax];
               filter.value = [filter.min, filter.max];
-              const cartofilter_non = layer.current_layer
+              const cartofilter_non = layer.layer
                 .getSource()
                 .getFilters()[0] //since this is a filtercollection
                 .getFilters()[filterIndex];
