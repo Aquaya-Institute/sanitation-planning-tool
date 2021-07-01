@@ -62,9 +62,6 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: "#ffffff",
   },
-  checkboxLabel: {
-    fontSize: 13,
-  },
 }));
 export const MapPopper = ({
   popupData,

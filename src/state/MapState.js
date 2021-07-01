@@ -3,12 +3,15 @@ import Carto, { active } from "@carto/carto.js";
 import produce from "immer";
 import { enableMapSet } from "immer";
 import { legendStyles } from "../components/subcomponents/LegendStyles";
-import { ghana } from "./ghana";
-import { liberia } from "./liberia";
-import { niger } from "./niger";
-import { rwanda } from "./rwanda";
-import { nigeria } from "./nigeria";
-import { DragHandleTwoTone } from "@material-ui/icons";
+import { ghana } from "./countries/ghana";
+import { liberia } from "./countries/liberia";
+import { niger } from "./countries/niger";
+import { rwanda } from "./countries/rwanda";
+import { nigeria } from "./countries/nigeria";
+import { cambodia } from "./countries/cambodia";
+import { s_sudan } from "./countries/s_sudan";
+import { ethiopia } from "./countries/ethiopia";
+import { mozambique } from "./countries/mozambique";
 enableMapSet();
 const legendStylesObj = legendStyles;
 //this is the "global map state". this is where state is maintained and updated
@@ -18,11 +21,15 @@ const initialState = {
   leafletMap: null,
   /* all the maps in the tool organised by country */
   maps: {
+    cambodia,
+    ethiopia,
     ghana,
     liberia,
+    mozambique,
     niger,
     rwanda,
     nigeria,
+    s_sudan,
   },
   currentLayerID: "2",
   activeLegend: "0",

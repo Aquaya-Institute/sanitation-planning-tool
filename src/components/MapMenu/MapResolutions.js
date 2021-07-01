@@ -155,7 +155,8 @@ export const MapResolutions = ({
                     classes={{
                       label: classes.checkboxLabel,
                     }}
-                    key="radio1"
+                    key="1x1km-layer-radio"
+                    inputprops={{ "aria-label": "1x1km-layer-radio" }}
                   />
                   <FormControlLabel
                     value="2"
@@ -164,16 +165,24 @@ export const MapResolutions = ({
                     classes={{
                       label: classes.checkboxLabel,
                     }}
-                    key="radio2"
+                    key="5x5km-layer-radio"
+                    inputprops={{ "aria-label": "5x5km-layer-radio" }}
                   />
                   <FormControlLabel
                     value="3"
                     control={<Radio />}
-                    label={maps[mapID].layers["3"].name + "s"}
+                    label={
+                      maps[mapID].layers["3"].name === "County"
+                        ? "Counties"
+                        : maps[mapID].layers["3"].name === "Locality"
+                        ? "Localities"
+                        : maps[mapID].layers["3"].name + "s"
+                    }
                     classes={{
                       label: classes.checkboxLabel,
                     }}
-                    key="radio3"
+                    key="area-layer-radio"
+                    inputprops={{ "aria-label": "area-layer-radio" }}
                   />
                 </RadioGroup>
               </Box>

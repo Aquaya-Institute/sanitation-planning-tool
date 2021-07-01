@@ -240,14 +240,15 @@ export const DropdownMenu = ({
               pl={1}
             >
               <Box pl={1}>
-                <InputLabel pl={1} id="demo-mutiple-checkbox-label">
+                <InputLabel pl={1} id="select-areas-mutiple-checkbox-label">
                   Select {maps[mapID].layers["3"].name}(s)
                 </InputLabel>
 
                 <Select
                   //   native={true}
-                  labelId="demo-mutiple-checkbox-label"
-                  id="demo-mutiple-checkbox"
+                  labelId="select-areas-mutiple-checkbox-label"
+                  id="select-areas-mutiple-checkbox"
+                  inputProps={{ "aria-label": "select-areas-mutiple-checkbox" }}
                   multiple
                   value={distName}
                   onChange={handleChange}
@@ -258,7 +259,10 @@ export const DropdownMenu = ({
                 >
                   {allDistricts.map((name, i) => (
                     <MenuItem key={i} value={name} className={classes.menu}>
-                      <Checkbox checked={distName.indexOf(name) > -1} />
+                      <Checkbox
+                        checked={distName.indexOf(name) > -1}
+                        inputProps={{ "aria-label": "area-name-checkbox" }}
+                      />
                       <ListItemText primary={name} />
                     </MenuItem>
                   ))}

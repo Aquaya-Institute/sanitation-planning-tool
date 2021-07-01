@@ -35,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
     align: "center",
   },
-  checkboxLabel: {
-    fontSize: 13,
-  },
 }));
 const drawerWidth = 175;
 

@@ -391,22 +391,19 @@ export const UploadButton = () => {
                           if (settlementBoundary) {
                             settlementBoundary.show();
                           }
-                          // maps[mapID].layers["4"].carto_layer.show();
-                          // maps[mapID].layers["4"].carto_layer.bringToFront();
-                          // carto_client.addLayer(settlementBoundary);
-                          // maps[mapID].layers["4"].carto_layer.show();
                         } else {
-                          // maps[mapID].layers["4"].carto_layer.hide();
                           if (settlementBoundary) {
                             settlementBoundary.hide();
                           }
-                          // carto_client.removeLayer(settlementBoundary);
                         }
                       }
                     }}
                     icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                     checkedIcon={<CheckBoxIcon fontSize="small" />}
                     color="primary"
+                    inputProps={{
+                      "aria-label": "sho/hide-settlements-layer-checkbox",
+                    }}
                   />
                 }
                 label={
@@ -456,7 +453,7 @@ export const UploadButton = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          key="consent"
+                          key="allow-settlements-layer"
                           checked={showLayer}
                           name="consent"
                           onChange={() => {
@@ -485,6 +482,9 @@ export const UploadButton = () => {
                           icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                           checkedIcon={<CheckBoxIcon fontSize="small" />}
                           color="primary"
+                          inputProps={{
+                            "aria-label": "allow-settlements-layer-checkbox",
+                          }}
                         />
                       }
                       label={

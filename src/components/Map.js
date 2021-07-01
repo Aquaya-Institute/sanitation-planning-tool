@@ -94,7 +94,7 @@ export const Map = () => {
   const [popup, setPopup] = useState();
   const [popupData, setPopupData] = useState();
   const [downloadData, setDownloadData] = useState();
-  const [buckets, setBuckets] = useState([]);
+  const [buckets, setBuckets] = useState();
   const openPopper = Boolean(popup);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [popoverColumns, setPopoverColumns] = useState([]);
@@ -103,6 +103,38 @@ export const Map = () => {
   const clickRefPop = useRef(null);
   const mapRef = useRef(null);
   const initialLoad = useRef(false);
+  // const buckets = useRef({
+  //   legend: [
+  //     { name: "Rural Remote", value: "#3d4bc7" },
+  //     { name: "Rural On-road", value: "#4f9130" },
+  //     { name: "Rural Mixed", value: "#bf4343" },
+  //     { name: "Urban", value: "#c49755" },
+  //   ],
+  // });
+  const buckets_1 = useRef({
+    legend: [
+      { name: "Rural Remote", value: "#3d4bc7" },
+      { name: "Rural On-road", value: "#4f9130" },
+      { name: "Rural Mixed", value: "#bf4343" },
+      { name: "Urban", value: "#c49755" },
+    ],
+  });
+  const buckets_2 = useRef({
+    legend: [
+      { name: "Rural Remote", value: "#3d4bc7" },
+      { name: "Rural On-road", value: "#4f9130" },
+      { name: "Rural Mixed", value: "#bf4343" },
+      { name: "Urban", value: "#c49755" },
+    ],
+  });
+  const buckets_3 = useRef({
+    legend: [
+      { name: "Rural Remote", value: "#3d4bc7" },
+      { name: "Rural On-road", value: "#4f9130" },
+      { name: "Rural Mixed", value: "#bf4343" },
+      { name: "Urban", value: "#c49755" },
+    ],
+  });
   // const [value, setValue] = useState(100);
   // const [commCalcSource, setCommCalcSource] = useState(null);
   // const [widgetLoad, setWidgetLoad] = useState();
@@ -499,7 +531,7 @@ export const Map = () => {
             var obj = {};
             // get buckets
             if (event.styles[0]._buckets === undefined) {
-              obj["variable"] = layer.name;
+              // obj["variable"] = layer.name;
               obj["legend"] = event.styles[0]._categories;
               for (var i in obj.legend) {
                 if (obj.legend[i].name === 1) {
@@ -513,15 +545,34 @@ export const Map = () => {
                 }
               }
             } else {
-              obj["variable"] = layer.name;
+              // obj["variable"] = layer.name;
               obj["legend"] = event.styles[0]._buckets;
             }
             setBuckets(obj);
+            // if (buckets_1.current === undefined) {
+            //   buckets_1.current = obj;
+            //   buckets_2.current = obj;
+            //   buckets_3.current = obj;
+            // }
+            if (currentLayerID === "2") {
+              buckets_2.current = obj;
+              // buckets.current = obj;
+            } else if (currentLayerID === "3") {
+              buckets_3.current = obj;
+              // buckets.current = obj;
+            }
             // setBuckets((st) => [...st, obj]);
             // }
           }
         }
       );
+      if (currentLayerID === "1") {
+        setBuckets(buckets_1.current);
+      } else if (currentLayerID === "2") {
+        setBuckets(buckets_2.current);
+      } else if (currentLayerID === "3") {
+        setBuckets(buckets_3.current);
+      }
     }
   }, [currentCountry[currentLayerID].layer, currentLayerID, activeLegend]);
 
@@ -925,6 +976,7 @@ export const Map = () => {
                   icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                   checkedIcon={<CheckBoxIcon fontSize="small" />}
                   color="primary"
+                  inputProps={{ "aria-label": "show/hide-main-layer" }}
                 />
               }
               label={
@@ -996,8 +1048,9 @@ export const Map = () => {
                   value={activeLegend}
                   onChange={handleChange}
                   inputProps={{
-                    name: "age",
-                    id: "age-native-label-placeholder",
+                    name: "active-legend",
+                    id: "select-active-legend",
+                    "aria-label": "select-active-legend",
                   }}
                   className="tour-legendselect"
                   style={{ backgroundColor: theme.palette.background.selected }}
@@ -1018,7 +1071,8 @@ export const Map = () => {
                 </NativeSelect>
                 <FormHelperText> </FormHelperText>
               </FormControl>
-              {maps[mapID].layers[currentLayerID].name === buckets.variable && (
+              {/* {maps[mapID].layers[currentLayerID].name === buckets.variable && ( */}
+              {buckets && (
                 <Fragment key={"legendContent" + buckets.variable}>
                   {buckets.legend.map((legend, j) => {
                     return (

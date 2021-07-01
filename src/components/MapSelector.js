@@ -44,6 +44,7 @@ export const MapSelector = () => {
         inputProps={{
           name: "country",
           id: "country-maps-dropdown",
+          "aria-label": "country-maps-dropdown",
         }}
         label="Filled"
         onChange={onSelectChange}

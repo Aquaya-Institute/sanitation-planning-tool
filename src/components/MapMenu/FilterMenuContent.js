@@ -140,10 +140,10 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                       >
                         {filter.value.map((category, cat_filter_index) => (
                           <FormControlLabel
-                            key={cat_filter_index + "formcontrol"}
+                            key={cat_filter_index + "_formcontrol"}
                             control={
                               <Checkbox
-                                key={cat_filter_index + "box"}
+                                key={cat_filter_index + "_box"}
                                 checked={category.checked}
                                 name={category.name}
                                 onChange={(e, newval) => {
@@ -160,6 +160,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                                 }
                                 checkedIcon={<CheckBoxIcon fontSize="small" />}
                                 color="primary"
+                                inputProps={{ "aria-label": "cat-checkbox" }}
                               />
                             }
                             label={
