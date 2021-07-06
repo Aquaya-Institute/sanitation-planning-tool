@@ -38,20 +38,20 @@ export const UploadButton = () => {
   const [state, setState] = useState(null);
   const [showLayer, setShowLayer] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [popup, setPopup] = useState();
-  const [popupData, setPopupData] = useState();
-  const [downloadData, setDownloadData] = useState();
+  // const [popup, setPopup] = useState();
+  // const [popupData, setPopupData] = useState();
+  // const [downloadData, setDownloadData] = useState();
   const [
     {
       maps,
       currentMapID,
       settlementBoundary,
-      carto_client,
-      queries,
-      currentLayerID,
-      showSettlements,
+      // carto_client,
+      // queries,
+      // currentLayerID,
+      // showSettlements,
       allowSettlements,
-      leafletMap,
+      // leafletMap,
     },
     dispatch,
   ] = useContext(MapContext);
@@ -61,10 +61,10 @@ export const UploadButton = () => {
   const clickRef = useRef(null);
   const [scroll] = useState("paper");
   const classes = useStyles();
-  const selectedSettlement = useRef();
-  const clickRefPop = useRef(null);
-  const openPopper = Boolean(popup);
-  const dat_popup = [];
+  // const selectedSettlement = useRef();
+  // const clickRefPop = useRef(null);
+  // const openPopper = Boolean(popup);
+  // const dat_popup = [];
 
   function handleChange(event) {
     setState({
@@ -357,7 +357,6 @@ export const UploadButton = () => {
       <button onClick={importCSV}>Upload</button>
       <button onClick={removeCSV}>Remove</button>
       <Divider />
-      {/* <Settlements /> */}
       {mapID && (
         <>
           {" "}

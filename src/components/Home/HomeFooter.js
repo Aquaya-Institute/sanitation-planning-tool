@@ -32,7 +32,6 @@ const styles = (theme) => ({
 
 function ProductHowItWorks(props) {
   const { classes } = props;
-  const preventDefault = (event) => event.preventDefault();
 
   return (
     <section className={classes.root}>

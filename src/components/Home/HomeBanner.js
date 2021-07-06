@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography, Link, Grid } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import HomeLayout from "./HomeLayout";
 import backgroundImage from "../../images/latrinebanner.jpg";
 import usaidLogo from "../../images/usaid-rect.png";

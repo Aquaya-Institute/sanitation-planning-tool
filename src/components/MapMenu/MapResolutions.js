@@ -41,7 +41,7 @@ export const MapResolutions = ({
   const classes = useStyles();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [setPopoverOpen] = useState(false);
   const clickRef = useRef(null);
 
   useEffect(() => {

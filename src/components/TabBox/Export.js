@@ -32,7 +32,6 @@ export const Export = () => {
       currentCountry,
       selectedDistName,
     },
-    dispatch,
   ] = useContext(MapContext);
   const [download, setDownload] = useState(null);
   const [queryDesc, setQueryDesc] = useState(null);

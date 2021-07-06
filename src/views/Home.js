@@ -1,20 +1,8 @@
-import {
-  Paper,
-  // Grid,
-  // Card,
-  // CardContent,
-  // CardActionArea,
-  // CardMedia,
-  // CardActions,
-  Container,
-  Box,
-  Typography,
-} from "@material-ui/core";
+import { Paper, Container, Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 // eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Link } from "react-router-dom";
-// import { MapContext } from "../state/MapState";
 import HomeBanner from "../components/Home/HomeBanner";
 import HomeMap from "../components/Home/HomeMap";
 import HomeRelatedResearch from "../components/Home/HomeRelatedResearch";

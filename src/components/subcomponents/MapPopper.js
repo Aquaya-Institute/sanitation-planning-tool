@@ -1,6 +1,5 @@
 import { useState, useContext, Fragment } from "react";
 import { MapContext } from "../../state/MapState";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Link, Grid, Button, Box } from "@material-ui/core";
 import Popper from "@material-ui/core/Popper";
@@ -76,7 +75,7 @@ export const MapPopper = ({
   anchorPopper,
   downloadData,
 }) => {
-  const [{ maps, currentLayerID, activeLegend, leafletMap }, dispatch] =
+  const [{ maps, currentLayerID, activeLegend, leafletMap }] =
     useContext(MapContext);
   const classes = useStyles();
   const idPopper = "transitions-popper";

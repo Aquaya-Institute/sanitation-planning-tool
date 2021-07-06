@@ -4,7 +4,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import CloseIcon from "@material-ui/icons/Close";
 import theme from "../../theme/theme";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Card, CardContent, Button } from "@material-ui/core";
 

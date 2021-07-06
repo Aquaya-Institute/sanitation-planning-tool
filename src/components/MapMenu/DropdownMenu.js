@@ -74,12 +74,10 @@ export const DropdownMenu = ({
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
-  // const [currentLayerID, setcurrentLayerID] = useState("2");
   const [distName, setDistName] = useState(selectedDistName);
   const [allDistricts, setAllDistricts] = useState([]);
   const [column, setColumn] = useState("");
   const classes = useStyles();
-  const highlightDist = useRef();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
 
@@ -145,7 +143,6 @@ export const DropdownMenu = ({
     if (highlightLayer) {
       leafletMap.removeLayer(highlightLayer);
     }
-
     if (leafletMap && mapID) {
       if (distName.length > 0) {
         return fetch(
@@ -164,7 +161,6 @@ export const DropdownMenu = ({
               weight: 2,
             };
             let geojsonLayer = L.geoJSON(response, myStyle);
-            // highlightDist.current = geojsonLayer;
             leafletMap.fitBounds(geojsonLayer.getBounds());
             filterPopulatedPlacesByCountry(distName);
             geojsonLayer.addTo(leafletMap);
@@ -267,7 +263,6 @@ export const DropdownMenu = ({
                     </MenuItem>
                   ))}
                 </Select>
-
                 <button
                   onClick={() => {
                     setDistName([]);

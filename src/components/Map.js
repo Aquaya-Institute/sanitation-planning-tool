@@ -78,7 +78,6 @@ export const Map = () => {
       activeLegend,
       userData,
       queryDist,
-      queries,
       showSettlements,
       settlementBoundary,
       currentCountry,
@@ -299,7 +298,6 @@ export const Map = () => {
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
         var _source = null;
-        let queryURL = null;
         if (queryDist && index > 1) {
           let queryedit =
             `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist;
@@ -815,7 +813,7 @@ export const Map = () => {
   // add layer
   const layerRef = useRef(null);
   const [myRadius, setMyRadius] = useState(5);
-  const [myWeight, setMyWeight] = useState(2);
+  const [myWeight] = useState(2);
 
   useEffect(() => {
     if (mapRef.current) {

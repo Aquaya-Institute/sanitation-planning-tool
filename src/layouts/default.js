@@ -43,22 +43,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DefaultLayout(props) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const mobileMenuId = "primary-search-account-menu-mobile";
   const [{}, dispatch] = React.useContext(MapContext);
 
-  const isMenuOpen = Boolean(anchorEl);
+  // const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
+  // const handleMenuClose = () => {
+  //   setAnchorEl(null);
+  //   handleMobileMenuClose();
+  // };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);

@@ -37,26 +37,9 @@ function createMarks(array) {
 }
 
 const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
-  const [
-    {
-      currentMapID,
-      filters,
-      currentLayerID,
-      currentCountry,
-      showSettlements,
-      settlementBoundary,
-    },
-    dispatch,
-  ] = React.useContext(MapContext);
-  // const [mapID, setMapID] = useState(null);
+  const [{ currentMapID, currentLayerID, currentCountry }, dispatch] =
+    React.useContext(MapContext);
   const classes = useStyles();
-
-  // useEffect(() => {
-  //   if (currentMapID) {
-  //     console.log(currentMapID);
-  //     setMapID(currentMapID);
-  //   }
-  // }, [currentMapID]);
 
   const updateFilter = ({
     layerIndex,

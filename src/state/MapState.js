@@ -1,5 +1,5 @@
 import * as React from "react";
-import Carto, { active } from "@carto/carto.js";
+import Carto from "@carto/carto.js";
 import produce from "immer";
 import { enableMapSet } from "immer";
 import { legendStyles } from "../components/subcomponents/LegendStyles";
@@ -296,7 +296,6 @@ const reducer = (state, action) => {
         draft.currentMapID = action.mapID;
         draft.currentCountry[draft.currentLayerID].filters[action.filterIndex] =
           action.filter;
-        const layer = draft.currentCountry;
 
         //TODO: based on the type of filter (range, categorical)
         //use Switch statement to apply appropriate filters
