@@ -107,8 +107,8 @@ export const madagascar = {
           type: "range",
           column_name: "od",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 98,
+          value: [0, 98],
           subcategory: "wash",
         },
         {
@@ -117,8 +117,8 @@ export const madagascar = {
           type: "range",
           column_name: "timecities",
           min: 0,
-          max: 1000,
-          value: [0, 1000],
+          max: 2204,
+          value: [0, 2204],
           subcategory: "accessibility",
         },
         {
@@ -126,9 +126,9 @@ export const madagascar = {
           unit: "%",
           type: "range",
           column_name: "dia",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 2.1,
+          max: 8.4,
+          value: [2.1, 8.4],
           subcategory: "health",
         },
         {
@@ -137,8 +137,8 @@ export const madagascar = {
           type: "range",
           column_name: "cholera",
           min: 0,
-          max: 1000,
-          value: [0, 1000],
+          max: 64.8,
+          value: [0, 64.8],
           subcategory: "health",
         },
         {
@@ -147,8 +147,8 @@ export const madagascar = {
           type: "range",
           column_name: "s_unimp",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 97,
+          value: [0, 97],
           subcategory: "wash",
         },
         {
@@ -157,8 +157,8 @@ export const madagascar = {
           type: "range",
           column_name: "w_unimp",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 85,
+          value: [0, 85],
           subcategory: "wash",
         },
         {
@@ -166,9 +166,9 @@ export const madagascar = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_w",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 2,
+          max: 9,
+          value: [2, 9],
           subcategory: "socioeconomic",
         },
         {
@@ -176,9 +176,9 @@ export const madagascar = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_m",
-          min: 0,
+          min: 2,
           max: 10,
-          value: [0, 10],
+          value: [2, 10],
           subcategory: "socioeconomic",
         },
         {
@@ -186,9 +186,9 @@ export const madagascar = {
           unit: "%",
           type: "range",
           column_name: "u5m",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 5,
+          max: 13.1,
+          value: [5, 13.1],
           subcategory: "health",
         },
         {
@@ -196,9 +196,9 @@ export const madagascar = {
           unit: "km.",
           type: "range",
           column_name: "dr",
-          min: 0,
-          max: 50,
-          value: [0, 50],
+          min: 0.1,
+          max: 87,
+          value: [0.1, 87],
           subcategory: "accessibility",
         },
         {
@@ -207,8 +207,8 @@ export const madagascar = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 212.8,
+          value: [0, 212.8],
           subcategory: "accessibility",
         },
         {
@@ -220,8 +220,8 @@ export const madagascar = {
           max: 70, //we want 7 breaks not counting start value of 0.
           value: [0, 70], //slider range will be from 0-70, which we will scale to
           scaledMin: 0,
-          scaledMax: 500000,
-          scaledValue: [0, 500000], //the actual min/max of column
+          scaledMax: 460461,
+          scaledValue: [0, 460461], //the actual min/max of column
           subcategory: "socioeconomic",
           // define 7+1 non linear marks here, note that value goes from 0-70 only
           marks: [
