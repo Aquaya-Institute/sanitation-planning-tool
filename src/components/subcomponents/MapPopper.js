@@ -1,10 +1,10 @@
+import React from "react";
 import { useState, useContext, Fragment } from "react";
 import { MapContext } from "../../state/MapState";
 import "leaflet/dist/leaflet.css";
 import { Link, Grid, Button, Box } from "@material-ui/core";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles } from "@material-ui/core/styles";
-// import "../App.css";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -67,15 +67,16 @@ export const MapPopper = ({
   clickRef,
   openPopper,
   setPopup,
-  highlightLayer,
+  // highlightLayer,
   mapID,
   setPopoverOpen,
   popoverOpen,
   clickRefPop,
   anchorPopper,
   downloadData,
+  mapRef,
 }) => {
-  const [{ maps, currentLayerID, activeLegend, leafletMap }] =
+  const [{ maps, currentLayerID, activeLegend, highlightBoundary }] =
     useContext(MapContext);
   const classes = useStyles();
   const idPopper = "transitions-popper";
@@ -145,7 +146,7 @@ export const MapPopper = ({
   //   }, [popup]);
 
   return (
-    <>
+    <React.Fragment>
       {popupData && (
         <Popper
           aria-labelledby="Small popup on data at the clicked location"
@@ -182,13 +183,15 @@ export const MapPopper = ({
                 color="disabled"
                 onClick={(e) => {
                   setPopup(null);
-                  leafletMap.removeLayer(highlightLayer);
+                  if (highlightBoundary) {
+                    mapRef.current.removeLayer(highlightBoundary);
+                  }
                 }}
               />
             </Grid>
 
             {/* <Fragment key={"popper"}> */}
-            {activeLegend !== "0" && popupData.data.cholera ? (
+            {activeLegend !== "0" && popupData.data.od ? (
               <Box>
                 <Box fontWeight="fontWeightBold">
                   {
@@ -220,6 +223,8 @@ export const MapPopper = ({
                   {popupData.data.classes.Name}:{" "}
                 </Box>
                 {popupData.data.classes.Value}
+                {/* {currentLayerID !== "1" && (
+                  <> */}
                 <Box fontWeight="fontWeightLight" fontSize={11}>
                   {popupData.data.rr.Name}: {popupData.data.rr.Value}
                   {popupData.data.rr.Unit}
@@ -236,6 +241,8 @@ export const MapPopper = ({
                   {popupData.data.u.Name}: {popupData.data.u.Value}
                   {popupData.data.u.Unit}
                 </Box>
+                {/* </>
+                )} */}
               </Box>
             )}
             <Link
@@ -276,8 +283,10 @@ export const MapPopper = ({
                 />
               </Grid>
               <DialogTitle>
-                {popupData.data.cholera ? (
-                  <>{maps[mapID].layers[currentLayerID].name}</>
+                {popupData.data.od ? (
+                  <React.Fragment>
+                    {maps[mapID].layers[currentLayerID].name}
+                  </React.Fragment>
                 ) : (
                   "Estimated Settlement Area"
                 )}
@@ -302,8 +311,8 @@ export const MapPopper = ({
                   key={"popoverTable"}
                   aria-label="Data table of values from each variable at the clicked location."
                 >
-                  {popupData.data.cholera ? (
-                    <>
+                  {popupData.data.od ? (
+                    <React.Fragment>
                       {cat.map((category, i) => {
                         return (
                           <Fragment key={"popoverTableRow" + category}>
@@ -347,9 +356,9 @@ export const MapPopper = ({
                           </Fragment>
                         );
                       })}
-                    </>
+                    </React.Fragment>
                   ) : (
-                    <>
+                    <React.Fragment>
                       {cat_lim.map((category, i) => {
                         return (
                           <Fragment key={"popoverTableRow" + category}>
@@ -393,7 +402,7 @@ export const MapPopper = ({
                           </Fragment>
                         );
                       })}
-                    </>
+                    </React.Fragment>
                   )}
                 </Table>
               </DialogContent>
@@ -445,6 +454,6 @@ export const MapPopper = ({
           </div>
         </Popper>
       )}
-    </>
+    </React.Fragment>
   );
 };

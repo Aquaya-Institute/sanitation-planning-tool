@@ -65,6 +65,7 @@ function ProductHowItWorks(props) {
           marked="center"
           className={classes.title}
           fontWeight="fontWeightBold"
+          component="h2"
         >
           <strong>RELATED RESEARCH</strong>
         </Typography>
@@ -79,7 +80,7 @@ function ProductHowItWorks(props) {
           likelihood of success, and ii) adapt implementation strategies to
           maximize the chances for their success and sustainability.
         </Typography>
-        <div>
+        <React.Fragment>
           <Grid container spacing={5}>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
@@ -188,7 +189,7 @@ function ProductHowItWorks(props) {
               </div>
             </Grid>
           </Grid>
-        </div>
+        </React.Fragment>
       </Container>
     </section>
   );

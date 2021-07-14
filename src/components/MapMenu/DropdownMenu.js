@@ -118,25 +118,36 @@ export const DropdownMenu = ({
 
   function filterPopulatedPlacesByCountry(distName) {
     let query = null;
+    let query2 = null;
     if (distName.length > 0) {
       query = `SELECT * FROM ${
-        maps[mapID].layers[currentLayerID].carto_tableName
+        maps[mapID].layers["2"].carto_tableName
+      } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
+      query2 = `SELECT * FROM ${
+        maps[mapID].layers["3"].carto_tableName
       } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
     } else {
-      query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
+      query = `SELECT * FROM ${maps[mapID].layers["2"].carto_tableName}`;
+      query2 = `SELECT * FROM ${maps[mapID].layers["3"].carto_tableName}`;
     }
     // const source = new Carto.source.SQL(
     //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`
     // );
     // source.setQuery(query);
-    if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
-      currentCountry[currentLayerID].source.setQuery(query);
-      currentCountry[currentLayerID].layer.getSource().setQuery(query);
-      dispatch({
-        type: "layer.queryDist",
-        queryDist: query,
-      });
-    }
+    currentCountry["2"].source.setQuery(query);
+    // currentCountry["2"].query = query;
+    currentCountry["2"].layer.getSource().setQuery(query);
+    currentCountry["3"].source.setQuery(query2);
+    // currentCountry["3"].query = query;
+    currentCountry["3"].layer.getSource().setQuery(query2);
+    // if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
+    //   currentCountry[currentLayerID].source.setQuery(query);
+    //   currentCountry[currentLayerID].layer.getSource().setQuery(query);
+    //   dispatch({
+    //     type: "layer.queryDist",
+    //     queryDist: query,
+    //   });
+    // }
   }
 
   useEffect(() => {
@@ -169,11 +180,17 @@ export const DropdownMenu = ({
               highlightLayer: geojsonLayer,
             });
           });
+      } else {
+        filterPopulatedPlacesByCountry(distName);
+        leafletMap.setView(
+          [maps[mapID].lat, maps[mapID].long],
+          maps[mapID].zoom
+        );
       }
     }
   }, [distName]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (distName.length > 0 && mapID) {
       filterPopulatedPlacesByCountry(distName);
     }

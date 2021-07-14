@@ -146,7 +146,16 @@ export default function DefaultLayout(props) {
             <span>Change map to:</span>
           </Box>
           <Box ml={3}>
-            <MapSelector />
+            <MapSelector
+              // selectMapID="country-drop-id-nav"
+              // selectMapAria="country-drop-id-nav"
+              // selectMapName="country-drop-name-nav"
+              inputProps={{
+                name: "country-drop-name-nav",
+                id: "country-drop-id-nav",
+                "aria-label": "country-drop-id-nav",
+              }}
+            />
           </Box>
 
           <div className={classes.sectionDesktop}>

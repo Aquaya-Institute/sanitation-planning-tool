@@ -1,3 +1,4 @@
+import React from "react";
 import InfoOutlinedIcon from "@material-ui/icons/Info";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -254,7 +255,7 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
     }
   }, [datasetName]);
   return (
-    <>
+    <React.Fragment>
       <InfoOutlinedIcon
         fontSize="small"
         onClick={(e) => {
@@ -308,7 +309,7 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
                     {selectedDataset.description}
                     <br></br>
                     {selectedDataset.remote && (
-                      <>
+                      <React.Fragment>
                         <ul>
                           <li>
                             <strong>Urban:</strong> {selectedDataset.urban}
@@ -326,7 +327,7 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
                             {selectedDataset.remote}
                           </li>
                         </ul>
-                      </>
+                      </React.Fragment>
                     )}
                     <Typography color="textSecondary">
                       {selectedDataset.note}
@@ -341,11 +342,11 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
                       <strong>{selectedDataset.source}</strong>
                     </Typography>
                     {selectedDataset.ihme && (
-                      <>
+                      <React.Fragment>
                         <Typography variant="body2" gutterBottom>
                           {selectedDataset.ihme}
                         </Typography>
-                      </>
+                      </React.Fragment>
                     )}
                     {selectedDataset.citation && (
                       <Typography variant="body2" color="textSecondary">
@@ -378,7 +379,7 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
           </div>
         </Fade>
       </Modal>
-    </>
+    </React.Fragment>
   );
 };
 export default DatasetInfoPopover;

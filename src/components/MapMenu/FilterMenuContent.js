@@ -72,6 +72,10 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
     //   settlementBoundary.hide();
     // }
 
+    // function valuetext(value) {
+    //   return `${value}°C`;
+    // }
+
     dispatch({
       type: "layer.filter",
       mapID: currentMapID,
@@ -200,6 +204,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         max={filter.max}
                         aria-labelledby={filter.name + " range slider"}
                         valueLabelDisplay="auto"
+                        aria-valuetext={`${filter.value[0]}, ${filter.value[1]}`}
                         marks={createMarks([
                           Number(filter.min),
                           Number(filter.max),
@@ -255,6 +260,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         max={filter.max}
                         aria-labelledby={filter.name + " non-linear slider"}
                         valueLabelDisplay="auto"
+                        aria-valuetext={`${filter.scaledValue[0]}, ${filter.scaledValue[1]}`}
                         marks={filter.marks}
                         callback={(e, newval, scaledVal) => {
                           updateFilter({

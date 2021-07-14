@@ -1,30 +1,15 @@
-import {
-  useState,
-  useMemo,
-  useEffect,
-  useContext,
-  useRef,
-  Fragment,
-} from "react";
+import { useState, useMemo, useEffect, useContext, useRef } from "react";
 import { MapContext } from "../state/MapState";
 import Carto from "@carto/carto.js";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Grid, Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import "../App.css";
-import Paper from "@material-ui/core/Paper";
-import theme from "../theme/theme";
-import FormControl from "@material-ui/core/FormControl";
-import NativeSelect from "@material-ui/core/NativeSelect";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import { legendStyles } from "./subcomponents/LegendStyles";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import TabsWrappedLabel from "../components/TabBox/TabBox";
 import { MapPopper } from "./subcomponents/MapPopper";
+import { Legend } from "./subcomponents/Legend";
+import NoDataAlert from "./subcomponents/NoDataAlert";
+
 const useStyles = makeStyles((theme) => ({
   grid: {
     height: 40,
@@ -102,14 +87,6 @@ export const Map = () => {
   const clickRefPop = useRef(null);
   const mapRef = useRef(null);
   const initialLoad = useRef(false);
-  // const buckets = useRef({
-  //   legend: [
-  //     { name: "Rural Remote", value: "#3d4bc7" },
-  //     { name: "Rural On-road", value: "#4f9130" },
-  //     { name: "Rural Mixed", value: "#bf4343" },
-  //     { name: "Urban", value: "#c49755" },
-  //   ],
-  // });
   const buckets_1 = useRef({
     legend: [
       { name: "Rural Remote", value: "#3d4bc7" },
@@ -134,16 +111,10 @@ export const Map = () => {
       { name: "Urban", value: "#c49755" },
     ],
   });
-  // const [value, setValue] = useState(100);
-  // const [commCalcSource, setCommCalcSource] = useState(null);
-  // const [widgetLoad, setWidgetLoad] = useState();
-
   var dat_popup = {};
   const highlightLayer = useRef();
   const settlementHighlight = useRef();
-  // const [highlightLayer, setHighlightLayer] = useState();
   const legendStylesObj = legendStyles;
-  // const [legendIndex, setLegendIndex] = useState(0);
 
   //click outside
   useEffect(() => {
@@ -166,14 +137,11 @@ export const Map = () => {
             setPopup(null);
             if (highlightLayer.current && cartoClient) {
               mapRef.current.removeLayer(highlightLayer.current);
-              // highlightLayer.current.clearLayers();
             }
             if (settlementHighlight.current && cartoClient) {
               mapRef.current.removeLayer(settlementHighlight.current);
-              // settlementHighlight.current.clearLayers();
               settlementHighlight.current = undefined;
             }
-            // settlementPopup=null
           }
         }
         console.log("clicked outside");
@@ -289,9 +257,6 @@ export const Map = () => {
     console.log("Selected Map Changed", currentMapState);
 
     if (cartoClient && mapID && initialLoad.current === false) {
-      // dispatch({
-      //   type: "layer.removeCartoLayers",
-      // });
       console.log("Creating Carto Layers");
       const _mapID = mapID;
 
@@ -301,9 +266,7 @@ export const Map = () => {
         if (queryDist && index > 1) {
           let queryedit =
             `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist;
-          // let queryedit2 = queryedit.replace(/\s/g, " ");
           _source = new Carto.source.SQL(queryedit);
-          // _source = maps[mapID].layers[layer].carto_source;
         } else {
           _source = new Carto.source.SQL(
             `SELECT * FROM ${layer.carto_tableName}`
@@ -385,13 +348,15 @@ export const Map = () => {
         if (_filters.length > 0) {
           _source.addFilter(new Carto.filter.AND(_filters));
         }
-
-        //create the carto layer and add feature clicks
-        const _layer = new Carto.layer.Layer(_source, _style, {
-          featureClickColumns: _columns,
-          // visible:
-          //   (showSettlements && index > 3) === true ? true : layer.visible,
-        });
+        var _layer = null;
+        if (index === "1") {
+          _layer = new Carto.layer.Layer(_source, _style);
+        } else {
+          //create the carto layer and add feature clicks
+          _layer = new Carto.layer.Layer(_source, _style, {
+            featureClickColumns: _columns,
+          });
+        }
 
         dispatch({
           type: "layer.addCartoLayer",
@@ -402,113 +367,15 @@ export const Map = () => {
           cartoStyle: _style,
           cartoFilters: _filters,
         });
-
-        // setup feature clicks on relevant layers
-        // if (_columns.length > 1) {
-        //   _layer.on("featureClicked", (featureEvent) => {
-        //     console.log("clicked a feature", featureEvent);
-        //     var result = null;
-        //     var input = featureEvent.data.cartodb_id;
-        //     fetch(
-        //       `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${layer.carto_tableName} where cartodb_id = ${input}`
-        //     )
-        //       .then((resp) => resp.json())
-        //       .then((response) => {
-        //         var myStyle = {
-        //           color: "#FFFFFF",
-        //           fillColor: "#FFFFFF",
-        //           fillOpacity: 0.3,
-        //           weight: 1,
-        //         };
-        //         result = L.geoJson(
-        //           JSON.parse(response.rows[0].the_geom),
-        //           myStyle
-        //         );
-        //         highlightLayer.current = result;
-        //         if (
-        //           settlementHighlight.current &&
-        //           popup !== undefined &&
-        //           popup !== null
-        //         ) {
-        //           mapRef.current.removeLayer(settlementHighlight.current);
-        //           // settlementHighlight.current.clearLayers();
-        //           result.addTo(mapRef.current);
-        //         } else if (
-        //           // settlementHighlight.current === null ||
-        //           settlementHighlight.current === undefined
-        //         ) {
-        //           result.addTo(mapRef.current);
-        //         }
-        //       });
-        //     setPopup([layer.name, featureEvent]);
-        //     setPopoverOpen(false);
-        //     console.log("popup", popup);
-        //   });
-        // }
         console.log("cycle");
-
-        //add the layer to carto client
-        // cartoClient.addLayer(_layer);
-        // _layer.bringToBack();
-        // setlayerID(index);
-
-        // _layer.on("metadataChanged", function (event) {
-        //   console.log(event);
-        //   if (
-        //     layer.name === maps[mapID].layers[currentLayerID].name &&
-        //     (layer.carto_style === legendStylesObj[activeLegend].style_pixel ||
-        //       layer.carto_style === legendStylesObj[activeLegend].style_bounds)
-        //   ) {
-        //     var obj = {};
-        //     // get buckets
-        //     if (event.styles[0]._buckets === undefined) {
-        //       obj["variable"] = layer.name;
-        //       obj["legend"] = event.styles[0]._categories;
-        //       for (var i in obj.legend) {
-        //         if (obj.legend[i].name === 1) {
-        //           obj.legend[i].name = "Rural Remote";
-        //         } else if (obj.legend[i].name === 2) {
-        //           obj.legend[i].name = "Rural On-road";
-        //         } else if (obj.legend[i].name === 3) {
-        //           obj.legend[i].name = "Rural Mixed";
-        //         } else if (obj.legend[i].name === 4) {
-        //           obj.legend[i].name = "Urban";
-        //         }
-        //       }
-        //     } else {
-        //       obj["variable"] = layer.name;
-        //       obj["legend"] = event.styles[0]._buckets;
-        //     }
-        //     setBuckets(obj);
-        //     // setBuckets((st) => [...st, obj]);
-        //   }
-        //   // }
-        // });
-
-        //add the carto layer to global state
-
         initialLoad.current = true;
-        // }
       });
       setPopoverColumns(objlist);
       console.log(popoverColumns);
     }
   }, [mapID, cartoClient]);
 
-  // useEffect(() => {
-  //   if (initialLoad.current === true) {
-  //     console.log("currentlayer");
-
-  //     dispatch({
-  //       type: "current.layer",
-  //       // currentLayer: maps[mapID].layers[currentLayerID].carto_layer,
-  //       // currentSource: maps[mapID].layers[currentLayerID].carto_source,
-  //       // currentStyle: maps[mapID].layers[currentLayerID].carto_style,
-  //       // currentFilters: maps[mapID].layers[currentLayerID].filters,
-  //     });
-  //   }
-  // }, [currentLayerID, dispatch, mapID, maps]);
-
+  //Set buckets
   useEffect(() => {
     if (
       initialLoad.current === true &&
@@ -529,7 +396,6 @@ export const Map = () => {
             var obj = {};
             // get buckets
             if (event.styles[0]._buckets === undefined) {
-              // obj["variable"] = layer.name;
               obj["legend"] = event.styles[0]._categories;
               for (var i in obj.legend) {
                 if (obj.legend[i].name === 1) {
@@ -543,24 +409,14 @@ export const Map = () => {
                 }
               }
             } else {
-              // obj["variable"] = layer.name;
               obj["legend"] = event.styles[0]._buckets;
             }
             setBuckets(obj);
-            // if (buckets_1.current === undefined) {
-            //   buckets_1.current = obj;
-            //   buckets_2.current = obj;
-            //   buckets_3.current = obj;
-            // }
             if (currentLayerID === "2") {
               buckets_2.current = obj;
-              // buckets.current = obj;
             } else if (currentLayerID === "3") {
               buckets_3.current = obj;
-              // buckets.current = obj;
             }
-            // setBuckets((st) => [...st, obj]);
-            // }
           }
         }
       );
@@ -574,10 +430,12 @@ export const Map = () => {
     }
   }, [currentCountry[currentLayerID].layer, currentLayerID, activeLegend]);
 
+  //Register feature clicks
   useEffect(() => {
     if (
       initialLoad.current === true &&
-      currentCountry[currentLayerID].layer !== null
+      currentCountry[currentLayerID].layer !== null &&
+      currentLayerID !== "1"
     ) {
       currentCountry[currentLayerID].layer.on(
         "featureClicked",
@@ -604,6 +462,10 @@ export const Map = () => {
                 myStyle
               );
               highlightLayer.current = result;
+              dispatch({
+                type: "boundary.highlight",
+                highlightBoundary: highlightLayer.current,
+              });
               if (
                 settlementHighlight.current &&
                 popup !== undefined &&
@@ -625,21 +487,25 @@ export const Map = () => {
         }
       );
     }
-  }, [currentCountry[currentLayerID].layer, currentLayerID, mapID, maps]);
+  }, [currentCountry[currentLayerID].layer, currentLayerID, mapID]);
 
+  // settlements layer
   useEffect(() => {
     if (allowSettlements === true && mapID) {
       if (showSettlements === true) {
         if (maps[mapID].layers["4"] && cartoClient) {
           console.log("3");
           if (currentCountry[currentLayerID].query) {
+            // let queryURL = currentCountry[currentLayerID].source._query.replace(
+            //   /\s/g,
+            //   " "
+            // );
+            // let queryURL2 = `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`;
+            // currentCountry["4"].source.setQuery(queryURL2);
+            // currentCountry["4"].layer.getSource().setQuery(queryURL2);
             if (settlementBoundary) {
               cartoClient.removeLayer(settlementBoundary);
             }
-            // var clause = query.substr(query.indexOf(" WHERE"), query.length);
-            // queryURL =
-            //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}` +
-            //   clause;
             let queryURL = currentCountry[currentLayerID].query.replace(
               /\s/g,
               " "
@@ -653,21 +519,15 @@ export const Map = () => {
             settlement_style = new Carto.style.CartoCSS(
               `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
             );
-
-            // let queryURL2 = `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`;
-            // maps[mapID].layers["5"].carto_source.setQuery(queryURL2);
-            // query.replace(/\s/g, " ");
-            // queryURL2 = encodeURIComponent(queryURL2);
-
-            // queryURL = `SELECT the_geom FROM ${queryURL2}`;
           } else {
-            // queryURL = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
-            // maps[mapID].layers["4"].carto_source.setQuery(
-            //   `SELECT * FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
+            // currentCountry["4"].source.setQuery(
+            //   `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM ${maps[mapID].layers[currentLayerID].carto_tableName}, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
             // );
-            // _source = new Carto.source.SQL(
-            //   `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
-            // );
+            // currentCountry["4"].layer
+            //   .getSource()
+            //   .setQuery(
+            //     `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM ${maps[mapID].layers[currentLayerID].carto_tableName}, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
+            //   );
             settlement_source = new Carto.source.SQL(
               `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM ${maps[mapID].layers[currentLayerID].carto_tableName}, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
             );
@@ -716,23 +576,18 @@ export const Map = () => {
                     myStyle
                   );
                   settlementHighlight.current = result;
+                  dispatch({
+                    type: "boundary.highlight",
+                    highlightBoundary: settlementHighlight.current,
+                  });
                   if (highlightLayer.current) {
                     mapRef.current.removeLayer(highlightLayer.current);
-                    // highlightLayer.current.clearLayers();
                   }
                   result.addTo(mapRef.current);
                 });
               setPopup([maps[mapID].layers["4"].carto_tableName, featureEvent]);
               setPopoverOpen(false);
               console.log("popup", popup);
-              // dispatch({
-              //   type: "settlement.popup",
-              //   settlementPopup: [
-              //     maps[mapID].layers["4"].carto_tableName,
-              //     featureEvent,
-              //   ],
-              //   settlementHighlight: selectedSettlement.current,
-              // });
             });
             cartoClient.addLayer(settlementBoundaryset);
             currentCountry[currentLayerID].layer.show();
@@ -748,7 +603,7 @@ export const Map = () => {
     currentCountry[currentLayerID].query,
     allowSettlements,
     showSettlements,
-    currentLayerID,
+    // currentLayerID,
   ]);
 
   // popup data
@@ -756,9 +611,13 @@ export const Map = () => {
     console.log("updated popup", popup);
     if (popup) {
       var dat = [];
-      currentMapState.layers[currentLayerID].filters.forEach(function (
-        element
-      ) {
+      var layerID = null;
+      if (popup[0].includes("comms")) {
+        layerID = "4";
+      } else {
+        layerID = currentLayerID;
+      }
+      currentMapState.layers[layerID].filters.forEach(function (element) {
         dat.push([
           element.column_name,
           element.name,
@@ -839,9 +698,6 @@ export const Map = () => {
   useEffect(() => {
     console.log("5");
     if (userData) {
-      // var myRadius = 5;
-      // var myWeight = 2;
-
       var markerOptions = {
         radius: myRadius,
         fillColor: "#ffffff",
@@ -850,12 +706,9 @@ export const Map = () => {
         opacity: 1,
         fillOpacity: 0.3,
       };
-      // if (layerRef.current) {
-      //   layerRef.current.clearLayers();
-      // }
       userData.forEach((marker, key) => {
         var popupContent = "";
-        for (var key in marker) {
+        for (key in marker) {
           popupContent = popupContent + key + ":  " + marker[key] + "</br>";
         }
         L.circleMarker([marker.Latitude, marker.Longitude], markerOptions)
@@ -924,191 +777,13 @@ export const Map = () => {
       style={{ height: "100%", position: "relative" }}
       className={classes.content}
     >
+      {mapID === "niger" && <NoDataAlert />}
       <div
         id="map"
         style={{ height: "100%" }}
         className="tour-map"
         alt={"map of " + mapID + " which can be manipulated by the site user"}
       ></div>
-
-      {/* Legend */}
-      {mapID && currentLayerID && (
-        <div
-          style={{
-            padding: theme.spacing(1),
-            position: "absolute",
-            bottom: "10px",
-            right: "0px",
-            top: "unset",
-            left: "unset",
-            height: "auto",
-            width: "280px",
-            zIndex: "1000",
-            backgroundColor: "transparent",
-          }}
-        >
-          <TabsWrappedLabel />
-          <Paper
-            style={{ height: "5px", backgroundColor: "transparent" }}
-          ></Paper>
-          <Paper
-            square
-            pb={2}
-            style={{
-              padding: theme.spacing(0.5),
-              backgroundColor: theme.palette.background.default,
-            }}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={hideLayer}
-                  onChange={() => {
-                    setHideLayer(!hideLayer);
-                    if (!hideLayer === true) {
-                      currentCountry[currentLayerID].layer.hide();
-                    } else {
-                      currentCountry[currentLayerID].layer.show();
-                    }
-                  }}
-                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                  color="primary"
-                  inputProps={{ "aria-label": "show/hide-main-layer" }}
-                />
-              }
-              label={
-                <Typography key="filterListItemLabel" variant="body2">
-                  Remove layer to view underlying satellite imagery
-                </Typography>
-              }
-              size="small"
-            />
-          </Paper>
-          {/* <Paper
-            square
-            pb={2}
-            style={{
-              padding: theme.spacing(0.5),
-              backgroundColor: theme.palette.background.default,
-            }}
-          >
-            <Grid container spacing={0}>
-              <Box>
-                <Typography variant="subtitle2">Change opacity</Typography>
-              </Box>
-              <Box mx="auto" width="210px" height="45px">
-                <Slider
-                  value={value}
-                  aria-labelledby={"Opacity range slider"}
-                  marks={[
-                    { value: 0, label: "0%" },
-                    { value: 100, label: "100%" },
-                  ]}
-                  onChange={handleOpacityChange}
-                />
-              </Box>
-            </Grid>
-          </Paper> */}
-          <Paper
-            style={{ height: "5px", backgroundColor: "transparent" }}
-          ></Paper>
-          <Paper
-            square
-            key={"legendContainer"}
-            style={{
-              padding: theme.spacing(1),
-              // position: "absolute",
-              // bottom: "16px",
-              // right: "0px",
-              // top: "unset",
-              // left: "unset",
-              // height: "auto",
-              // width: "280px",
-              // zIndex: "1000",
-              backgroundColor: theme.palette.background.default,
-            }}
-          >
-            <Fragment key={"legendContent" + currentLayerID}>
-              <Box variant="subtitle2" fontSize={12} fontWeight="light">
-                Selected resolution:{" "}
-                {maps[mapID].layers[currentLayerID].name + "s"}
-              </Box>
-              <FormControl className={classes.formControl}>
-                <Box
-                  variant="subtitle2"
-                  fontStyle="italic"
-                  fontWeight="fontWeightBold"
-                >
-                  Select the indicator to visualize:
-                </Box>
-                <NativeSelect
-                  value={activeLegend}
-                  onChange={handleChange}
-                  inputProps={{
-                    name: "active-legend",
-                    id: "select-active-legend",
-                    "aria-label": "select-active-legend",
-                  }}
-                  className="tour-legendselect"
-                  style={{ backgroundColor: theme.palette.background.selected }}
-                >
-                  {maps[mapID].layers[currentLayerID].filters.map(
-                    (filter, i) => {
-                      if (filter.type !== "none") {
-                        return (
-                          <option key={"filter" + i} value={i}>
-                            {filter.name}
-                          </option>
-                        );
-                      } else {
-                        return null;
-                      }
-                    }
-                  )}
-                </NativeSelect>
-                <FormHelperText> </FormHelperText>
-              </FormControl>
-              {/* {maps[mapID].layers[currentLayerID].name === buckets.variable && ( */}
-              {buckets && (
-                <Fragment key={"legendContent" + buckets.variable}>
-                  {buckets.legend.map((legend, j) => {
-                    return (
-                      <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
-                        className={classes.element}
-                        key={"bucket" + j}
-                      >
-                        <div
-                          className={classes.dot}
-                          style={{
-                            backgroundColor: legend.value,
-                            border: legend.border,
-                          }}
-                          key={legend.value.toString()}
-                        ></div>
-                        {legend.min === null
-                          ? "No data remaining"
-                          : legend.name === undefined
-                          ? legend.min.toString() +
-                            " - " +
-                            legend.max.toString() +
-                            " " +
-                            maps[mapID].layers[currentLayerID].filters[
-                              activeLegend
-                            ].unit
-                          : legend.name}
-                      </Grid>
-                    );
-                  })}
-                </Fragment>
-              )}
-            </Fragment>
-          </Paper>
-        </div>
-      )}
       {/* Popup */}
       {popupData && (
         <MapPopper
@@ -1116,17 +791,30 @@ export const Map = () => {
           clickRef={clickRef}
           openPopper={openPopper}
           setPopup={setPopup}
-          highlightLayer={
-            popupData.data.cholera
-              ? highlightLayer.current
-              : settlementHighlight.current
-          }
+          // highlightLayer={
+          //   popupData.data.od
+          //     ? highlightLayer.current
+          //     : settlementHighlight.current
+          // }
           mapID={mapID}
           setPopoverOpen={setPopoverOpen}
           popoverOpen={popoverOpen}
           clickRefPop={clickRefPop}
           downloadData={downloadData}
+          mapRef={mapRef}
         />
+      )}
+
+      {/* Legend */}
+      {mapID && currentLayerID && (
+        <Legend
+          mapID={mapID}
+          buckets={buckets}
+          classes={classes}
+          handleChange={handleChange}
+          hideLayer={hideLayer}
+          setHideLayer={setHideLayer}
+        ></Legend>
       )}
     </div>
   );

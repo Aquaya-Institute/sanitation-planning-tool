@@ -85,6 +85,14 @@ export const MapMenu = () => {
           key="drawerContainer"
           // style={{ borderRight: "1px solid #CFCDC9" }}
         >
+          <Box m={1} align="center" id="publicData" fontSize={20}>
+            {currentMapID && (
+              <Typography variant="h5" color="primary" component="h1">
+                {maps[currentMapID].name.toUpperCase()}
+              </Typography>
+            )}
+          </Box>
+          <Divider />
           <Box
             mt={1.5}
             align="center"
@@ -92,13 +100,14 @@ export const MapMenu = () => {
             key="scalesTitle"
             style={{ borderRight: "1px solid #CFCDC9" }}
           >
-            <Typography key="scalesTitleLabel" color="secondary">
+            <Typography key="scalesTitleLabel" color="secondary" component="h2">
               MAP SCALES
             </Typography>
           </Box>
           <Box
             key="scalesSubtitle"
             p={1}
+            pb={0}
             variant="subtitle2"
             fontStyle="italic"
             fontSize={13.5}
@@ -201,7 +210,6 @@ export const MapMenu = () => {
             >
               {mapID && (
                 <Button
-                  // justify="center"
                   startIcon={
                     <img
                       src={boundaryIcon}
@@ -237,13 +245,14 @@ export const MapMenu = () => {
             key="themesTitle"
             style={{ borderRight: "1px solid #CFCDC9" }}
           >
-            <Typography key="themesTitleLabel" color="secondary">
+            <Typography key="themesTitleLabel" color="secondary" component="h2">
               INDICATOR THEMES
             </Typography>
           </Box>
           <Box
             key="themesSubtitle"
             p={1}
+            pb={0}
             variant="subtitle2"
             fontStyle="italic"
             fontSize={13.5}

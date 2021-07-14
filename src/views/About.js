@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import {
   Grid,
   Container,
@@ -27,12 +28,25 @@ const useStyles = makeStyles((theme) => ({
 function About() {
   const classes = useStyles();
   return (
-    <>
+    <React.Fragment>
+      <Helmet>
+        <html lang="en" />
+        <title>About Page</title>
+        <meta
+          name="About"
+          content="Additional details about the SanPlan tool and it's authors."
+        />
+      </Helmet>
+
       <Container m={2}>
-        <br />
+        <Box mt={3} mb={2} id="publicData">
+          <Typography variant="h5" color="primary" component="h1">
+            ABOUT SANPLAN
+          </Typography>
+        </Box>
         <Paper elevation={0}>
           <Box p={2}>
-            <Typography variant="h5" color="secondary">
+            <Typography variant="h5" color="secondary" component="h2">
               <strong>What</strong> is the SanPlan tool?
             </Typography>
             <br />
@@ -48,7 +62,7 @@ function About() {
             data on their area of interest.
           </Box>
           <Box p={2}>
-            <Typography variant="h5" color="secondary" p={2}>
+            <Typography variant="h5" color="secondary" p={2} component="h2">
               <strong>Who</strong> should use this tool?
             </Typography>
             <br />
@@ -63,7 +77,7 @@ function About() {
             their region are on a major roadway.
           </Box>
           <Box p={2}>
-            <Typography variant="h5" color="secondary">
+            <Typography variant="h5" color="secondary" component="h2">
               <strong>How</strong> does the tool work?
             </Typography>
             <br />
@@ -81,7 +95,7 @@ function About() {
 
         <Card elevation={0}>
           <CardContent>
-            <Typography variant="h5" color="secondary">
+            <Typography variant="h5" color="secondary" component="h2">
               About WASHPaLS
             </Typography>
             <br></br>
@@ -97,7 +111,7 @@ function About() {
         <br></br>
         <Card elevation={0}>
           <CardContent>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h3">
               Project Contractors
             </Typography>
             <br></br>
@@ -143,7 +157,7 @@ function About() {
         <Divider />
       </Container>
       <HomeFooter />
-    </>
+    </React.Fragment>
   );
 }
 export default About;

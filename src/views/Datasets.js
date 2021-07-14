@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import {
   Grid,
   Card,
@@ -243,9 +244,22 @@ function Datasets() {
   ];
   return (
     <Container>
-      <Box mt={4} mb={2} id="publicData">
-        <Typography variant="h5" color="secondary">
-          Overview of Public Datasets Utlilized
+      <Helmet>
+        <html lang="en" />
+        <title>Datasets Overview</title>
+        <meta
+          name="Datasets Overview"
+          content="Names, sources, citations and metadata for datasets utilized in the interactive maps."
+        />
+      </Helmet>
+      <Box mt={3} mb={2} id="publicData">
+        <Typography variant="h5" color="primary" component="h1">
+          OVERVIEW OF DATASETS UTILIZED
+        </Typography>
+      </Box>
+      <Box mb={1} id="publicData">
+        <Typography variant="h6" color="secondary" component="h2">
+          PUBLIC DATASETS
         </Typography>
       </Box>
       <Grid container item spacing={2} lg={12}>
@@ -253,25 +267,29 @@ function Datasets() {
           <Grid key={"dataCard" + i} item xs={12} md={12} lg={12}>
             <Card className={classes.root} elevation={0}>
               <CardContent>
-                <Typography variant="h6" component="h2">
+                <Typography variant="h6" component="h3">
                   {data[1].name}
                 </Typography>
                 {data[1].description}
                 <br></br>
-                <Typography color="textSecondary">{data[1].note}</Typography>
-                <Typography variant="body1">Year: {data[1].year}</Typography>
-                <Typography variant="body1" component="h5">
+                <Typography color="textSecondary" component="h4">
+                  {data[1].note}
+                </Typography>
+                <Typography variant="body1" component="h4">
+                  Year: {data[1].year}
+                </Typography>
+                <Typography variant="body1" component="h4">
                   Dataset resolution: {data[1].resolution}
                 </Typography>
-                <Typography variant="body1" color="primary">
+                <Typography variant="body1" color="primary" component="h4">
                   <strong>{data[1].source}</strong>
                 </Typography>
                 {data[1].ihme && (
-                  <>
+                  <React.Fragment>
                     <Typography variant="body2" gutterBottom>
                       {data[1].ihme}
                     </Typography>
-                  </>
+                  </React.Fragment>
                 )}
                 {data[1].citation && (
                   <Typography variant="body2" color="textSecondary">
@@ -292,9 +310,9 @@ function Datasets() {
           </Grid>
         ))}
       </Grid>
-      <Box mt={4} mb={2} id="customData">
-        <Typography variant="h5" color="secondary">
-          Overview of Custom-Built Datasets
+      <Box mt={3} mb={1} id="customData">
+        <Typography variant="h6" color="secondary" component="h2">
+          CUSTOM-BUILT DATASETS
         </Typography>
       </Box>
       <Grid container item spacing={2} lg={12}>
@@ -317,12 +335,12 @@ function Datasets() {
           >
             <Card className={classes.root} elevation={0}>
               <CardContent>
-                <Typography variant="h6" component="h2">
+                <Typography variant="h6" component="h3">
                   {data[1].name}
                 </Typography>
                 {data[1].description}
                 {data[1].remote && (
-                  <>
+                  <React.Fragment>
                     <ul>
                       <li>
                         <strong>Rural Mixed:</strong> {data[1].mixed}
@@ -343,15 +361,19 @@ function Datasets() {
                     <Link href="https://washmatters.wateraid.org/publications/rethinking-rural-sanitation">
                       Check out the Rethinking Rural Sanitation Guidance
                     </Link>
-                  </>
+                  </React.Fragment>
                 )}
                 {data[1].wsf && (
-                  <>
+                  <React.Fragment>
                     <ul>
                       <li>
                         <strong>World Settlement Footprint (2015):</strong>{" "}
                         {data[1].wsf}
-                        <Typography variant="body2" color="textSecondary">
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          component="h4"
+                        >
                           Corresponding publication: {data[1].wsf_citation}
                         </Typography>
                         <Button
@@ -365,7 +387,11 @@ function Datasets() {
                       </li>
                       <li>
                         <strong>Data for Good (2016):</strong> {data[1].fb}
-                        <Typography variant="body2" color="textSecondary">
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          component="h4"
+                        >
                           Corresponding publication: {data[1].fb_citation}
                         </Typography>
                         <Button
@@ -378,14 +404,18 @@ function Datasets() {
                         </Button>
                       </li>
                     </ul>
-                  </>
+                  </React.Fragment>
                 )}
-                <Typography color="textSecondary">{data[1].note}</Typography>
-                <Typography variant="body1">Year: {data[1].year}</Typography>
-                <Typography variant="body1" component="h5">
+                <Typography color="textSecondary" component="h4">
+                  {data[1].note}
+                </Typography>
+                <Typography variant="body1" component="h4">
+                  Year: {data[1].year}
+                </Typography>
+                <Typography variant="body1" component="h4">
                   Dataset resolution: {data[1].resolution}
                 </Typography>
-                <Typography variant="body1" color="primary">
+                <Typography variant="body1" color="primary" component="h4">
                   <strong>{data[1].source}</strong>
                 </Typography>
               </CardContent>

@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import { Container, Typography, Box, Paper } from "@material-ui/core";
 // import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
@@ -18,7 +19,12 @@ document.getElementsByTagName("head")[0].appendChild(link);
 function Privacy() {
   // const classes = useStyles();
   return (
-    <>
+    <React.Fragment>
+      <Helmet>
+        <html lang="en" />
+        <title>Privacy Policy Page</title>
+        <meta name="Privacy Policy" content="SanPlan's privacy policy." />
+      </Helmet>
       <Container m={2}>
         <br />
         <Paper elevation={0}>
@@ -251,7 +257,7 @@ function Privacy() {
         </Paper>
       </Container>
       <HomeFooter />
-    </>
+    </React.Fragment>
   );
 }
 export default Privacy;

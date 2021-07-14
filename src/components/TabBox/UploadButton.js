@@ -46,6 +46,7 @@ export const UploadButton = () => {
       maps,
       currentMapID,
       settlementBoundary,
+      currentCountry,
       // carto_client,
       // queries,
       // currentLayerID,
@@ -107,223 +108,8 @@ export const UploadButton = () => {
     }
   }, [currentMapID]);
 
-  // //click outside
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (clickRef.current && !clickRef.current.contains(event.target)) {
-  //       if (clickRef.current && !clickRef.current.contains(event.target)) {
-  //         console.log("clicked outside");
-  //         if (
-  //           clickRefPop.current &&
-  //           !clickRefPop.current.contains(event.target)
-  //         ) {
-  //           setPopoverOpen(null);
-  //           console.log("clicked outside");
-  //         } else if (
-  //           clickRefPop.current &&
-  //           clickRefPop.current.contains(event.target)
-  //         ) {
-  //         } else {
-  //           setPopup(null);
-  //         }
-  //       }
-  //       console.log("clicked outside");
-  //       if (selectedSettlement.current) {
-  //         leafletMap.removeLayer(selectedSettlement.current);
-  //       }
-  //     }
-  //   };
-  //   document.addEventListener("click", handleClickOutside, true);
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutside, true);
-  //   };
-  // }, [leafletMap]);
-
-  // useEffect(() => {
-  //   if (mapID) {
-  //     var _source = new Carto.source.SQL(
-  //       `SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`
-  //     );
-  //     const _style = new Carto.style.CartoCSS(
-  //       `#layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
-  //     );
-  //     const settlementBoundaryset = new Carto.layer.Layer(_source, _style, {});
-
-  //     dispatch({
-  //       type: "settlement.boundary",
-  //       settlementBoundary: settlementBoundaryset,
-  //     });
-  //   }
-  // }, [mapID]);
-
-  // useEffect(() => {
-  //   if (mapID) {
-  //     let queryURL = null;
-  //     if (query) {
-  //       if (settlementBoundary) {
-  //         carto_client.removeLayer(settlementBoundary);
-  //       }
-  //       // var clause = query.substr(query.indexOf(" WHERE"), query.length);
-  //       // queryURL =
-  //       //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}` +
-  //       //   clause;
-  //       let queryURL = query.replace(/\s/g, " ");
-  //       var _style = null;
-  //       var _source = null;
-  //       var settlementBoundaryset = null;
-  //       _source = new Carto.source.SQL(
-  //         `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
-  //       );
-  //       _style = new Carto.style.CartoCSS(
-  //         `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
-  //       );
-
-  //       // let queryURL2 = `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`;
-  //       // maps[mapID].layers["5"].carto_source.setQuery(queryURL2);
-  //       // query.replace(/\s/g, " ");
-  //       // queryURL2 = encodeURIComponent(queryURL2);
-
-  //       // queryURL = `SELECT the_geom FROM ${queryURL2}`;
-  //     } else {
-  //       // queryURL = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
-  //       // maps[mapID].layers["4"].carto_source.setQuery(
-  //       //   `SELECT * FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
-  //       // );
-  //       // _source = new Carto.source.SQL(
-  //       //   `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS originalQuery, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(originalQuery.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
-  //       // );
-  //       _source = new Carto.source.SQL(
-  //         `SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`
-  //       );
-  //       _style = new Carto.style.CartoCSS(
-  //         `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
-  //       );
-  //     }
-  //     if (_source) {
-  //       settlementBoundaryset = new Carto.layer.Layer(_source, _style, {
-  //         visible: showLayer === true ? true : false,
-  //         featureClickColumns: [
-  //           "classes",
-  //           "dt",
-  //           "dr",
-  //           "timecities",
-  //           "pop",
-  //           "rr",
-  //           "rrd",
-  //           "rm",
-  //           "u",
-  //           "name_1",
-  //           "name_2",
-  //         ],
-  //       });
-  //       settlementBoundaryset.on("featureClicked", (featureEvent) => {
-  //         console.log("clicked a feature", featureEvent);
-  //         var result = null;
-  //         var input = featureEvent.data.cartodb_id;
-  //         setAnchorPopper(featureEvent.currentTarget);
-  //         fetch(
-  //           `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers["4"].carto_tableName} where cartodb_id = ${input}`
-  //         )
-  //           .then((resp) => resp.json())
-  //           .then((response) => {
-  //             var myStyle = {
-  //               color: "#FFFFFF",
-  //               fillColor: "#FFFFFF",
-  //               fillOpacity: 0.3,
-  //               weight: 1,
-  //             };
-  //             result = L.geoJson(
-  //               JSON.parse(response.rows[0].the_geom),
-  //               myStyle
-  //             );
-  //             selectedSettlement.current = result;
-  //             result.addTo(leafletMap);
-  //           });
-  //         setPopup([maps[mapID].layers["4"].carto_tableName, featureEvent]);
-  //         setPopoverOpen(false);
-  //         console.log("popup", popup);
-  //         // dispatch({
-  //         //   type: "settlement.popup",
-  //         //   settlementPopup: [
-  //         //     maps[mapID].layers["4"].carto_tableName,
-  //         //     featureEvent,
-  //         //   ],
-  //         //   settlementHighlight: selectedSettlement.current,
-  //         // });
-  //       });
-  //       carto_client.addLayer(settlementBoundaryset);
-  //       dispatch({
-  //         type: "settlement.boundary",
-  //         settlementBoundary: settlementBoundaryset,
-  //       });
-  //     }
-  //   }
-  // }, [query, mapID]);
-
-  // // popup data
-  // useEffect(() => {
-  //   console.log("updated popup", popup);
-  //   if (popup) {
-  //     var dat = [];
-  //     maps[mapID].layers[currentLayerID].filters.forEach(function (element) {
-  //       dat.push([
-  //         element.column_name,
-  //         element.name,
-  //         element.subcategory,
-  //         element.unit,
-  //       ]);
-  //     });
-  //     dat.sort();
-  //     var dat_loc = [];
-  //     if (popup[1].data.classes !== undefined) {
-  //       if (popup[1].data.classes === 1) {
-  //         popup[1].data.classes = "Rural Remote";
-  //       } else if (popup[1].data.classes === 2) {
-  //         popup[1].data.classes = "Rural On-road";
-  //       } else if (popup[1].data.classes === 3) {
-  //         popup[1].data.classes = "Rural Mixed";
-  //       } else if (popup[1].data.classes === 4) {
-  //         popup[1].data.classes = "Urban";
-  //       }
-  //     }
-  //     Object.entries(popup[1].data)
-  //       .slice(1)
-  //       .map((keyName) => {
-  //         return dat_loc.push([keyName[0], keyName[1]]);
-  //       });
-  //     dat_loc.sort();
-
-  //     for (let j = 0; j < dat.length; j++) {
-  //       for (let i = 0; i < dat_loc.length; i++) {
-  //         if (dat[j][0] === dat_loc[i][0]) {
-  //           dat_popup[dat[j][0]] = {
-  //             Name: dat[j][1],
-  //             Category: dat[j][2],
-  //             Unit: dat[j][3],
-  //             Value: dat_loc[i][1],
-  //           };
-  //         }
-  //       }
-  //     }
-  //     var obj = {};
-  //     obj["data"] = dat_popup;
-  //     obj["latLng"] = popup[1].latLng;
-  //     obj["position"] = popup[1].position;
-  //     setPopupData(obj);
-  //     var myData = Object.keys(dat_popup).map((key) => {
-  //       return dat_popup[key];
-  //     });
-  //     setDownloadData(myData);
-  //     dispatch({
-  //       type: "settlement.popup",
-  //       settlementPopup: obj,
-  //       settlementHighlight: selectedSettlement.current,
-  //     });
-  //   }
-  // }, [popup]);
-
   return (
-    <div>
+    <React.Fragment>
       <Box
         p={1}
         fontStyle="italic"
@@ -358,10 +144,10 @@ export const UploadButton = () => {
       <button onClick={removeCSV}>Remove</button>
       <Divider />
       {mapID && (
-        <>
+        <React.Fragment>
           {" "}
           {maps[mapID].layers["4"] && (
-            <>
+            <React.Fragment>
               <Box
                 p={1}
                 fontStyle="italic"
@@ -390,10 +176,13 @@ export const UploadButton = () => {
                           if (settlementBoundary) {
                             settlementBoundary.show();
                           }
+                          // currentCountry["4"].layer.show();
+                          // currentCountry["4"].layer.bringToFront();
                         } else {
                           if (settlementBoundary) {
                             settlementBoundary.hide();
                           }
+                          // currentCountry["4"].layer.hide();
                         }
                       }
                     }}
@@ -466,6 +255,8 @@ export const UploadButton = () => {
                               if (settlementBoundary) {
                                 settlementBoundary.show();
                               }
+                              // currentCountry["4"].layer.show();
+                              // currentCountry["4"].layer.bringToFront();
                               // carto_client.addLayer(settlementBoundary);
                               setChecked(true);
                               dispatch({
@@ -475,6 +266,7 @@ export const UploadButton = () => {
                             } else {
                               // maps[mapID].layers["4"].carto_layer.hide();
                               settlementBoundary.hide();
+                              // currentCountry["4"].layer.hide();
                               // carto_client.removeLayer(settlementBoundary);
                             }
                           }}
@@ -501,22 +293,10 @@ export const UploadButton = () => {
                   </DialogActions>
                 </DialogContent>
               </Dialog>
-            </>
+            </React.Fragment>
           )}
-        </>
+        </React.Fragment>
       )}
-      {/* <MapPopper
-        popup={popup}
-        clickRef={clickRef}
-        openPopper={openPopper}
-        setPopup={setPopup}
-        highlightLayer={selectedSettlement}
-        mapID={mapID}
-        setPopoverOpen={setPopoverOpen}
-        popoverOpen={popoverOpen}
-        clickRefPop={clickRefPop}
-        anchorPopper={anchorPopper}
-      /> */}
-    </div>
+    </React.Fragment>
   );
 };

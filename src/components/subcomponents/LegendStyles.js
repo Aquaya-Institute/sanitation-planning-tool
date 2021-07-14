@@ -26,8 +26,8 @@ export const legendStyles = [
   },
   {
     name: "Reliance on Unimproved Sanitation",
-    style_pixel: `#layer {polygon-fill: ramp([s_unimp], (#335c67, #fff3b0, #e09f3e, #9e2a2b, #540b0e), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([s_unimp], (#335c67, #fff3b0, #e09f3e, #9e2a2b, #540b0e), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([s_unimp], (#335c67, #fff3b0, #e09f3e, #9e2a2b, #540b0e), quantiles);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([s_unimp], (#335c67, #fff3b0, #e09f3e, #9e2a2b, #540b0e), quantiles);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name: "Reliance on Unimproved Drinking Water",
@@ -61,8 +61,8 @@ export const legendStyles = [
   },
   {
     name: "Population Estimate",
-    style_pixel: `#layer {polygon-fill: ramp([pop], (#355070, #6d597a, #b56576, #e56b6f, #eaac8b), quantiles);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([pop], (#355070, #6d597a, #b56576, #e56b6f, #eaac8b), quantiles);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([pop], (#355070, #6d597a, #b56576, #e56b6f, #eaac8b), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([pop], (#355070, #6d597a, #b56576, #e56b6f, #eaac8b), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name: "Relative Wealth Index",

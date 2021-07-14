@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import { Container, Typography, Box, Paper } from "@material-ui/core";
 // import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
@@ -15,15 +16,28 @@ document.getElementsByTagName("head")[0].appendChild(link);
 //     textAlign: "left",
 //   },
 // }));
+
 function FAQ() {
   // const classes = useStyles();
   return (
-    <>
+    <React.Fragment>
+      <Helmet>
+        <html lang="en" />
+        <title>Frequently Asked Questions</title>
+        <meta
+          name="FAQ"
+          content="Frequently asked questions and guidance for use of the interactive maps."
+        />
+      </Helmet>
       <Container m={2}>
-        <br />
+        <Box mt={3} mb={2} id="FAQtitle">
+          <Typography variant="h5" color="primary" component="h1">
+            FREQUENTLY ASKED QUESTIONS
+          </Typography>
+        </Box>
         <Paper elevation={0}>
           <Box p={2}>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h2">
               What do I do if I find a bug, or have a recommendation or comment
               about the tool?
             </Typography>
@@ -31,7 +45,7 @@ function FAQ() {
             Please email any issues or comments to admin@URL.org
           </Box>
           <Box p={2}>
-            <Typography variant="h6" color="secondary" p={2}>
+            <Typography variant="h6" color="secondary" p={2} component="h2">
               When will my country be available?
             </Typography>
             <br />
@@ -40,7 +54,7 @@ function FAQ() {
             to make it a priority as opportunities become available.
           </Box>
           <Box p={2}>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h2">
               How can I add my program data to the tool?
             </Typography>
             <br />
@@ -54,7 +68,7 @@ function FAQ() {
             coordinate reference system.
           </Box>
           <Box p={2}>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h2">
               Why can I not see government data? Can I see if the community is
               ODF certified?
             </Typography>
@@ -67,14 +81,14 @@ function FAQ() {
             map.
           </Box>
           <Box p={2}>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h2">
               Why do some grid cells appear to be missing?
             </Typography>
             <br />
             Missing grid cells represent areas with insufficient data.
           </Box>
           <Box p={2}>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h2">
               Why do urban, rural mixed and rural on-road areas appear so much
               larger at 5km than they do at 1km?
             </Typography>
@@ -89,7 +103,7 @@ function FAQ() {
             misinterpreted as strictly rural remote.
           </Box>
           <Box p={2}>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h2">
               What is an estimated settlement area, and how does that relate to
               actual communities?
             </Typography>
@@ -103,7 +117,7 @@ function FAQ() {
             proximity could be enveloped in one settlement.
           </Box>
           <Box p={2}>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h2">
               Why are names not included on each settlement?
             </Typography>
             <br />
@@ -113,7 +127,7 @@ function FAQ() {
             names to the settlement areas based on location.
           </Box>
           <Box p={2}>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h2">
               Why do I need to opt in to the settlements layer?
             </Typography>
             <br />
@@ -133,7 +147,7 @@ function FAQ() {
             validated.
           </Box>
           <Box p={2}>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="secondary" component="h2">
               How do I interpret the data presented in the partial grid cells?
             </Typography>
             <br />
@@ -150,7 +164,7 @@ function FAQ() {
         </Paper>
       </Container>
       <HomeFooter />
-    </>
+    </React.Fragment>
   );
 }
 export default FAQ;

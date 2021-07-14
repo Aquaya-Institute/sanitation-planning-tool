@@ -12,6 +12,8 @@ import { cambodia } from "./countries/cambodia";
 import { s_sudan } from "./countries/s_sudan";
 import { ethiopia } from "./countries/ethiopia";
 import { mozambique } from "./countries/mozambique";
+// import { senegal } from "./countries/senegal";
+
 enableMapSet();
 const legendStylesObj = legendStyles;
 //this is the "global map state". this is where state is maintained and updated
@@ -30,6 +32,7 @@ const initialState = {
     rwanda,
     nigeria,
     s_sudan,
+    // senegal,
   },
   currentLayerID: "2",
   activeLegend: "0",
@@ -39,6 +42,7 @@ const initialState = {
   skip: true,
   selectedDistName: [],
   highlightLayer: null,
+  highlightBoundary: null,
   settlementBoundary: null,
   showSettlements: false,
   allowSettlements: false,
@@ -558,6 +562,11 @@ const reducer = (state, action) => {
     case "dropdown.highlight":
       return produce(state, (draft) => {
         draft.highlightLayer = action.highlightLayer;
+      });
+
+    case "boundary.highlight":
+      return produce(state, (draft) => {
+        draft.highlightBoundary = action.highlightBoundary;
       });
 
     case "settlement.boundary":

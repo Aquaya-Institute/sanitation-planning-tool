@@ -134,7 +134,7 @@ const Tour = () => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <Button
         justify="center"
         startIcon={<MapIcon />}
@@ -165,7 +165,7 @@ const Tour = () => {
           last: "End tour",
         }}
       />
-    </>
+    </React.Fragment>
   );
 };
 
