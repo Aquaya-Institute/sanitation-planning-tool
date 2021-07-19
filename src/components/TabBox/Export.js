@@ -481,7 +481,8 @@ export const Export = () => {
                     fontSize={16}
                     color="#BA0C2F"
                   >
-                    {downloadUpload.length} uploaded locations
+                    {/* {downloadUpload.length} uploaded locations */}
+                    all uploaded locations
                   </Box>{" "}
                   in{" "}
                   <Box
