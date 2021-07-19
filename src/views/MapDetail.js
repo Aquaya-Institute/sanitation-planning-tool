@@ -31,12 +31,10 @@ function MapDetail() {
         <title>{id} Map Page</title>
         <meta name={id + " Map"} content={"Interactive map of " + id} />
       </Helmet>
-      {/* <Grid item  style={{boxShadow:"0px 0px 10px black", zIndex: 1100}}> */}
       <Grid item>
         <MapMenu />
       </Grid>
       <Grid item xs={true} md={true} lg={true}>
-        {/* <NoDataAlert /> */}
         <Map />
       </Grid>
     </Grid>

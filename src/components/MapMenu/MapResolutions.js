@@ -34,6 +34,7 @@ export const MapResolutions = ({
   setFilterMenuOpen,
   cat,
   setSelectedMenu,
+  tabIndex,
 }) => {
   const [{ maps, currentMapID, currentLayerID }, dispatch] =
     useContext(MapContext);
@@ -92,6 +93,7 @@ export const MapResolutions = ({
   return (
     <Popper
       // id={cat + "filterMenu"}
+      autoFocus={true}
       ref={clickRefMenu}
       key={cat + "filterMenu"}
       anchorEl={anchorEl}
@@ -111,9 +113,9 @@ export const MapResolutions = ({
       }}
     >
       {mapID && (
-        <Box p={2}>
-          <FormControl component="fieldset" key="fieldset">
-            <FormLabel component="legend" key="legend">
+        <Box p={2} autoFocus={true}>
+          <FormControl component="fieldset" key="fieldset" autoFocus={true}>
+            <FormLabel component="legend" key="legend" autoFocus={true}>
               <Box
                 pb={1}
                 fontStyle="italic"
@@ -127,8 +129,9 @@ export const MapResolutions = ({
               </Box>
             </FormLabel>
             {mapID && (
-              <Box pl={1}>
+              <Box pl={1} autoFocus={true}>
                 <RadioGroup
+                  // tabIndex={1}
                   // p={1}
                   aria-label="Map resolution options"
                   name="resolutionSelector"
@@ -147,10 +150,15 @@ export const MapResolutions = ({
                   }}
                   className="tour-scale"
                   key="radioLabel"
+                  // autoFocus
                 >
                   <FormControlLabel
                     value="1"
-                    control={<Radio />}
+                    control={
+                      <Radio
+                      // tabIndex={tabIndex}
+                      />
+                    }
                     label="1x1km areas (Rural Typology layer only)"
                     classes={{
                       label: classes.checkboxLabel,
@@ -160,7 +168,11 @@ export const MapResolutions = ({
                   />
                   <FormControlLabel
                     value="2"
-                    control={<Radio />}
+                    control={
+                      <Radio
+                      // tabIndex={tabIndex}
+                      />
+                    }
                     label="5x5km areas"
                     classes={{
                       label: classes.checkboxLabel,
@@ -170,7 +182,11 @@ export const MapResolutions = ({
                   />
                   <FormControlLabel
                     value="3"
-                    control={<Radio />}
+                    control={
+                      <Radio
+                      // tabIndex={tabIndex}
+                      />
+                    }
                     label={
                       maps[mapID].layers["3"].name === "County"
                         ? "Counties"

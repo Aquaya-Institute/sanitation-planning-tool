@@ -58,6 +58,7 @@ export const DropdownMenu = ({
   setFilterMenuOpen,
   cat,
   setSelectedMenu,
+  tabIndex,
 }) => {
   const [
     {
@@ -85,6 +86,7 @@ export const DropdownMenu = ({
     if (currentMapID !== mapID) {
       console.log(currentMapID);
       setMapID(currentMapID);
+      // document.getElementById("select-areas-mutiple-checkbox").focus();
     }
   }, [currentMapID, mapID]);
 
@@ -118,36 +120,46 @@ export const DropdownMenu = ({
 
   function filterPopulatedPlacesByCountry(distName) {
     let query = null;
-    let query2 = null;
+    // let query2 = null;
     if (distName.length > 0) {
       query = `SELECT * FROM ${
-        maps[mapID].layers["2"].carto_tableName
+        maps[mapID].layers[currentLayerID].carto_tableName
       } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
-      query2 = `SELECT * FROM ${
-        maps[mapID].layers["3"].carto_tableName
-      } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
+      // query2 = `SELECT * FROM ${
+      //   maps[mapID].layers["3"].carto_tableName
+      // } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
     } else {
-      query = `SELECT * FROM ${maps[mapID].layers["2"].carto_tableName}`;
-      query2 = `SELECT * FROM ${maps[mapID].layers["3"].carto_tableName}`;
+      // query = `SELECT * FROM ${
+      //   maps[mapID].layers["2"].carto_tableName
+      // } WHERE ${column} IN (${allDistricts
+      //   .map((x) => "'" + x + "'")
+      //   .toString()})`;
+      // query2 = `SELECT * FROM ${
+      //   maps[mapID].layers["3"].carto_tableName
+      // } WHERE ${column} IN (${allDistricts
+      //   .map((x) => "'" + x + "'")
+      //   .toString()})`;
+      query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
+      // query2 = `SELECT * FROM ${maps[mapID].layers["3"].carto_tableName}`;
     }
     // const source = new Carto.source.SQL(
     //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`
     // );
     // source.setQuery(query);
-    currentCountry["2"].source.setQuery(query);
-    // currentCountry["2"].query = query;
-    currentCountry["2"].layer.getSource().setQuery(query);
-    currentCountry["3"].source.setQuery(query2);
-    // currentCountry["3"].query = query;
-    currentCountry["3"].layer.getSource().setQuery(query2);
-    // if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
-    //   currentCountry[currentLayerID].source.setQuery(query);
-    //   currentCountry[currentLayerID].layer.getSource().setQuery(query);
-    //   dispatch({
-    //     type: "layer.queryDist",
-    //     queryDist: query,
-    //   });
-    // }
+    // currentCountry["2"].source.setQuery(query);
+    // // currentCountry["2"].query = query;
+    // currentCountry["2"].layer.getSource().setQuery(query);
+    // currentCountry["3"].source.setQuery(query2);
+    // // currentCountry["3"].query = query;
+    // currentCountry["3"].layer.getSource().setQuery(query2);
+    if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
+      currentCountry[currentLayerID].source.setQuery(query);
+      currentCountry[currentLayerID].layer.getSource().setQuery(query);
+      dispatch({
+        type: "layer.queryDist",
+        queryDist: query,
+      });
+    }
   }
 
   useEffect(() => {
@@ -206,7 +218,8 @@ export const DropdownMenu = ({
 
   return (
     <Popper
-      // id={cat + "filterMenu"}
+      id={"popperDrop"}
+      // tabIndex={-1}
       ref={clickRefMenu}
       key={cat + "filterMenu"}
       anchorEl={anchorEl}
@@ -259,21 +272,29 @@ export const DropdownMenu = ({
 
                 <Select
                   //   native={true}
+                  // tabIndex={1}
+
                   labelId="select-areas-mutiple-checkbox-label"
                   id="select-areas-mutiple-checkbox"
                   inputProps={{ "aria-label": "select-areas-mutiple-checkbox" }}
                   multiple
                   value={distName}
                   onChange={handleChange}
-                  input={<Input />}
+                  input={<Input autoFocus tabIndex="-1" />}
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                   className={classes.formControl}
                 >
                   {allDistricts.map((name, i) => (
-                    <MenuItem key={i} value={name} className={classes.menu}>
+                    <MenuItem
+                      // tabIndex={tabIndex}
+                      key={i}
+                      value={name}
+                      className={classes.menu}
+                    >
                       <Checkbox
                         checked={distName.indexOf(name) > -1}
+                        // tabIndex={tabIndex}
                         inputProps={{ "aria-label": "area-name-checkbox" }}
                       />
                       <ListItemText primary={name} />
@@ -281,6 +302,7 @@ export const DropdownMenu = ({
                   ))}
                 </Select>
                 <button
+                  tabindex="0"
                   onClick={() => {
                     setDistName([]);
                     dispatch({

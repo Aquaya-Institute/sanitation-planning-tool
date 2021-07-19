@@ -46,11 +46,11 @@ export const UploadButton = () => {
       maps,
       currentMapID,
       settlementBoundary,
-      currentCountry,
+      // currentCountry,
       // carto_client,
       // queries,
       // currentLayerID,
-      // showSettlements,
+      showSettlements,
       allowSettlements,
       // leafletMap,
     },
@@ -110,46 +110,14 @@ export const UploadButton = () => {
 
   return (
     <React.Fragment>
-      <Box
-        p={1}
-        fontStyle="italic"
-        fontWeight="fontWeightBold"
-        fontSize={13.5}
-        variant="subtitle2"
-        style={{ color: "black" }}
-        key="rightBoxSubtitle"
-      >
-        Upload a CSV file of GPS coordinates to display them on the map:
-      </Box>
-      <Box style={{ fontSize: 12 }} pl={1} pb={1}>
-        To plot communitiy locations, create a CSV file with at minimum 2
-        specific columns, 1) Latitiude, and 2) Longitude. Other columns
-        including community name or identifiers may also be included.
-      </Box>
-      <CSVLink
-        data={template}
-        filename={"SPT_Upload_Template.csv"}
-        style={{ fontSize: 13 }}
-      >
-        DOWNLOAD TEMPLATE UPLOAD FORM
-      </CSVLink>
-      <input
-        className="upload-input"
-        type="file"
-        name="file"
-        placeholder={state}
-        onChange={handleChange}
-      />
-      <button onClick={importCSV}>Upload</button>
-      <button onClick={removeCSV}>Remove</button>
-      <Divider />
       {mapID && (
         <React.Fragment>
           {" "}
           {maps[mapID].layers["4"] && (
             <React.Fragment>
               <Box
-                p={1}
+                pt={1}
+                pb={1}
                 fontStyle="italic"
                 fontWeight="fontWeightBold"
                 fontSize={13.5}
@@ -162,15 +130,18 @@ export const UploadButton = () => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={showLayer}
+                    checked={showSettlements}
                     onChange={() => {
-                      if (showLayer === false && allowSettlements === false) {
+                      if (
+                        showSettlements === false &&
+                        allowSettlements === false
+                      ) {
                         setPopoverOpen(true);
                       } else {
-                        setShowLayer(!showLayer);
+                        setShowLayer(!showSettlements);
                         dispatch({
                           type: "show.settlements",
-                          showSettlements: !showLayer,
+                          showSettlements: !showSettlements,
                         });
                         if (showLayer === false) {
                           if (settlementBoundary) {
@@ -297,6 +268,42 @@ export const UploadButton = () => {
           )}
         </React.Fragment>
       )}
+      <Divider />
+      <Box
+        pt={1}
+        pb={1}
+        fontStyle="italic"
+        fontWeight="fontWeightBold"
+        fontSize={13.5}
+        variant="subtitle2"
+        style={{ color: "black" }}
+        key="rightBoxSubtitle"
+      >
+        Upload a CSV file of GPS coordinates to display them on the map:
+      </Box>
+      <Box style={{ fontSize: 12 }} pt={1} pb={1}>
+        To plot communitiy locations, create a CSV file with at minimum 2
+        specific columns, 1) Latitiude, and 2) Longitude. Other columns
+        including community name or identifiers may also be included.
+        Coordinates within the CSV file should be in WGS84 (ESPG:4326)
+        coordinate reference system.
+      </Box>
+      <CSVLink
+        data={template}
+        filename={"SPT_Upload_Template.csv"}
+        style={{ fontSize: 13 }}
+      >
+        DOWNLOAD TEMPLATE UPLOAD FORM
+      </CSVLink>
+      <input
+        className="upload-input"
+        type="file"
+        name="file"
+        placeholder={state}
+        onChange={handleChange}
+      />
+      <button onClick={importCSV}>Upload</button>
+      <button onClick={removeCSV}>Remove</button>
     </React.Fragment>
   );
 };

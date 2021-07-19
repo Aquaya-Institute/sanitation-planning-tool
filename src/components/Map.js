@@ -9,6 +9,7 @@ import { legendStyles } from "./subcomponents/LegendStyles";
 import { MapPopper } from "./subcomponents/MapPopper";
 import { Legend } from "./subcomponents/Legend";
 import NoDataAlert from "./subcomponents/NoDataAlert";
+import { MapMenu } from "./MapMenu/MapMenu";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -784,6 +785,7 @@ export const Map = () => {
         className="tour-map"
         alt={"map of " + mapID + " which can be manipulated by the site user"}
       ></div>
+      {/* <MapMenu /> */}
       {/* Popup */}
       {popupData && (
         <MapPopper

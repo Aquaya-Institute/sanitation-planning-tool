@@ -52,6 +52,8 @@ function TabPanel(props) {
         // borderTop: "1.5px solid #CFCDC9",
         borderLeft: "1.5px solid #CFCDC9",
         display: hidden ? "none" : "block",
+        overflow: "auto",
+        maxHeight: "300px",
       }}
       className={classes.root}
       {...other}

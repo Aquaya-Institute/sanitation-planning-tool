@@ -176,7 +176,12 @@ export const MapPopper = ({
           }}
         >
           <div className={classes.paper}>
-            <Grid container justify="flex-end" pt={2} key={"popperHeader"}>
+            <Grid
+              container
+              justifyContent="flex-end"
+              pt={2}
+              key={"popperHeader"}
+            >
               <CloseIcon
                 key={"popperClose"}
                 fontSize="small"
@@ -272,7 +277,7 @@ export const MapPopper = ({
             >
               {/* <Fade in={popoverOpen}>
                   <div className={classes.popover}> */}
-              <Grid container justify="flex-end" key={"popoverHeader"}>
+              <Grid container justifyContent="flex-end" key={"popoverHeader"}>
                 <CloseIcon
                   key={"popoverClose"}
                   fontSize="small"

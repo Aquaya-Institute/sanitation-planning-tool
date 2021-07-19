@@ -36,7 +36,7 @@ function createMarks(array) {
   return returnedTarget;
 }
 
-const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
+const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
   const [{ currentMapID, currentLayerID, currentCountry }, dispatch] =
     React.useContext(MapContext);
   const classes = useStyles();
@@ -96,7 +96,11 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
           {filter.subcategory === cat && filter.type !== "none" && (
             <List key="filterList">
               {filter.type === "categorical" ? (
-                <ListItem key={"cat" + filterIndex} className={classes.nested}>
+                <ListItem
+                  key={"cat" + filterIndex}
+                  className={classes.nested}
+                  // tabIndex={tabIndex}
+                >
                   <Grid
                     container
                     spacing={0}
@@ -110,7 +114,12 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         {filter.name} {filter.unit}
                       </Typography>
                     </Grid>
-                    <Grid item xs={1} key={"catSubHeader4" + filterIndex}>
+                    <Grid
+                      item
+                      xs={1}
+                      key={"catSubHeader4" + filterIndex}
+                      // tabIndex={tabIndex}
+                    >
                       <DatasetInfoPopover
                         filter={filter}
                         filterIndex={filterIndex}
@@ -127,9 +136,11 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                       >
                         {filter.value.map((category, cat_filter_index) => (
                           <FormControlLabel
+                            // tabIndex={tabIndex}
                             key={cat_filter_index + "_formcontrol"}
                             control={
                               <Checkbox
+                                // tabIndex={tabIndex}
                                 key={cat_filter_index + "_box"}
                                 checked={category.checked}
                                 name={category.name}
@@ -168,8 +179,9 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
               ) : filter.type === "range" ? (
                 <ListItem
                   key={"range" + filterIndex}
-                  button
+                  // button
                   className={classes.nested}
+                  // tabIndex={tabIndex}
                 >
                   <Grid
                     container
@@ -184,7 +196,12 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         {filter.name} ({filter.unit})
                       </Typography>
                     </Grid>
-                    <Grid item xs={1} key={"rangeSubHeader4" + filterIndex}>
+                    <Grid
+                      item
+                      xs={1}
+                      key={"rangeSubHeader4" + filterIndex}
+                      // tabIndex={tabIndex}
+                    >
                       <DatasetInfoPopover
                         filter={filter}
                         filterIndex={filterIndex}
@@ -194,6 +211,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                     </Grid>
                     <Grid item xs={11} key={"sliderGrid" + filterIndex}>
                       <Slider
+                        // tabIndex={tabIndex}
                         id={filterIndex}
                         key={"slider" + filterIndex}
                         value={[
@@ -204,7 +222,8 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         max={filter.max}
                         aria-labelledby={filter.name + " range slider"}
                         valueLabelDisplay="auto"
-                        aria-valuetext={`${filter.value[0]}, ${filter.value[1]}`}
+                        getAriaValueText={(value) => `${value}`}
+                        // getAriaValueText={`${filter.value[0]}, ${filter.value[1]}`}
                         marks={createMarks([
                           Number(filter.min),
                           Number(filter.max),
@@ -224,8 +243,9 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
               ) : (
                 <ListItem
                   key={"NLrange" + filterIndex}
-                  button
+                  // button
                   className={classes.nested}
+                  // tabIndex={tabIndex}
                 >
                   <Grid
                     container
@@ -240,7 +260,12 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         {filter.name} ({filter.unit})
                       </Typography>
                     </Grid>
-                    <Grid item xs={1} key={"NLrangeSubHeader4" + filterIndex}>
+                    <Grid
+                      item
+                      xs={1}
+                      key={"NLrangeSubHeader4" + filterIndex}
+                      // tabIndex={tabIndex}
+                    >
                       <DatasetInfoPopover
                         filter={filter}
                         filterIndex={filterIndex}
@@ -250,6 +275,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                     </Grid>
                     <Grid item xs={11} key={"NLsliderGrid" + filterIndex}>
                       <SliderNonLinear
+                        // tabIndex={tabIndex}
                         id={filterIndex}
                         key={"slider" + filterIndex}
                         value={[
@@ -260,7 +286,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         max={filter.max}
                         aria-labelledby={filter.name + " non-linear slider"}
                         valueLabelDisplay="auto"
-                        aria-valuetext={`${filter.scaledValue[0]}, ${filter.scaledValue[1]}`}
+                        getAriaValueText={(value) => `${value}`}
                         marks={filter.marks}
                         callback={(e, newval, scaledVal) => {
                           updateFilter({

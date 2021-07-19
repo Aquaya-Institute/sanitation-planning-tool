@@ -13,6 +13,7 @@ const FilterMenu = ({
   cat,
   setSelectedMenu,
   layerID,
+  tabIndex,
 }) => {
   const [menuTileColor, setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
@@ -139,6 +140,7 @@ const FilterMenu = ({
           cat={cat}
           layerID={layerID}
           clickRefData={clickRefData}
+          // tabIndex={tabIndex}
           // setPopoverOpen={setPopoverOpen}
         />
       </Box>
