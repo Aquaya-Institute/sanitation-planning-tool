@@ -1,12 +1,6 @@
 import * as React from "react";
 import { MapContext } from "../../state/MapState";
-import {
-  Box,
-  Typography,
-  Button,
-  ListItemText,
-  ListItemIcon,
-} from "@material-ui/core";
+import { Box, Typography, ListItemText, ListItemIcon } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
 import WashIcon from "../../images/wash.png";
@@ -22,7 +16,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import FilterMenu from "./FilterMenu";
 import Tour from "../subcomponents/Tour";
-import theme from "../../theme/theme";
+// import theme from "../../theme/theme";
 import Badge from "@material-ui/core/Badge";
 import { MapResolutions } from "./MapResolutions";
 import { DropdownMenu } from "./DropdownMenu";
@@ -52,9 +46,6 @@ const useStyles = makeStyles((theme) => ({
     align: "center",
   },
   item: {
-    // fontSize: "13",
-    // padding: 0,
-    // textAlign: "left",
     "& span, & svg": {
       fontSize: 12.5,
       padding: 0,
@@ -213,7 +204,6 @@ export const MapMenu = () => {
               </Button>
             </Box> */}
               {selectedMenu === 4 && (
-                // <div tabindex="1">
                 <MapResolutions
                   anchorEl={anchorEl}
                   filterMenuOpen={filterMenuOpen}
@@ -222,7 +212,6 @@ export const MapMenu = () => {
                   setSelectedMenu={setSelectedMenu}
                   // tabIndex={1}
                 />
-                // </div>
               )}
             </ListItem>
             {mapID && (

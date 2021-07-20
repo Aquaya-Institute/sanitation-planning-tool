@@ -13,7 +13,7 @@ const FilterMenu = ({
   cat,
   setSelectedMenu,
   layerID,
-  tabIndex,
+  // tabIndex,
 }) => {
   const [menuTileColor, setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
@@ -49,6 +49,13 @@ const FilterMenu = ({
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, [setFilterMenuOpen, setSelectedMenu]);
+
+  useEffect(() => {
+    // document.getElementById("filterBox").focus();
+    if (clickRefMenu.current) {
+      clickRefMenu.current.focus();
+    }
+  }, []);
 
   return (
     <Popper
@@ -107,6 +114,7 @@ const FilterMenu = ({
           maxHeight: "400px",
           overflow: "auto",
         }}
+        id="filterBox"
       >
         <Box
           key="filter instructions"

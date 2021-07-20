@@ -5,7 +5,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { UploadButton } from "./UploadButton";
-// import { MapResolutions } from "../MapMenu/MapResolutions";
 import { Export } from "./Export";
 import theme from "../../theme/theme";
 import clsx from "clsx";
@@ -23,9 +22,6 @@ const useStyles = makeStyles((theme) => ({
     width: width / 2,
     minWidth: 50,
     fontSize: 12,
-  },
-  indicator: {
-    backgroundColor: "transparent",
   },
 }));
 
@@ -112,6 +108,7 @@ export default function FullWidthTabs() {
           <Tab
             className={clsx(classes.tab, "tour-upload")}
             label="Settlements/ Communities"
+            tabIndex={0}
             {...a11yProps(0)}
             style={{
               borderBottom: "1px solid #CFCDC9",
@@ -129,6 +126,7 @@ export default function FullWidthTabs() {
           <Tab
             className={clsx(classes.tab, "tour-export")}
             label="Data Export"
+            tabIndex={0}
             {...a11yProps(1)}
             style={{
               borderBottom: "1px solid #CFCDC9",

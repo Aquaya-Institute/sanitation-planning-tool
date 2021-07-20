@@ -12,20 +12,6 @@ const useStyles = makeStyles((theme) => ({
   checkboxLabel: {
     fontSize: 13,
   },
-  formControl: {
-    margin: theme.spacing(0),
-    minWidth: 200,
-    maxWidth: 275,
-  },
-  menu: {
-    height: "25px",
-  },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "scroll",
-  },
 }));
 
 export const MapResolutions = ({
@@ -42,8 +28,9 @@ export const MapResolutions = ({
   const classes = useStyles();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
-  const [setPopoverOpen] = useState(false);
+  // const [setPopoverOpen] = useState(false);
   const clickRef = useRef(null);
+  const radioRef = useRef();
 
   useEffect(() => {
     if (currentMapID !== mapID) {
@@ -63,7 +50,7 @@ export const MapResolutions = ({
       ) {
         console.log("clicked outside");
         if (clickRef.current && !clickRef.current.contains(event.target)) {
-          setPopoverOpen(null);
+          // setPopoverOpen(null);
           console.log("clicked outside");
         } else if (
           clickRef.current &&
@@ -89,6 +76,12 @@ export const MapResolutions = ({
       newLayerID: currentLayerID,
     });
   };
+
+  useEffect(() => {
+    if (radioRef.current) {
+      radioRef.current.focus();
+    }
+  }, []);
 
   return (
     <Popper
@@ -154,8 +147,10 @@ export const MapResolutions = ({
                 >
                   <FormControlLabel
                     value="1"
+                    inputRef={radioRef}
                     control={
                       <Radio
+
                       // tabIndex={tabIndex}
                       />
                     }
@@ -170,6 +165,7 @@ export const MapResolutions = ({
                     value="2"
                     control={
                       <Radio
+
                       // tabIndex={tabIndex}
                       />
                     }

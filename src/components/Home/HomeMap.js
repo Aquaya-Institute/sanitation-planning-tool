@@ -25,6 +25,7 @@ const MapChart = () => {
       obj["markerOffset"] = -28;
       obj["name"] = `${value.name}`;
       obj["coordinates"] = [`${value.long}`, `${value.lat}`];
+      obj["key"] = `${key}`;
       markers.push(obj);
       countries.push(value.name);
     }
@@ -54,7 +55,14 @@ const MapChart = () => {
                 stroke="#D6D6DA"
                 onClick={() => {
                   if (cur) {
-                    history.push(`/maps/${cur.toLowerCase()}`);
+                    var mapID;
+                    for (let i = 0; i < countries.length; i++) {
+                      if (markers[i].name === cur) {
+                        mapID = markers[i].key;
+                        break;
+                      }
+                    }
+                    history.push(`/maps/${mapID.toLowerCase()}`);
                   }
                 }}
                 style={{

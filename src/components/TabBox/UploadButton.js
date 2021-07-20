@@ -1,7 +1,14 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Papa from "papaparse";
-import { Box, Divider, Typography, Dialog, Grid } from "@material-ui/core";
+import {
+  Box,
+  Divider,
+  Typography,
+  Dialog,
+  Grid,
+  IconButton,
+} from "@material-ui/core";
 import { MapContext } from "../../state/MapState";
 import { CSVLink } from "react-csv";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -30,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    overflow: "scroll",
+    // overflow: "scroll",
   },
 }));
 
@@ -109,7 +116,7 @@ export const UploadButton = () => {
   }, [currentMapID]);
 
   return (
-    <React.Fragment>
+    <div id="upload-div">
       {mapID && (
         <React.Fragment>
           {" "}
@@ -128,8 +135,10 @@ export const UploadButton = () => {
               </Box>
 
               <FormControlLabel
+                autoFocus
                 control={
                   <Checkbox
+                    autoFocus
                     checked={showSettlements}
                     onChange={() => {
                       if (
@@ -185,15 +194,16 @@ export const UploadButton = () => {
                 }}
                 scroll={"paper"}
               >
-                <Grid container justify="flex-end" key={"popoverHeader"}>
-                  <CloseIcon
+                <Grid container justifyContent="flex-end" key={"popoverHeader"}>
+                  <IconButton
                     key={"popoverClose"}
-                    fontSize="small"
-                    color="disabled"
+                    color="default"
                     onClick={(e) => {
                       setPopoverOpen(false);
                     }}
-                  />
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
                 </Grid>
                 <DialogTitle>Estimated Settlements Layer (Beta)</DialogTitle>
                 <DialogContent dividers={scroll === "paper"}>
@@ -304,6 +314,6 @@ export const UploadButton = () => {
       />
       <button onClick={importCSV}>Upload</button>
       <button onClick={removeCSV}>Remove</button>
-    </React.Fragment>
+    </div>
   );
 };

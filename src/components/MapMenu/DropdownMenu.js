@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useContext,
-  useMemo,
-  useRef,
-  useLayoutEffect,
-} from "react";
+import { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import { Box, Popper } from "@material-ui/core";
@@ -302,7 +295,7 @@ export const DropdownMenu = ({
                   ))}
                 </Select>
                 <button
-                  tabindex="0"
+                  tabIndex="0"
                   onClick={() => {
                     setDistName([]);
                     dispatch({

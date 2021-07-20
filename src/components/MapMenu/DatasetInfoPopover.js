@@ -4,10 +4,17 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import CloseIcon from "@material-ui/icons/Close";
-import theme from "../../theme/theme";
+// import theme from "../../theme/theme";
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Card, CardContent, Button } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  Card,
+  CardContent,
+  Button,
+  IconButton,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -21,6 +28,15 @@ const useStyles = makeStyles((theme) => ({
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(1, 1, 1, 1),
     backgroundColor: theme.palette.background.default,
+  },
+  icon: {
+    color: "#a8a8a8",
+    "&:focus": {
+      color: theme.palette.secondary.main,
+    },
+    "&:hover": {
+      color: theme.palette.secondary.main,
+    },
   },
 }));
 
@@ -236,7 +252,6 @@ const datasetsInfo = [
 
 const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const [hover, setHover] = useState(false);
   // const clickRefData = useRef(null);
   const classes = useStyles();
   const [datasetName, setDatasetName] = useState();
@@ -256,23 +271,31 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
   }, [datasetName]);
   return (
     <React.Fragment>
-      <InfoOutlinedIcon
-        fontSize="small"
+      <IconButton
+        autoFocus={
+          filterIndex === 0
+            ? true
+            : filterIndex === 1
+            ? true
+            : filterIndex === 3
+            ? true
+            : filterIndex === 7
+            ? true
+            : false
+        }
+        className={classes.icon}
+        p={0}
+        // disableRipple={true}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
           setPopoverOpen(true);
           setDatasetName(filter.name);
-          // setPopup(null);
         }}
-        onMouseEnter={() => {
-          setHover(true);
-        }}
-        onMouseLeave={() => {
-          setHover(false);
-        }}
-        style={{ color: hover ? theme.palette.secondary.main : "#a8a8a8" }}
-      />
+      >
+        <InfoOutlinedIcon fontSize="small" />
+      </IconButton>
+
       <Modal
         ref={clickRefData}
         aria-labelledby="Popup containing details of the selected dataset"
@@ -291,15 +314,24 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
       >
         <Fade in={popoverOpen}>
           <div className={classes.popover}>
-            <Grid container justify="flex-end" pt={2} key={"popoverHeader"}>
-              <CloseIcon
+            <Grid
+              container
+              justifyContent="flex-end"
+              pt={2}
+              key={"popoverHeader"}
+            >
+              <IconButton
                 key={"popoverClose"}
+                p={0}
                 fontSize="small"
-                color="disabled"
+                color="default"
                 onClick={(e) => {
                   setPopoverOpen(false);
                 }}
-              />
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+
               {selectedDataset && (
                 <Card className={classes.root} elevation={0}>
                   <CardContent>

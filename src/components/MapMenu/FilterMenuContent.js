@@ -40,7 +40,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
   const [{ currentMapID, currentLayerID, currentCountry }, dispatch] =
     React.useContext(MapContext);
   const classes = useStyles();
-
+  const filterRefcat = React.useRef();
   const updateFilter = ({
     layerIndex,
     filterIndex,
@@ -89,6 +89,12 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
     });
   };
 
+  // React.useEffect(() => {
+  //   if (filterRefcat.current) {
+  //     filterRefcat.current.focus();
+  //   }
+  // }, []);
+
   return (
     <React.Fragment key="filterListDiv">
       {currentCountry[currentLayerID].filters.map((filter, filterIndex) => (
@@ -103,10 +109,10 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                 >
                   <Grid
                     container
-                    spacing={0}
                     key={"catSubHeader" + filterIndex}
+                    alignItems="center"
                   >
-                    <Grid item xs={11} key={"catSubHeader2" + filterIndex}>
+                    <Grid item xs={10} key={"catSubHeader2" + filterIndex}>
                       <Typography
                         variant="subtitle2"
                         key={"catSubHeader3" + filterIndex}
@@ -116,7 +122,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                     </Grid>
                     <Grid
                       item
-                      xs={1}
+                      xs={2}
                       key={"catSubHeader4" + filterIndex}
                       // tabIndex={tabIndex}
                     >
@@ -124,6 +130,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                         filter={filter}
                         filterIndex={filterIndex}
                         clickRefData={clickRefData}
+                        tabIndex={0}
                         // setPopoverOpen={setPopoverOpen}
                       />
                     </Grid>
@@ -140,7 +147,8 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                             key={cat_filter_index + "_formcontrol"}
                             control={
                               <Checkbox
-                                // tabIndex={tabIndex}
+                                // tabIndex={-1}
+                                inputRef={filterRefcat}
                                 key={cat_filter_index + "_box"}
                                 checked={category.checked}
                                 name={category.name}
@@ -187,8 +195,9 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                     container
                     spacing={0}
                     key={"rangeSubHeader" + filterIndex}
+                    alignItems="center"
                   >
-                    <Grid item xs={11} key={"rangeSubHeader2" + filterIndex}>
+                    <Grid item xs={10} key={"rangeSubHeader2" + filterIndex}>
                       <Typography
                         variant="subtitle2"
                         key={"rangeSubHeader3" + filterIndex}
@@ -198,7 +207,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                     </Grid>
                     <Grid
                       item
-                      xs={1}
+                      xs={2}
                       key={"rangeSubHeader4" + filterIndex}
                       // tabIndex={tabIndex}
                     >
@@ -206,12 +215,14 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                         filter={filter}
                         filterIndex={filterIndex}
                         clickRefData={clickRefData}
+                        tabIndex={0}
                         // setPopoverOpen={setPopoverOpen}
                       />
                     </Grid>
                     <Grid item xs={11} key={"sliderGrid" + filterIndex}>
                       <Slider
                         // tabIndex={tabIndex}
+                        tabIndex={-1}
                         id={filterIndex}
                         key={"slider" + filterIndex}
                         value={[
@@ -251,8 +262,9 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                     container
                     spacing={0}
                     key={"NLrangeSubHeader" + filterIndex}
+                    alignItems="center"
                   >
-                    <Grid item xs={11} key={"NLrangeSubHeader2" + filterIndex}>
+                    <Grid item xs={10} key={"NLrangeSubHeader2" + filterIndex}>
                       <Typography
                         variant="subtitle2"
                         key={"NLrangeSubHeader3" + filterIndex}
@@ -262,7 +274,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                     </Grid>
                     <Grid
                       item
-                      xs={1}
+                      xs={2}
                       key={"NLrangeSubHeader4" + filterIndex}
                       // tabIndex={tabIndex}
                     >
@@ -270,12 +282,14 @@ const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
                         filter={filter}
                         filterIndex={filterIndex}
                         clickRefData={clickRefData}
+                        tabIndex={0}
                         // setPopoverOpen={setPopoverOpen}
                       />
                     </Grid>
                     <Grid item xs={11} key={"NLsliderGrid" + filterIndex}>
                       <SliderNonLinear
                         // tabIndex={tabIndex}
+                        tabIndex={-1}
                         id={filterIndex}
                         key={"slider" + filterIndex}
                         value={[
