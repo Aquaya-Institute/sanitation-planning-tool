@@ -1,7 +1,8 @@
+/* accessibility: mui components done*/
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography, Link, Grid } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import HomeLayout from "./HomeLayout";
 import backgroundImage from "../../images/latrinebanner.jpg";
 import usaidLogo from "../../images/usaid-rect.png";
@@ -44,7 +45,13 @@ function ProductHero(props) {
         alt="Two complete and one partial mud and clay latrine superstructures with thatch roofs in Ghana"
       />
 
-      <Typography color="inherit" align="center" variant="h2" marked="center">
+      <Typography
+        color="inherit"
+        align="center"
+        variant="h2"
+        marked="center"
+        component="h1"
+      >
         The Sanitation Planning Tool <br />
         (SanPlan)
       </Typography>
@@ -55,6 +62,7 @@ function ProductHero(props) {
             align="center"
             variant="h6"
             marked="center"
+            component="h2"
           >
             Funded By
           </Typography>
@@ -70,14 +78,24 @@ function ProductHero(props) {
           </a>
         </Grid>
       </div>
-      <Typography color="inherit" variant="h6" className={classes.h5}>
+      <Typography
+        color="inherit"
+        variant="h6"
+        className={classes.h5}
+        component="h3"
+      >
         Use SanPlan to design and execute sanitation programs by exploring
         highly-localized, contextual, spatial data. SanPlan harmonizes data from
         multiple sources so that you can visualize geographic patterns and local
         contexts from anywhere.
       </Typography>
 
-      <Typography variant="body2" color="inherit" className={classes.more}>
+      <Typography
+        variant="body2"
+        color="inherit"
+        className={classes.more}
+        component="h4"
+      >
         <strong>Explore the map tool below.</strong>
       </Typography>
     </HomeLayout>

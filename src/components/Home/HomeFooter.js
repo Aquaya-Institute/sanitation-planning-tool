@@ -1,3 +1,4 @@
+/* accessibility: mui components done*/
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -32,7 +33,6 @@ const styles = (theme) => ({
 
 function ProductHowItWorks(props) {
   const { classes } = props;
-  const preventDefault = (event) => event.preventDefault();
 
   return (
     <section className={classes.root}>
@@ -44,7 +44,7 @@ function ProductHowItWorks(props) {
           Government.
         </Typography>
         <Link component={RouterLink} color="inherit" to="/privacy">
-          <Typography align="left">PRIVACY</Typography>
+          <Typography align="left">PRIVACY POLICY</Typography>
         </Link>
       </Container>
     </section>

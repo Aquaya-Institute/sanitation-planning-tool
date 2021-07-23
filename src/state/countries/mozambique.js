@@ -1,17 +1,17 @@
-export const country = {
-  name: "",
-  mapID: "",
-  lat: null,
-  long: null,
-  zoom: 7,
+export const mozambique = {
+  name: "Mozambique",
+  mapID: "mozambique",
+  lat: -18.6657,
+  long: 35.5296,
+  zoom: 6,
   /* 
-    you can add as many layers for each indicator. 
-    do maintain the same structure for all. 
-    */
+      you can add as many layers for each indicator. 
+      do maintain the same structure for all. 
+      */
   layers: [
     {
       name: "Country Border",
-      carto_tableName: "cc_adm0",
+      carto_tableName: "moz_adm0",
       carto_layer: null /* we will insert carto's layer object here */,
       carto_style: `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1.75; line-color: #000000; line-opacity: 1;}`,
       visible: true,
@@ -19,7 +19,7 @@ export const country = {
     },
     {
       name: "1x1km area",
-      carto_tableName: "cc_class",
+      carto_tableName: "moz_class",
       carto_source: null,
       carto_layer: null /* we will insert carto's layer object here */,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
@@ -62,7 +62,7 @@ export const country = {
     },
     {
       name: "5x5km area",
-      carto_tableName: "CC_multivariable_pixel",
+      carto_tableName: "moz_multivariable_pixel",
       carto_source: null,
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
@@ -107,8 +107,8 @@ export const country = {
           type: "range",
           column_name: "od",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 92,
+          value: [0, 92],
           subcategory: "wash",
         },
         {
@@ -117,8 +117,8 @@ export const country = {
           type: "range",
           column_name: "timecities",
           min: 0,
-          max: 1000,
-          value: [0, 1000],
+          max: 966,
+          value: [0, 966],
           subcategory: "accessibility",
         },
         {
@@ -126,9 +126,9 @@ export const country = {
           unit: "%",
           type: "range",
           column_name: "dia",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 1.4,
+          max: 6.4,
+          value: [1.4, 6.4],
           subcategory: "health",
         },
         {
@@ -137,8 +137,8 @@ export const country = {
           type: "range",
           column_name: "cholera",
           min: 0,
-          max: 1000,
-          value: [0, 1000],
+          max: 1735,
+          value: [0, 1735],
           subcategory: "health",
         },
         {
@@ -147,8 +147,8 @@ export const country = {
           type: "range",
           column_name: "s_unimp",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 90,
+          value: [0, 90],
           subcategory: "wash",
         },
         {
@@ -157,8 +157,8 @@ export const country = {
           type: "range",
           column_name: "w_unimp",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 92,
+          value: [0, 92],
           subcategory: "wash",
         },
         {
@@ -166,9 +166,9 @@ export const country = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_w",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 1,
+          max: 9,
+          value: [1, 9],
           subcategory: "socioeconomic",
         },
         {
@@ -176,9 +176,9 @@ export const country = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_m",
-          min: 0,
+          min: 2,
           max: 10,
-          value: [0, 10],
+          value: [2, 10],
           subcategory: "socioeconomic",
         },
         {
@@ -186,9 +186,9 @@ export const country = {
           unit: "%",
           type: "range",
           column_name: "u5m",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 4.4,
+          max: 9.5,
+          value: [4.4, 9.5],
           subcategory: "health",
         },
         {
@@ -197,8 +197,8 @@ export const country = {
           type: "range",
           column_name: "dr",
           min: 0,
-          max: 50,
-          value: [0, 50],
+          max: 77.3,
+          value: [0, 77.3],
           subcategory: "accessibility",
         },
         {
@@ -207,8 +207,8 @@ export const country = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 182.6,
+          value: [0, 182.6],
           subcategory: "accessibility",
         },
         {
@@ -220,8 +220,8 @@ export const country = {
           max: 70, //we want 7 breaks not counting start value of 0.
           value: [0, 70], //slider range will be from 0-70, which we will scale to
           scaledMin: 0,
-          scaledMax: 500000,
-          scaledValue: [0, 500000], //the actual min/max of column
+          scaledMax: 315786,
+          scaledValue: [0, 315786], //the actual min/max of column
           subcategory: "socioeconomic",
           // define 7+1 non linear marks here, note that value goes from 0-70 only
           marks: [
@@ -262,8 +262,8 @@ export const country = {
             },
             {
               value: 70,
-              scaledValue: 500000,
-              label: "500K",
+              scaledValue: 320000,
+              label: "320K",
             },
           ],
         },
@@ -296,19 +296,19 @@ export const country = {
           subcategory: "accessibility",
         },
         {
-          name: "",
+          name: "Province",
           type: "none",
           column_name: "name_1",
           subcategory: "id",
         },
         {
-          name: "",
+          name: "District",
           type: "none",
           column_name: "name_2",
           subcategory: "id",
         },
         {
-          name: "",
+          name: "Locality",
           type: "none",
           column_name: "name_3",
           subcategory: "id",
@@ -316,8 +316,8 @@ export const country = {
       ],
     },
     {
-      name: "",
-      carto_tableName: "CC_multivariable_dist",
+      name: "Locality",
+      carto_tableName: "moz_multivariable_dist",
       carto_source: null,
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
@@ -361,9 +361,9 @@ export const country = {
           unit: "%",
           type: "range",
           column_name: "od",
-          min: 10,
-          max: 100,
-          value: [10, 100],
+          min: 1,
+          max: 77,
+          value: [1, 77],
           subcategory: "wash",
         },
         {
@@ -372,8 +372,8 @@ export const country = {
           type: "range",
           column_name: "timecities",
           min: 0,
-          max: 500,
-          value: [0, 500],
+          max: 607,
+          value: [0, 607],
           subcategory: "accessibility",
         },
         {
@@ -381,9 +381,9 @@ export const country = {
           unit: "%",
           type: "range",
           column_name: "dia",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 1.7,
+          max: 3.4,
+          value: [1.7, 3.4],
           subcategory: "health",
         },
         {
@@ -392,8 +392,8 @@ export const country = {
           type: "range",
           column_name: "cholera",
           min: 0,
-          max: 1000,
-          value: [0, 1000],
+          max: 359.9,
+          value: [0, 359.9],
           subcategory: "health",
         },
         {
@@ -401,9 +401,9 @@ export const country = {
           unit: "%",
           type: "range",
           column_name: "s_unimp",
-          min: 0,
-          max: 100,
-          value: [0, 100],
+          min: 14,
+          max: 62,
+          value: [14, 62],
           subcategory: "wash",
         },
         {
@@ -412,8 +412,8 @@ export const country = {
           type: "range",
           column_name: "w_unimp",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 71,
+          value: [0, 71],
           subcategory: "wash",
         },
         {
@@ -421,9 +421,9 @@ export const country = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_w",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 2,
+          max: 9,
+          value: [2, 9],
           subcategory: "socioeconomic",
         },
         {
@@ -431,9 +431,9 @@ export const country = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_m",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 3,
+          max: 9,
+          value: [3, 9],
           subcategory: "socioeconomic",
         },
         {
@@ -441,9 +441,9 @@ export const country = {
           unit: "%",
           type: "range",
           column_name: "u5m",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 4.9,
+          max: 8.9,
+          value: [4.9, 8.9],
           subcategory: "health",
         },
         {
@@ -451,9 +451,9 @@ export const country = {
           unit: "km.",
           type: "range",
           column_name: "dr",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 0.2,
+          max: 35.5,
+          value: [0.2, 35.5],
           subcategory: "accessibility",
         },
         {
@@ -462,8 +462,8 @@ export const country = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 50,
-          value: [0, 50],
+          max: 139.6,
+          value: [0, 139.6],
           subcategory: "accessibility",
         },
         {
@@ -471,61 +471,61 @@ export const country = {
           unit: "people",
           type: "range",
           column_name: "pop",
-          min: 10000,
-          max: 1000000,
-          value: [10000, 1000000],
-          subcategory: "socioeconomic",
-        },
-        {
-          name: "Average Relative Wealth Index",
-          unit: "index",
-          type: "range_non_linear",
-          column_name: "rwi",
-          scaledMin: -0.53,
-          scaledMax: 1.35,
-          scaledValue: [-0.53, 1.35],
-          subcategory: "socioeconomic",
           min: 0,
-          max: 60,
-          value: [0, 60], //the actual min/max of column
-          marks: [
-            {
-              value: 0,
-              scaledValue: -0.53,
-              label: "-0.53",
-            },
-            {
-              value: 10,
-              scaledValue: -0.25,
-              label: "-0.25",
-            },
-            {
-              value: 20,
-              scaledValue: 0,
-              label: "0",
-            },
-            {
-              value: 30,
-              scaledValue: 0.25,
-              label: "0.25",
-            },
-            {
-              value: 40,
-              scaledValue: 0.6,
-              label: "0.6",
-            },
-            {
-              value: 50,
-              scaledValue: 1,
-              label: "1",
-            },
-            {
-              value: 60,
-              scaledValue: 1.4,
-              label: "1.4",
-            },
-          ],
+          max: 1245294,
+          value: [0, 1245294],
+          subcategory: "socioeconomic",
         },
+        // {
+        //   name: "Average Relative Wealth Index",
+        //   unit: "index",
+        //   type: "range_non_linear",
+        //   column_name: "rwi",
+        //   scaledMin: -0.53,
+        //   scaledMax: 1.35,
+        //   scaledValue: [-0.53, 1.35],
+        //   subcategory: "socioeconomic",
+        //   min: 0,
+        //   max: 60,
+        //   value: [0, 60], //the actual min/max of column
+        //   marks: [
+        //     {
+        //       value: 0,
+        //       scaledValue: -0.53,
+        //       label: "-0.53",
+        //     },
+        //     {
+        //       value: 10,
+        //       scaledValue: -0.25,
+        //       label: "-0.25",
+        //     },
+        //     {
+        //       value: 20,
+        //       scaledValue: 0,
+        //       label: "0",
+        //     },
+        //     {
+        //       value: 30,
+        //       scaledValue: 0.25,
+        //       label: "0.25",
+        //     },
+        //     {
+        //       value: 40,
+        //       scaledValue: 0.6,
+        //       label: "0.6",
+        //     },
+        //     {
+        //       value: 50,
+        //       scaledValue: 1,
+        //       label: "1",
+        //     },
+        //     {
+        //       value: 60,
+        //       scaledValue: 1.4,
+        //       label: "1.4",
+        //     },
+        //   ],
+        // },
         {
           name: "Rural Remote",
           unit: "%",
@@ -555,19 +555,19 @@ export const country = {
           subcategory: "accessibility",
         },
         {
-          name: "",
+          name: "Province",
           type: "none",
           column_name: "name_1",
           subcategory: "id",
         },
         {
-          name: "",
+          name: "District",
           type: "none",
           column_name: "name_2",
           subcategory: "id",
         },
         {
-          name: "",
+          name: "Locality",
           type: "none",
           column_name: "name_3",
           subcategory: "id",
@@ -576,7 +576,7 @@ export const country = {
     },
     {
       name: "Estimated settlement",
-      carto_tableName: "CC_multivariable_comms",
+      carto_tableName: "moz_multivariable_comms",
       carto_layer: null /* we will insert carto's layer object here */,
       carto_source: null,
       carto_style: `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`,
@@ -621,8 +621,8 @@ export const country = {
           type: "range",
           column_name: "timecities",
           min: 0,
-          max: 500,
-          value: [0, 500],
+          max: 964,
+          value: [0, 964],
           subcategory: "accessibility",
         },
         {
@@ -631,8 +631,8 @@ export const country = {
           type: "range",
           column_name: "dr",
           min: 0,
-          max: 50,
-          value: [0, 50],
+          max: 67.8,
+          value: [0, 67.8],
           subcategory: "accessibility",
         },
         {
@@ -641,8 +641,8 @@ export const country = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 182.8,
+          value: [0, 182.8],
           subcategory: "accessibility",
         },
         {
@@ -654,8 +654,8 @@ export const country = {
           max: 70, //we want 7 breaks not counting start value of 0.
           value: [0, 70], //slider range will be from 0-70, which we will scale to
           scaledMin: 0,
-          scaledMax: 5000000,
-          scaledValue: [0, 5000000], //the actual min/max of column
+          scaledMax: 2769981,
+          scaledValue: [0, 2769981], //the actual min/max of column
           subcategory: "socioeconomic",
           // define 7+1 non linear marks here, note that value goes from 0-70 only
           marks: [
@@ -696,8 +696,8 @@ export const country = {
             },
             {
               value: 70,
-              scaledValue: 5000000,
-              label: "5M",
+              scaledValue: 2800000,
+              label: "2.8M",
             },
           ],
         },
@@ -730,19 +730,19 @@ export const country = {
           subcategory: "accessibility",
         },
         {
-          name: "",
+          name: "Province",
           type: "none",
           column_name: "name_1",
           subcategory: "id",
         },
         {
-          name: "",
+          name: "District",
           type: "none",
           column_name: "name_2",
           subcategory: "id",
         },
         {
-          name: "",
+          name: "Locality",
           type: "none",
           column_name: "name_3",
           subcategory: "id",

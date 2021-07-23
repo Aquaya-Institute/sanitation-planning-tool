@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useContext,
-  useMemo,
-  useRef,
-  useLayoutEffect,
-} from "react";
+import { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import { Box, Popper } from "@material-ui/core";
@@ -58,27 +51,27 @@ export const DropdownMenu = ({
   setFilterMenuOpen,
   cat,
   setSelectedMenu,
+  tabIndex,
 }) => {
   const [
     {
       maps,
       currentMapID,
-      activeLayer,
+      currentLayerID,
       carto_client,
       leafletMap,
       activeLegend,
       selectedDistName,
       highlightLayer,
+      currentCountry,
     },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
-  // const [activeLayer, setActiveLayer] = useState("2");
   const [distName, setDistName] = useState(selectedDistName);
   const [allDistricts, setAllDistricts] = useState([]);
   const [column, setColumn] = useState("");
   const classes = useStyles();
-  const highlightDist = useRef();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
 
@@ -86,6 +79,7 @@ export const DropdownMenu = ({
     if (currentMapID !== mapID) {
       console.log(currentMapID);
       setMapID(currentMapID);
+      // document.getElementById("select-areas-mutiple-checkbox").focus();
     }
   }, [currentMapID, mapID]);
 
@@ -119,19 +113,41 @@ export const DropdownMenu = ({
 
   function filterPopulatedPlacesByCountry(distName) {
     let query = null;
+    // let query2 = null;
     if (distName.length > 0) {
       query = `SELECT * FROM ${
-        maps[mapID].layers[activeLayer].carto_tableName
+        maps[mapID].layers[currentLayerID].carto_tableName
       } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
+      // query2 = `SELECT * FROM ${
+      //   maps[mapID].layers["3"].carto_tableName
+      // } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
     } else {
-      query = `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`;
+      // query = `SELECT * FROM ${
+      //   maps[mapID].layers["2"].carto_tableName
+      // } WHERE ${column} IN (${allDistricts
+      //   .map((x) => "'" + x + "'")
+      //   .toString()})`;
+      // query2 = `SELECT * FROM ${
+      //   maps[mapID].layers["3"].carto_tableName
+      // } WHERE ${column} IN (${allDistricts
+      //   .map((x) => "'" + x + "'")
+      //   .toString()})`;
+      query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
+      // query2 = `SELECT * FROM ${maps[mapID].layers["3"].carto_tableName}`;
     }
     // const source = new Carto.source.SQL(
-    //   `SELECT * FROM ${maps[mapID].layers[activeLayer].carto_tableName}`
+    //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`
     // );
     // source.setQuery(query);
-    if (maps[mapID].layers[activeLayer].carto_source && activeLayer !== "1") {
-      maps[mapID].layers[activeLayer].carto_source.setQuery(query);
+    // currentCountry["2"].source.setQuery(query);
+    // // currentCountry["2"].query = query;
+    // currentCountry["2"].layer.getSource().setQuery(query);
+    // currentCountry["3"].source.setQuery(query2);
+    // // currentCountry["3"].query = query;
+    // currentCountry["3"].layer.getSource().setQuery(query2);
+    if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
+      currentCountry[currentLayerID].source.setQuery(query);
+      currentCountry[currentLayerID].layer.getSource().setQuery(query);
       dispatch({
         type: "layer.queryDist",
         queryDist: query,
@@ -143,7 +159,6 @@ export const DropdownMenu = ({
     if (highlightLayer) {
       leafletMap.removeLayer(highlightLayer);
     }
-
     if (leafletMap && mapID) {
       if (distName.length > 0) {
         return fetch(
@@ -162,7 +177,6 @@ export const DropdownMenu = ({
               weight: 2,
             };
             let geojsonLayer = L.geoJSON(response, myStyle);
-            // highlightDist.current = geojsonLayer;
             leafletMap.fitBounds(geojsonLayer.getBounds());
             filterPopulatedPlacesByCountry(distName);
             geojsonLayer.addTo(leafletMap);
@@ -171,11 +185,17 @@ export const DropdownMenu = ({
               highlightLayer: geojsonLayer,
             });
           });
+      } else {
+        filterPopulatedPlacesByCountry(distName);
+        leafletMap.setView(
+          [maps[mapID].lat, maps[mapID].long],
+          maps[mapID].zoom
+        );
       }
     }
   }, [distName]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (distName.length > 0 && mapID) {
       filterPopulatedPlacesByCountry(distName);
     }
@@ -191,7 +211,8 @@ export const DropdownMenu = ({
 
   return (
     <Popper
-      // id={cat + "filterMenu"}
+      id={"popperDrop"}
+      // tabIndex={-1}
       ref={clickRefMenu}
       key={cat + "filterMenu"}
       anchorEl={anchorEl}
@@ -238,31 +259,43 @@ export const DropdownMenu = ({
               pl={1}
             >
               <Box pl={1}>
-                <InputLabel pl={1} id="demo-mutiple-checkbox-label">
+                <InputLabel pl={1} id="select-areas-mutiple-checkbox-label">
                   Select {maps[mapID].layers["3"].name}(s)
                 </InputLabel>
 
                 <Select
                   //   native={true}
-                  labelId="demo-mutiple-checkbox-label"
-                  id="demo-mutiple-checkbox"
+                  // tabIndex={1}
+
+                  labelId="select-areas-mutiple-checkbox-label"
+                  id="select-areas-mutiple-checkbox"
+                  inputProps={{ "aria-label": "select-areas-mutiple-checkbox" }}
                   multiple
                   value={distName}
                   onChange={handleChange}
-                  input={<Input />}
+                  input={<Input autoFocus tabIndex="-1" />}
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                   className={classes.formControl}
                 >
                   {allDistricts.map((name, i) => (
-                    <MenuItem key={i} value={name} className={classes.menu}>
-                      <Checkbox checked={distName.indexOf(name) > -1} />
+                    <MenuItem
+                      // tabIndex={tabIndex}
+                      key={i}
+                      value={name}
+                      className={classes.menu}
+                    >
+                      <Checkbox
+                        checked={distName.indexOf(name) > -1}
+                        // tabIndex={tabIndex}
+                        inputProps={{ "aria-label": "area-name-checkbox" }}
+                      />
                       <ListItemText primary={name} />
                     </MenuItem>
                   ))}
                 </Select>
-
                 <button
+                  tabIndex="0"
                   onClick={() => {
                     setDistName([]);
                     dispatch({

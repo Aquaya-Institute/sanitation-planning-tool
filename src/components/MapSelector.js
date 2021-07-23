@@ -4,7 +4,12 @@ import { MapContext } from "../state/MapState";
 import Select from "@material-ui/core/Select";
 import { useHistory } from "react-router-dom";
 
-export const MapSelector = () => {
+export const MapSelector = ({
+  inputProps,
+  selectMapID,
+  selectMapName,
+  selectMapAria,
+}) => {
   //pick specific states (and dispatcher) we need from mapstate
   const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
   const [mapID, setMapID] = React.useState(undefined);
@@ -38,19 +43,21 @@ export const MapSelector = () => {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <Select
         native
-        inputProps={{
-          name: "country",
-          id: "country-maps-dropdown",
-        }}
+        // inputProps={{
+        //   name: { selectMapName },
+        //   id: { selectMapID },
+        //   "aria-label": { selectMapAria },
+        // }}
+        inputProps={inputProps}
         label="Filled"
         onChange={onSelectChange}
         style={{
           textTransform: "capitalize",
           backgroundColor: "#FFFFFF",
-          opacity: "0.5",
+          opacity: "0.75",
         }}
         value={mapID}
       >
@@ -69,6 +76,6 @@ export const MapSelector = () => {
             </option>
           ))}
       </Select>
-    </div>
+    </React.Fragment>
   );
 };

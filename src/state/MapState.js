@@ -1,12 +1,19 @@
 import * as React from "react";
+import Carto from "@carto/carto.js";
 import produce from "immer";
 import { enableMapSet } from "immer";
 import { legendStyles } from "../components/subcomponents/LegendStyles";
-import { ghana } from "./ghana";
-import { liberia } from "./liberia";
-import { niger } from "./niger";
-import { rwanda } from "./rwanda";
-import { nigeria } from "./nigeria";
+import { ghana } from "./countries/ghana";
+import { liberia } from "./countries/liberia";
+import { niger } from "./countries/niger";
+import { rwanda } from "./countries/rwanda";
+import { nigeria } from "./countries/nigeria";
+import { cambodia } from "./countries/cambodia";
+import { s_sudan } from "./countries/s_sudan";
+import { ethiopia } from "./countries/ethiopia";
+import { mozambique } from "./countries/mozambique";
+// import { senegal } from "./countries/senegal";
+
 enableMapSet();
 const legendStylesObj = legendStyles;
 //this is the "global map state". this is where state is maintained and updated
@@ -16,25 +23,98 @@ const initialState = {
   leafletMap: null,
   /* all the maps in the tool organised by country */
   maps: {
+    cambodia,
+    ethiopia,
     ghana,
     liberia,
+    mozambique,
     niger,
     rwanda,
     nigeria,
+    s_sudan,
+    // senegal,
   },
-  activeLayer: "2",
+  currentLayerID: "2",
   activeLegend: "0",
   userData: null,
-  query: null,
+  // query: null,
   queryDist: null,
   skip: true,
   selectedDistName: [],
   highlightLayer: null,
+  highlightBoundary: null,
   settlementBoundary: null,
   showSettlements: false,
   allowSettlements: false,
   settlementHighlight: null,
   settlementPopup: null,
+  currentCountry: [
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
+  ],
 };
 
 const reducer = (state, action) => {
@@ -49,8 +129,9 @@ const reducer = (state, action) => {
           var index = 3;
           for (; index >= 0; index--) {
             if (draft.maps[action.mapID].layers[index].visible === true) {
-              draft.activeLayer = index.toString();
-              draft.query = null;
+              draft.currentLayerID = index.toString();
+              // draft.currentCountry[index].query = null;
+              // draft.filters[index].filter = null;
               break;
             }
           }
@@ -58,15 +139,49 @@ const reducer = (state, action) => {
           for (i = 0; i < legendStylesObj.length; i++) {
             if (
               legendStylesObj[i].style_pixel ===
-                draft.maps[action.mapID].layers[draft.activeLayer]
-                  .carto_style ||
+                draft.currentCountry[draft.currentLayerID].style ||
               legendStylesObj[i].style_bounds ===
-                draft.maps[action.mapID].layers[draft.activeLayer].carto_style
+                draft.currentCountry[draft.currentLayerID].style
             ) {
               draft.activeLegend = i.toString();
               break;
             }
           }
+        }
+      });
+
+    case "current.layer":
+      return produce(state, (draft) => {
+        // if (draft.currentCountry[draft.currentLayerID].layer) {
+        //   draft.carto_client.removeLayer(
+        //     draft.currentCountry[draft.currentLayerID].layer
+        //   );
+        // }
+        // draft.currentCountry[draft.currentLayerID].layer = action.currentLayer;
+        draft.currentCountry[draft.currentLayerID].source =
+          action.currentSource;
+        draft.currentCountry[draft.currentLayerID].style = action.currentStyle;
+        draft.currentCountry[draft.currentLayerID].filters =
+          action.currentFilters;
+        const columns = [];
+        action.currentFilters.forEach((filter) => {
+          columns.push(filter.column_name);
+        });
+        draft.currentCountry[draft.currentLayerID].columns = columns;
+        draft.currentCountry[draft.currentLayerID].layer =
+          new Carto.layer.Layer(
+            draft.currentCountry[draft.currentLayerID].source,
+            new Carto.style.CartoCSS(
+              draft.currentCountry[draft.currentLayerID].style
+            ),
+            { featureClickColumns: columns }
+          );
+        draft.carto_client.addLayer(
+          draft.currentCountry[draft.currentLayerID].layer
+        );
+        draft.currentCountry[draft.currentLayerID].layer.show();
+        if (draft.showSettlements === true) {
+          draft.currentCountry[draft.currentLayerID].layer.bringToBack();
         }
       });
 
@@ -88,28 +203,39 @@ const reducer = (state, action) => {
       */
       return produce(state, (draft) => {
         // draft.currentMapID = action.mapID;
-        const mid = action.mapID;
-        draft.activeLayer = action.layerID;
-        const cartoLayer = draft.maps[mid].layers[action.layerID].carto_layer;
+        // const mid = action.mapID;
+        // draft.currentCountry[draft.currentLayerID].filters =
+        //   draft.currentCountry[draft.currentLayerID].source.getFilters();
+        draft.currentCountry[draft.currentLayerID].layer.hide();
+        draft.currentLayerID = action.newLayerID;
+        draft.currentCountry[draft.currentLayerID].layer.show();
+        // if (draft.settlementBoundary === true) {
+        //   draft.draft.carto_client.removeLayer(draft.settlementBoundary);
+        // }
+        // draft.query[draft.currentLayerID] = null;
+        // draft.currentCountry.carto_layer =
+        //   draft.currentCountry[draft.currentLayerID].layer.setFilters(
+        //     draft.currentCountry[draft.currentLayerID].filters
+        //   );
         //update the state
-        for (var index in draft.maps[mid].layers) {
-          if (index === action.layerID || index === "0") {
-            draft.maps[mid].layers[action.layerID].visible = true;
-            cartoLayer.show();
-            console.log("vistoggle");
-          } else {
-            draft.maps[mid].layers[index].visible = false;
-            draft.maps[mid].layers[index].carto_layer.hide();
-            console.log("vistoggle");
-          }
-        }
+        // for (var index in draft.maps[mid].layers) {
+        //   if (index === action.layerID || index === "0") {
+        //     draft.maps[mid].layers[action.layerID].visible = true;
+        //     cartoLayer.show();
+        //     console.log("vistoggle");
+        //   } else {
+        //     draft.maps[mid].layers[index].visible = false;
+        //     draft.maps[mid].layers[index].carto_layer.hide();
+        //     console.log("vistoggle");
+        //   }
+        // }
         var i;
         for (i = 0; i < legendStylesObj.length; i++) {
           if (
             legendStylesObj[i].style_pixel ===
-              draft.maps[action.mapID].layers[draft.activeLayer].carto_style ||
+              draft.currentCountry[draft.currentLayerID].style ||
             legendStylesObj[i].style_bounds ===
-              draft.maps[action.mapID].layers[draft.activeLayer].carto_style
+              draft.currentCountry[draft.currentLayerID].style
           ) {
             draft.activeLegend = i.toString();
             break;
@@ -127,17 +253,38 @@ const reducer = (state, action) => {
     case "legend.select":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
-        const mid = action.mapID;
-        const lid = draft.activeLayer;
-        draft.maps[mid].layers[lid].carto_style = action.styleNew;
+        // if (draft.currentCountry[draft.currentLayerID].layer) {
+        //   draft.carto_client.removeLayer(
+        //     draft.currentCountry[draft.currentLayerID].layer
+        //   );
+        // }
+        draft.currentCountry[draft.currentLayerID].style = action.styleNew;
+        draft.currentCountry[draft.currentLayerID].layer
+          .getStyle()
+          .setContent(action.styleNew);
         draft.activeLegend = action.legendIndex;
+        // draft.currentCountry[draft.currentLayerID].layer =
+        //   new Carto.layer.Layer(
+        //     draft.currentCountry[draft.currentLayerID].source,
+        //     new Carto.style.CartoCSS(
+        //       draft.currentCountry[draft.currentLayerID].style
+        //     ),
+        //     { featureClickColumns: draft.currentCountry.current_columns }
+        //   );
+        // draft.carto_client.addLayer(
+        //   draft.currentCountry[draft.currentLayerID].layer
+        // );
+        draft.currentCountry[draft.currentLayerID].layer.show();
+        if (draft.showSettlements === true) {
+          draft.currentCountry[draft.currentLayerID].layer.bringToBack();
+        }
       });
 
     case "layer.opacity":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
         const mid = action.mapID;
-        const lid = draft.activeLayer;
+        const lid = draft.currentLayerID;
         draft.maps[mid].layers[lid].carto_style = action.styleNew;
         draft.skip = true;
         // draft.maps[action.mapID].layers[
@@ -151,22 +298,18 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         // draft.reset = false;
         draft.currentMapID = action.mapID;
-        draft.maps[action.mapID].layers[action.layerIndex].filters[
-          action.filterIndex
-        ] = action.filter;
-        const layer = draft.maps[action.mapID].layers[action.layerIndex];
+        draft.currentCountry[draft.currentLayerID].filters[action.filterIndex] =
+          action.filter;
+
         //TODO: based on the type of filter (range, categorical)
         //use Switch statement to apply appropriate filters
         switch (
-          draft.maps[action.mapID].layers[action.layerIndex].filters[
-            action.filterIndex
-          ].type
+          draft.currentCountry[draft.currentLayerID].filters[action.filterIndex]
+            .type
         ) {
           case "range":
             //this is how you get the filter out of the carto layer
-            const filter = draft.maps[action.mapID].layers[
-              action.layerIndex
-            ].carto_layer
+            const filter = draft.currentCountry[draft.currentLayerID].layer
               .getSource()
               .getFilters()[0] //since this is a filtercollection
               .getFilters()[action.filterIndex];
@@ -180,31 +323,45 @@ const reducer = (state, action) => {
               action.filter.value[1] !== action.filter.max
             ) {
               if (action.filter.subcategory === "accessibility") {
-                layer.accessCounter.add(action.filter.name);
+                draft.currentCountry[draft.currentLayerID].accessCounter.add(
+                  action.filter.name
+                );
               } else if (action.filter.subcategory === "socioeconomic") {
-                layer.socioCounter.add(action.filter.name);
+                draft.currentCountry[draft.currentLayerID].socioCounter.add(
+                  action.filter.name
+                );
               } else if (action.filter.subcategory === "wash") {
-                layer.washCounter.add(action.filter.name);
+                draft.currentCountry[draft.currentLayerID].washCounter.add(
+                  action.filter.name
+                );
               } else if (action.filter.subcategory === "health") {
-                layer.healthCounter.add(action.filter.name);
+                draft.currentCountry[draft.currentLayerID].healthCounter.add(
+                  action.filter.name
+                );
               }
             } else {
               if (action.filter.subcategory === "accessibility") {
-                layer.accessCounter.delete(action.filter.name);
+                draft.currentCountry[draft.currentLayerID].accessCounter.delete(
+                  action.filter.name
+                );
               } else if (action.filter.subcategory === "socioeconomic") {
-                layer.socioCounter.delete(action.filter.name);
+                draft.currentCountry[draft.currentLayerID].socioCounter.delete(
+                  action.filter.name
+                );
               } else if (action.filter.subcategory === "wash") {
-                layer.washCounter.delete(action.filter.name);
+                draft.currentCountry[draft.currentLayerID].washCounter.delete(
+                  action.filter.name
+                );
               } else if (action.filter.subcategory === "health") {
-                layer.healthCounter.delete(action.filter.name);
+                draft.currentCountry[draft.currentLayerID].healthCounter.delete(
+                  action.filter.name
+                );
               }
             }
             break;
           case "range_non_linear":
             //this is how you get the filter out of the carto layer
-            const filter_non = draft.maps[action.mapID].layers[
-              action.layerIndex
-            ].carto_layer
+            const filter_non = draft.currentCountry[draft.currentLayerID].layer
               .getSource()
               .getFilters()[0] //since this is a filtercollection
               .getFilters()[action.filterIndex];
@@ -217,15 +374,17 @@ const reducer = (state, action) => {
               action.filter.value[0] !== action.filter.min ||
               action.filter.value[1] !== action.filter.max
             ) {
-              layer.socioCounter.add(action.filter.name);
+              draft.currentCountry[draft.currentLayerID].socioCounter.add(
+                action.filter.name
+              );
             } else {
-              layer.socioCounter.delete(action.filter.name);
+              draft.currentCountry[draft.currentLayerID].socioCounter.delete(
+                action.filter.name
+              );
             }
             break;
           case "categorical":
-            const filter_c = draft.maps[action.mapID].layers[
-              action.layerIndex
-            ].carto_layer
+            const filter_c = draft.currentCountry[draft.currentLayerID].layer
               .getSource()
               .getFilters()[0] //since this is a filtercollection
               .getFilters()[action.filterIndex];
@@ -243,9 +402,13 @@ const reducer = (state, action) => {
             });
 
             if (changed === true) {
-              layer.accessCounter.add(action.filter.name);
+              draft.currentCountry[draft.currentLayerID].accessCounter.add(
+                action.filter.name
+              );
             } else {
-              layer.accessCounter.delete(action.filter.name);
+              draft.currentCountry[draft.currentLayerID].accessCounter.delete(
+                action.filter.name
+              );
             }
             //this is how you set the filter. this is specific to range filter
             filter_c.setFilters({
@@ -259,14 +422,12 @@ const reducer = (state, action) => {
             break;
         }
         draft.download =
-          draft.maps[action.mapID].layers[
-            action.layerIndex
-          ].carto_layer.getSource();
+          draft.currentCountry[draft.currentLayerID].layer.getSource();
       });
 
     case "layer.query":
       return produce(state, (draft) => {
-        draft.query = action.query;
+        draft.currentCountry[draft.currentLayerID].query = action.query;
       });
 
     case "layer.queryDist":
@@ -287,71 +448,92 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         // draft.reset = true;
         draft.currentMapID = action.mapID;
-        const layer = draft.maps[action.mapID].layers[draft.activeLayer];
-        layer.filters.forEach((filter, filterIndex) => {
-          if (filter.type === "categorical") {
-            const cartofilter_c = layer.carto_layer
-              .getSource()
-              .getFilters()[0] //since this is a filtercollection
-              .getFilters()[filterIndex];
+        const layer = draft.currentCountry[draft.currentLayerID];
+        draft.currentCountry[draft.currentLayerID].filters.forEach(
+          (filter, filterIndex) => {
+            if (filter.type === "categorical") {
+              const cartofilter_c = layer.layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()[filterIndex];
 
-            let col_vals_tofilter = [];
-            //get the category filter state and create an array
-            //of checked=true col values to filter
-            filter.value.forEach((category) => {
-              category.checked = true;
-              col_vals_tofilter.push(category.value);
-            });
-            cartofilter_c.setFilters({
-              in: col_vals_tofilter,
-            });
-          } else if (filter.type === "range") {
-            filter.value = [filter.min, filter.max];
-            const cartofilter = layer.carto_layer
-              .getSource()
-              .getFilters()[0] //since this is a filtercollection
-              .getFilters()[filterIndex];
-            //this is how you set the filter. this is specific to range filter
-            cartofilter.setFilters({
-              gte: filter.min,
-              lte: filter.max,
-            });
-          } else if (filter.type === "range_non_linear") {
-            filter.scaledValue = [filter.scaledMin, filter.scaledMax];
-            filter.value = [filter.min, filter.max];
-            const cartofilter_non = layer.carto_layer
-              .getSource()
-              .getFilters()[0] //since this is a filtercollection
-              .getFilters()[filterIndex];
-            //this is how you set the filter. this is specific to range filter
-            cartofilter_non.setFilters({
-              gte: filter.scaledMin,
-              lte: filter.scaledMax,
-            });
+              let col_vals_tofilter = [];
+              //get the category filter state and create an array
+              //of checked=true col values to filter
+              filter.value.forEach((category) => {
+                category.checked = true;
+                col_vals_tofilter.push(category.value);
+              });
+              cartofilter_c.setFilters({
+                in: col_vals_tofilter,
+              });
+            } else if (filter.type === "range") {
+              filter.value = [filter.min, filter.max];
+              const cartofilter = layer.layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()[filterIndex];
+              //this is how you set the filter. this is specific to range filter
+              cartofilter.setFilters({
+                gte: filter.min,
+                lte: filter.max,
+              });
+            } else if (filter.type === "range_non_linear") {
+              filter.scaledValue = [filter.scaledMin, filter.scaledMax];
+              filter.value = [filter.min, filter.max];
+              const cartofilter_non = layer.layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()[filterIndex];
+              //this is how you set the filter. this is specific to range filter
+              cartofilter_non.setFilters({
+                gte: filter.scaledMin,
+                lte: filter.scaledMax,
+              });
+            }
           }
-        });
-        layer.accessCounter = new Set(null);
-        layer.washCounter = new Set(null);
-        layer.socioCounter = new Set(null);
-        layer.healthCounter = new Set(null);
+        );
+        draft.currentCountry[draft.currentLayerID].accessCounter = new Set(
+          null
+        );
+        draft.currentCountry[draft.currentLayerID].washCounter = new Set(null);
+        draft.currentCountry[draft.currentLayerID].socioCounter = new Set(null);
+        draft.currentCountry[draft.currentLayerID].healthCounter = new Set(
+          null
+        );
       });
+
     //when a new carto layer is added
     case "layer.addCartoLayer":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
-        draft.maps[action.mapID].layers[action.layerID].carto_layer =
-          action.cartoLayer;
-        draft.maps[action.mapID].layers[action.layerID].carto_source =
-          action.cartoSource;
+        // draft.maps[action.mapID].layers[action.layerID].carto_layer =
+        //   action.cartoLayer;
+        // draft.maps[action.mapID].layers[action.layerID].carto_source =
+        //   action.cartoSource;
+        // var add = false;
+        // if (draft.currentCountry[action.layerID].layer === null) {
+        //   add = true;
+        // }
+        draft.currentCountry[action.layerID].layer = action.cartoLayer;
+        draft.currentCountry[action.layerID].source = action.cartoSource;
+        draft.currentCountry[action.layerID].style =
+          draft.maps[draft.currentMapID].layers[action.layerID].carto_style;
+        draft.currentCountry[action.layerID].filters =
+          draft.maps[draft.currentMapID].layers[action.layerID].filters;
+        // if (add === true) {
+        draft.carto_client.addLayer(draft.currentCountry[action.layerID].layer);
+        //   add = false;
+        // }
         if (action.layerID !== "0") {
           action.cartoLayer.bringToBack();
         }
-      });
-
-    case "layer.refresh":
-      return produce(state, (draft) => {
-        draft.maps[action.mapID].layers[action.layerID].carto_source =
-          action.source;
+        //set default visibility as set in map state
+        if (draft.maps[draft.currentMapID].layers[action.layerID].visible) {
+          draft.currentCountry[action.layerID].layer.show();
+        } else {
+          draft.currentCountry[action.layerID].layer.hide();
+        }
       });
 
     case "layer.removeCartoLayers":
@@ -380,6 +562,11 @@ const reducer = (state, action) => {
     case "dropdown.highlight":
       return produce(state, (draft) => {
         draft.highlightLayer = action.highlightLayer;
+      });
+
+    case "boundary.highlight":
+      return produce(state, (draft) => {
+        draft.highlightBoundary = action.highlightBoundary;
       });
 
     case "settlement.boundary":

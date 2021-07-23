@@ -5,7 +5,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { UploadButton } from "./UploadButton";
-// import { MapResolutions } from "../MapMenu/MapResolutions";
 import { Export } from "./Export";
 import theme from "../../theme/theme";
 import clsx from "clsx";
@@ -24,9 +23,6 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 50,
     fontSize: 12,
   },
-  indicator: {
-    backgroundColor: "transparent",
-  },
 }));
 
 function TabPanel(props) {
@@ -37,6 +33,7 @@ function TabPanel(props) {
     <div
       role="tabpanel"
       hidden={value !== index}
+      elevation={0}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
       style={{
@@ -51,6 +48,8 @@ function TabPanel(props) {
         // borderTop: "1.5px solid #CFCDC9",
         borderLeft: "1.5px solid #CFCDC9",
         display: hidden ? "none" : "block",
+        overflow: "auto",
+        maxHeight: "300px",
       }}
       className={classes.root}
       {...other}
@@ -90,7 +89,7 @@ export default function FullWidthTabs() {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} elevation={0}>
       <TabPanel value={value} index={0} dir={theme.direction} hidden={hidden}>
         <UploadButton />
       </TabPanel>
@@ -109,6 +108,7 @@ export default function FullWidthTabs() {
           <Tab
             className={clsx(classes.tab, "tour-upload")}
             label="Settlements/ Communities"
+            tabIndex={0}
             {...a11yProps(0)}
             style={{
               borderBottom: "1px solid #CFCDC9",
@@ -126,6 +126,7 @@ export default function FullWidthTabs() {
           <Tab
             className={clsx(classes.tab, "tour-export")}
             label="Data Export"
+            tabIndex={0}
             {...a11yProps(1)}
             style={{
               borderBottom: "1px solid #CFCDC9",

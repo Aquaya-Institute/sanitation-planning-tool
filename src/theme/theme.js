@@ -1,9 +1,9 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 
 //see
 //https://material-ui.com/customization/default-theme/?expand-path=$.palette
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     // type: 'dark',
     primary: {
@@ -41,8 +41,29 @@ const theme = createMuiTheme({
         //This can be referred from Material UI API documentation.
         padding: "4px 8px",
         width: "20px",
+        // "&$selected": {
+        //   backgroundColor: "red",
+        //   "&:hover": {
+        //     backgroundColor: "orange",
+        //   },
+        // },
       },
     },
+    // MuiListItem: {
+    //   root: {
+    //     "&$selected": {
+    //       backgroundColor: "red",
+    //       "&:hover": {
+    //         backgroundColor: "orange",
+    //       },
+    //     },
+    //   },
+    //   button: {
+    //     "&:hover": {
+    //       backgroundColor: "yellow",
+    //     },
+    //   },
+    // },
   },
 });
 

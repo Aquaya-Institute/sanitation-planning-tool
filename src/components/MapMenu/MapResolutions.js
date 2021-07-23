@@ -12,20 +12,6 @@ const useStyles = makeStyles((theme) => ({
   checkboxLabel: {
     fontSize: 13,
   },
-  formControl: {
-    margin: theme.spacing(0),
-    minWidth: 200,
-    maxWidth: 275,
-  },
-  menu: {
-    height: "25px",
-  },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "scroll",
-  },
 }));
 
 export const MapResolutions = ({
@@ -34,22 +20,24 @@ export const MapResolutions = ({
   setFilterMenuOpen,
   cat,
   setSelectedMenu,
+  tabIndex,
 }) => {
-  const [{ maps, currentMapID, activeLayer }, dispatch] =
+  const [{ maps, currentMapID, currentLayerID }, dispatch] =
     useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
   const classes = useStyles();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  // const [setPopoverOpen] = useState(false);
   const clickRef = useRef(null);
+  const radioRef = useRef();
 
   useEffect(() => {
     if (currentMapID !== mapID) {
       console.log(currentMapID);
       setMapID(currentMapID);
       // setDistName([]);
-      // setActiveLayer(maps[currentMapID].currentLayer);
+      // setcurrentLayerID(maps[currentMapID].currentLayer);
     }
   }, [currentMapID, mapID]);
 
@@ -62,7 +50,7 @@ export const MapResolutions = ({
       ) {
         console.log("clicked outside");
         if (clickRef.current && !clickRef.current.contains(event.target)) {
-          setPopoverOpen(null);
+          // setPopoverOpen(null);
           console.log("clicked outside");
         } else if (
           clickRef.current &&
@@ -80,18 +68,25 @@ export const MapResolutions = ({
     };
   }, [setFilterMenuOpen, setSelectedMenu]);
 
-  const toggleLayerVisibility = (activeLayer) => {
+  const toggleLayerVisibility = (currentLayerID) => {
     console.log("radio");
     dispatch({
       type: "layer.toggle",
       mapID: mapID,
-      layerID: activeLayer,
+      newLayerID: currentLayerID,
     });
   };
+
+  useEffect(() => {
+    if (radioRef.current) {
+      radioRef.current.focus();
+    }
+  }, []);
 
   return (
     <Popper
       // id={cat + "filterMenu"}
+      autoFocus={true}
       ref={clickRefMenu}
       key={cat + "filterMenu"}
       anchorEl={anchorEl}
@@ -111,9 +106,9 @@ export const MapResolutions = ({
       }}
     >
       {mapID && (
-        <Box p={2}>
-          <FormControl component="fieldset" key="fieldset">
-            <FormLabel component="legend" key="legend">
+        <Box p={2} autoFocus={true}>
+          <FormControl component="fieldset" key="fieldset" autoFocus={true}>
+            <FormLabel component="legend" key="legend" autoFocus={true}>
               <Box
                 pb={1}
                 fontStyle="italic"
@@ -127,12 +122,13 @@ export const MapResolutions = ({
               </Box>
             </FormLabel>
             {mapID && (
-              <Box pl={1}>
+              <Box pl={1} autoFocus={true}>
                 <RadioGroup
+                  // tabIndex={1}
                   // p={1}
                   aria-label="Map resolution options"
                   name="resolutionSelector"
-                  value={activeLayer}
+                  value={currentLayerID}
                   onChange={(e) => {
                     // setDistName([]);
                     toggleLayerVisibility(e.target.value);
@@ -147,33 +143,58 @@ export const MapResolutions = ({
                   }}
                   className="tour-scale"
                   key="radioLabel"
+                  // autoFocus
                 >
                   <FormControlLabel
                     value="1"
-                    control={<Radio />}
+                    inputRef={radioRef}
+                    control={
+                      <Radio
+
+                      // tabIndex={tabIndex}
+                      />
+                    }
                     label="1x1km areas (Rural Typology layer only)"
                     classes={{
                       label: classes.checkboxLabel,
                     }}
-                    key="radio1"
+                    key="1x1km-layer-radio"
+                    inputprops={{ "aria-label": "1x1km-layer-radio" }}
                   />
                   <FormControlLabel
                     value="2"
-                    control={<Radio />}
+                    control={
+                      <Radio
+
+                      // tabIndex={tabIndex}
+                      />
+                    }
                     label="5x5km areas"
                     classes={{
                       label: classes.checkboxLabel,
                     }}
-                    key="radio2"
+                    key="5x5km-layer-radio"
+                    inputprops={{ "aria-label": "5x5km-layer-radio" }}
                   />
                   <FormControlLabel
                     value="3"
-                    control={<Radio />}
-                    label={maps[mapID].layers["3"].name + "s"}
+                    control={
+                      <Radio
+                      // tabIndex={tabIndex}
+                      />
+                    }
+                    label={
+                      maps[mapID].layers["3"].name === "County"
+                        ? "Counties"
+                        : maps[mapID].layers["3"].name === "Locality"
+                        ? "Localities"
+                        : maps[mapID].layers["3"].name + "s"
+                    }
                     classes={{
                       label: classes.checkboxLabel,
                     }}
-                    key="radio3"
+                    key="area-layer-radio"
+                    inputprops={{ "aria-label": "area-layer-radio" }}
                   />
                 </RadioGroup>
               </Box>

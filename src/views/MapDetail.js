@@ -1,9 +1,11 @@
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import { MapContext } from "../state/MapState";
 import { MapMenu } from "../components/MapMenu/MapMenu";
 import { Map } from "../components/Map";
 import { Grid } from "@material-ui/core";
 import { useParams } from "react-router-dom";
+import NoDataAlert from "../components/subcomponents/NoDataAlert";
 
 var link = document.createElement("meta");
 link.setAttribute("name", "map page description");
@@ -24,7 +26,11 @@ function MapDetail() {
 
   return (
     <Grid container style={{ height: "100%" }}>
-      {/* <Grid item  style={{boxShadow:"0px 0px 10px black", zIndex: 1100}}> */}
+      <Helmet>
+        <html lang="en" />
+        <title>{id} Map Page</title>
+        <meta name={id + " Map"} content={"Interactive map of " + id} />
+      </Helmet>
       <Grid item>
         <MapMenu />
       </Grid>

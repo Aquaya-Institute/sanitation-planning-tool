@@ -1,3 +1,4 @@
+/* accessibility: mui components done*/
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -20,7 +21,7 @@ const styles = (theme) => ({
   },
   card: {
     display: "flex",
-    justifyContent: "center",
+    justifycontent: "center",
     backgroundColor: "#000000",
     padding: theme.spacing(8, 3),
     color: "#FFFFFF",
@@ -74,6 +75,7 @@ function ProductCTA(props) {
             marked="center"
             className={classes.root}
             fontWeight="fontWeightBold"
+            component="h2"
           >
             <strong>HOW IT WORKS</strong>
           </Typography>
@@ -99,6 +101,7 @@ function ProductCTA(props) {
                 p={2}
                 gutterBottom
                 className={classes.font}
+                component="h3"
               >
                 <strong>Who should use this tool?</strong>
               </Typography>

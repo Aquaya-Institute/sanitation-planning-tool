@@ -36,18 +36,11 @@ function createMarks(array) {
   return returnedTarget;
 }
 
-const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
-  const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
-  // const [mapID, setMapID] = useState(null);
+const FilterMenuContent = ({ cat, layerID, clickRefData, tabIndex }) => {
+  const [{ currentMapID, currentLayerID, currentCountry }, dispatch] =
+    React.useContext(MapContext);
   const classes = useStyles();
-
-  // useEffect(() => {
-  //   if (currentMapID) {
-  //     console.log(currentMapID);
-  //     setMapID(currentMapID);
-  //   }
-  // }, [currentMapID]);
-
+  const filterRefcat = React.useRef();
   const updateFilter = ({
     layerIndex,
     filterIndex,
@@ -74,6 +67,15 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
       newValue[categoryFilterIndex] = new_cat_obj;
     }
 
+    // if (showSettlements === true) {
+    //   currentCountry[currentLayerID].layer.hide();
+    //   settlementBoundary.hide();
+    // }
+
+    // function valuetext(value) {
+    //   return `${value}°C`;
+    // }
+
     dispatch({
       type: "layer.filter",
       mapID: currentMapID,
@@ -87,20 +89,30 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
     });
   };
 
+  // React.useEffect(() => {
+  //   if (filterRefcat.current) {
+  //     filterRefcat.current.focus();
+  //   }
+  // }, []);
+
   return (
     <React.Fragment key="filterListDiv">
-      {maps[currentMapID].layers[layerID].filters.map((filter, filterIndex) => (
+      {currentCountry[currentLayerID].filters.map((filter, filterIndex) => (
         <React.Fragment key={"filterListDiv" + filterIndex}>
           {filter.subcategory === cat && filter.type !== "none" && (
             <List key="filterList">
               {filter.type === "categorical" ? (
-                <ListItem key={"cat" + filterIndex} className={classes.nested}>
+                <ListItem
+                  key={"cat" + filterIndex}
+                  className={classes.nested}
+                  // tabIndex={tabIndex}
+                >
                   <Grid
                     container
-                    spacing={0}
                     key={"catSubHeader" + filterIndex}
+                    alignItems="center"
                   >
-                    <Grid item xs={11} key={"catSubHeader2" + filterIndex}>
+                    <Grid item xs={10} key={"catSubHeader2" + filterIndex}>
                       <Typography
                         variant="subtitle2"
                         key={"catSubHeader3" + filterIndex}
@@ -108,11 +120,17 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         {filter.name} {filter.unit}
                       </Typography>
                     </Grid>
-                    <Grid item xs={1} key={"catSubHeader4" + filterIndex}>
+                    <Grid
+                      item
+                      xs={2}
+                      key={"catSubHeader4" + filterIndex}
+                      // tabIndex={tabIndex}
+                    >
                       <DatasetInfoPopover
                         filter={filter}
                         filterIndex={filterIndex}
                         clickRefData={clickRefData}
+                        tabIndex={0}
                         // setPopoverOpen={setPopoverOpen}
                       />
                     </Grid>
@@ -125,10 +143,13 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                       >
                         {filter.value.map((category, cat_filter_index) => (
                           <FormControlLabel
-                            key={cat_filter_index + "formcontrol"}
+                            // tabIndex={tabIndex}
+                            key={cat_filter_index + "_formcontrol"}
                             control={
                               <Checkbox
-                                key={cat_filter_index + "box"}
+                                // tabIndex={-1}
+                                inputRef={filterRefcat}
+                                key={cat_filter_index + "_box"}
                                 checked={category.checked}
                                 name={category.name}
                                 onChange={(e, newval) => {
@@ -145,6 +166,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                                 }
                                 checkedIcon={<CheckBoxIcon fontSize="small" />}
                                 color="primary"
+                                inputProps={{ "aria-label": "cat-checkbox" }}
                               />
                             }
                             label={
@@ -165,15 +187,17 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
               ) : filter.type === "range" ? (
                 <ListItem
                   key={"range" + filterIndex}
-                  button
+                  // button
                   className={classes.nested}
+                  // tabIndex={tabIndex}
                 >
                   <Grid
                     container
                     spacing={0}
                     key={"rangeSubHeader" + filterIndex}
+                    alignItems="center"
                   >
-                    <Grid item xs={11} key={"rangeSubHeader2" + filterIndex}>
+                    <Grid item xs={10} key={"rangeSubHeader2" + filterIndex}>
                       <Typography
                         variant="subtitle2"
                         key={"rangeSubHeader3" + filterIndex}
@@ -181,16 +205,24 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         {filter.name} ({filter.unit})
                       </Typography>
                     </Grid>
-                    <Grid item xs={1} key={"rangeSubHeader4" + filterIndex}>
+                    <Grid
+                      item
+                      xs={2}
+                      key={"rangeSubHeader4" + filterIndex}
+                      // tabIndex={tabIndex}
+                    >
                       <DatasetInfoPopover
                         filter={filter}
                         filterIndex={filterIndex}
                         clickRefData={clickRefData}
+                        tabIndex={0}
                         // setPopoverOpen={setPopoverOpen}
                       />
                     </Grid>
                     <Grid item xs={11} key={"sliderGrid" + filterIndex}>
                       <Slider
+                        // tabIndex={tabIndex}
+                        tabIndex={-1}
                         id={filterIndex}
                         key={"slider" + filterIndex}
                         value={[
@@ -201,6 +233,8 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         max={filter.max}
                         aria-labelledby={filter.name + " range slider"}
                         valueLabelDisplay="auto"
+                        getAriaValueText={(value) => `${value}`}
+                        // getAriaValueText={`${filter.value[0]}, ${filter.value[1]}`}
                         marks={createMarks([
                           Number(filter.min),
                           Number(filter.max),
@@ -220,15 +254,17 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
               ) : (
                 <ListItem
                   key={"NLrange" + filterIndex}
-                  button
+                  // button
                   className={classes.nested}
+                  // tabIndex={tabIndex}
                 >
                   <Grid
                     container
                     spacing={0}
                     key={"NLrangeSubHeader" + filterIndex}
+                    alignItems="center"
                   >
-                    <Grid item xs={11} key={"NLrangeSubHeader2" + filterIndex}>
+                    <Grid item xs={10} key={"NLrangeSubHeader2" + filterIndex}>
                       <Typography
                         variant="subtitle2"
                         key={"NLrangeSubHeader3" + filterIndex}
@@ -236,16 +272,24 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         {filter.name} ({filter.unit})
                       </Typography>
                     </Grid>
-                    <Grid item xs={1} key={"NLrangeSubHeader4" + filterIndex}>
+                    <Grid
+                      item
+                      xs={2}
+                      key={"NLrangeSubHeader4" + filterIndex}
+                      // tabIndex={tabIndex}
+                    >
                       <DatasetInfoPopover
                         filter={filter}
                         filterIndex={filterIndex}
                         clickRefData={clickRefData}
+                        tabIndex={0}
                         // setPopoverOpen={setPopoverOpen}
                       />
                     </Grid>
                     <Grid item xs={11} key={"NLsliderGrid" + filterIndex}>
                       <SliderNonLinear
+                        // tabIndex={tabIndex}
+                        tabIndex={-1}
                         id={filterIndex}
                         key={"slider" + filterIndex}
                         value={[
@@ -256,6 +300,7 @@ const FilterMenuContent = ({ cat, layerID, clickRefData }) => {
                         max={filter.max}
                         aria-labelledby={filter.name + " non-linear slider"}
                         valueLabelDisplay="auto"
+                        getAriaValueText={(value) => `${value}`}
                         marks={filter.marks}
                         callback={(e, newval, scaledVal) => {
                           updateFilter({

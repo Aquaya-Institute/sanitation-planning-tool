@@ -13,6 +13,7 @@ const FilterMenu = ({
   cat,
   setSelectedMenu,
   layerID,
+  // tabIndex,
 }) => {
   const [menuTileColor, setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
@@ -49,6 +50,13 @@ const FilterMenu = ({
     };
   }, [setFilterMenuOpen, setSelectedMenu]);
 
+  useEffect(() => {
+    // document.getElementById("filterBox").focus();
+    if (clickRefMenu.current) {
+      clickRefMenu.current.focus();
+    }
+  }, []);
+
   return (
     <Popper
       id={cat + "filterMenu"}
@@ -56,7 +64,7 @@ const FilterMenu = ({
       key={cat + "filterMenu"}
       anchorEl={anchorEl}
       placement={
-        cat === "health"
+        cat === "health" || cat === "socioeconomic"
           ? "left-end"
           : // : cat === "socioeconomic"
             "left"
@@ -65,7 +73,7 @@ const FilterMenu = ({
       style={{
         height: "auto",
         maxHeight: "500px",
-        width: "285px",
+        width: "275px",
         zIndex: "1300",
         backgroundColor: "#fff",
         overflow: "auto",
@@ -99,13 +107,26 @@ const FilterMenu = ({
         </Typography>
       </Box>
       <Divider />
+
       <Box
         key="filterBox"
         style={{
           maxHeight: "400px",
           overflow: "auto",
         }}
+        id="filterBox"
       >
+        <Box
+          key="filter instructions"
+          p={1}
+          variant="subtitle2"
+          fontStyle="italic"
+          fontSize={13.5}
+          fontWeight="fontWeightBold"
+        >
+          Drag the minimum and maximum values to set desired value criteria for
+          each filter:
+        </Box>
         {layerID === "1" && cat !== "accessibility" && (
           <Box m={1} fontStyle="italic" key="noFiltersBox">
             <Typography variant={"body2"} key="noFiltersText">
@@ -127,6 +148,7 @@ const FilterMenu = ({
           cat={cat}
           layerID={layerID}
           clickRefData={clickRefData}
+          // tabIndex={tabIndex}
           // setPopoverOpen={setPopoverOpen}
         />
       </Box>

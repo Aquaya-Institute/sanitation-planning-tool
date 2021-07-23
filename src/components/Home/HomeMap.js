@@ -25,16 +25,13 @@ const MapChart = () => {
       obj["markerOffset"] = -28;
       obj["name"] = `${value.name}`;
       obj["coordinates"] = [`${value.long}`, `${value.lat}`];
+      obj["key"] = `${key}`;
       markers.push(obj);
       countries.push(value.name);
     }
   }, [maps]);
 
   const history = useHistory();
-
-  //   const handleClick = () => {
-  //     history.push("/newurl");
-  //   }
 
   return (
     <ComposableMap
@@ -48,41 +45,39 @@ const MapChart = () => {
     >
       <Geographies geography={geoUrl}>
         {({ geographies }) =>
-          geographies
-            // .filter((d) => d.properties.REGION_UN === "Americas")
-            .map((geo) => {
-              const cur = countries.find((s) => s === geo.properties.NAME);
-              return (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  fill={cur ? "#651D32" : "#EAEAEC"}
-                  stroke="#D6D6DA"
-                  // onMouseEnter={() => {
-                  //     const { NAME, POP_EST } = geo.properties;
-                  //     setTooltipContent(`${NAME} — ${rounded(POP_EST)}`);
-                  //   }}
-                  //   onMouseLeave={() => {
-                  //     setTooltipContent("");
-                  //   }}
-                  onClick={() => {
-                    if (cur) {
-                      history.push(`/maps/${cur.toLowerCase()}`);
+          geographies.map((geo) => {
+            const cur = countries.find((s) => s === geo.properties.NAME);
+            return (
+              <Geography
+                key={geo.rsmKey}
+                geography={geo}
+                fill={cur ? "#651D32" : "#EAEAEC"}
+                stroke="#D6D6DA"
+                onClick={() => {
+                  if (cur) {
+                    var mapID;
+                    for (let i = 0; i < countries.length; i++) {
+                      if (markers[i].name === cur) {
+                        mapID = markers[i].key;
+                        break;
+                      }
                     }
-                  }}
-                  style={{
-                    hover: {
-                      fill: cur ? "#BA0C2F" : "#EAEAEC",
-                      outline: "none",
-                    },
-                    pressed: {
-                      fill: cur ? "#E42" : "#EAEAEC",
-                      outline: "none",
-                    },
-                  }}
-                />
-              );
-            })
+                    history.push(`/maps/${mapID.toLowerCase()}`);
+                  }
+                }}
+                style={{
+                  hover: {
+                    fill: cur ? "#BA0C2F" : "#EAEAEC",
+                    outline: "none",
+                  },
+                  pressed: {
+                    fill: cur ? "#E42" : "#EAEAEC",
+                    outline: "none",
+                  },
+                }}
+              />
+            );
+          })
         }
       </Geographies>
       {markers.map(({ name, coordinates, markerOffset }, i) => (

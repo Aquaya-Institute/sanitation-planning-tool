@@ -1,5 +1,6 @@
+import { Helmet } from "react-helmet";
 import { Container, Typography, Box, Paper } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import HomeFooter from "../components/Home/HomeFooter";
 
@@ -9,16 +10,21 @@ link.content =
   "The about page gives a short description of the tool and its intended use, and the organizations involved in the creation of the tool.";
 document.getElementsByTagName("head")[0].appendChild(link);
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "left",
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   paper: {
+//     padding: theme.spacing(2),
+//     textAlign: "left",
+//   },
+// }));
 function Privacy() {
-  const classes = useStyles();
+  // const classes = useStyles();
   return (
-    <>
+    <React.Fragment>
+      <Helmet>
+        <html lang="en" />
+        <title>Privacy Policy Page</title>
+        <meta name="Privacy Policy" content="SanPlan's privacy policy." />
+      </Helmet>
       <Container m={2}>
         <br />
         <Paper elevation={0}>
@@ -251,7 +257,7 @@ function Privacy() {
         </Paper>
       </Container>
       <HomeFooter />
-    </>
+    </React.Fragment>
   );
 }
 export default Privacy;

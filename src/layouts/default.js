@@ -43,22 +43,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DefaultLayout(props) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const mobileMenuId = "primary-search-account-menu-mobile";
   const [{}, dispatch] = React.useContext(MapContext);
 
-  const isMenuOpen = Boolean(anchorEl);
+  // const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
+  // const handleMenuClose = () => {
+  //   setAnchorEl(null);
+  //   handleMobileMenuClose();
+  // };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -146,7 +146,16 @@ export default function DefaultLayout(props) {
             <span>Change map to:</span>
           </Box>
           <Box ml={3}>
-            <MapSelector />
+            <MapSelector
+              // selectMapID="country-drop-id-nav"
+              // selectMapAria="country-drop-id-nav"
+              // selectMapName="country-drop-name-nav"
+              inputProps={{
+                name: "country-drop-name-nav",
+                id: "country-drop-id-nav",
+                "aria-label": "country-drop-id-nav",
+              }}
+            />
           </Box>
 
           <div className={classes.sectionDesktop}>
