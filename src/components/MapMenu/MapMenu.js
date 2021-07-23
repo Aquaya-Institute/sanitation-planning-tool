@@ -82,7 +82,6 @@ export const MapMenu = () => {
 
   useEffect(() => {
     if (currentMapID) {
-      console.log(currentMapID);
       setMapID(currentMapID);
     }
   }, [currentMapID]);

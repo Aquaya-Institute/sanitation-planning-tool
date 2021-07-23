@@ -122,7 +122,6 @@ const reducer = (state, action) => {
     //when a different country is selected
     case "map.select":
       return produce(state, (draft) => {
-        console.log("set current map to", action.mapID);
         draft.currentMapID = action.mapID;
         if (action.mapID !== null) {
           // var index = draft.maps[action.mapID].layers.length - 1;
@@ -222,11 +221,9 @@ const reducer = (state, action) => {
         //   if (index === action.layerID || index === "0") {
         //     draft.maps[mid].layers[action.layerID].visible = true;
         //     cartoLayer.show();
-        //     console.log("vistoggle");
         //   } else {
         //     draft.maps[mid].layers[index].visible = false;
         //     draft.maps[mid].layers[index].carto_layer.hide();
-        //     console.log("vistoggle");
         //   }
         // }
         var i;
@@ -290,7 +287,6 @@ const reducer = (state, action) => {
         // draft.maps[action.mapID].layers[
         //   action.layerID
         // ].carto_layer._style._content = action.styleNew;
-        // console.log(action.styleNew);
       });
 
     //when a filter is manipulated
@@ -437,7 +433,6 @@ const reducer = (state, action) => {
             action.queryDist.indexOf("WHERE") + "WHERE".length,
             action.queryDist.length
           );
-          console.log(clause);
           draft.queryDist = clause;
         } else {
           draft.queryDist = null;
@@ -548,7 +543,6 @@ const reducer = (state, action) => {
             }
           });
           if (layerstoremove.length > 1) {
-            console.log("Cleanup: layertoremove", layerstoremove);
             draft.carto_client.removeLayers(layerstoremove);
           }
         }

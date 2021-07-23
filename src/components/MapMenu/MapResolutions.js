@@ -34,7 +34,6 @@ export const MapResolutions = ({
 
   useEffect(() => {
     if (currentMapID !== mapID) {
-      console.log(currentMapID);
       setMapID(currentMapID);
       // setDistName([]);
       // setcurrentLayerID(maps[currentMapID].currentLayer);
@@ -48,10 +47,8 @@ export const MapResolutions = ({
         clickRefMenu.current &&
         !clickRefMenu.current.contains(event.target)
       ) {
-        console.log("clicked outside");
         if (clickRef.current && !clickRef.current.contains(event.target)) {
           // setPopoverOpen(null);
-          console.log("clicked outside");
         } else if (
           clickRef.current &&
           clickRef.current.contains(event.target)
@@ -69,7 +66,6 @@ export const MapResolutions = ({
   }, [setFilterMenuOpen, setSelectedMenu]);
 
   const toggleLayerVisibility = (currentLayerID) => {
-    console.log("radio");
     dispatch({
       type: "layer.toggle",
       mapID: mapID,

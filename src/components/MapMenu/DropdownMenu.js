@@ -77,7 +77,6 @@ export const DropdownMenu = ({
 
   useEffect(() => {
     if (currentMapID !== mapID) {
-      console.log(currentMapID);
       setMapID(currentMapID);
       // document.getElementById("select-areas-mutiple-checkbox").focus();
     }
@@ -234,7 +233,6 @@ export const DropdownMenu = ({
       <ClickAwayListener
         mouseEvent="onMouseDown"
         onClickAway={(e) => {
-          console.log("click away");
           setFilterMenuOpen(false);
           setSelectedMenu(null);
         }}

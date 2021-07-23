@@ -90,16 +90,13 @@ export const Map = () => {
   //click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      console.log("1");
       if (clickRef.current && !clickRef.current.contains(event.target)) {
         if (clickRef.current && !clickRef.current.contains(event.target)) {
-          console.log("clicked outside");
           if (
             clickRefPop.current &&
             !clickRefPop.current.contains(event.target)
           ) {
             setPopoverOpen(null);
-            console.log("clicked outside");
           } else if (
             clickRefPop.current &&
             clickRefPop.current.contains(event.target)
@@ -115,7 +112,6 @@ export const Map = () => {
             }
           }
         }
-        console.log("clicked outside");
       }
     };
     document.addEventListener("click", handleClickOutside, true);
@@ -126,7 +122,6 @@ export const Map = () => {
 
   //set mapID
   useMemo(() => {
-    console.log("currentMapID", currentMapID);
     if (currentMapID !== mapID) {
       setMapID(currentMapID);
     }
@@ -134,7 +129,6 @@ export const Map = () => {
 
   //clean up
   useMemo(() => {
-    console.log("mapClean");
     if (mapID && dispatch) {
       return function cleanup() {
         dispatch({
@@ -150,10 +144,7 @@ export const Map = () => {
 
   // load leaflet
   useEffect(() => {
-    console.log("load");
-
     if (leaflet !== undefined) {
-      console.log("remove map renderer");
       leaflet.remove();
     }
 
@@ -204,7 +195,6 @@ export const Map = () => {
   Remove any previous layers from cartoClient
   */
   useEffect(() => {
-    console.log("2");
     if (mapID) {
       setCurrentMapState((prevMap) => {
         if (prevMap && prevMap.name === maps[mapID].name) {
@@ -225,10 +215,7 @@ export const Map = () => {
   filtering, toggling visibility 
   */
   useEffect(() => {
-    console.log("Selected Map Changed", currentMapState);
-
     if (cartoClient && mapID && initialLoad.current === false) {
-      console.log("Creating Carto Layers");
       const _mapID = mapID;
 
       var objlist = [];
@@ -338,11 +325,9 @@ export const Map = () => {
           cartoStyle: _style,
           cartoFilters: _filters,
         });
-        console.log("cycle");
         initialLoad.current = true;
       });
       setPopoverColumns(objlist);
-      console.log(popoverColumns);
     }
   }, [mapID, cartoClient]);
 
@@ -351,7 +336,6 @@ export const Map = () => {
     if (initialLoad.current === true && currentLayer !== null) {
       const layer = maps[mapID].layers[currentLayerID];
       currentLayer.on("metadataChanged", function (event) {
-        console.log(event);
         if (
           layer.name === maps[mapID].layers[currentLayerID].name &&
           (currentCountry[currentLayerID].style ===
@@ -403,7 +387,6 @@ export const Map = () => {
       currentLayerID !== "1"
     ) {
       currentLayer.on("featureClicked", (featureEvent) => {
-        console.log("clicked a feature", featureEvent);
         if (highlightLayer.current) {
           mapRef.current.removeLayer(highlightLayer.current);
         }
@@ -443,7 +426,6 @@ export const Map = () => {
           });
         setPopup([maps[mapID].layers[currentLayerID].name, featureEvent]);
         setPopoverOpen(false);
-        console.log("popup", popup);
       });
     }
   }, [currentLayer, currentLayerID, mapID]);
@@ -453,7 +435,6 @@ export const Map = () => {
     if (allowSettlements === true && mapID) {
       if (showSettlements === true) {
         if (maps[mapID].layers["4"] && cartoClient) {
-          console.log("3");
           if (layerQuery) {
             // let queryURL = currentCountry[currentLayerID].source._query.replace(
             //   /\s/g,
@@ -513,7 +494,6 @@ export const Map = () => {
               }
             );
             settlementBoundaryset.on("featureClicked", (featureEvent) => {
-              console.log("clicked a feature", featureEvent);
               var result = null;
               var input = featureEvent.data.cartodb_id;
               fetch(
@@ -543,7 +523,6 @@ export const Map = () => {
                 });
               setPopup([maps[mapID].layers["4"].carto_tableName, featureEvent]);
               setPopoverOpen(false);
-              console.log("popup", popup);
             });
             cartoClient.addLayer(settlementBoundaryset);
             currentLayer.show();
@@ -564,7 +543,6 @@ export const Map = () => {
 
   // popup data
   useMemo(() => {
-    console.log("updated popup", popup);
     if (popup) {
       var dat = [];
       var layerID = null;
@@ -632,7 +610,6 @@ export const Map = () => {
 
   useEffect(() => {
     if (mapRef.current) {
-      console.log("4");
       if (layerRef.current) {
         mapRef.current.removeLayer(layerRef.current);
       }
@@ -652,7 +629,6 @@ export const Map = () => {
   // update markers
 
   useEffect(() => {
-    console.log("5");
     if (userData) {
       var markerOptions = {
         radius: myRadius,

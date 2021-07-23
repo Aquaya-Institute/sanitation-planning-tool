@@ -17,7 +17,6 @@ export const MapSelector = ({
 
   React.useLayoutEffect(() => {
     if (currentMapID) {
-      console.log(currentMapID);
       setMapID(currentMapID);
     } else {
       setMapID("Select country");
@@ -34,7 +33,6 @@ export const MapSelector = ({
       dispatch({
         type: "layer.removeCartoLayers",
       });
-      console.log("selectorRemove");
       dispatch({
         type: "map.select",
         mapID: event.target.value,

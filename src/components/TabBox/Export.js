@@ -54,7 +54,6 @@ export const Export = () => {
 
   useEffect(() => {
     if (currentMapID !== mapID) {
-      console.log(currentMapID);
       setMapID(currentMapID);
     }
   }, [currentMapID, mapID]);

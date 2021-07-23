@@ -259,7 +259,6 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
 
   useEffect(() => {
     if (datasetName) {
-      console.log("datasetName", datasetName);
       if (datasetName) {
         datasetsInfo.forEach((data, i) => {
           if (datasetName.includes(data.name)) {

@@ -67,7 +67,6 @@ export const MapPopper = ({
   // var dat_popup = {};
   //   // popup data
   //   useMemo(() => {
-  //     console.log("updated popup", popup);
   //     if (popup) {
   //       var dat = [];
   //       maps[mapID].layers[currentLayerID].filters.forEach(function (element) {
