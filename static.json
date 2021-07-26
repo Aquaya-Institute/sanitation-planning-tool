@@ -3,7 +3,7 @@
   "https_only": true,
   "headers": {
     "/**": {
-      "Content-Security-Policy": "default-src 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: https: blob: ; script-src 'unsafe-inline' https://api.mapbox.com sha384-kikMIBon+ybxILwmJNVfcKND+LmFm16pIa7yCRXNnhHZ7cNuL6Wal5sjYt1/FDBn; manifest-src 'self'; script-src-elem 'self' https://api.mapbox.com sha384-kikMIBon+ybxILwmJNVfcKND+LmFm16pIa7yCRXNnhHZ7cNuL6Wal5sjYt1/FDBn; frame-ancestors 'none'; connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com; worker-src blob: ; child-src blob: ;",
+      "Content-Security-Policy": "default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css https://fonts.googleapis.com; img-src 'self' data: https: blob: ; script-src 'unsafe-inline' https://api.mapbox.com; manifest-src 'self'; script-src-elem 'self' https://api.mapbox.com ; frame-ancestors 'none'; connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com; worker-src blob: ; child-src blob: ;",
       "Referrer-Policy": "strict-origin-when-cross-origin",
       "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
       "X-Content-Type-Options": "nosniff",
