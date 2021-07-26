@@ -3,7 +3,7 @@
   "https_only": true,
   "headers": {
     "/**": {
-      "Content-Security-Policy": "default-src 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: https:; script-src 'unsafe-inline' https://api.mapbox.com; manifest-src 'self'; frame-ancestors 'none'; connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com",
+      "Content-Security-Policy": "default-src 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: https:; script-src 'unsafe-inline' https://api.mapbox.com; manifest-src 'self'; script-src-elem 'self' api.mapbox.com; frame-ancestors 'none'; connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com",
       "Referrer-Policy": "no-referrer, strict-origin-when-cross-origin",
       "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
       "X-Content-Type-Options": "nosniff",

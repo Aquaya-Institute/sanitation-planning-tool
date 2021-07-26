@@ -447,44 +447,67 @@ const reducer = (state, action) => {
         draft.currentCountry[draft.currentLayerID].filters.forEach(
           (filter, filterIndex) => {
             if (filter.type === "categorical") {
-              const cartofilter_c = layer.layer
-                .getSource()
-                .getFilters()[0] //since this is a filtercollection
-                .getFilters()[filterIndex];
+              if (
+                filter.value[0].checked === true &&
+                filter.value[1].checked === true &&
+                filter.value[2].checked === true &&
+                filter.value[3].checked === true
+              ) {
+                return null;
+              } else {
+                const cartofilter_c = layer.layer
+                  .getSource()
+                  .getFilters()[0] //since this is a filtercollection
+                  .getFilters()[filterIndex];
 
-              let col_vals_tofilter = [];
-              //get the category filter state and create an array
-              //of checked=true col values to filter
-              filter.value.forEach((category) => {
-                category.checked = true;
-                col_vals_tofilter.push(category.value);
-              });
-              cartofilter_c.setFilters({
-                in: col_vals_tofilter,
-              });
+                let col_vals_tofilter = [];
+                //get the category filter state and create an array
+                //of checked=true col values to filter
+                filter.value.forEach((category) => {
+                  category.checked = true;
+                  col_vals_tofilter.push(category.value);
+                });
+                cartofilter_c.setFilters({
+                  in: col_vals_tofilter,
+                });
+              }
             } else if (filter.type === "range") {
-              filter.value = [filter.min, filter.max];
-              const cartofilter = layer.layer
-                .getSource()
-                .getFilters()[0] //since this is a filtercollection
-                .getFilters()[filterIndex];
-              //this is how you set the filter. this is specific to range filter
-              cartofilter.setFilters({
-                gte: filter.min,
-                lte: filter.max,
-              });
+              if (
+                filter.value[0] === filter.min &&
+                filter.value[1] === filter.max
+              ) {
+                return null;
+              } else {
+                filter.value = [filter.min, filter.max];
+                const cartofilter = layer.layer
+                  .getSource()
+                  .getFilters()[0] //since this is a filtercollection
+                  .getFilters()[filterIndex];
+                //this is how you set the filter. this is specific to range filter
+                cartofilter.setFilters({
+                  gte: filter.min,
+                  lte: filter.max,
+                });
+              }
             } else if (filter.type === "range_non_linear") {
-              filter.scaledValue = [filter.scaledMin, filter.scaledMax];
-              filter.value = [filter.min, filter.max];
-              const cartofilter_non = layer.layer
-                .getSource()
-                .getFilters()[0] //since this is a filtercollection
-                .getFilters()[filterIndex];
-              //this is how you set the filter. this is specific to range filter
-              cartofilter_non.setFilters({
-                gte: filter.scaledMin,
-                lte: filter.scaledMax,
-              });
+              if (
+                filter.value[0] === filter.min &&
+                filter.value[1] === filter.max
+              ) {
+                return null;
+              } else {
+                filter.scaledValue = [filter.scaledMin, filter.scaledMax];
+                filter.value = [filter.min, filter.max];
+                const cartofilter_non = layer.layer
+                  .getSource()
+                  .getFilters()[0] //since this is a filtercollection
+                  .getFilters()[filterIndex];
+                //this is how you set the filter. this is specific to range filter
+                cartofilter_non.setFilters({
+                  gte: filter.scaledMin,
+                  lte: filter.scaledMax,
+                });
+              }
             }
           }
         );
