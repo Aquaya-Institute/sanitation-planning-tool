@@ -122,7 +122,6 @@ const reducer = (state, action) => {
     //when a different country is selected
     case "map.select":
       return produce(state, (draft) => {
-        console.log("set current map to", action.mapID);
         draft.currentMapID = action.mapID;
         if (action.mapID !== null) {
           // var index = draft.maps[action.mapID].layers.length - 1;
@@ -222,11 +221,9 @@ const reducer = (state, action) => {
         //   if (index === action.layerID || index === "0") {
         //     draft.maps[mid].layers[action.layerID].visible = true;
         //     cartoLayer.show();
-        //     console.log("vistoggle");
         //   } else {
         //     draft.maps[mid].layers[index].visible = false;
         //     draft.maps[mid].layers[index].carto_layer.hide();
-        //     console.log("vistoggle");
         //   }
         // }
         var i;
@@ -240,6 +237,17 @@ const reducer = (state, action) => {
             draft.activeLegend = i.toString();
             break;
           }
+        }
+        if (draft.queryDist && draft.currentLayerID > 1) {
+          let queryedit =
+            `SELECT * FROM ${
+              draft.maps[draft.currentMapID].layers[draft.currentLayerID]
+                .carto_tableName
+            } WHERE` + draft.queryDist;
+          draft.currentCountry[draft.currentLayerID].source.setQuery(queryedit);
+          draft.currentCountry[draft.currentLayerID].layer
+            .getSource()
+            .setQuery(queryedit);
         }
         // if (draft.showSettlements === true) {
         //   draft.carto_client.removeLayer(draft.settlementBoundary);
@@ -290,7 +298,6 @@ const reducer = (state, action) => {
         // draft.maps[action.mapID].layers[
         //   action.layerID
         // ].carto_layer._style._content = action.styleNew;
-        // console.log(action.styleNew);
       });
 
     //when a filter is manipulated
@@ -437,7 +444,6 @@ const reducer = (state, action) => {
             action.queryDist.indexOf("WHERE") + "WHERE".length,
             action.queryDist.length
           );
-          console.log(clause);
           draft.queryDist = clause;
         } else {
           draft.queryDist = null;
@@ -452,44 +458,67 @@ const reducer = (state, action) => {
         draft.currentCountry[draft.currentLayerID].filters.forEach(
           (filter, filterIndex) => {
             if (filter.type === "categorical") {
-              const cartofilter_c = layer.layer
-                .getSource()
-                .getFilters()[0] //since this is a filtercollection
-                .getFilters()[filterIndex];
+              if (
+                filter.value[0].checked === true &&
+                filter.value[1].checked === true &&
+                filter.value[2].checked === true &&
+                filter.value[3].checked === true
+              ) {
+                return null;
+              } else {
+                const cartofilter_c = layer.layer
+                  .getSource()
+                  .getFilters()[0] //since this is a filtercollection
+                  .getFilters()[filterIndex];
 
-              let col_vals_tofilter = [];
-              //get the category filter state and create an array
-              //of checked=true col values to filter
-              filter.value.forEach((category) => {
-                category.checked = true;
-                col_vals_tofilter.push(category.value);
-              });
-              cartofilter_c.setFilters({
-                in: col_vals_tofilter,
-              });
+                let col_vals_tofilter = [];
+                //get the category filter state and create an array
+                //of checked=true col values to filter
+                filter.value.forEach((category) => {
+                  category.checked = true;
+                  col_vals_tofilter.push(category.value);
+                });
+                cartofilter_c.setFilters({
+                  in: col_vals_tofilter,
+                });
+              }
             } else if (filter.type === "range") {
-              filter.value = [filter.min, filter.max];
-              const cartofilter = layer.layer
-                .getSource()
-                .getFilters()[0] //since this is a filtercollection
-                .getFilters()[filterIndex];
-              //this is how you set the filter. this is specific to range filter
-              cartofilter.setFilters({
-                gte: filter.min,
-                lte: filter.max,
-              });
+              if (
+                filter.value[0] === filter.min &&
+                filter.value[1] === filter.max
+              ) {
+                return null;
+              } else {
+                filter.value = [filter.min, filter.max];
+                const cartofilter = layer.layer
+                  .getSource()
+                  .getFilters()[0] //since this is a filtercollection
+                  .getFilters()[filterIndex];
+                //this is how you set the filter. this is specific to range filter
+                cartofilter.setFilters({
+                  gte: filter.min,
+                  lte: filter.max,
+                });
+              }
             } else if (filter.type === "range_non_linear") {
-              filter.scaledValue = [filter.scaledMin, filter.scaledMax];
-              filter.value = [filter.min, filter.max];
-              const cartofilter_non = layer.layer
-                .getSource()
-                .getFilters()[0] //since this is a filtercollection
-                .getFilters()[filterIndex];
-              //this is how you set the filter. this is specific to range filter
-              cartofilter_non.setFilters({
-                gte: filter.scaledMin,
-                lte: filter.scaledMax,
-              });
+              if (
+                filter.value[0] === filter.min &&
+                filter.value[1] === filter.max
+              ) {
+                return null;
+              } else {
+                filter.scaledValue = [filter.scaledMin, filter.scaledMax];
+                filter.value = [filter.min, filter.max];
+                const cartofilter_non = layer.layer
+                  .getSource()
+                  .getFilters()[0] //since this is a filtercollection
+                  .getFilters()[filterIndex];
+                //this is how you set the filter. this is specific to range filter
+                cartofilter_non.setFilters({
+                  gte: filter.scaledMin,
+                  lte: filter.scaledMax,
+                });
+              }
             }
           }
         );
@@ -548,7 +577,6 @@ const reducer = (state, action) => {
             }
           });
           if (layerstoremove.length > 1) {
-            console.log("Cleanup: layertoremove", layerstoremove);
             draft.carto_client.removeLayers(layerstoremove);
           }
         }
@@ -566,7 +594,11 @@ const reducer = (state, action) => {
 
     case "boundary.highlight":
       return produce(state, (draft) => {
+        if (draft.highlightBoundary) {
+          draft.leafletMap.removeLayer(draft.highlightBoundary);
+        }
         draft.highlightBoundary = action.highlightBoundary;
+        draft.leafletMap.addLayer(action.highlightBoundary);
       });
 
     case "settlement.boundary":

@@ -102,7 +102,6 @@ export const UploadButton = () => {
   function updateData(result) {
     // setState(null);
     var data = result.data;
-    console.log(data);
     dispatch({
       type: "user.upload",
       userData: data,
@@ -110,7 +109,6 @@ export const UploadButton = () => {
   }
   useEffect(() => {
     if (currentMapID) {
-      console.log(currentMapID);
       setMapID(currentMapID);
     }
   }, [currentMapID]);

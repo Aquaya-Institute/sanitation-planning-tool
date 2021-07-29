@@ -67,7 +67,6 @@ export const MapPopper = ({
   // var dat_popup = {};
   //   // popup data
   //   useMemo(() => {
-  //     console.log("updated popup", popup);
   //     if (popup) {
   //       var dat = [];
   //       maps[mapID].layers[currentLayerID].filters.forEach(function (element) {
@@ -153,8 +152,15 @@ export const MapPopper = ({
           }}
         >
           <div className={classes.paper}>
-            <Grid container p={1} key={"popperHeader"}>
-              <Grid item xs={10} direction="row" justifyContent="flex-start">
+            <Grid
+              container
+              p={1}
+              key={"popperHeader"}
+              alignItems="flex-start"
+              direction="row"
+              justifyContent="flex-start"
+            >
+              <Grid item xs={10}>
                 {/* <Fragment key={"popper"}> */}
                 {activeLegend !== "0" && popupData.data.od ? (
                   <Box>
@@ -248,7 +254,7 @@ export const MapPopper = ({
                     <CloseIcon
                       key={"popoverClose"}
                       fontSize="small"
-                      color="disabled"
+                      color="default"
                       onClick={(e) => {
                         setPopoverOpen(false);
                       }}
@@ -437,14 +443,14 @@ export const MapPopper = ({
               <Grid
                 item
                 xs={2}
-                justifyContent="flex-end"
-                direction="row"
-                alignItems="flex-start"
+                // justifyContent="flex-end"
+                // direction="row"
+                // alignItems="flex-start"
               >
                 <IconButton
                   key={"popperClose"}
                   p={0}
-                  color="disabled"
+                  color="default"
                   onClick={(e) => {
                     setPopup(null);
                     if (highlightBoundary) {

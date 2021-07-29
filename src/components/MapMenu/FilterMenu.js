@@ -32,7 +32,6 @@ const FilterMenu = ({
           !clickRefData.current.contains(event.target)
         ) {
           // setPopoverOpen(null);
-          console.log("clicked outside");
         } else if (
           clickRefData.current &&
           clickRefData.current.contains(event.target)
@@ -40,7 +39,6 @@ const FilterMenu = ({
         } else {
           setFilterMenuOpen(false);
           setSelectedMenu(null);
-          console.log("clicked outside");
         }
       }
     };
@@ -82,7 +80,6 @@ const FilterMenu = ({
       onClose={(e) => {
         setFilterMenuOpen(false);
         setMenuTileColor(false);
-        console.log(menuTileColor);
       }}
     >
       {/* <Grid container justify="flex-end" pt={2} key={cat + "filterMenuHeader"}>
