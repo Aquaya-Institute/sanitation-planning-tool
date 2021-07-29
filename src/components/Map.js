@@ -36,6 +36,7 @@ export const Map = () => {
       settlementBoundary,
       currentCountry,
       allowSettlements,
+      highlightBoundary,
     },
     dispatch,
   ] = useContext(MapContext);
@@ -56,6 +57,7 @@ export const Map = () => {
   const clickRefPop = useRef(null);
   const mapRef = useRef(null);
   const initialLoad = useRef(false);
+  const [currentHighlight, setCurrentHighlight] = useState();
   const buckets_1 = useRef({
     legend: [
       { name: "Rural Remote", value: "#3d4bc7" },
@@ -105,6 +107,7 @@ export const Map = () => {
             setPopup(null);
             if (highlightLayer.current && cartoClient) {
               mapRef.current.removeLayer(highlightLayer.current);
+              highlightLayer.current = undefined;
             }
             if (settlementHighlight.current && cartoClient) {
               mapRef.current.removeLayer(settlementHighlight.current);
@@ -387,9 +390,9 @@ export const Map = () => {
       currentLayerID !== "1"
     ) {
       currentLayer.on("featureClicked", (featureEvent) => {
-        if (highlightLayer.current) {
-          mapRef.current.removeLayer(highlightLayer.current);
-        }
+        // if (highlightBoundary) {
+        //   mapRef.current.removeLayer(highlightBoundary);
+        // }
         var result = null;
         var input = featureEvent.data.cartodb_id;
         fetch(
@@ -405,24 +408,22 @@ export const Map = () => {
             };
             result = L.geoJson(JSON.parse(response.rows[0].the_geom), myStyle);
             highlightLayer.current = result;
+            // setCurrentHighlight(result);
+            // result.addTo(mapRef.current);
             dispatch({
               type: "boundary.highlight",
-              highlightBoundary: highlightLayer.current,
+              highlightBoundary: result,
             });
-            if (
-              settlementHighlight.current &&
-              popup !== undefined &&
-              popup !== null
-            ) {
-              mapRef.current.removeLayer(settlementHighlight.current);
-              // settlementHighlight.current.clearLayers();
-              result.addTo(mapRef.current);
-            } else if (
-              // settlementHighlight.current === null ||
-              settlementHighlight.current === undefined
-            ) {
-              result.addTo(mapRef.current);
-            }
+            // if (highlightBoundary && popup !== undefined && popup !== null) {
+            //   mapRef.current.removeLayer(highlightBoundary);
+            //   // settlementHighlight.current.clearLayers();
+            //   result.addTo(mapRef.current);
+            // } else if (
+            //   // settlementHighlight.current === null ||
+            //   highlightBoundary === null
+            // ) {
+            //   result.addTo(mapRef.current);
+            // }
           });
         setPopup([maps[mapID].layers[currentLayerID].name, featureEvent]);
         setPopoverOpen(false);
@@ -511,15 +512,16 @@ export const Map = () => {
                     JSON.parse(response.rows[0].the_geom),
                     myStyle
                   );
+                  // setCurrentHighlight(result);
                   settlementHighlight.current = result;
                   dispatch({
                     type: "boundary.highlight",
-                    highlightBoundary: settlementHighlight.current,
+                    highlightBoundary: result,
                   });
-                  if (highlightLayer.current) {
-                    mapRef.current.removeLayer(highlightLayer.current);
-                  }
-                  result.addTo(mapRef.current);
+                  // if (highlightBoundary) {
+                  //   mapRef.current.removeLayer(highlightBoundary);
+                  // }
+                  // highlightBoundary.addTo(mapRef.current);
                 });
               setPopup([maps[mapID].layers["4"].carto_tableName, featureEvent]);
               setPopoverOpen(false);

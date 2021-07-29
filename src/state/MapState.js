@@ -238,6 +238,17 @@ const reducer = (state, action) => {
             break;
           }
         }
+        if (draft.queryDist && draft.currentLayerID > 1) {
+          let queryedit =
+            `SELECT * FROM ${
+              draft.maps[draft.currentMapID].layers[draft.currentLayerID]
+                .carto_tableName
+            } WHERE` + draft.queryDist;
+          draft.currentCountry[draft.currentLayerID].source.setQuery(queryedit);
+          draft.currentCountry[draft.currentLayerID].layer
+            .getSource()
+            .setQuery(queryedit);
+        }
         // if (draft.showSettlements === true) {
         //   draft.carto_client.removeLayer(draft.settlementBoundary);
         //   draft.carto_client.addLayer(draft.settlementBoundary);
@@ -583,7 +594,11 @@ const reducer = (state, action) => {
 
     case "boundary.highlight":
       return produce(state, (draft) => {
+        if (draft.highlightBoundary) {
+          draft.leafletMap.removeLayer(draft.highlightBoundary);
+        }
         draft.highlightBoundary = action.highlightBoundary;
+        draft.leafletMap.addLayer(action.highlightBoundary);
       });
 
     case "settlement.boundary":

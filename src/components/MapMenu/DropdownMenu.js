@@ -192,7 +192,7 @@ export const DropdownMenu = ({
         );
       }
     }
-  }, [distName]);
+  }, [distName, currentLayerID]);
 
   useEffect(() => {
     if (distName.length > 0 && mapID) {
@@ -277,15 +277,9 @@ export const DropdownMenu = ({
                   className={classes.formControl}
                 >
                   {allDistricts.map((name, i) => (
-                    <MenuItem
-                      // tabIndex={tabIndex}
-                      key={i}
-                      value={name}
-                      className={classes.menu}
-                    >
+                    <MenuItem key={i} value={name} className={classes.menu}>
                       <Checkbox
                         checked={distName.indexOf(name) > -1}
-                        // tabIndex={tabIndex}
                         inputProps={{ "aria-label": "area-name-checkbox" }}
                       />
                       <ListItemText primary={name} />
