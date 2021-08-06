@@ -12,7 +12,7 @@ import { cambodia } from "./countries/cambodia";
 import { s_sudan } from "./countries/s_sudan";
 import { ethiopia } from "./countries/ethiopia";
 import { mozambique } from "./countries/mozambique";
-// import { senegal } from "./countries/senegal";
+import { senegal } from "./countries/senegal";
 
 enableMapSet();
 const legendStylesObj = legendStyles;
@@ -32,7 +32,7 @@ const initialState = {
     rwanda,
     nigeria,
     s_sudan,
-    // senegal,
+    senegal,
   },
   currentLayerID: "2",
   activeLegend: "0",

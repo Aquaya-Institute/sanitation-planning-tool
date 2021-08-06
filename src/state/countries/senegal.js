@@ -107,8 +107,8 @@ export const senegal = {
           type: "range",
           column_name: "od",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 97,
+          value: [0, 97],
           subcategory: "wash",
         },
         {
@@ -117,8 +117,8 @@ export const senegal = {
           type: "range",
           column_name: "timecities",
           min: 0,
-          max: 1000,
-          value: [0, 1000],
+          max: 695,
+          value: [0, 695],
           subcategory: "accessibility",
         },
         {
@@ -126,9 +126,9 @@ export const senegal = {
           unit: "%",
           type: "range",
           column_name: "dia",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 2.7,
+          max: 6.3,
+          value: [2.7, 6.3],
           subcategory: "health",
         },
         {
@@ -137,8 +137,8 @@ export const senegal = {
           type: "range",
           column_name: "cholera",
           min: 0,
-          max: 1000,
-          value: [0, 1000],
+          max: 13.2,
+          value: [0, 13.2],
           subcategory: "health",
         },
         {
@@ -147,8 +147,8 @@ export const senegal = {
           type: "range",
           column_name: "s_unimp",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 66,
+          value: [0, 66],
           subcategory: "wash",
         },
         {
@@ -166,9 +166,9 @@ export const senegal = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_w",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 1,
+          max: 7,
+          value: [1, 7],
           subcategory: "socioeconomic",
         },
         {
@@ -176,9 +176,9 @@ export const senegal = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_m",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 1,
+          max: 8,
+          value: [1, 8],
           subcategory: "socioeconomic",
         },
         {
@@ -186,9 +186,9 @@ export const senegal = {
           unit: "%",
           type: "range",
           column_name: "u5m",
-          min: 0,
-          max: 10,
-          value: [0, 10],
+          min: 3,
+          max: 12.1,
+          value: [3, 12.1],
           subcategory: "health",
         },
         {
@@ -196,9 +196,9 @@ export const senegal = {
           unit: "km.",
           type: "range",
           column_name: "dr",
-          min: 0,
-          max: 50,
-          value: [0, 50],
+          min: 0.1,
+          max: 62.4,
+          value: [0.1, 62.4],
           subcategory: "accessibility",
         },
         {
@@ -207,8 +207,8 @@ export const senegal = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 100,
-          value: [0, 100],
+          max: 115.6,
+          value: [0, 115.6],
           subcategory: "accessibility",
         },
         {
@@ -220,8 +220,8 @@ export const senegal = {
           max: 70, //we want 7 breaks not counting start value of 0.
           value: [0, 70], //slider range will be from 0-70, which we will scale to
           scaledMin: 0,
-          scaledMax: 500000,
-          scaledValue: [0, 500000], //the actual min/max of column
+          scaledMax: 410925,
+          scaledValue: [0, 410925], //the actual min/max of column
           subcategory: "socioeconomic",
           // define 7+1 non linear marks here, note that value goes from 0-70 only
           marks: [
