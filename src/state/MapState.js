@@ -13,6 +13,7 @@ import { s_sudan } from "./countries/s_sudan";
 import { ethiopia } from "./countries/ethiopia";
 import { mozambique } from "./countries/mozambique";
 import { senegal } from "./countries/senegal";
+import { madagascar } from "./countries/madagascar";
 
 enableMapSet();
 const legendStylesObj = legendStyles;
@@ -27,6 +28,7 @@ const initialState = {
     ethiopia,
     ghana,
     liberia,
+    madagascar,
     mozambique,
     niger,
     rwanda,

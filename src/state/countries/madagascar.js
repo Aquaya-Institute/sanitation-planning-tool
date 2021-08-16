@@ -1,9 +1,9 @@
 export const madagascar = {
-  name: "madagascar",
-  mapID: "Madagascar",
-  lat: 18.7669,
+  name: "Madagascar",
+  mapID: "madagascar",
+  lat: -18.7669,
   long: 46.8691,
-  zoom: 7,
+  zoom: 6,
   /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
