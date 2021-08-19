@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet";
 import { Container, Typography, Box, Paper } from "@material-ui/core";
-// import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import HomeFooter from "../components/Home/HomeFooter";
 
@@ -10,15 +9,7 @@ link.content =
   "The about page gives a short description of the tool and its intended use, and the organizations involved in the creation of the tool.";
 document.getElementsByTagName("head")[0].appendChild(link);
 
-// const useStyles = makeStyles((theme) => ({
-//   paper: {
-//     padding: theme.spacing(2),
-//     textAlign: "left",
-//   },
-// }));
-
 function FAQ() {
-  // const classes = useStyles();
   return (
     <React.Fragment>
       <Helmet>

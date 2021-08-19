@@ -30,7 +30,6 @@ const useCardStyles = makeStyles({
 });
 
 function Home() {
-  // const [{ maps }] = React.useContext(MapContext);
   const classes = useCardStyles();
   return (
     <React.Fragment>
@@ -57,9 +56,6 @@ function Home() {
               the dropdown:
             </Typography>
             <MapSelector
-              // selectMapID="country-drop-id-home"
-              // selectMapAria="country-drop-id-home"
-              // selectMapName="country-drop-name-home"
               inputProps={{
                 name: "country-drop-name-home",
                 id: "country-drop-id-home",

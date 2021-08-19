@@ -5,7 +5,6 @@ import { MapMenu } from "../components/MapMenu/MapMenu";
 import { Map } from "../components/Map";
 import { Grid } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import NoDataAlert from "../components/subcomponents/NoDataAlert";
 
 var link = document.createElement("meta");
 link.setAttribute("name", "map page description");

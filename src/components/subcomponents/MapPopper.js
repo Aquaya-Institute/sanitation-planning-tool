@@ -2,22 +2,27 @@ import React from "react";
 import { useState, useContext, Fragment } from "react";
 import { MapContext } from "../../state/MapState";
 import "leaflet/dist/leaflet.css";
-import { Link, Grid, Button, Box } from "@material-ui/core";
-import Popper from "@material-ui/core/Popper";
+import {
+  Link,
+  Grid,
+  Button,
+  Box,
+  Popper,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import CloseIcon from "@material-ui/icons/Close";
-import IconButton from "@material-ui/core/IconButton";
 import SaveIcon from "@material-ui/icons/Save";
 import { CSVLink } from "react-csv";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 
 const useStyles = makeStyles((theme) => ({
   paper: {

@@ -1,7 +1,6 @@
 import { Slider } from "@material-ui/core";
 
 export const SliderNonLinear = (props) => {
-
   const scale = (value) => {
     const previousMarkIndex = Math.floor(value / 10);
     const previousMark = props.marks[previousMarkIndex];

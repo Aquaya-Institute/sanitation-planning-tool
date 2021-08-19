@@ -106,10 +106,8 @@ const Tour = () => {
   const setTourViewed = () => {
     localStorage.setItem("tour", "1");
   };
-
   const callback = (data) => {
     const { action, index, type, status } = data;
-
     if (
       // If close button clicked, then close the tour
       action === ACTIONS.CLOSE ||
@@ -136,7 +134,6 @@ const Tour = () => {
   return (
     <React.Fragment>
       <Button
-        // tabIndex="8"
         justifyContent="center"
         startIcon={<MapIcon />}
         onClick={startTour}

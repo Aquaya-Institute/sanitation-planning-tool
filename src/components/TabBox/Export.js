@@ -2,26 +2,12 @@ import React, { useMemo } from "react";
 import { MapContext } from "../../state/MapState";
 import { useState, useContext, useEffect } from "react";
 import { Box, Divider } from "@material-ui/core";
-// import { makeStyles } from "@material-ui/core/styles";
 import { Loader_2, Loader2_2 } from "../subcomponents/Loader_2";
 import ReactExport from "react-export-excel";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
-// const useStyles = makeStyles((theme) => ({
-//   button: {
-//     margin: theme.spacing(1),
-//   },
-//   loader: {
-//     width: "100%",
-//     height: "100%",
-//     position: "absolute",
-//     top: 0,
-//     left: 0,
-//     zIndex: "2",
-//   },
-// }));
 
 export const Export = () => {
   const [
@@ -64,8 +50,6 @@ export const Export = () => {
       setDownload(null);
       hideLoader();
     } else if (layerQuery && mapID && columnNames) {
-      // let query = layerQuery.substring(8);
-      // let queryURL = query.replace(/\s/g, " ");
       let queryURL = layerQuery.replace(/\s/g, " ");
       var conditions = [];
       if (selectedDistName.length > 0) {
@@ -126,7 +110,6 @@ export const Export = () => {
         },
       ]);
       return fetch(
-        // `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsText(the_geom) as geometry, ${columnNames}${queryURL}`
         `https://zebra.geodb.host/user/admin/api/v2/sql?q=${queryURL}`
       )
         .then((resp) => resp.json())
@@ -153,7 +136,6 @@ export const Export = () => {
           hideLoader();
         });
     } else if (mapID && columnNames) {
-      //   let queryURL = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
       setQueryDesc([
         {
           Description: `This data export was created via the SanPlan tool (www.sanplan.app). This data is pulled from ${maps[mapID].name} with no ${maps[mapID].layers[currentLayerID].name} filter constraints.`,
@@ -260,7 +242,6 @@ export const Export = () => {
         )
           .then((resp) => resp.json())
           .then((response) => {
-            // for (var i = 0; i < response.rows.length; i++) {
             if (response.rows[0].classes !== undefined) {
               if (response.rows[0].classes === 1) {
                 response.rows[0].classes = "Rural Remote";
@@ -271,19 +252,16 @@ export const Export = () => {
               } else if (response.rows[0].classes === 4) {
                 response.rows[0].classes = "Urban";
               }
-              // }
               // eslint-disable-next-line no-loop-func
               Object.keys(response.rows[0]).forEach((k) => {
                 response.rows[0][k] = "" + response.rows[0][k];
               });
             }
             uploadArray.push(response.rows[0]);
-            // setDownloadUpload((oldArray) => [...oldArray, response.rows]);
             setDownloadUpload(uploadArray);
             hideLoader2();
           });
       }
-      // setDownloadUpload(uploadArray);
     }
   }, []);
 
@@ -485,7 +463,6 @@ export const Export = () => {
                     fontSize={16}
                     color="#BA0C2F"
                   >
-                    {/* {downloadUpload.length} uploaded locations */}
                     all uploaded locations
                   </Box>{" "}
                   in{" "}
@@ -514,12 +491,6 @@ export const Export = () => {
                       );
                     })}
                   </ExcelSheet>
-                  {/* <ExcelSheet data={queryDesc} name="Notes">
-                    <ExcelColumn
-                      label="Data Export Notes"
-                      value="Description"
-                    />
-                  </ExcelSheet> */}
                 </ExcelFile>
               </React.Fragment>
             )}

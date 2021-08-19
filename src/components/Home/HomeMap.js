@@ -7,7 +7,6 @@ import {
 } from "react-simple-maps";
 import { MapContext } from "../../state/MapState";
 import { useContext, useMemo } from "react";
-// import { BrowserRouter as Router, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 const markers = [];

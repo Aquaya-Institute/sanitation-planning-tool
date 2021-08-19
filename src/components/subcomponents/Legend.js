@@ -1,14 +1,18 @@
 import { useContext, Fragment } from "react";
 import { MapContext } from "../../state/MapState";
 import "leaflet/dist/leaflet.css";
-import { Grid, Box, Typography } from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
+import {
+  Grid,
+  Box,
+  Typography,
+  Paper,
+  FormControl,
+  NativeSelect,
+  FormHelperText,
+  FormControlLabel,
+  Checkbox,
+} from "@material-ui/core";
 import theme from "../../theme/theme";
-import FormControl from "@material-ui/core/FormControl";
-import NativeSelect from "@material-ui/core/NativeSelect";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import TabsWrappedLabel from "../TabBox/TabBox";
@@ -58,7 +62,6 @@ export const Legend = ({
               checked={hideLayer}
               onChange={() => {
                 setHideLayer(!hideLayer);
-
                 if (!hideLayer === true) {
                   currentCountry[currentLayerID].layer.hide();
                 } else {
@@ -81,31 +84,6 @@ export const Legend = ({
           size="small"
         />
       </Paper>
-      {/* <Paper
-        square
-        pb={2}
-        style={{
-        padding: theme.spacing(0.5),
-        backgroundColor: theme.palette.background.default,
-        }}
-        >
-        <Grid container spacing={0}>
-        <Box>
-            <Typography variant="subtitle2">Change opacity</Typography>
-        </Box>
-        <Box mx="auto" width="210px" height="45px">
-            <Slider
-            value={value}
-            aria-labelledby={"Opacity range slider"}
-            marks={[
-                { value: 0, label: "0%" },
-                { value: 100, label: "100%" },
-            ]}
-            onChange={handleOpacityChange}
-            />
-        </Box>
-        </Grid>
-        </Paper> */}
       <Paper
         style={{
           height: "5px",
@@ -159,7 +137,6 @@ export const Legend = ({
             </NativeSelect>
             <FormHelperText> </FormHelperText>
           </FormControl>
-          {/* {maps[mapID].layers[currentLayerID].name === buckets.variable && ( */}
           {buckets && (
             <Fragment key={"legendContent" + buckets.variable}>
               {buckets.legend.map((legend, j) => {

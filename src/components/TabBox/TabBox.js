@@ -1,9 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Box from "@material-ui/core/Box";
+import { AppBar, Tabs, Tab, Box } from "@material-ui/core";
 import { UploadButton } from "./UploadButton";
 import { Export } from "./Export";
 import theme from "../../theme/theme";
@@ -45,7 +42,6 @@ function TabPanel(props) {
         zIndex: "1000",
         borderBottom: "1.5px solid #FFFFFF",
         borderRight: "1.5px solid #CFCDC9",
-        // borderTop: "1.5px solid #CFCDC9",
         borderLeft: "1.5px solid #CFCDC9",
         display: hidden ? "none" : "block",
         overflow: "auto",

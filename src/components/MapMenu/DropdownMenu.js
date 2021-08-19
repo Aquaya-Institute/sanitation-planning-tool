@@ -1,17 +1,20 @@
 import { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import FormControl from "@material-ui/core/FormControl";
-import { Box, Popper } from "@material-ui/core";
+import {
+  Box,
+  Popper,
+  FormControl,
+  Input,
+  InputLabel,
+  MenuItem,
+  ListItemText,
+  Select,
+  Checkbox,
+  ClickAwayListener,
+} from "@material-ui/core";
 import { MapContext } from "../../state/MapState";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Select from "@material-ui/core/Select";
-import Checkbox from "@material-ui/core/Checkbox";
 import L from "leaflet";
 import clsx from "clsx";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 const useStyles = makeStyles((theme) => ({
   checkboxLabel: {
@@ -24,14 +27,11 @@ const useStyles = makeStyles((theme) => ({
   },
   menu: {
     height: "25px",
-    // zIndex: "1500",
   },
 }));
-
 const ITEM_HEIGHT = 40;
 const ITEM_PADDING_TOP = 0;
 const MenuProps = {
-  //   disablePortal: true,
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
@@ -40,6 +40,7 @@ const MenuProps = {
     },
   },
 };
+
 function extractValue(arr, prop) {
   let extractedValue = arr.map((item) => item[prop]).sort();
   return extractedValue;
@@ -78,7 +79,6 @@ export const DropdownMenu = ({
   useEffect(() => {
     if (currentMapID !== mapID) {
       setMapID(currentMapID);
-      // document.getElementById("select-areas-mutiple-checkbox").focus();
     }
   }, [currentMapID, mapID]);
 
@@ -112,38 +112,13 @@ export const DropdownMenu = ({
 
   function filterPopulatedPlacesByCountry(distName) {
     let query = null;
-    // let query2 = null;
     if (distName.length > 0) {
       query = `SELECT * FROM ${
         maps[mapID].layers[currentLayerID].carto_tableName
       } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
-      // query2 = `SELECT * FROM ${
-      //   maps[mapID].layers["3"].carto_tableName
-      // } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
     } else {
-      // query = `SELECT * FROM ${
-      //   maps[mapID].layers["2"].carto_tableName
-      // } WHERE ${column} IN (${allDistricts
-      //   .map((x) => "'" + x + "'")
-      //   .toString()})`;
-      // query2 = `SELECT * FROM ${
-      //   maps[mapID].layers["3"].carto_tableName
-      // } WHERE ${column} IN (${allDistricts
-      //   .map((x) => "'" + x + "'")
-      //   .toString()})`;
       query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
-      // query2 = `SELECT * FROM ${maps[mapID].layers["3"].carto_tableName}`;
     }
-    // const source = new Carto.source.SQL(
-    //   `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`
-    // );
-    // source.setQuery(query);
-    // currentCountry["2"].source.setQuery(query);
-    // // currentCountry["2"].query = query;
-    // currentCountry["2"].layer.getSource().setQuery(query);
-    // currentCountry["3"].source.setQuery(query2);
-    // // currentCountry["3"].query = query;
-    // currentCountry["3"].layer.getSource().setQuery(query2);
     if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
       currentCountry[currentLayerID].source.setQuery(query);
       currentCountry[currentLayerID].layer.getSource().setQuery(query);
@@ -262,9 +237,6 @@ export const DropdownMenu = ({
                 </InputLabel>
 
                 <Select
-                  //   native={true}
-                  // tabIndex={1}
-
                   labelId="select-areas-mutiple-checkbox-label"
                   id="select-areas-mutiple-checkbox"
                   inputProps={{ "aria-label": "select-areas-mutiple-checkbox" }}

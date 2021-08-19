@@ -1,8 +1,16 @@
 import * as React from "react";
 import { MapContext } from "../../state/MapState";
-import { Box, Typography, ListItemText, ListItemIcon } from "@material-ui/core";
-import Drawer from "@material-ui/core/Drawer";
-import Toolbar from "@material-ui/core/Toolbar";
+import {
+  Box,
+  Typography,
+  ListItemText,
+  ListItemIcon,
+  Drawer,
+  Toolbar,
+  Divider,
+  List,
+  ListItem,
+} from "@material-ui/core";
 import WashIcon from "../../images/wash.png";
 import SocioIcon from "../../images/socioecon.png";
 import HealthIcon from "../../images/health.png";
@@ -11,25 +19,16 @@ import resolutionIcon from "../../images/resolution.png";
 import boundaryIcon from "../../images/boundaryselect.png";
 import { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import FilterMenu from "./FilterMenu";
 import Tour from "../subcomponents/Tour";
-// import theme from "../../theme/theme";
 import Badge from "@material-ui/core/Badge";
 import { MapResolutions } from "./MapResolutions";
 import { DropdownMenu } from "./DropdownMenu";
-// import TrapFocus from "@material-ui/unstyled/Unstable_TrapFocus";
 
-/* Toggle button overrides */
 const useStyles = makeStyles((theme) => ({
   root: {
     "&$selected": {
       backgroundColor: "white",
-      // "&:hover": {
-      //   backgroundColor: "yellow",
-      // },
     },
   },
   selected: {},
@@ -65,19 +64,15 @@ const useStyles = makeStyles((theme) => ({
 const drawerWidth = 175;
 
 export const MapMenu = () => {
-  //pick specific states (and dispatcher) we need from mapstate
   const [{ maps, currentMapID, currentLayerID, currentCountry }, dispatch] =
     useContext(MapContext);
   const [mapID, setMapID] = useState(null);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMenu, setSelectedMenu] = React.useState(null);
-  // const [scaleValue, setScaleValue] = useState("2");
-
   const setActive = (event, text) => {
     setSelectedMenu(text);
   };
-
   const classes = useStyles();
 
   useEffect(() => {
@@ -97,19 +92,13 @@ export const MapMenu = () => {
     <React.Fragment key="drawerDiv">
       <Drawer
         key="drawer"
-        // className={classes.drawer}
         variant="permanent"
         classes={{
           paper: classes.drawerPaper,
         }}
-        // style={{ borderRight: "1px solid #CFCDC9" }}
       >
         <Toolbar key="toolbar" />
-        <div
-          className={classes.drawerContainer}
-          key="drawerContainer"
-          // style={{ borderRight: "1px solid #CFCDC9" }}
-        >
+        <div className={classes.drawerContainer} key="drawerContainer">
           <Box m={1} align="center" id="publicData" fontSize={20}>
             {currentMapID && (
               <Typography variant="h5" color="primary" component="h1">
@@ -143,8 +132,6 @@ export const MapMenu = () => {
           </Box>
           <List>
             <ListItem
-              // disableEnforceFocus
-              // tabIndex="1"
               className="tour-scale"
               button={true}
               key={"resButton"}
@@ -162,24 +149,9 @@ export const MapMenu = () => {
                 borderBottom: selectedMenu === 4 ? "1px solid #CFCDC9" : null,
                 borderTop: selectedMenu === 4 ? "1px solid #CFCDC9" : null,
                 borderRight: selectedMenu !== 4 ? "1px solid #CFCDC9" : null,
-                // backgroundColor:
-                //   selectedMenu === 4
-                //     ? theme.palette.background.selected
-                //     : theme.palette.background.default,
               }}
               classes={{ root: classes.root, selected: classes.selected }}
             >
-              {/* <Box
-              key="resButtonContent"
-              mx="auto"
-              my="auto"
-              style={{
-                minHeight: "5vh",
-                // justifyContent: "center",
-                alignItems: "center",
-                display: "flex",
-              }}
-            > */}
               <ListItemIcon className={classes.item}>
                 <img
                   src={resolutionIcon}
@@ -188,20 +160,6 @@ export const MapMenu = () => {
                 />
               </ListItemIcon>
               <ListItemText primary="SET RESOLUTION" className={classes.item} />
-              {/* <Button
-                justify="center"
-                startIcon={
-                  <img
-                    src={resolutionIcon}
-                    alt="square with outward facing arrows icon"
-                    height="25px"
-                  />
-                }
-                style={{ fontSize: 13, padding: 0, textAlign: "left" }}
-              >
-                SET RESOLUTION
-              </Button>
-            </Box> */}
               {selectedMenu === 4 && (
                 <MapResolutions
                   anchorEl={anchorEl}
@@ -209,13 +167,11 @@ export const MapMenu = () => {
                   setFilterMenuOpen={setFilterMenuOpen}
                   cat={"drop"}
                   setSelectedMenu={setSelectedMenu}
-                  // tabIndex={1}
                 />
               )}
             </ListItem>
             {mapID && (
               <ListItem
-                // tabIndex={2}
                 className="tour-dropdown"
                 button
                 key={"dropButton"}
@@ -224,10 +180,6 @@ export const MapMenu = () => {
                   e.preventDefault();
                   e.stopPropagation();
                   setFilterMenuOpen(true);
-                  // document
-                  //   .getElementById("select-areas-mutiple-checkbox")
-                  //   .focus();
-                  // document.getElementById("popperDrop").focus();
                   setAnchorEl(e.currentTarget);
                   setActive(e, 5);
                 }}
@@ -254,36 +206,6 @@ export const MapMenu = () => {
                   }
                   className={classes.item}
                 />
-                {/* <Box
-              key="dropButtonContent"
-              mx="auto"
-              my="auto"
-              style={{
-                minHeight: "5vh",
-                // justifyContent: "center",
-                alignItems: "center",
-                display: "flex",
-              }}
-            > */}
-                {/* {mapID && (
-                <Button
-                  startIcon={
-                    <img
-                      src={boundaryIcon}
-                      alt="map with dropped pin icon"
-                      height="25px"
-                    />
-                  }
-                  style={{
-                    fontSize: 13,
-                    padding: 0,
-                    textAlign: "left",
-                  }}
-                >
-                  SELECT {maps[mapID].layers["3"].name}(S)
-                </Button>
-              )}
-            </Box> */}
                 {selectedMenu === 5 && (
                   <DropdownMenu
                     anchorEl={anchorEl}
@@ -291,7 +213,6 @@ export const MapMenu = () => {
                     setFilterMenuOpen={setFilterMenuOpen}
                     cat={"drop"}
                     setSelectedMenu={setSelectedMenu}
-                    // tabIndex={2}
                   />
                 )}
               </ListItem>
@@ -322,11 +243,7 @@ export const MapMenu = () => {
             Select a theme to view filters:
           </Box>
           {mapID && (
-            <List
-              className="tour-themes"
-              key="themeList"
-              // style={{ borderRight: "1px solid #CFCDC9" }}
-            >
+            <List className="tour-themes" key="themeList">
               <Badge
                 key="accessBadge"
                 badgeContent={currentCountry[currentLayerID].accessCounter.size}
@@ -336,7 +253,6 @@ export const MapMenu = () => {
                 overlap="circular"
               >
                 <ListItem
-                  // tabIndex="3"
                   button
                   key={"accessButton"}
                   selected={selectedMenu === 0}
@@ -354,10 +270,6 @@ export const MapMenu = () => {
                     borderTop: selectedMenu === 0 ? "1px solid #CFCDC9" : null,
                     borderRight:
                       selectedMenu !== 0 ? "1px solid #CFCDC9" : null,
-                    // backgroundColor:
-                    //   selectedMenu === 0
-                    //     ? theme.palette.background.selected
-                    //     : theme.palette.background.default,
                   }}
                   classes={{ root: classes.root, selected: classes.selected }}
                 >
@@ -368,25 +280,6 @@ export const MapMenu = () => {
                     primary="ACCESSIBILITY"
                     className={classes.item}
                   />
-                  {/* <Box
-                    key="accessButtonContent"
-                    style={{
-                      minHeight: "5vh",
-                      // justifyContent: "center",
-                      alignItems: "center",
-                      display: "flex",
-                    }}
-                  >
-                    <Button
-                      startIcon={
-                        <img src={AccessIcon} alt="Road icon" height="20px" />
-                      }
-                      // onClick={startTour}
-                      style={{ fontSize: 13, padding: 0, textAlign: "left" }}
-                    >
-                      ACCESSIBILITY
-                    </Button>
-                  </Box> */}
                   {selectedMenu === 0 && (
                     <FilterMenu
                       key="filterMenus"
@@ -396,7 +289,6 @@ export const MapMenu = () => {
                       cat={"accessibility"}
                       setSelectedMenu={setSelectedMenu}
                       layerID={currentLayerID}
-                      // tabIndex={"3"}
                     />
                   )}
                 </ListItem>
@@ -411,7 +303,6 @@ export const MapMenu = () => {
               >
                 <ListItem
                   button
-                  // tabIndex="4"
                   key="washButton"
                   selected={selectedMenu === 1}
                   onClick={(e) => {
@@ -428,10 +319,6 @@ export const MapMenu = () => {
                     borderTop: selectedMenu === 1 ? "1px solid #CFCDC9" : null,
                     borderRight:
                       selectedMenu !== 1 ? "1px solid #CFCDC9" : null,
-                    // backgroundColor:
-                    //   selectedMenu === 1
-                    //     ? theme.palette.background.selected
-                    //     : theme.palette.background.default,
                   }}
                   classes={{ root: classes.root, selected: classes.selected }}
                 >
@@ -446,29 +333,6 @@ export const MapMenu = () => {
                     primary="WATER & SANITATION"
                     className={classes.item}
                   />
-                  {/* <Box
-                    key="washButtonContent"
-                    style={{
-                      minHeight: "5vh",
-                      justifyContent: "left",
-                      alignItems: "center",
-                      display: "flex",
-                    }}
-                  >
-                    <Button
-                      justify="center"
-                      startIcon={
-                        <img
-                          src={WashIcon}
-                          alt="Hand catching a water droplet icon"
-                          height="27px"
-                        />
-                      }
-                      style={{ fontSize: 13, padding: 0, textAlign: "left" }}
-                    >
-                      WATER & SANITATION
-                    </Button>
-                  </Box> */}
                   {selectedMenu === 1 && (
                     <FilterMenu
                       key="filterMenus"
@@ -478,7 +342,6 @@ export const MapMenu = () => {
                       cat={"wash"}
                       setSelectedMenu={setSelectedMenu}
                       layerID={currentLayerID}
-                      // tabIndex={"4"}
                     />
                   )}
                 </ListItem>
@@ -493,7 +356,6 @@ export const MapMenu = () => {
               >
                 <ListItem
                   button
-                  // tabIndex="5"
                   key="socioButton"
                   selected={selectedMenu === 2}
                   onClick={(e) => {
@@ -510,10 +372,6 @@ export const MapMenu = () => {
                     borderTop: selectedMenu === 2 ? "1px solid #CFCDC9" : null,
                     borderRight:
                       selectedMenu !== 2 ? "1px solid #CFCDC9" : null,
-                    // backgroundColor:
-                    //   selectedMenu === 2
-                    //     ? theme.palette.background.selected
-                    //     : theme.palette.background.default,
                   }}
                   classes={{ root: classes.root, selected: classes.selected }}
                 >
@@ -528,31 +386,6 @@ export const MapMenu = () => {
                     primary="SOCIOECONOMIC"
                     className={classes.item}
                   />
-                  {/* <Box
-                    // mx="auto"
-                    my="auto"
-                    key="socioButtonContent"
-                    style={{
-                      minHeight: "5vh",
-                      // justifyContent: "center",
-                      alignItems: "center",
-                      display: "flex",
-                    }}
-                  >
-                    <Button
-                      justify="center"
-                      startIcon={
-                        <img
-                          src={SocioIcon}
-                          alt="Bag of money with a bowl and wheat icon"
-                          height="35px"
-                        />
-                      }
-                      style={{ fontSize: 13, padding: 0, textAlign: "left" }}
-                    >
-                      SOCIOECONOMIC
-                    </Button>
-                  </Box> */}
                   {selectedMenu === 2 && (
                     <FilterMenu
                       key="filterMenus"
@@ -562,7 +395,6 @@ export const MapMenu = () => {
                       cat={"socioeconomic"}
                       setSelectedMenu={setSelectedMenu}
                       layerID={currentLayerID}
-                      // tabIndex={"5"}
                     />
                   )}
                 </ListItem>
@@ -577,7 +409,6 @@ export const MapMenu = () => {
               >
                 <ListItem
                   button
-                  // tabIndex={"6"}
                   key="healthButton"
                   selected={selectedMenu === 3}
                   onClick={(e) => {
@@ -594,10 +425,6 @@ export const MapMenu = () => {
                     borderTop: selectedMenu === 3 ? "1px solid #CFCDC9" : null,
                     borderRight:
                       selectedMenu !== 3 ? "1px solid #CFCDC9" : null,
-                    // backgroundColor:
-                    //   selectedMenu === 3
-                    //     ? theme.palette.background.selected
-                    //     : theme.palette.background.default,
                   }}
                   classes={{ root: classes.root, selected: classes.selected }}
                 >
@@ -609,29 +436,6 @@ export const MapMenu = () => {
                     />
                   </ListItemIcon>
                   <ListItemText primary="HEALTH" className={classes.item} />
-                  {/* <Box
-                    key="healthButtonContent"
-                    style={{
-                      minHeight: "5vh",
-                      alignItems: "center",
-                      display: "flex",
-                    }}
-                  >
-                    <Button
-                      justify="left"
-                      startIcon={
-                        <img
-                          src={HealthIcon}
-                          alt="Heart with a plus icon"
-                          height="27px"
-                        />
-                      }
-                      // onClick={startTour}
-                      style={{ fontSize: 13, padding: 0, textAlign: "left" }}
-                    >
-                      HEALTH
-                    </Button>
-                  </Box> */}
                   {selectedMenu === 3 && (
                     <FilterMenu
                       key="filterMenus"
@@ -641,7 +445,6 @@ export const MapMenu = () => {
                       cat={"health"}
                       setSelectedMenu={setSelectedMenu}
                       layerID={currentLayerID}
-                      // tabIndex={"6"}
                     />
                   )}
                 </ListItem>
@@ -652,7 +455,6 @@ export const MapMenu = () => {
           <List key="bottomList">
             <ListItem
               button
-              // tabIndex={"7"}
               key="reset"
               style={{
                 width: drawerWidth - 1,
@@ -667,17 +469,8 @@ export const MapMenu = () => {
               className="tour-reset"
             >
               <ListItemText primary="RESET FILTERS" className={classes.reset} />
-              {/* <Typography
-                variant="button"
-                align="center"
-                key="resetLabel"
-                style={{ fontSize: 13 }}
-              >
-                Reset Filters
-              </Typography> */}
             </ListItem>
             <ListItem
-              // tabIndex={"8"}
               key="tourButton"
               style={{
                 width: drawerWidth - 1,
