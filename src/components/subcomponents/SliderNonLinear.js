@@ -33,7 +33,7 @@ export const SliderNonLinear = (props) => {
       marks={props.marks}
       scale={scale}
       valueLabelFormat={numFormatter}
-      step={1}
+      step={2.5}
       onChange={(e, newValue) => {
         let scaled_val_min = scale(newValue[0]);
         let scaled_val_max = scale(newValue[1]);

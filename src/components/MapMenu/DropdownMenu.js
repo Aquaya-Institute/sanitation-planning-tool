@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -11,7 +12,11 @@ import {
   Select,
   Checkbox,
   ClickAwayListener,
+  TextField,
 } from "@material-ui/core";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { MapContext } from "../../state/MapState";
 import L from "leaflet";
 import clsx from "clsx";
@@ -41,10 +46,10 @@ const MenuProps = {
   },
 };
 
-function extractValue(arr, prop) {
-  let extractedValue = arr.map((item) => item[prop]).sort();
-  return extractedValue;
-}
+// function extractValue(arr, prop) {
+//   let extractedValue = arr.map((item) => item[prop]).sort();
+//   return extractedValue;
+// }
 
 export const DropdownMenu = ({
   anchorEl,
@@ -53,62 +58,43 @@ export const DropdownMenu = ({
   cat,
   setSelectedMenu,
   tabIndex,
+  allDistricts,
+  column,
 }) => {
   const [
     {
       maps,
       currentMapID,
       currentLayerID,
-      carto_client,
+      // carto_client,
       leafletMap,
       activeLegend,
       selectedDistName,
       highlightLayer,
       currentCountry,
+      // allDistricts,
+      // column,
     },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
   const [distName, setDistName] = useState(selectedDistName);
-  const [allDistricts, setAllDistricts] = useState([]);
-  const [column, setColumn] = useState("");
+  const [newDistName, setNewDistName] = useState(false);
+  // const [allDistricts, setAllDistricts] = useState([]);
+  // const [column, setColumn] = useState("");
+  // const column = useRef();
   const classes = useStyles();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
+  const initialSelect = useRef(false);
+  // const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+  // const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
   useEffect(() => {
     if (currentMapID !== mapID) {
       setMapID(currentMapID);
     }
   }, [currentMapID, mapID]);
-
-  //Set all districts
-  useMemo(() => {
-    if (carto_client && mapID) {
-      if (allDistricts.length === 0) {
-        var column_name = null;
-        if (
-          maps[mapID].layers["3"].filters.some(
-            (el) => el.column_name === "name_3"
-          )
-        ) {
-          column_name = "name_3";
-        } else {
-          column_name = "name_2";
-        }
-        setColumn(column_name);
-
-        return fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${maps[mapID].layers["3"].carto_tableName}`
-        )
-          .then((resp) => resp.json())
-          .then((response) => {
-            const result = extractValue(response.rows, column_name);
-            setAllDistricts(result);
-          });
-      }
-    }
-  }, [carto_client, mapID, maps]);
 
   function filterPopulatedPlacesByCountry(distName) {
     let query = null;
@@ -129,54 +115,67 @@ export const DropdownMenu = ({
     }
   }
 
-  useEffect(() => {
-    if (highlightLayer) {
-      leafletMap.removeLayer(highlightLayer);
-    }
-    if (leafletMap && mapID) {
-      if (distName.length > 0) {
-        return fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?format=GeoJSON&q=SELECT * FROM ${
-            maps[mapID].layers["3"].carto_tableName
-          } where ${column} IN (${distName
-            .map((x) => "'" + x + "'")
-            .toString()})`
-        )
-          .then((resp) => resp.json())
-          .then((response) => {
-            var myStyle = {
-              color: "#FFFFFF",
-              fillColor: "#FFFFFF",
-              fillOpacity: 0,
-              weight: 2,
-            };
-            let geojsonLayer = L.geoJSON(response, myStyle);
-            leafletMap.fitBounds(geojsonLayer.getBounds());
-            filterPopulatedPlacesByCountry(distName);
-            geojsonLayer.addTo(leafletMap);
-            dispatch({
-              type: "dropdown.highlight",
-              highlightLayer: geojsonLayer,
+  useMemo(() => {
+    if (newDistName === true) {
+      if (highlightLayer) {
+        leafletMap.removeLayer(highlightLayer);
+      }
+      if (leafletMap && mapID) {
+        if (distName.length > 0) {
+          return fetch(
+            `https://zebra.geodb.host/user/admin/api/v2/sql?format=GeoJSON&q=SELECT * FROM ${
+              maps[mapID].layers["3"].carto_tableName
+            } where ${column} IN (${distName
+              .map((x) => "'" + x + "'")
+              .toString()})`
+          )
+            .then((resp) => resp.json())
+            .then((response) => {
+              var myStyle = {
+                color: "#FFFFFF",
+                fillColor: "#FFFFFF",
+                fillOpacity: 0,
+                weight: 2,
+              };
+              let geojsonLayer = L.geoJSON(response, myStyle);
+              leafletMap.fitBounds(geojsonLayer.getBounds());
+              filterPopulatedPlacesByCountry(distName);
+              geojsonLayer.addTo(leafletMap);
+              dispatch({
+                type: "dropdown.highlight",
+                highlightLayer: geojsonLayer,
+              });
+              initialSelect.current = true;
             });
-          });
-      } else {
-        filterPopulatedPlacesByCountry(distName);
-        leafletMap.setView(
-          [maps[mapID].lat, maps[mapID].long],
-          maps[mapID].zoom
-        );
+        } else if (initialSelect.current === true) {
+          filterPopulatedPlacesByCountry(distName);
+          leafletMap.setView(
+            [maps[mapID].lat, maps[mapID].long],
+            maps[mapID].zoom
+          );
+        }
       }
     }
   }, [distName, currentLayerID]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (distName.length > 0 && mapID) {
       filterPopulatedPlacesByCountry(distName);
     }
   }, [activeLegend]);
 
   const handleChange = (event) => {
-    setDistName(event.target.value);
+    // setDistName(event.target.value);
+    setDistName((prevDists) => {
+      if (prevDists && prevDists === event.target.value) {
+        setNewDistName(false);
+        return prevDists;
+      } else {
+        //user has selected different country
+        setNewDistName(true);
+        return event.target.value;
+      }
+    });
     dispatch({
       type: "dropdown.selection",
       distName: event.target.value,
@@ -199,11 +198,13 @@ export const DropdownMenu = ({
         backgroundColor: "#fff",
         overflow: "auto",
       }}
-      open={filterMenuOpen}
+      open={true}
       onClose={(e) => {
         setFilterMenuOpen(false);
+        // setIsMounted(false);
         setMenuTileColor(false);
       }}
+      keepMounted={true}
     >
       <ClickAwayListener
         mouseEvent="onMouseDown"
@@ -258,6 +259,36 @@ export const DropdownMenu = ({
                     </MenuItem>
                   ))}
                 </Select>
+                {/* <Autocomplete
+                  multiple
+                  id="checkboxes-tags-demo"
+                  options={allDistricts}
+                  disableCloseOnSelect
+                  getOptionLabel={(option) => option}
+                  onInputChange={handleChange}
+                  fullWidth={true}
+                  limitTags={2}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option}
+                    </React.Fragment>
+                  )}
+                  style={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label={maps[mapID].layers["3"].name + "(s)"}
+                      placeholder="Select"
+                    />
+                  )}
+                /> */}
                 <button
                   tabIndex="0"
                   onClick={() => {

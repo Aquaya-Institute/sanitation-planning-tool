@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { MapContext } from "../../state/MapState";
 import { useState, useContext, useEffect } from "react";
-import { Box, Divider } from "@material-ui/core";
+import { Box, Divider, CircularProgress } from "@material-ui/core";
 import { Loader_2, Loader2_2 } from "../subcomponents/Loader_2";
 import ReactExport from "react-export-excel";
 
@@ -26,8 +26,9 @@ export const Export = () => {
   const [downloadSettlements, setDownloadSettlements] = useState(null);
   const [downloadUpload, setDownloadUpload] = useState(null);
   const [mapID, setMapID] = useState(currentMapID);
-  const [loader, showLoader, hideLoader] = Loader_2();
-  const [loader2, showLoader2, hideLoader2] = Loader2_2();
+  // const [loader, showLoader, hideLoader] = Loader_2();
+  // const [loader2, showLoader2, hideLoader2] = Loader2_2();
+  const [loading, setLoading] = useState(false);
   const columnNames = [];
   const layerQuery = currentCountry[currentLayerID].query;
 
@@ -45,10 +46,12 @@ export const Export = () => {
   }, [currentMapID, mapID]);
 
   useEffect(() => {
-    showLoader();
+    // showLoader();
+    setLoading(true);
     if (currentLayerID === "1") {
       setDownload(null);
-      hideLoader();
+      // hideLoader();
+      setLoading(false);
     } else if (layerQuery && mapID && columnNames) {
       let queryURL = layerQuery.replace(/\s/g, " ");
       var conditions = [];
@@ -133,7 +136,8 @@ export const Export = () => {
           }
 
           setDownload(response.rows);
-          hideLoader();
+          // hideLoader();
+          setLoading(false);
         });
     } else if (mapID && columnNames) {
       setQueryDesc([
@@ -167,14 +171,16 @@ export const Export = () => {
             });
           }
           setDownload(response.rows);
-          hideLoader();
+          // hideLoader();
+          setLoading(false);
         });
     }
   }, [mapID, layerQuery]);
 
   useEffect(() => {
     if (showSettlements === true) {
-      showLoader2();
+      // showLoader2();
+      setLoading(true);
       if (layerQuery && mapID) {
         let queryURL = layerQuery.replace(/\s/g, " ");
         return fetch(
@@ -200,7 +206,8 @@ export const Export = () => {
               });
             }
             setDownloadSettlements(response.rows);
-            hideLoader2();
+            // hideLoader2();
+            setLoading(false);
           });
       } else if (mapID && columnNames) {
         return fetch(
@@ -226,7 +233,8 @@ export const Export = () => {
               });
             }
             setDownloadSettlements(response.rows);
-            hideLoader2();
+            // hideLoader2();
+            setLoading(false);
           });
       }
     }
@@ -234,7 +242,8 @@ export const Export = () => {
 
   useEffect(() => {
     if (userData && mapID && columnNames) {
-      showLoader2();
+      // showLoader2();
+      setLoading(true);
       var uploadArray = [];
       for (var i = 0; i < userData.length; i++) {
         fetch(
@@ -259,7 +268,9 @@ export const Export = () => {
             }
             uploadArray.push(response.rows[0]);
             setDownloadUpload(uploadArray);
-            hideLoader2();
+            // hideLoader2();
+
+            setLoading(false);
           });
       }
     }
@@ -278,10 +289,15 @@ export const Export = () => {
 
   return (
     <React.Fragment>
-      {downloadSettlements ? (
+      {/* {downloadSettlements ? (
         <div align="center">{loader2}</div>
       ) : (
         <div align="center">{loader}</div>
+      )} */}
+      {loading === true && (
+        <div align="center">
+          <CircularProgress />
+        </div>
       )}
       <React.Fragment>
         {currentLayerID === "1" ? (
@@ -293,152 +309,190 @@ export const Export = () => {
           <React.Fragment>
             {download && downloadSettlements && downloadUpload === null ? (
               <React.Fragment>
-                <Box
-                  p={1}
-                  fontStyle="italic"
-                  fontWeight="fontWeightBold"
-                  fontSize={13.5}
-                  variant="subtitle2"
-                  style={{ color: "black" }}
-                  key="rightBoxSubtitle"
-                >
-                  Export a CSV file of mapped data.
-                </Box>
-                <Box style={{ fontSize: 12 }} pl={1} pb={1}>
-                  The downloaded file will represent the regions remaining after
-                  filtering. Use the "Map Resolutions" tab to select the
-                  resolution of the regions to download. Large datasets may take
-                  longer to download.
-                </Box>
-                <Box style={{ fontSize: 12 }} pl={1} pb={1}>
-                  Download data for{" "}
+                {download.length === 0 || downloadSettlements.length === 0 ? (
                   <Box
-                    component="span"
-                    fontWeight="fontWeightMedium"
-                    fontSize={16}
-                    color="#BA0C2F"
+                    p={1}
+                    fontStyle="italic"
+                    fontWeight="fontWeightBold"
+                    fontSize={13.5}
+                    variant="subtitle2"
+                    style={{ color: "black" }}
+                    key="rightBoxSubtitle"
                   >
-                    {download.length}{" "}
-                    {maps[currentMapID].layers[
-                      currentLayerID
-                    ].name.toLowerCase() + "s"}
-                  </Box>{" "}
-                  and{" "}
-                  <Box
-                    component="span"
-                    fontWeight="fontWeightMedium"
-                    fontSize={16}
-                    color="#BA0C2F"
-                  >
-                    {downloadSettlements.length} estimated settlement areas
-                  </Box>{" "}
-                  in{" "}
-                  <Box
-                    component="span"
-                    fontWeight="fontWeightMedium"
-                    fontSize={16}
-                    color="#BA0C2F"
-                  >
-                    {maps[currentMapID].name}
+                    There is no data mapped to download, adjust the map filters
+                    until map populates with data.
                   </Box>
-                  .
-                </Box>
-                <ExcelFile element={<button autoFocus>Download Data</button>}>
-                  <ExcelSheet data={queryDesc} name="Notes">
-                    <ExcelColumn
-                      label="Data Export Notes"
-                      value="Description"
-                    />
-                  </ExcelSheet>
-                  <ExcelSheet data={download} name="Boundary Query Data">
-                    {Object.keys(download[0]).map((col) => {
-                      return (
+                ) : (
+                  <React.Fragment>
+                    <Box
+                      p={1}
+                      fontStyle="italic"
+                      fontWeight="fontWeightBold"
+                      fontSize={13.5}
+                      variant="subtitle2"
+                      style={{ color: "black" }}
+                      key="rightBoxSubtitle"
+                    >
+                      Export a CSV file of mapped data.
+                    </Box>
+                    <Box style={{ fontSize: 12 }} pl={1} pb={1}>
+                      The downloaded file will represent the regions remaining
+                      after filtering. Use the "Map Resolutions" tab to select
+                      the resolution of the regions to download. Large datasets
+                      may take longer to download.
+                    </Box>
+                    <Box style={{ fontSize: 12 }} pl={1} pb={1}>
+                      Download data for{" "}
+                      <Box
+                        component="span"
+                        fontWeight="fontWeightMedium"
+                        fontSize={16}
+                        color="#BA0C2F"
+                      >
+                        {download.length}{" "}
+                        {maps[currentMapID].layers[
+                          currentLayerID
+                        ].name.toLowerCase() + "s"}
+                      </Box>{" "}
+                      and{" "}
+                      <Box
+                        component="span"
+                        fontWeight="fontWeightMedium"
+                        fontSize={16}
+                        color="#BA0C2F"
+                      >
+                        {downloadSettlements.length} estimated settlement areas
+                      </Box>{" "}
+                      in{" "}
+                      <Box
+                        component="span"
+                        fontWeight="fontWeightMedium"
+                        fontSize={16}
+                        color="#BA0C2F"
+                      >
+                        {maps[currentMapID].name}
+                      </Box>
+                      .
+                    </Box>
+                    <ExcelFile
+                      element={<button autoFocus>Download Data</button>}
+                    >
+                      <ExcelSheet data={queryDesc} name="Notes">
                         <ExcelColumn
-                          label={label(col) !== null ? label(col) : col}
-                          value={col}
-                          key={col}
+                          label="Data Export Notes"
+                          value="Description"
                         />
-                      );
-                    })}
-                  </ExcelSheet>
-                  <ExcelSheet
-                    data={downloadSettlements}
-                    name="Settlement Query Data"
-                  >
-                    {Object.keys(downloadSettlements[0]).map((col) => {
-                      return (
-                        <ExcelColumn
-                          label={label(col) !== null ? label(col) : col}
-                          value={col}
-                          key={col}
-                        />
-                      );
-                    })}
-                  </ExcelSheet>
-                </ExcelFile>
+                      </ExcelSheet>
+                      <ExcelSheet data={download} name="Boundary Query Data">
+                        {Object.keys(download[0]).map((col) => {
+                          return (
+                            <ExcelColumn
+                              label={label(col) !== null ? label(col) : col}
+                              value={col}
+                              key={col}
+                            />
+                          );
+                        })}
+                      </ExcelSheet>
+                      <ExcelSheet
+                        data={downloadSettlements}
+                        name="Settlement Query Data"
+                      >
+                        {Object.keys(downloadSettlements[0]).map((col) => {
+                          return (
+                            <ExcelColumn
+                              label={label(col) !== null ? label(col) : col}
+                              value={col}
+                              key={col}
+                            />
+                          );
+                        })}
+                      </ExcelSheet>
+                    </ExcelFile>
+                  </React.Fragment>
+                )}
               </React.Fragment>
             ) : download && downloadSettlements === null ? (
               <React.Fragment>
-                <Box
-                  p={1}
-                  fontStyle="italic"
-                  fontWeight="fontWeightBold"
-                  fontSize={13.5}
-                  variant="subtitle2"
-                  style={{ color: "black" }}
-                  key="rightBoxSubtitle2"
-                >
-                  Export a CSV file of mapped data.
-                </Box>
-                <Box style={{ fontSize: 12 }} pl={1} pb={1}>
-                  The downloaded file will represent the regions remaining after
-                  filtering. Use the "Map Resolutions" tab to select the
-                  resolution of the regions to download. Large datasets may take
-                  longer to download.
-                </Box>
-                <Box style={{ fontSize: 12 }} pl={1} pb={1}>
-                  Download data for{" "}
+                {download.length === 0 ? (
                   <Box
-                    component="span"
-                    fontWeight="fontWeightMedium"
-                    fontSize={16}
-                    color="#BA0C2F"
+                    p={1}
+                    fontStyle="italic"
+                    fontWeight="fontWeightBold"
+                    fontSize={13.5}
+                    variant="subtitle2"
+                    style={{ color: "black" }}
+                    key="rightBoxSubtitle"
                   >
-                    {download.length}{" "}
-                    {maps[currentMapID].layers[
-                      currentLayerID
-                    ].name.toLowerCase() + "s"}
-                  </Box>{" "}
-                  in{" "}
-                  <Box
-                    component="span"
-                    fontWeight="fontWeightMedium"
-                    fontSize={16}
-                    color="#BA0C2F"
-                  >
-                    {maps[currentMapID].name}
+                    There is no data mapped to download, adjust the map filters
+                    until map populates with data.
                   </Box>
-                  .
-                </Box>
-                <ExcelFile element={<button autoFocus>Download Data</button>}>
-                  <ExcelSheet data={queryDesc} name="Notes">
-                    <ExcelColumn
-                      label="Data Export Notes"
-                      value="Description"
-                    />
-                  </ExcelSheet>
-                  <ExcelSheet data={download} name="Boundary Query Data">
-                    {Object.keys(download[0]).map((col) => {
-                      return (
+                ) : (
+                  <React.Fragment>
+                    <Box
+                      p={1}
+                      fontStyle="italic"
+                      fontWeight="fontWeightBold"
+                      fontSize={13.5}
+                      variant="subtitle2"
+                      style={{ color: "black" }}
+                      key="rightBoxSubtitle2"
+                    >
+                      Export a CSV file of mapped data.
+                    </Box>
+                    <Box style={{ fontSize: 12 }} pl={1} pb={1}>
+                      The downloaded file will represent the regions remaining
+                      after filtering. Use the "Map Resolutions" tab to select
+                      the resolution of the regions to download. Large datasets
+                      may take longer to download.
+                    </Box>
+                    <Box style={{ fontSize: 12 }} pl={1} pb={1}>
+                      Download data for{" "}
+                      <Box
+                        component="span"
+                        fontWeight="fontWeightMedium"
+                        fontSize={16}
+                        color="#BA0C2F"
+                      >
+                        {download.length}{" "}
+                        {maps[currentMapID].layers[
+                          currentLayerID
+                        ].name.toLowerCase() + "s"}
+                      </Box>{" "}
+                      in{" "}
+                      <Box
+                        component="span"
+                        fontWeight="fontWeightMedium"
+                        fontSize={16}
+                        color="#BA0C2F"
+                      >
+                        {maps[currentMapID].name}
+                      </Box>
+                      .
+                    </Box>
+                    <ExcelFile
+                      element={<button autoFocus>Download Data</button>}
+                    >
+                      <ExcelSheet data={queryDesc} name="Notes">
                         <ExcelColumn
-                          label={label(col) !== null ? label(col) : col}
-                          value={col}
-                          key={col}
+                          label="Data Export Notes"
+                          value="Description"
                         />
-                      );
-                    })}
-                  </ExcelSheet>
-                </ExcelFile>
+                      </ExcelSheet>
+                      <ExcelSheet data={download} name="Boundary Query Data">
+                        {Object.keys(download[0]).map((col) => {
+                          return (
+                            <ExcelColumn
+                              label={label(col) !== null ? label(col) : col}
+                              value={col}
+                              key={col}
+                            />
+                          );
+                        })}
+                      </ExcelSheet>
+                    </ExcelFile>
+                  </React.Fragment>
+                )}
               </React.Fragment>
             ) : null}
             {downloadUpload !== null && (

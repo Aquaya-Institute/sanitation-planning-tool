@@ -218,16 +218,19 @@ export const Map = () => {
 
       var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
-        var _source = null;
-        if (queryDist && index > 1) {
-          let queryedit =
-            `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist;
-          _source = new Carto.source.SQL(queryedit);
-        } else {
-          _source = new Carto.source.SQL(
-            `SELECT * FROM ${layer.carto_tableName}`
-          );
-        }
+        // var _source = null;
+        // if (queryDist && index > 1) {
+        //   let queryedit =
+        //     `SELECT * FROM ${layer.carto_tableName} WHERE` + queryDist;
+        //   _source = new Carto.source.SQL(queryedit);
+        // } else {
+        //   _source = new Carto.source.SQL(
+        //     `SELECT * FROM ${layer.carto_tableName}`
+        //   );
+        // }
+        const _source = new Carto.source.SQL(
+          `SELECT * FROM ${layer.carto_tableName}`
+        );
 
         _source.on("queryChanged", function (e) {
           dispatch({

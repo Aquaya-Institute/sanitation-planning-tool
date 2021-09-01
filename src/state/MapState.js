@@ -41,6 +41,7 @@ const initialState = {
   userData: null,
   queryDist: null,
   skip: true,
+  allDistricts: [],
   selectedDistName: [],
   highlightLayer: null,
   highlightBoundary: null,
@@ -49,6 +50,7 @@ const initialState = {
   allowSettlements: false,
   settlementHighlight: null,
   settlementPopup: null,
+  column: null,
   currentCountry: [
     {
       source: null,
@@ -491,10 +493,20 @@ const reducer = (state, action) => {
           }
         }
       });
+    /* when the district dropdown is loaded */
+    case "layer.column":
+      return produce(state, (draft) => {
+        draft.column = action.column;
+      });
     /* when a district is selected from the dropdown */
     case "dropdown.selection":
       return produce(state, (draft) => {
         draft.selectedDistName = action.distName;
+      });
+    /* when a new map is loaded, fetches all district options */
+    case "dropdown.options":
+      return produce(state, (draft) => {
+        draft.allDistricts = action.allDistricts;
       });
     /* saves the district highlight layer from dropdown selection */
     case "dropdown.highlight":

@@ -17,7 +17,7 @@ import HealthIcon from "../../images/health.png";
 import AccessIcon from "../../images/access.png";
 import resolutionIcon from "../../images/resolution.png";
 import boundaryIcon from "../../images/boundaryselect.png";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import FilterMenu from "./FilterMenu";
 import Tour from "../subcomponents/Tour";
@@ -63,13 +63,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 const drawerWidth = 175;
 
+function extractValue(arr, prop) {
+  let extractedValue = arr.map((item) => item[prop]).sort();
+  return extractedValue;
+}
+
 export const MapMenu = () => {
-  const [{ maps, currentMapID, currentLayerID, currentCountry }, dispatch] =
-    useContext(MapContext);
+  const [
+    { maps, currentMapID, currentLayerID, currentCountry, carto_client },
+    dispatch,
+  ] = useContext(MapContext);
   const [mapID, setMapID] = useState(null);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMenu, setSelectedMenu] = React.useState(null);
+  const allDistricts = useRef();
+  const column = useRef();
+  // const [isMounted, setIsMounted] = useState(false);
   const setActive = (event, text) => {
     setSelectedMenu(text);
   };
@@ -87,6 +97,45 @@ export const MapMenu = () => {
       mapID: mapID,
     });
   };
+
+  //Set all districts
+  useMemo(() => {
+    if (
+      carto_client &&
+      currentMapID &&
+      currentCountry[currentLayerID].filters !== null
+    ) {
+      if (allDistricts.current === undefined) {
+        var column_name = null;
+        if (
+          currentCountry["3"].filters.some((el) => el.column_name === "name_3")
+        ) {
+          column_name = "name_3";
+        } else {
+          column_name = "name_2";
+        }
+        column.current = column_name;
+        // dispatch({
+        //   type: "layer.column",
+        //   column: column_name,
+        // });
+
+        return fetch(
+          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${maps[currentMapID].layers["3"].carto_tableName}`
+        )
+          .then((resp) => resp.json())
+          .then((response) => {
+            const result = extractValue(response.rows, column_name);
+            // setAllDistricts(result);
+            // dispatch({
+            //   type: "dropdown.options",
+            //   allDistricts: result,
+            // });
+            allDistricts.current = result;
+          });
+      }
+    }
+  }, [carto_client, currentCountry, currentLayerID, currentMapID]);
 
   return (
     <React.Fragment key="drawerDiv">
@@ -180,6 +229,7 @@ export const MapMenu = () => {
                   e.preventDefault();
                   e.stopPropagation();
                   setFilterMenuOpen(true);
+                  // setIsMounted(true);
                   setAnchorEl(e.currentTarget);
                   setActive(e, 5);
                 }}
@@ -207,13 +257,21 @@ export const MapMenu = () => {
                   className={classes.item}
                 />
                 {selectedMenu === 5 && (
-                  <DropdownMenu
-                    anchorEl={anchorEl}
-                    filterMenuOpen={filterMenuOpen}
-                    setFilterMenuOpen={setFilterMenuOpen}
-                    cat={"drop"}
-                    setSelectedMenu={setSelectedMenu}
-                  />
+                  <div
+                    style={{
+                      display: filterMenuOpen === true ? false : "none",
+                    }}
+                  >
+                    <DropdownMenu
+                      anchorEl={anchorEl}
+                      filterMenuOpen={filterMenuOpen}
+                      setFilterMenuOpen={setFilterMenuOpen}
+                      allDistricts={allDistricts.current}
+                      column={column.current}
+                      cat={"drop"}
+                      setSelectedMenu={setSelectedMenu}
+                    />
+                  </div>
                 )}
               </ListItem>
             )}
