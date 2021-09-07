@@ -12,11 +12,11 @@ import {
   Select,
   Checkbox,
   ClickAwayListener,
-  TextField,
+  // TextField,
 } from "@material-ui/core";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+// import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+// import CheckBoxIcon from "@material-ui/icons/CheckBox";
+// import Autocomplete from "@material-ui/lab/Autocomplete";
 import { MapContext } from "../../state/MapState";
 import L from "leaflet";
 import clsx from "clsx";
@@ -162,6 +162,7 @@ export const DropdownMenu = ({
     if (distName.length > 0 && mapID) {
       filterPopulatedPlacesByCountry(distName);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLegend]);
 
   const handleChange = (event) => {

@@ -135,6 +135,7 @@ export const MapMenu = () => {
           });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carto_client, currentCountry, currentLayerID, currentMapID]);
 
   return (

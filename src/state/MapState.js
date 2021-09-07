@@ -362,7 +362,7 @@ const reducer = (state, action) => {
         draft.download =
           draft.currentCountry[draft.currentLayerID].layer.getSource();
       });
-    /* CHECK IF NEEDED */
+    /* clip settlements layer along with 5x5km layer */
     case "layer.query":
       return produce(state, (draft) => {
         draft.currentCountry[draft.currentLayerID].query = action.query;

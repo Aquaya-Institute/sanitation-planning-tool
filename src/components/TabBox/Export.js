@@ -25,6 +25,8 @@ export const Export = () => {
   const [queryDesc, setQueryDesc] = useState(null);
   const [downloadSettlements, setDownloadSettlements] = useState(null);
   const [downloadUpload, setDownloadUpload] = useState(null);
+  const [downloadUpload5k, setDownloadUpload5k] = useState(null);
+  const [downloadUploadAdmin, setDownloadUploadAdmin] = useState(null);
   const [mapID, setMapID] = useState(currentMapID);
   // const [loader, showLoader, hideLoader] = Loader_2();
   // const [loader2, showLoader2, hideLoader2] = Loader2_2();
@@ -245,9 +247,12 @@ export const Export = () => {
       // showLoader2();
       setLoading(true);
       var uploadArray = [];
-      for (var i = 0; i < userData.length; i++) {
+      var uploadAdminArray = [];
+      var upload5kArray = [];
+      for (var i = 0; i < userData.length - 1; i++) {
+        let userData_temp = userData[i];
         fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom)`
+          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["1"].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers["1"].carto_tableName}.the_geom)`
         )
           .then((resp) => resp.json())
           .then((response) => {
@@ -261,15 +266,74 @@ export const Export = () => {
               } else if (response.rows[0].classes === 4) {
                 response.rows[0].classes = "Urban";
               }
-              // eslint-disable-next-line no-loop-func
               Object.keys(response.rows[0]).forEach((k) => {
                 response.rows[0][k] = "" + response.rows[0][k];
               });
             }
-            uploadArray.push(response.rows[0]);
+            let temp = { ...userData_temp, ...response.rows[0] };
+            delete temp["the_geom"];
+            delete temp["the_geom_webmercator"];
+            delete temp["cartodb_id"];
+            uploadArray.push(temp);
             setDownloadUpload(uploadArray);
             // hideLoader2();
 
+            setLoading(false);
+          });
+        fetch(
+          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["2"].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers["2"].carto_tableName}.the_geom)`
+        )
+          .then((resp) => resp.json())
+          .then((response) => {
+            if (response.rows[0].classes !== undefined) {
+              if (response.rows[0].classes === 1) {
+                response.rows[0].classes = "Rural Remote";
+              } else if (response.rows[0].classes === 2) {
+                response.rows[0].classes = "Rural On-road";
+              } else if (response.rows[0].classes === 3) {
+                response.rows[0].classes = "Rural Mixed";
+              } else if (response.rows[0].classes === 4) {
+                response.rows[0].classes = "Urban";
+              }
+              Object.keys(response.rows[0]).forEach((k) => {
+                response.rows[0][k] = "" + response.rows[0][k];
+              });
+            }
+            let temp = { ...userData_temp, ...response.rows[0] };
+            delete temp["the_geom"];
+            delete temp["the_geom_webmercator"];
+            delete temp["cartodb_id"];
+            delete temp["name_1"];
+            delete temp["name_2"];
+            upload5kArray.push(temp);
+            setDownloadUpload5k(upload5kArray);
+            setLoading(false);
+          });
+        fetch(
+          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["3"].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers["3"].carto_tableName}.the_geom)`
+        )
+          .then((resp) => resp.json())
+          .then((response) => {
+            if (response.rows[0].classes !== undefined) {
+              if (response.rows[0].classes === 1) {
+                response.rows[0].classes = "Rural Remote";
+              } else if (response.rows[0].classes === 2) {
+                response.rows[0].classes = "Rural On-road";
+              } else if (response.rows[0].classes === 3) {
+                response.rows[0].classes = "Rural Mixed";
+              } else if (response.rows[0].classes === 4) {
+                response.rows[0].classes = "Urban";
+              }
+              Object.keys(response.rows[0]).forEach((k) => {
+                response.rows[0][k] = "" + response.rows[0][k];
+              });
+            }
+            let temp = { ...userData_temp, ...response.rows[0] };
+            delete temp["the_geom"];
+            delete temp["the_geom_webmercator"];
+            delete temp["cartodb_id"];
+            uploadAdminArray.push(temp);
+            setDownloadUploadAdmin(uploadAdminArray);
             setLoading(false);
           });
       }
@@ -289,18 +353,13 @@ export const Export = () => {
 
   return (
     <React.Fragment>
-      {/* {downloadSettlements ? (
-        <div align="center">{loader2}</div>
-      ) : (
-        <div align="center">{loader}</div>
-      )} */}
       {loading === true && (
         <div align="center">
           <CircularProgress />
         </div>
       )}
       <React.Fragment>
-        {currentLayerID === "1" ? (
+        {currentLayerID === "1" && downloadUpload === null ? (
           <React.Fragment>
             Data downloads are not available for this layer, please select a
             larger resolution from "Map Resolutions".{" "}
@@ -495,59 +554,86 @@ export const Export = () => {
                 )}
               </React.Fragment>
             ) : null}
-            {downloadUpload !== null && (
-              <React.Fragment>
-                <Divider />
-                <Box
-                  p={1}
-                  fontStyle="italic"
-                  fontWeight="fontWeightBold"
-                  fontSize={13.5}
-                  variant="subtitle2"
-                  style={{ color: "black" }}
-                  key="rightBoxSubtitle3"
-                >
-                  Export a CSV file of data for your uploaded locations.
-                </Box>
-                <Box style={{ fontSize: 12 }} pl={1} pb={1}>
-                  Download data for{" "}
+            {downloadUpload !== null &&
+              downloadUpload5k !== null &&
+              downloadUploadAdmin !== null && (
+                <React.Fragment>
+                  <Divider />
                   <Box
-                    component="span"
-                    fontWeight="fontWeightMedium"
-                    fontSize={16}
-                    color="#BA0C2F"
+                    p={1}
+                    fontStyle="italic"
+                    fontWeight="fontWeightBold"
+                    fontSize={13.5}
+                    variant="subtitle2"
+                    style={{ color: "black" }}
+                    key="rightBoxSubtitle3"
                   >
-                    all uploaded locations
-                  </Box>{" "}
-                  in{" "}
-                  <Box
-                    component="span"
-                    fontWeight="fontWeightMedium"
-                    fontSize={16}
-                    color="#BA0C2F"
-                  >
-                    {maps[currentMapID].name}
+                    Export a CSV file of data for your uploaded locations.
                   </Box>
-                  .
-                </Box>
-                <ExcelFile element={<button>Download Data</button>}>
-                  <ExcelSheet
-                    data={downloadUpload}
-                    name="Data at Uploaded Points"
-                  >
-                    {Object.keys(downloadUpload[0]).map((col) => {
-                      return (
-                        <ExcelColumn
-                          label={label(col) !== null ? label(col) : col}
-                          value={col}
-                          key={col}
-                        />
-                      );
-                    })}
-                  </ExcelSheet>
-                </ExcelFile>
-              </React.Fragment>
-            )}
+                  <Box style={{ fontSize: 12 }} pl={1} pb={1}>
+                    Download data for{" "}
+                    <Box
+                      component="span"
+                      fontWeight="fontWeightMedium"
+                      fontSize={16}
+                      color="#BA0C2F"
+                    >
+                      all uploaded locations
+                    </Box>{" "}
+                    in{" "}
+                    <Box
+                      component="span"
+                      fontWeight="fontWeightMedium"
+                      fontSize={16}
+                      color="#BA0C2F"
+                    >
+                      {maps[currentMapID].name}
+                    </Box>
+                    .
+                  </Box>
+                  <ExcelFile element={<button>Download Data</button>}>
+                    <ExcelSheet data={downloadUpload} name="1km data at Points">
+                      {Object.keys(downloadUpload[0]).map((col) => {
+                        return (
+                          <ExcelColumn
+                            label={label(col) !== null ? label(col) : col}
+                            value={col}
+                            key={col}
+                          />
+                        );
+                      })}
+                    </ExcelSheet>
+                    <ExcelSheet
+                      data={downloadUpload5k}
+                      name="5km Data at Points"
+                    >
+                      {Object.keys(downloadUpload5k[0]).map((col) => {
+                        return (
+                          <ExcelColumn
+                            label={label(col) !== null ? label(col) : col}
+                            value={col}
+                            key={col}
+                          />
+                        );
+                      })}
+                    </ExcelSheet>
+                    <ExcelSheet
+                      data={downloadUploadAdmin}
+                      name="Admin Boundary Data at Points"
+                    >
+                      {Object.keys(downloadUploadAdmin[0]).map((col) => {
+                        return (
+                          <ExcelColumn
+                            label={label(col) !== null ? label(col) : col}
+                            value={col}
+                            key={col}
+                          />
+                        );
+                      })}
+                    </ExcelSheet>
+                  </ExcelFile>
+                </React.Fragment>
+              )}
           </React.Fragment>
         )}
       </React.Fragment>

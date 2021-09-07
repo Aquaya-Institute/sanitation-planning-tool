@@ -134,7 +134,7 @@ const Tour = () => {
   return (
     <React.Fragment>
       <Button
-        justifyContent="center"
+        // justifyContent="center"
         startIcon={<MapIcon />}
         onClick={startTour}
         style={{ fontSize: 13, padding: 0 }}

@@ -30,7 +30,7 @@ export const Map = () => {
       currentLayerID,
       activeLegend,
       userData,
-      queryDist,
+      // queryDist,
       showSettlements,
       settlementBoundary,
       currentCountry,
@@ -48,7 +48,7 @@ export const Map = () => {
   const [buckets, setBuckets] = useState();
   const openPopper = Boolean(popup);
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const [popoverColumns, setPopoverColumns] = useState([]);
+  // const [popoverColumns, setPopoverColumns] = useState([]);
   const classes = useStyles();
   const clickRef = useRef(null);
   const clickRefPop = useRef(null);
@@ -216,7 +216,7 @@ export const Map = () => {
     if (cartoClient && mapID && initialLoad.current === false) {
       const _mapID = mapID;
 
-      var objlist = [];
+      // var objlist = [];
       maps[mapID].layers.forEach((layer, index) => {
         // var _source = null;
         // if (queryDist && index > 1) {
@@ -241,17 +241,17 @@ export const Map = () => {
         const _style = new Carto.style.CartoCSS(layer.carto_style);
         const _filters = [];
         const _columns = [];
-        var obj1 = [];
+        // var obj1 = [];
 
         layer.filters.forEach((filter, filter_c) => {
-          obj1 = [
-            layer.name,
-            filter.name,
-            filter.column_name,
-            filter.subcategory,
-            filter.unit,
-          ];
-          objlist.push(obj1);
+          // obj1 = [
+          //   layer.name,
+          //   filter.name,
+          //   filter.column_name,
+          //   filter.subcategory,
+          //   filter.unit,
+          // ];
+          // objlist.push(obj1);
           switch (filter.type) {
             case "range":
               const _filter = new Carto.filter.Range(
@@ -328,7 +328,7 @@ export const Map = () => {
         });
         initialLoad.current = true;
       });
-      setPopoverColumns(objlist);
+      // setPopoverColumns(objlist);
     }
   }, [mapID, cartoClient]);
 
@@ -601,13 +601,17 @@ export const Map = () => {
         fillOpacity: 0.3,
       };
       userData.forEach((marker, key) => {
-        var popupContent = "";
-        for (key in marker) {
-          popupContent = popupContent + key + ":  " + marker[key] + "</br>";
+        if (marker.Latitude === null || marker.Longitude === null) {
+          return null;
+        } else {
+          var popupContent = "";
+          for (key in marker) {
+            popupContent = popupContent + key + ":  " + marker[key] + "</br>";
+          }
+          L.circleMarker([marker.Latitude, marker.Longitude], markerOptions)
+            .addTo(layerRef.current)
+            .bindPopup(popupContent);
         }
-        L.circleMarker([marker.Latitude, marker.Longitude], markerOptions)
-          .addTo(layerRef.current)
-          .bindPopup(popupContent);
       });
     }
   }, [myRadius, myWeight, userData]);
