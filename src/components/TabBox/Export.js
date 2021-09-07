@@ -351,6 +351,39 @@ export const Export = () => {
     return lab;
   };
 
+  const label1k = (code) => {
+    var lab = null;
+    currentCountry["1"].filters.map((filter) => {
+      if (filter.column_name === code) {
+        lab = filter.name;
+      }
+      return lab;
+    });
+    return lab;
+  };
+
+  const label5k = (code) => {
+    var lab = null;
+    currentCountry["2"].filters.map((filter) => {
+      if (filter.column_name === code) {
+        lab = filter.name;
+      }
+      return lab;
+    });
+    return lab;
+  };
+
+  const labelAdmin = (code) => {
+    var lab = null;
+    currentCountry["2"].filters.map((filter) => {
+      if (filter.column_name === code) {
+        lab = filter.name;
+      }
+      return lab;
+    });
+    return lab;
+  };
+
   return (
     <React.Fragment>
       {loading === true && (
@@ -596,7 +629,7 @@ export const Export = () => {
                       {Object.keys(downloadUpload[0]).map((col) => {
                         return (
                           <ExcelColumn
-                            label={label(col) !== null ? label(col) : col}
+                            label={label1k(col) !== null ? label1k(col) : col}
                             value={col}
                             key={col}
                           />
@@ -610,7 +643,7 @@ export const Export = () => {
                       {Object.keys(downloadUpload5k[0]).map((col) => {
                         return (
                           <ExcelColumn
-                            label={label(col) !== null ? label(col) : col}
+                            label={label5k(col) !== null ? label5k(col) : col}
                             value={col}
                             key={col}
                           />
@@ -624,7 +657,9 @@ export const Export = () => {
                       {Object.keys(downloadUploadAdmin[0]).map((col) => {
                         return (
                           <ExcelColumn
-                            label={label(col) !== null ? label(col) : col}
+                            label={
+                              labelAdmin(col) !== null ? labelAdmin(col) : col
+                            }
                             value={col}
                             key={col}
                           />
