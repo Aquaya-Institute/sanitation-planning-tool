@@ -518,7 +518,7 @@ export const MapMenu = () => {
               style={{
                 width: drawerWidth - 1,
                 minHeight: "3vh",
-                justifyContent: "center",
+                // justifyContent: "center",
                 alignItems: "center",
                 borderRight: "1px solid #CFCDC9",
               }}

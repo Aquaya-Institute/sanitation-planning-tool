@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { MapContext } from "../../state/MapState";
 import { useState, useContext, useEffect } from "react";
 import { Box, Divider, CircularProgress } from "@material-ui/core";
-import { Loader_2, Loader2_2 } from "../subcomponents/Loader_2";
+// import { Loader_2, Loader2_2 } from "../subcomponents/Loader_2";
 import ReactExport from "react-export-excel";
 
 const ExcelFile = ReactExport.ExcelFile;

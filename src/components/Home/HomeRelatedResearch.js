@@ -23,7 +23,7 @@ const styles = (theme) => ({
   item: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    // alignItems: "center",
     padding: theme.spacing(0, 2),
     fontFamily: "Source Sans Pro",
   },
@@ -81,13 +81,12 @@ function ProductHowItWorks(props) {
           <Grid container spacing={5}>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <div className={classes.number} align="center">
+                <div className={classes.number}>
                   <strong>WHERE DOES CLTS WORK BEST?</strong>
                 </div>
                 <Link
                   href="https://pubs.acs.org/doi/full/10.1021/acs.est.0c05733"
                   variant="h6"
-                  align="center"
                   color="inherit"
                   className={classes.root}
                 >
@@ -96,7 +95,6 @@ function ProductHowItWorks(props) {
                 <Link
                   href="https://www.globalwaters.org/resources/assets/washpals/targeting-community-led-total-sanitation-clts-favorable-contexts-factors-0"
                   variant="h6"
-                  align="center"
                   color="inherit"
                   className={classes.root}
                 >
@@ -105,7 +103,6 @@ function ProductHowItWorks(props) {
                 <Link
                   href="https://www.globalwaters.org/resources/assets/washpals/targeting-community-led-total-sanitation-clts-favorable-contexts-factors"
                   variant="h6"
-                  align="center"
                   color="inherit"
                   className={classes.root}
                 >
@@ -114,7 +111,6 @@ function ProductHowItWorks(props) {
                 <Link
                   href="https://www.globalwaters.org/resources/assets/washpals/targeting-community-led-total-sanitation-clts-favorable-contexts-factors-2"
                   variant="h6"
-                  align="center"
                   color="inherit"
                   className={classes.root}
                 >
@@ -123,7 +119,6 @@ function ProductHowItWorks(props) {
                 <Link
                   href="https://www.globalwaters.org/resources/assets/washpals/targeting-community-led-total-sanitation-clts-favorable-contexts-factors-1"
                   variant="h6"
-                  align="center"
                   color="inherit"
                   className={classes.root}
                 >
@@ -133,7 +128,7 @@ function ProductHowItWorks(props) {
             </Grid>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <div className={classes.number} align="center">
+                <div className={classes.number}>
                   <strong>
                     HOW DO COMMUNITIES SUSTAIN LATRINE COVERAGE AND USE?
                   </strong>
@@ -142,7 +137,6 @@ function ProductHowItWorks(props) {
                   href="https://www.mdpi.com/2071-1050/13/10/5440/htm"
                   onClick={preventDefault}
                   variant="h6"
-                  align="center"
                   color="inherit"
                   className={classes.root}
                 >
@@ -151,7 +145,6 @@ function ProductHowItWorks(props) {
                 <Link
                   href="https://www.globalwaters.org/resources/assets/washpals/sustaining-latrine-coverage-and-use-study-cambodia-rural-sanitation-and-hygiene"
                   variant="h6"
-                  align="center"
                   color="inherit"
                   className={classes.root}
                 >
@@ -160,7 +153,6 @@ function ProductHowItWorks(props) {
                 <Link
                   href="https://www.globalwaters.org/resources/assets/washpals/sustaining-latrine-coverage-and-use-study-community-led-total-sanitation-programs"
                   variant="h6"
-                  align="center"
                   color="inherit"
                   className={classes.root}
                 >
@@ -177,7 +169,6 @@ function ProductHowItWorks(props) {
                   href="#"
                   onClick={preventDefault}
                   variant="h6"
-                  align="center"
                   color="inherit"
                   className={classes.root}
                 >

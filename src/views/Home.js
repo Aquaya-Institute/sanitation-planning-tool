@@ -8,7 +8,7 @@ import HomeBanner from "../components/Home/HomeBanner";
 import HomeMap from "../components/Home/HomeMap";
 import HomeRelatedResearch from "../components/Home/HomeRelatedResearch";
 import { MapSelector } from "../components/MapSelector";
-import HomeHowItWorks from "../components/Home/HomeHowItWorks";
+// import HomeHowItWorks from "../components/Home/HomeHowItWorks";
 import HomeFooter from "../components/Home/HomeFooter";
 
 const useCardStyles = makeStyles({
@@ -20,9 +20,6 @@ const useCardStyles = makeStyles({
   },
   font: {
     fontFamily: "Source Sans Pro",
-  },
-  media: {
-    height: 180,
   },
   content: {
     height: 50,
@@ -66,8 +63,8 @@ function Home() {
         </Paper>
       </Container>
       <br />
-      <HomeHowItWorks />
-      <br />
+      {/* <HomeHowItWorks />
+      <br /> */}
       <HomeRelatedResearch />
       <HomeFooter />
     </React.Fragment>
