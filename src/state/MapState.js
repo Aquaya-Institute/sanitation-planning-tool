@@ -193,6 +193,9 @@ const reducer = (state, action) => {
         draft.currentCountry[draft.currentLayerID].layer.hide();
         draft.currentLayerID = action.newLayerID;
         draft.currentCountry[draft.currentLayerID].layer.show();
+        if (draft.showSettlements === true) {
+          draft.currentCountry[draft.currentLayerID].layer.bringToBack();
+        }
         var i;
         for (i = 0; i < legendStylesObj.length; i++) {
           if (

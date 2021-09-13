@@ -57,6 +57,7 @@ export const MapPopper = ({
   anchorPopper,
   downloadData,
   mapRef,
+  settlementclickRef,
 }) => {
   const [{ maps, currentLayerID, activeLegend, highlightBoundary }] =
     useContext(MapContext);
@@ -259,7 +260,7 @@ export const MapPopper = ({
                     <CloseIcon
                       key={"popoverClose"}
                       fontSize="small"
-                      color="default"
+                      color="disabled"
                       onClick={(e) => {
                         setPopoverOpen(false);
                       }}
@@ -455,9 +456,10 @@ export const MapPopper = ({
                 <IconButton
                   key={"popperClose"}
                   p={0}
-                  color="default"
+                  color="disabled"
                   onClick={(e) => {
                     setPopup(null);
+                    settlementclickRef = false;
                     if (highlightBoundary) {
                       mapRef.current.removeLayer(highlightBoundary);
                     }

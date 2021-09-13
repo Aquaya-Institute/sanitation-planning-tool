@@ -11,11 +11,13 @@ import {
   FormHelperText,
   FormControlLabel,
   Checkbox,
+  Switch,
 } from "@material-ui/core";
 import theme from "../../theme/theme";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import TabsWrappedLabel from "../TabBox/TabBox";
+import { CalculatorWidget } from "./CalculatorWidget";
 export const Legend = ({
   mapID,
   buckets,
@@ -48,6 +50,11 @@ export const Legend = ({
           backgroundColor: "transparent",
         }}
       ></Paper>
+      {/* {currentCountry[currentLayerID].source && (
+        <Paper>
+          <CalculatorWidget />
+        </Paper>
+      )} */}
       <Paper
         square
         pb={2}
@@ -56,33 +63,36 @@ export const Legend = ({
           backgroundColor: theme.palette.background.default,
         }}
       >
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={hideLayer}
-              onChange={() => {
-                setHideLayer(!hideLayer);
-                if (!hideLayer === true) {
-                  currentCountry[currentLayerID].layer.hide();
-                } else {
-                  currentCountry[currentLayerID].layer.show();
-                }
-              }}
-              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-              checkedIcon={<CheckBoxIcon fontSize="small" />}
-              color="primary"
-              inputProps={{
-                "aria-label": "show/hide-main-layer",
-              }}
-            />
-          }
-          label={
-            <Typography key="filterListItemLabel" variant="body2">
-              Remove layer to view underlying satellite imagery
-            </Typography>
-          }
-          size="small"
-        />
+        <Box pl={1}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={hideLayer}
+                onChange={() => {
+                  setHideLayer(!hideLayer);
+                  if (!hideLayer === true) {
+                    currentCountry[currentLayerID].layer.hide();
+                  } else {
+                    currentCountry[currentLayerID].layer.show();
+                  }
+                }}
+                // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                // checkedIcon={<CheckBoxIcon fontSize="small" />}
+                size="small"
+                color="secondary"
+                inputProps={{
+                  "aria-label": "show/hide-main-layer",
+                }}
+              />
+            }
+            label={
+              <Typography key="filterListItemLabel" variant="body2">
+                Remove layer to view underlying satellite imagery
+              </Typography>
+            }
+            size="small"
+          />
+        </Box>
       </Paper>
       <Paper
         style={{

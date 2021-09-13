@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
     alignItems: "center",
-    // justifyContent: "center",
+    justifyContent: "center",
     zIndex: "2000",
   },
   popover: {
@@ -297,7 +297,7 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
                 key={"popoverClose"}
                 p={0}
                 fontSize="small"
-                color="default"
+                color="disabled"
                 onClick={(e) => {
                   setPopoverOpen(false);
                 }}

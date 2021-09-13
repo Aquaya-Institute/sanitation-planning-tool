@@ -49,6 +49,7 @@ export const Map = () => {
   const openPopper = Boolean(popup);
   const [popoverOpen, setPopoverOpen] = useState(false);
   // const [popoverColumns, setPopoverColumns] = useState([]);
+  const settlementclickRef = useRef(null);
   const classes = useStyles();
   const clickRef = useRef(null);
   const clickRefPop = useRef(null);
@@ -103,6 +104,7 @@ export const Map = () => {
           ) {
           } else {
             setPopup(null);
+            settlementclickRef.current = false;
             if (highlightLayer.current && cartoClient) {
               mapRef.current.removeLayer(highlightLayer.current);
               highlightLayer.current = undefined;
@@ -155,7 +157,7 @@ export const Map = () => {
         username: process.env.REACT_APP_CARTO_USERNAME,
         serverUrl: process.env.REACT_APP_CARTO_SERVERURL,
       });
-      mapRef.current = L.map("map", { minZoom: 6, maxZoom: 18 }).setView(
+      mapRef.current = L.map("map", { minZoom: 5.75, maxZoom: 18 }).setView(
         [maps[mapID].lat, maps[mapID].long],
         maps[mapID].zoom
       );
@@ -388,28 +390,41 @@ export const Map = () => {
       currentLayerID !== "1"
     ) {
       currentLayer.on("featureClicked", (featureEvent) => {
-        var result = null;
-        var input = featureEvent.data.cartodb_id;
-        fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[currentLayerID].carto_tableName} where cartodb_id = ${input}`
-        )
-          .then((resp) => resp.json())
-          .then((response) => {
-            var myStyle = {
-              color: "#FFFFFF",
-              fillColor: "#FFFFFF",
-              fillOpacity: 0.3,
-              weight: 1,
-            };
-            result = L.geoJson(JSON.parse(response.rows[0].the_geom), myStyle);
-            highlightLayer.current = result;
-            dispatch({
-              type: "boundary.highlight",
-              highlightBoundary: result,
+        if (
+          settlementclickRef.current === false ||
+          settlementclickRef.current === null
+        ) {
+          var result = null;
+          var input = featureEvent.data.cartodb_id;
+          fetch(
+            `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[currentLayerID].carto_tableName} where cartodb_id = ${input}`
+          )
+            .then((resp) => resp.json())
+            .then((response) => {
+              var myStyle = {
+                color: "#FFFFFF",
+                fillColor: "#FFFFFF",
+                fillOpacity: 0.3,
+                weight: 1,
+              };
+              result = L.geoJson(
+                JSON.parse(response.rows[0].the_geom),
+                myStyle
+              );
+              highlightLayer.current = result;
+              if (
+                settlementHighlight.current === null ||
+                settlementHighlight.current === undefined
+              ) {
+                dispatch({
+                  type: "boundary.highlight",
+                  highlightBoundary: result,
+                });
+              }
             });
-          });
-        setPopup([maps[mapID].layers[currentLayerID].name, featureEvent]);
-        setPopoverOpen(false);
+          setPopup([maps[mapID].layers[currentLayerID].name, featureEvent]);
+          setPopoverOpen(false);
+        }
       });
     }
   }, [currentLayer, currentLayerID, mapID]);
@@ -433,7 +448,7 @@ export const Map = () => {
             settlement_style = new Carto.style.CartoCSS(
               `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
             );
-          } else {
+          } else if (settlementBoundary == null) {
             settlement_source = new Carto.source.SQL(
               `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM ${maps[mapID].layers[currentLayerID].carto_tableName}, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
             );
@@ -463,6 +478,7 @@ export const Map = () => {
               }
             );
             settlementBoundaryset.on("featureClicked", (featureEvent) => {
+              settlementclickRef.current = true;
               var result = null;
               var input = featureEvent.data.cartodb_id;
               fetch(
@@ -651,6 +667,7 @@ export const Map = () => {
           popupData={popupData}
           clickRef={clickRef}
           openPopper={openPopper}
+          settlementclickRef={settlementclickRef.current}
           setPopup={setPopup}
           mapID={mapID}
           setPopoverOpen={setPopoverOpen}

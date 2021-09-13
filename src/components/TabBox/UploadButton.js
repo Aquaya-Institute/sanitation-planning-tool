@@ -13,6 +13,7 @@ import {
   IconButton,
   FormControlLabel,
   Checkbox,
+  Switch,
 } from "@material-ui/core";
 import { MapContext } from "../../state/MapState";
 import { CSVLink } from "react-csv";
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
     alignItems: "center",
-    // justifyContent: "center",
+    justifyContent: "center",
   },
 }));
 
@@ -95,10 +96,9 @@ export const UploadButton = () => {
   }, [currentMapID]);
 
   return (
-    <div id="upload-div">
+    <div id="upload-div" style={{ width: "100%" }}>
       {mapID && (
         <React.Fragment>
-          {" "}
           {maps[mapID].layers["4"] && (
             <React.Fragment>
               <Box
@@ -112,51 +112,53 @@ export const UploadButton = () => {
               >
                 Display all estimated settlement boundary areas on the map:
               </Box>
-
-              <FormControlLabel
-                autoFocus
-                control={
-                  <Checkbox
-                    autoFocus
-                    checked={showSettlements}
-                    onChange={() => {
-                      if (
-                        showSettlements === false &&
-                        allowSettlements === false
-                      ) {
-                        setPopoverOpen(true);
-                      } else {
-                        setShowLayer(!showSettlements);
-                        dispatch({
-                          type: "show.settlements",
-                          showSettlements: !showSettlements,
-                        });
-                        if (showLayer === false) {
-                          if (settlementBoundary) {
-                            settlementBoundary.show();
-                          }
+              <Box pl={1}>
+                <FormControlLabel
+                  autoFocus
+                  control={
+                    <Switch
+                      autoFocus
+                      checked={showSettlements}
+                      onChange={() => {
+                        if (
+                          showSettlements === false &&
+                          allowSettlements === false
+                        ) {
+                          setPopoverOpen(true);
                         } else {
-                          if (settlementBoundary) {
-                            settlementBoundary.hide();
+                          setShowLayer(!showSettlements);
+                          dispatch({
+                            type: "show.settlements",
+                            showSettlements: !showSettlements,
+                          });
+                          if (showSettlements === false) {
+                            if (settlementBoundary) {
+                              settlementBoundary.show();
+                            }
+                          } else if (showSettlements === true) {
+                            if (settlementBoundary) {
+                              settlementBoundary.hide();
+                            }
                           }
                         }
-                      }
-                    }}
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    color="primary"
-                    inputProps={{
-                      "aria-label": "sho/hide-settlements-layer-checkbox",
-                    }}
-                  />
-                }
-                label={
-                  <Typography key="filterListItemLabel" variant="body2">
-                    Show estimated settlement boundaries
-                  </Typography>
-                }
-                size="small"
-              />
+                      }}
+                      size="small"
+                      // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                      // checkedIcon={<CheckBoxIcon fontSize="small" />}
+                      color="secondary"
+                      inputProps={{
+                        "aria-label": "sho/hide-settlements-layer-checkbox",
+                      }}
+                    />
+                  }
+                  label={
+                    <Typography key="filterListItemLabel" variant="body2">
+                      Show estimated settlement boundaries
+                    </Typography>
+                  }
+                  size="small"
+                />
+              </Box>
               <Dialog
                 id={idPopover}
                 ref={clickRef}
@@ -173,7 +175,7 @@ export const UploadButton = () => {
                 <Grid container justifyContent="flex-end" key={"popoverHeader"}>
                   <IconButton
                     key={"popoverClose"}
-                    color="default"
+                    color="disabled"
                     onClick={(e) => {
                       setPopoverOpen(false);
                     }}
