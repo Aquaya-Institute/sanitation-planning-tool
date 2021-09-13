@@ -152,7 +152,7 @@ export const MapPopper = ({
           style={{
             position: "absolute",
             left: popupData.position.x,
-            top: popupData.position.y + 50,
+            top: popupData.position.y,
             zIndex: "1300",
             // backgroundColor: "#fff",
             width: "175px",
