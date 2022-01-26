@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   ComposableMap,
   Geographies,
@@ -14,16 +14,16 @@ const countries = [];
 const geoUrl =
   "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
-const MapChart = () => {
+const MapChart = ({ setTooltipContent }) => {
   const [{ maps }] = useContext(MapContext);
 
   useMemo(() => {
     var obj;
     for (const [key, value] of Object.entries(maps)) {
       obj = {};
-      obj["markerOffset"] = -28;
+      // obj["markerOffset"] = -28;
       obj["name"] = `${value.name}`;
-      obj["coordinates"] = [`${value.long}`, `${value.lat}`];
+      // obj["coordinates"] = [`${value.long}`, `${value.lat}`];
       obj["key"] = `${key}`;
       markers.push(obj);
       countries.push(value.name);
@@ -34,10 +34,11 @@ const MapChart = () => {
 
   return (
     <ComposableMap
+      data-tip=""
       projection="geoMercator"
       projectionConfig={{
-        rotate: [-55, 0, 0],
-        scale: 300,
+        rotate: [-55, -5, 0],
+        scale: 270,
       }}
       width={900}
       height={300}
@@ -64,6 +65,15 @@ const MapChart = () => {
                     history.push(`/maps/${mapID.toLowerCase()}`);
                   }
                 }}
+                onMouseEnter={() =>{
+                  if (cur) {
+                  // const {NAME} = cur;
+                  setTooltipContent(`${cur}`);
+                  }
+                }}
+                onMouseLeave={() => {
+                  setTooltipContent("");
+                }}
                 style={{
                   hover: {
                     fill: cur ? "#BA0C2F" : "#EAEAEC",
@@ -79,30 +89,8 @@ const MapChart = () => {
           })
         }
       </Geographies>
-      {markers.map(({ name, coordinates, markerOffset }, i) => (
-        <Marker key={name + "marker" + i} coordinates={coordinates}>
-          <g
-            fill="none"
-            stroke="#f28399"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            transform="translate(-12, -28)"
-          >
-            <circle cx="12" cy="10" r="3" />
-            <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z" />
-          </g>
-          <text
-            textAnchor="middle"
-            y={markerOffset}
-            style={{ fontFamily: "Source Sans Pro", fill: "#5D5A6D" }}
-          >
-            {name}
-          </text>
-        </Marker>
-      ))}
     </ComposableMap>
   );
 };
 
-export default MapChart;
+export default memo(MapChart);

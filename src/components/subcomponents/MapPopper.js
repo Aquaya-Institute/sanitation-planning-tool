@@ -164,7 +164,7 @@ export const MapPopper = ({
                 size="small"
                 key={"popperClose"}
                 p={0}
-                color="disabled"
+                color="default"
                 onClick={(e) => {
                   setPopup(null);
                   settlementclickRef = false;
@@ -305,7 +305,7 @@ export const MapPopper = ({
                 <IconButton
                   key={"popoverClose"}
                   fontSize="small"
-                  color="disabled"
+                  color="default"
                   onClick={(e) => {
                     setPopoverOpen(false);
                   }}

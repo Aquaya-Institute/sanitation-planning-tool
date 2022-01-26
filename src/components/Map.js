@@ -654,7 +654,7 @@ export const Map = () => {
 
   return (
     <div style={{ height: "100%", position: "relative" }}>
-      {mapID === "niger" && <NoDataAlert />}
+      {(mapID === "niger" || mapID === "mali") ? <NoDataAlert />:null}
       <div
         id="map"
         style={{ height: "100%" }}

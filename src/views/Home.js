@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 import { Paper, Container, Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
+import React, { useState } from "react";
 // eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import HomeBanner from "../components/Home/HomeBanner";
@@ -10,6 +10,7 @@ import HomeRelatedResearch from "../components/Home/HomeRelatedResearch";
 import { MapSelector } from "../components/MapSelector";
 // import HomeHowItWorks from "../components/Home/HomeHowItWorks";
 import HomeFooter from "../components/Home/HomeFooter";
+import ReactTooltip from "react-tooltip";
 
 const useCardStyles = makeStyles({
   root: {
@@ -28,6 +29,8 @@ const useCardStyles = makeStyles({
 
 function Home() {
   const classes = useCardStyles();
+  const [content, setContent] = useState("");
+
   return (
     <React.Fragment>
       <Helmet>
@@ -39,7 +42,8 @@ function Home() {
         />
       </Helmet>
       <HomeBanner />
-      <HomeMap />
+      <HomeMap setTooltipContent={setContent} />
+      <ReactTooltip>{content}</ReactTooltip>
       <Container>
         <Paper elevation={0}>
           <Box p={2}>

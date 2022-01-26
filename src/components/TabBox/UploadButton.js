@@ -175,7 +175,7 @@ export const UploadButton = () => {
                 <Grid container justifyContent="flex-end" key={"popoverHeader"}>
                   <IconButton
                     key={"popoverClose"}
-                    color="disabled"
+                    color="default"
                     onClick={(e) => {
                       setPopoverOpen(false);
                     }}

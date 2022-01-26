@@ -13,7 +13,12 @@ import { s_sudan } from "./countries/s_sudan";
 import { ethiopia } from "./countries/ethiopia";
 import { mozambique } from "./countries/mozambique";
 import { senegal } from "./countries/senegal";
+import { tanzania } from "./countries/tanzania";
 import { madagascar } from "./countries/madagascar";
+import { mali } from "./countries/mali";
+import { kenya } from "./countries/kenya";
+import { nepal } from "./countries/nepal";
+import { dem_rep_congo } from "./countries/dem_rep_congo";
 
 enableMapSet();
 const legendStylesObj = legendStyles;
@@ -35,6 +40,11 @@ const initialState = {
     nigeria,
     s_sudan,
     senegal,
+    tanzania,
+    mali,
+    kenya,
+    nepal,
+    dem_rep_congo,
   },
   currentLayerID: "2",
   activeLegend: "0",

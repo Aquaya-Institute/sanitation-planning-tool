@@ -297,7 +297,7 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
                 key={"popoverClose"}
                 p={0}
                 fontSize="small"
-                color="disabled"
+                color="default"
                 onClick={(e) => {
                   setPopoverOpen(false);
                 }}
