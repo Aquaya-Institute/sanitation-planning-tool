@@ -13,7 +13,7 @@ const styles = (theme) => ({
   },
   background: {
     backgroundImage: `url(${backgroundImage})`,
-    backgroundColor: "#7fc7d9", // Average color of the background image.
+    backgroundColor: "#7fc7d9",
     backgroundPosition: "center",
   },
   button: {
@@ -84,10 +84,10 @@ function ProductHero(props) {
         className={classes.h5}
         component="h3"
       >
-        Use SanPlan to design and execute sanitation programs by exploring
-        highly-localized, contextual, spatial data. SanPlan harmonizes data from
-        multiple sources so that you can visualize geographic patterns and local
-        contexts from anywhere.
+        Use SanPlan to design sanitation programs by exploring highly-localized,
+        contextual, spatial data. SanPlan harmonizes data from multiple sources
+        so that you can visualize geographic patterns and local contexts from
+        anywhere.
       </Typography>
 
       <Typography

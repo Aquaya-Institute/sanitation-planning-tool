@@ -476,56 +476,56 @@ export const country = {
           value: [10000, 1000000],
           subcategory: "socioeconomic",
         },
-        {
-          name: "Average Relative Wealth Index",
-          unit: "index",
-          type: "range_non_linear",
-          column_name: "rwi",
-          scaledMin: -0.53,
-          scaledMax: 1.35,
-          scaledValue: [-0.53, 1.35],
-          subcategory: "socioeconomic",
-          min: 0,
-          max: 60,
-          value: [0, 60], //the actual min/max of column
-          marks: [
-            {
-              value: 0,
-              scaledValue: -0.53,
-              label: "-0.53",
-            },
-            {
-              value: 10,
-              scaledValue: -0.25,
-              label: "-0.25",
-            },
-            {
-              value: 20,
-              scaledValue: 0,
-              label: "0",
-            },
-            {
-              value: 30,
-              scaledValue: 0.25,
-              label: "0.25",
-            },
-            {
-              value: 40,
-              scaledValue: 0.6,
-              label: "0.6",
-            },
-            {
-              value: 50,
-              scaledValue: 1,
-              label: "1",
-            },
-            {
-              value: 60,
-              scaledValue: 1.4,
-              label: "1.4",
-            },
-          ],
-        },
+        // {
+        //   name: "Average Relative Wealth Index",
+        //   unit: "index",
+        //   type: "range_non_linear",
+        //   column_name: "rwi",
+        //   scaledMin: -0.53,
+        //   scaledMax: 1.35,
+        //   scaledValue: [-0.53, 1.35],
+        //   subcategory: "socioeconomic",
+        //   min: 0,
+        //   max: 60,
+        //   value: [0, 60], //the actual min/max of column
+        //   marks: [
+        //     {
+        //       value: 0,
+        //       scaledValue: -0.53,
+        //       label: "-0.53",
+        //     },
+        //     {
+        //       value: 10,
+        //       scaledValue: -0.25,
+        //       label: "-0.25",
+        //     },
+        //     {
+        //       value: 20,
+        //       scaledValue: 0,
+        //       label: "0",
+        //     },
+        //     {
+        //       value: 30,
+        //       scaledValue: 0.25,
+        //       label: "0.25",
+        //     },
+        //     {
+        //       value: 40,
+        //       scaledValue: 0.6,
+        //       label: "0.6",
+        //     },
+        //     {
+        //       value: 50,
+        //       scaledValue: 1,
+        //       label: "1",
+        //     },
+        //     {
+        //       value: 60,
+        //       scaledValue: 1.4,
+        //       label: "1.4",
+        //     },
+        //   ],
+        // },
         {
           name: "Rural Remote",
           unit: "%",

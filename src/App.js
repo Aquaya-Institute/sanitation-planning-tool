@@ -11,13 +11,6 @@ import Datasets from "./views/Datasets";
 import Privacy from "./views/Privacy";
 import "./App.css";
 
-// const express = require("express");
-// const helmet = require("helmet");
-
-// const app = express();
-
-// app.use(helmet());
-
 function App() {
   return (
     <ThemeProvider theme={theme}>

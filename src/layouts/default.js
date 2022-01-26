@@ -1,15 +1,21 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Link,
+  CssBaseline,
+  Container,
+  Box,
+  Menu,
+  MenuItem,
+  IconButton,
+} from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
-import { CssBaseline, Container, Box, Menu, MenuItem } from "@material-ui/core";
 import { MapSelector } from "../components/MapSelector";
 import MoreIcon from "@material-ui/icons/MoreVert";
-import IconButton from "@material-ui/core/IconButton";
 import { MapContext } from "../state/MapState";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,26 +49,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DefaultLayout(props) {
   const classes = useStyles();
-  // const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const mobileMenuId = "primary-search-account-menu-mobile";
   const [{}, dispatch] = React.useContext(MapContext);
-
-  // const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
-
-  // const handleMenuClose = () => {
-  //   setAnchorEl(null);
-  //   handleMobileMenuClose();
-  // };
-
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}

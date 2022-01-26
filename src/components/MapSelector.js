@@ -1,16 +1,9 @@
 import * as React from "react";
-// import { Redirect } from "react-router-dom";
 import { MapContext } from "../state/MapState";
 import Select from "@material-ui/core/Select";
 import { useHistory } from "react-router-dom";
 
-export const MapSelector = ({
-  inputProps,
-  selectMapID,
-  selectMapName,
-  selectMapAria,
-}) => {
-  //pick specific states (and dispatcher) we need from mapstate
+export const MapSelector = ({ inputProps }) => {
   const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
   const [mapID, setMapID] = React.useState(undefined);
   const history = useHistory();
@@ -24,7 +17,6 @@ export const MapSelector = ({
   }, [currentMapID]);
 
   const onSelectChange = (event) => {
-    // <Redirect to={event.target.value} />;
     if (event.target.value === "Select country") {
       setMapID(event.target.value);
     } else if (event.target.value !== undefined) {
@@ -44,11 +36,6 @@ export const MapSelector = ({
     <React.Fragment>
       <Select
         native
-        // inputProps={{
-        //   name: { selectMapName },
-        //   id: { selectMapID },
-        //   "aria-label": { selectMapAria },
-        // }}
         inputProps={inputProps}
         label="Filled"
         onChange={onSelectChange}

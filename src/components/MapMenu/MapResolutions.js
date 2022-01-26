@@ -1,11 +1,14 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import { Box, Popper } from "@material-ui/core";
+import {
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  Box,
+  Popper,
+} from "@material-ui/core";
 import { MapContext } from "../../state/MapState";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,15 +31,12 @@ export const MapResolutions = ({
   const classes = useStyles();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
-  // const [setPopoverOpen] = useState(false);
   const clickRef = useRef(null);
   const radioRef = useRef();
 
   useEffect(() => {
     if (currentMapID !== mapID) {
       setMapID(currentMapID);
-      // setDistName([]);
-      // setcurrentLayerID(maps[currentMapID].currentLayer);
     }
   }, [currentMapID, mapID]);
 
@@ -48,7 +48,6 @@ export const MapResolutions = ({
         !clickRefMenu.current.contains(event.target)
       ) {
         if (clickRef.current && !clickRef.current.contains(event.target)) {
-          // setPopoverOpen(null);
         } else if (
           clickRef.current &&
           clickRef.current.contains(event.target)
@@ -81,7 +80,6 @@ export const MapResolutions = ({
 
   return (
     <Popper
-      // id={cat + "filterMenu"}
       autoFocus={true}
       ref={clickRefMenu}
       key={cat + "filterMenu"}
@@ -120,36 +118,19 @@ export const MapResolutions = ({
             {mapID && (
               <Box pl={1} autoFocus={true}>
                 <RadioGroup
-                  // tabIndex={1}
-                  // p={1}
                   aria-label="Map resolution options"
                   name="resolutionSelector"
                   value={currentLayerID}
                   onChange={(e) => {
-                    // setDistName([]);
                     toggleLayerVisibility(e.target.value);
-                    // if (
-                    //   (e.target.value === "4" || e.target.value === "5") &&
-                    //   showSettlementsLayer === false
-                    // ) {
-                    //   setPopoverOpen(true);
-                    // } else {
-                    //   toggleLayerVisibility(e.target.value);
-                    // }
                   }}
                   className="tour-scale"
                   key="radioLabel"
-                  // autoFocus
                 >
                   <FormControlLabel
                     value="1"
                     inputRef={radioRef}
-                    control={
-                      <Radio
-
-                      // tabIndex={tabIndex}
-                      />
-                    }
+                    control={<Radio />}
                     label="1x1km areas (Rural Typology layer only)"
                     classes={{
                       label: classes.checkboxLabel,
@@ -159,12 +140,7 @@ export const MapResolutions = ({
                   />
                   <FormControlLabel
                     value="2"
-                    control={
-                      <Radio
-
-                      // tabIndex={tabIndex}
-                      />
-                    }
+                    control={<Radio />}
                     label="5x5km areas"
                     classes={{
                       label: classes.checkboxLabel,
@@ -174,11 +150,7 @@ export const MapResolutions = ({
                   />
                   <FormControlLabel
                     value="3"
-                    control={
-                      <Radio
-                      // tabIndex={tabIndex}
-                      />
-                    }
+                    control={<Radio />}
                     label={
                       maps[mapID].layers["3"].name === "County"
                         ? "Counties"

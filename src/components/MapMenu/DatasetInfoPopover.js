@@ -1,10 +1,7 @@
 import React from "react";
 import InfoOutlinedIcon from "@material-ui/icons/Info";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
+import { Modal, Backdrop, Fade } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-// import theme from "../../theme/theme";
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -25,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
   },
   popover: {
     width: 550,
-    // boxShadow: theme.shadows[5],
     padding: theme.spacing(1, 1, 1, 1),
     backgroundColor: theme.palette.background.default,
   },
@@ -228,31 +224,10 @@ const datasetsInfo = [
     citation:
       "Jochem WC, Leasure DR, Pannell O, Chamberlain HR, Jones P, Tatem AJ. Classifying settlement types from multi-scale spatial patterns of building footprints. Environment and Planning B: Urban Analytics and City Science. 2020:1–19.",
   },
-  // {
-  //   name: "Settlement Areas and Estimated Population",
-  //   description:
-  //     "All settlements (areas consisting of multiple households/buildings) were mapped with the combination of two population mapping datasets. The datasets estimate the location of all settlements using satellite imagery. SanPlan combined these together to determine the location and boundary of all settlements. Data from various publicly available sources were then extracted for each settlement. The point layer represented on the SanPlan map represents the geographic center of each settlement areas's estimated boundary.",
-  //   note: "DISCLAIMER: Settlements mapped in this manner do not represent administratively recognized communities. It is highly likely that multiple communities in close proximity were combined graphically into a single settlement. As a result, center point locations may appear ‘off’ when compared with satellite imagery or base maps.",
-  //   year: 2020,
-  //   resolution: "30m",
-  //   source: "SanPlan",
-  //   subcategory: "accessibility",
-  //   wsf: "An effort headed by the German Aerospace Center which improves upon previous efforts to outline settlements (e.g., Global Urban Footprint) by employing a novel and robust methodology which jointly exploits open-and-free multitemporal optical and radar data.",
-  //   wsf_citation:
-  //     "Marconcini, M., Metz-Marconcini, A., Üreyen, S. et al. Outlining where humans live, the World Settlement Footprint 2015. Sci Data 7, 242 (2020). https://doi.org/10.1038/s41597-020-00580-5",
-  //   wsf_link:
-  //     "https://springernature.figshare.com/collections/Outlining_where_humans_live_-_The_World_Settlement_Footprint_2015/4712852",
-  //   fb: "Facebook, in partnership with the Center for International Earth Science Information Network (CIESIN) at Columbia University, utilized state-of-the-art computer vision techniques to identify buildings from publicly accessible mapping services to create population datasets at a 30m resolution.",
-  //   fb_citation:
-  //     "Facebook Connectivity Lab and Center for International Earth Science Information Network - CIESIN - Columbia University. 2016. High Resolution Settlement Layer (HRSL). Source imagery for HRSL © 2016 DigitalGlobe. Accessed 15 Sept. 2020.",
-  //   fb_link: "https://dataforgood.fb.com/tools/population-density-maps/",
-  //   link: "/Datasets/#settle",
-  // },
 ];
 
 const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
-  // const clickRefData = useRef(null);
   const classes = useStyles();
   const [datasetName, setDatasetName] = useState();
   const [selectedDataset, setSelectedDataset] = useState();
@@ -268,6 +243,7 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
       }
     }
   }, [datasetName]);
+
   return (
     <React.Fragment>
       <IconButton
@@ -284,7 +260,6 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
         }
         className={classes.icon}
         p={0}
-        // disableRipple={true}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -304,7 +279,6 @@ const DatasetInfoPopover = ({ filter, filterIndex, clickRefData }) => {
         onClose={(e) => {
           setPopoverOpen(false);
         }}
-        // closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,

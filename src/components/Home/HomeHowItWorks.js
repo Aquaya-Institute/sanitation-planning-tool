@@ -2,11 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+import { Grid, Hidden, Container, Typography, Box } from "@material-ui/core";
 import theme from "../../theme/theme";
 
 const styles = (theme) => ({
@@ -21,7 +17,7 @@ const styles = (theme) => ({
   },
   card: {
     display: "flex",
-    justifycontent: "center",
+    // justifycontent: "center",
     backgroundColor: "#000000",
     padding: theme.spacing(8, 3),
     color: "#FFFFFF",
@@ -54,7 +50,6 @@ const styles = (theme) => ({
     top: -35,
     left: -30,
     right: 0,
-    // bottom: 80,
     width: "100%",
     maxWidth: 600,
   },

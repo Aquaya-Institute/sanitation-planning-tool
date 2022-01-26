@@ -1,10 +1,7 @@
 import * as React from "react";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography, Popper, Divider } from "@material-ui/core";
 import { useState, useEffect, useRef } from "react";
-import Popper from "@material-ui/core/Popper";
-// import CloseIcon from "@material-ui/icons/Close";
 import FilterMenuContent from "./FilterMenuContent";
-import Divider from "@material-ui/core/Divider";
 
 const FilterMenu = ({
   anchorEl,
@@ -13,12 +10,10 @@ const FilterMenu = ({
   cat,
   setSelectedMenu,
   layerID,
-  // tabIndex,
 }) => {
-  const [menuTileColor, setMenuTileColor] = useState(false);
+  const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
   const clickRefData = useRef(null);
-  // const [popoverOpen, setPopoverOpen] = useState(false);
 
   //click outside
   useEffect(() => {
@@ -31,7 +26,6 @@ const FilterMenu = ({
           clickRefData.current &&
           !clickRefData.current.contains(event.target)
         ) {
-          // setPopoverOpen(null);
         } else if (
           clickRefData.current &&
           clickRefData.current.contains(event.target)
@@ -49,7 +43,6 @@ const FilterMenu = ({
   }, [setFilterMenuOpen, setSelectedMenu]);
 
   useEffect(() => {
-    // document.getElementById("filterBox").focus();
     if (clickRefMenu.current) {
       clickRefMenu.current.focus();
     }
@@ -62,11 +55,7 @@ const FilterMenu = ({
       key={cat + "filterMenu"}
       anchorEl={anchorEl}
       placement={
-        cat === "health" || cat === "socioeconomic"
-          ? "left-end"
-          : // : cat === "socioeconomic"
-            "left"
-        // : "left-start"
+        cat === "health" || cat === "socioeconomic" ? "left-end" : "left"
       }
       style={{
         height: "auto",
@@ -82,16 +71,6 @@ const FilterMenu = ({
         setMenuTileColor(false);
       }}
     >
-      {/* <Grid container justify="flex-end" pt={2} key={cat + "filterMenuHeader"}>
-        <CloseIcon
-          key={cat + "filterMenuClose"}
-          fontSize="small"
-          color="disabled"
-          onClick={(e) => {
-            setFilterMenuOpen(false);
-          }}
-        />
-      </Grid> */}
       <Box pt={1}>
         <Typography
           key="filterMenuTitle"
@@ -145,8 +124,6 @@ const FilterMenu = ({
           cat={cat}
           layerID={layerID}
           clickRefData={clickRefData}
-          // tabIndex={tabIndex}
-          // setPopoverOpen={setPopoverOpen}
         />
       </Box>
     </Popper>

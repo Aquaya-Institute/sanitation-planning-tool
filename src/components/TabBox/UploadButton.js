@@ -6,25 +6,21 @@ import {
   Divider,
   Typography,
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   IconButton,
+  FormControlLabel,
+  Checkbox,
+  Switch,
 } from "@material-ui/core";
 import { MapContext } from "../../state/MapState";
 import { CSVLink } from "react-csv";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-// import Carto from "@carto/carto.js";
-// import L from "leaflet";
-// import { Settlements } from "./Settlements";
-// import { MapPopper } from "../subcomponents/MapPopper";
 
-// import theme from "../../theme/theme";
 const template = [
   {
     Community: null,
@@ -37,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    // overflow: "scroll",
   },
 }));
 
@@ -45,21 +40,13 @@ export const UploadButton = () => {
   const [state, setState] = useState(null);
   const [showLayer, setShowLayer] = useState(false);
   const [checked, setChecked] = useState(false);
-  // const [popup, setPopup] = useState();
-  // const [popupData, setPopupData] = useState();
-  // const [downloadData, setDownloadData] = useState();
   const [
     {
       maps,
       currentMapID,
       settlementBoundary,
-      // currentCountry,
-      // carto_client,
-      // queries,
-      // currentLayerID,
       showSettlements,
       allowSettlements,
-      // leafletMap,
     },
     dispatch,
   ] = useContext(MapContext);
@@ -69,10 +56,6 @@ export const UploadButton = () => {
   const clickRef = useRef(null);
   const [scroll] = useState("paper");
   const classes = useStyles();
-  // const selectedSettlement = useRef();
-  // const clickRefPop = useRef(null);
-  // const openPopper = Boolean(popup);
-  // const dat_popup = [];
 
   function handleChange(event) {
     setState({
@@ -100,7 +83,6 @@ export const UploadButton = () => {
   }
 
   function updateData(result) {
-    // setState(null);
     var data = result.data;
     dispatch({
       type: "user.upload",
@@ -114,10 +96,9 @@ export const UploadButton = () => {
   }, [currentMapID]);
 
   return (
-    <div id="upload-div">
+    <div id="upload-div" style={{ width: "100%" }}>
       {mapID && (
         <React.Fragment>
-          {" "}
           {maps[mapID].layers["4"] && (
             <React.Fragment>
               <Box
@@ -131,54 +112,53 @@ export const UploadButton = () => {
               >
                 Display all estimated settlement boundary areas on the map:
               </Box>
-
-              <FormControlLabel
-                autoFocus
-                control={
-                  <Checkbox
-                    autoFocus
-                    checked={showSettlements}
-                    onChange={() => {
-                      if (
-                        showSettlements === false &&
-                        allowSettlements === false
-                      ) {
-                        setPopoverOpen(true);
-                      } else {
-                        setShowLayer(!showSettlements);
-                        dispatch({
-                          type: "show.settlements",
-                          showSettlements: !showSettlements,
-                        });
-                        if (showLayer === false) {
-                          if (settlementBoundary) {
-                            settlementBoundary.show();
-                          }
-                          // currentCountry["4"].layer.show();
-                          // currentCountry["4"].layer.bringToFront();
+              <Box pl={1}>
+                <FormControlLabel
+                  autoFocus
+                  control={
+                    <Switch
+                      autoFocus
+                      checked={showSettlements}
+                      onChange={() => {
+                        if (
+                          showSettlements === false &&
+                          allowSettlements === false
+                        ) {
+                          setPopoverOpen(true);
                         } else {
-                          if (settlementBoundary) {
-                            settlementBoundary.hide();
+                          setShowLayer(!showSettlements);
+                          dispatch({
+                            type: "show.settlements",
+                            showSettlements: !showSettlements,
+                          });
+                          if (showSettlements === false) {
+                            if (settlementBoundary) {
+                              settlementBoundary.show();
+                            }
+                          } else if (showSettlements === true) {
+                            if (settlementBoundary) {
+                              settlementBoundary.hide();
+                            }
                           }
-                          // currentCountry["4"].layer.hide();
                         }
-                      }
-                    }}
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    color="primary"
-                    inputProps={{
-                      "aria-label": "sho/hide-settlements-layer-checkbox",
-                    }}
-                  />
-                }
-                label={
-                  <Typography key="filterListItemLabel" variant="body2">
-                    Show estimated settlement boundaries
-                  </Typography>
-                }
-                size="small"
-              />
+                      }}
+                      size="small"
+                      // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                      // checkedIcon={<CheckBoxIcon fontSize="small" />}
+                      color="secondary"
+                      inputProps={{
+                        "aria-label": "sho/hide-settlements-layer-checkbox",
+                      }}
+                    />
+                  }
+                  label={
+                    <Typography key="filterListItemLabel" variant="body2">
+                      Show estimated settlement boundaries
+                    </Typography>
+                  }
+                  size="small"
+                />
+              </Box>
               <Dialog
                 id={idPopover}
                 ref={clickRef}
@@ -208,7 +188,6 @@ export const UploadButton = () => {
                   <Typography
                     key="filterListItemLabel"
                     variant="body2"
-                    // style={{ fontSize: 11 }}
                     gutterBottom
                   >
                     The settlements layer is an estimation and still under
@@ -230,23 +209,16 @@ export const UploadButton = () => {
                               showSettlements: !showLayer,
                             });
                             if (!showLayer === true) {
-                              // maps[mapID].layers["4"].carto_layer.show();
                               if (settlementBoundary) {
                                 settlementBoundary.show();
                               }
-                              // currentCountry["4"].layer.show();
-                              // currentCountry["4"].layer.bringToFront();
-                              // carto_client.addLayer(settlementBoundary);
                               setChecked(true);
                               dispatch({
                                 type: "allow.settlements",
                                 allowSettlements: !checked,
                               });
                             } else {
-                              // maps[mapID].layers["4"].carto_layer.hide();
                               settlementBoundary.hide();
-                              // currentCountry["4"].layer.hide();
-                              // carto_client.removeLayer(settlementBoundary);
                             }
                           }}
                           icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
@@ -261,7 +233,6 @@ export const UploadButton = () => {
                         <Typography
                           key="filterListItemLabel"
                           variant="body2"
-                          // style={{ fontSize: 11 }}
                           gutterBottom
                         >
                           I understand, turn on the layer.

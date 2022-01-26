@@ -13,7 +13,12 @@ import { s_sudan } from "./countries/s_sudan";
 import { ethiopia } from "./countries/ethiopia";
 import { mozambique } from "./countries/mozambique";
 import { senegal } from "./countries/senegal";
+import { tanzania } from "./countries/tanzania";
 import { madagascar } from "./countries/madagascar";
+import { mali } from "./countries/mali";
+import { kenya } from "./countries/kenya";
+import { nepal } from "./countries/nepal";
+import { dem_rep_congo } from "./countries/dem_rep_congo";
 
 enableMapSet();
 const legendStylesObj = legendStyles;
@@ -35,13 +40,18 @@ const initialState = {
     nigeria,
     s_sudan,
     senegal,
+    tanzania,
+    mali,
+    kenya,
+    nepal,
+    dem_rep_congo,
   },
   currentLayerID: "2",
   activeLegend: "0",
   userData: null,
-  // query: null,
   queryDist: null,
   skip: true,
+  allDistricts: [],
   selectedDistName: [],
   highlightLayer: null,
   highlightBoundary: null,
@@ -50,6 +60,7 @@ const initialState = {
   allowSettlements: false,
   settlementHighlight: null,
   settlementPopup: null,
+  column: null,
   currentCountry: [
     {
       source: null,
@@ -121,18 +132,15 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    //when a different country is selected
+    /* when a different country is selected */
     case "map.select":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
         if (action.mapID !== null) {
-          // var index = draft.maps[action.mapID].layers.length - 1;
           var index = 3;
           for (; index >= 0; index--) {
             if (draft.maps[action.mapID].layers[index].visible === true) {
               draft.currentLayerID = index.toString();
-              // draft.currentCountry[index].query = null;
-              // draft.filters[index].filter = null;
               break;
             }
           }
@@ -150,15 +158,9 @@ const reducer = (state, action) => {
           }
         }
       });
-
+    /* when a different resolution is selected */
     case "current.layer":
       return produce(state, (draft) => {
-        // if (draft.currentCountry[draft.currentLayerID].layer) {
-        //   draft.carto_client.removeLayer(
-        //     draft.currentCountry[draft.currentLayerID].layer
-        //   );
-        // }
-        // draft.currentCountry[draft.currentLayerID].layer = action.currentLayer;
         draft.currentCountry[draft.currentLayerID].source =
           action.currentSource;
         draft.currentCountry[draft.currentLayerID].style = action.currentStyle;
@@ -185,49 +187,25 @@ const reducer = (state, action) => {
           draft.currentCountry[draft.currentLayerID].layer.bringToBack();
         }
       });
-
+    /* saving link to Carto client */
     case "map.addCartoClient":
       return produce(state, (draft) => {
         draft.carto_client = action.carto_client;
       });
-
+    /* saving leaflet map */
     case "map.saveMap":
       return produce(state, (draft) => {
         draft.leafletMap = action.leafletMap;
       });
-
-    //when layer is toggled
+    /* when a layer is toggled */
     case "layer.toggle":
-      /* 
-      produce(immer) lets us manipulate the state in a 
-      immutable manner easily, see immer lib doc 
-      */
       return produce(state, (draft) => {
-        // draft.currentMapID = action.mapID;
-        // const mid = action.mapID;
-        // draft.currentCountry[draft.currentLayerID].filters =
-        //   draft.currentCountry[draft.currentLayerID].source.getFilters();
         draft.currentCountry[draft.currentLayerID].layer.hide();
         draft.currentLayerID = action.newLayerID;
         draft.currentCountry[draft.currentLayerID].layer.show();
-        // if (draft.settlementBoundary === true) {
-        //   draft.draft.carto_client.removeLayer(draft.settlementBoundary);
-        // }
-        // draft.query[draft.currentLayerID] = null;
-        // draft.currentCountry.carto_layer =
-        //   draft.currentCountry[draft.currentLayerID].layer.setFilters(
-        //     draft.currentCountry[draft.currentLayerID].filters
-        //   );
-        //update the state
-        // for (var index in draft.maps[mid].layers) {
-        //   if (index === action.layerID || index === "0") {
-        //     draft.maps[mid].layers[action.layerID].visible = true;
-        //     cartoLayer.show();
-        //   } else {
-        //     draft.maps[mid].layers[index].visible = false;
-        //     draft.maps[mid].layers[index].carto_layer.hide();
-        //   }
-        // }
+        if (draft.showSettlements === true) {
+          draft.currentCountry[draft.currentLayerID].layer.bringToBack();
+        }
         var i;
         for (i = 0; i < legendStylesObj.length; i++) {
           if (
@@ -251,45 +229,22 @@ const reducer = (state, action) => {
             .getSource()
             .setQuery(queryedit);
         }
-        // if (draft.showSettlements === true) {
-        //   draft.carto_client.removeLayer(draft.settlementBoundary);
-        //   draft.carto_client.addLayer(draft.settlementBoundary);
-        // }
       });
-
-    // case "clear.filter":
-    // cycle over initial filter states, see which filters are on, and reset the carto API
-
+    /* when a legend is selected */
     case "legend.select":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
-        // if (draft.currentCountry[draft.currentLayerID].layer) {
-        //   draft.carto_client.removeLayer(
-        //     draft.currentCountry[draft.currentLayerID].layer
-        //   );
-        // }
         draft.currentCountry[draft.currentLayerID].style = action.styleNew;
         draft.currentCountry[draft.currentLayerID].layer
           .getStyle()
           .setContent(action.styleNew);
         draft.activeLegend = action.legendIndex;
-        // draft.currentCountry[draft.currentLayerID].layer =
-        //   new Carto.layer.Layer(
-        //     draft.currentCountry[draft.currentLayerID].source,
-        //     new Carto.style.CartoCSS(
-        //       draft.currentCountry[draft.currentLayerID].style
-        //     ),
-        //     { featureClickColumns: draft.currentCountry.current_columns }
-        //   );
-        // draft.carto_client.addLayer(
-        //   draft.currentCountry[draft.currentLayerID].layer
-        // );
         draft.currentCountry[draft.currentLayerID].layer.show();
         if (draft.showSettlements === true) {
           draft.currentCountry[draft.currentLayerID].layer.bringToBack();
         }
       });
-
+    /* IN DEVELOPMENT: when the opacity slider is manipulated */
     case "layer.opacity":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
@@ -297,21 +252,13 @@ const reducer = (state, action) => {
         const lid = draft.currentLayerID;
         draft.maps[mid].layers[lid].carto_style = action.styleNew;
         draft.skip = true;
-        // draft.maps[action.mapID].layers[
-        //   action.layerID
-        // ].carto_layer._style._content = action.styleNew;
       });
-
-    //when a filter is manipulated
+    /* when a filter is manipulated */
     case "layer.filter":
       return produce(state, (draft) => {
-        // draft.reset = false;
         draft.currentMapID = action.mapID;
         draft.currentCountry[draft.currentLayerID].filters[action.filterIndex] =
           action.filter;
-
-        //TODO: based on the type of filter (range, categorical)
-        //use Switch statement to apply appropriate filters
         switch (
           draft.currentCountry[draft.currentLayerID].filters[action.filterIndex]
             .type
@@ -369,12 +316,10 @@ const reducer = (state, action) => {
             }
             break;
           case "range_non_linear":
-            //this is how you get the filter out of the carto layer
             const filter_non = draft.currentCountry[draft.currentLayerID].layer
               .getSource()
-              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[0]
               .getFilters()[action.filterIndex];
-            //this is how you set the filter. this is specific to range filter
             filter_non.setFilters({
               gte: action.filter.scaledValue[0],
               lte: action.filter.scaledValue[1],
@@ -395,7 +340,7 @@ const reducer = (state, action) => {
           case "categorical":
             const filter_c = draft.currentCountry[draft.currentLayerID].layer
               .getSource()
-              .getFilters()[0] //since this is a filtercollection
+              .getFilters()[0]
               .getFilters()[action.filterIndex];
 
             let col_vals_tofilter = [];
@@ -409,7 +354,6 @@ const reducer = (state, action) => {
                 changed = true;
               }
             });
-
             if (changed === true) {
               draft.currentCountry[draft.currentLayerID].accessCounter.add(
                 action.filter.name
@@ -419,12 +363,10 @@ const reducer = (state, action) => {
                 action.filter.name
               );
             }
-            //this is how you set the filter. this is specific to range filter
             filter_c.setFilters({
               in: col_vals_tofilter,
             });
             break;
-
           case "none":
             break;
           default:
@@ -433,12 +375,12 @@ const reducer = (state, action) => {
         draft.download =
           draft.currentCountry[draft.currentLayerID].layer.getSource();
       });
-
+    /* clip settlements layer along with 5x5km layer */
     case "layer.query":
       return produce(state, (draft) => {
         draft.currentCountry[draft.currentLayerID].query = action.query;
       });
-
+    /* when a district is selected from the dropdown */
     case "layer.queryDist":
       return produce(state, (draft) => {
         if (action.queryDist.indexOf("WHERE") > 0) {
@@ -451,7 +393,7 @@ const reducer = (state, action) => {
           draft.queryDist = null;
         }
       });
-
+    /* when the reset filters button is pressed */
     case "reset.filters":
       return produce(state, (draft) => {
         // draft.reset = true;
@@ -470,12 +412,9 @@ const reducer = (state, action) => {
               } else {
                 const cartofilter_c = layer.layer
                   .getSource()
-                  .getFilters()[0] //since this is a filtercollection
+                  .getFilters()[0]
                   .getFilters()[filterIndex];
-
                 let col_vals_tofilter = [];
-                //get the category filter state and create an array
-                //of checked=true col values to filter
                 filter.value.forEach((category) => {
                   category.checked = true;
                   col_vals_tofilter.push(category.value);
@@ -494,9 +433,8 @@ const reducer = (state, action) => {
                 filter.value = [filter.min, filter.max];
                 const cartofilter = layer.layer
                   .getSource()
-                  .getFilters()[0] //since this is a filtercollection
+                  .getFilters()[0]
                   .getFilters()[filterIndex];
-                //this is how you set the filter. this is specific to range filter
                 cartofilter.setFilters({
                   gte: filter.min,
                   lte: filter.max,
@@ -513,9 +451,8 @@ const reducer = (state, action) => {
                 filter.value = [filter.min, filter.max];
                 const cartofilter_non = layer.layer
                   .getSource()
-                  .getFilters()[0] //since this is a filtercollection
+                  .getFilters()[0]
                   .getFilters()[filterIndex];
-                //this is how you set the filter. this is specific to range filter
                 cartofilter_non.setFilters({
                   gte: filter.scaledMin,
                   lte: filter.scaledMax,
@@ -533,29 +470,17 @@ const reducer = (state, action) => {
           null
         );
       });
-
-    //when a new carto layer is added
+    /* when a new carto layer is added */
     case "layer.addCartoLayer":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
-        // draft.maps[action.mapID].layers[action.layerID].carto_layer =
-        //   action.cartoLayer;
-        // draft.maps[action.mapID].layers[action.layerID].carto_source =
-        //   action.cartoSource;
-        // var add = false;
-        // if (draft.currentCountry[action.layerID].layer === null) {
-        //   add = true;
-        // }
         draft.currentCountry[action.layerID].layer = action.cartoLayer;
         draft.currentCountry[action.layerID].source = action.cartoSource;
         draft.currentCountry[action.layerID].style =
           draft.maps[draft.currentMapID].layers[action.layerID].carto_style;
         draft.currentCountry[action.layerID].filters =
           draft.maps[draft.currentMapID].layers[action.layerID].filters;
-        // if (add === true) {
         draft.carto_client.addLayer(draft.currentCountry[action.layerID].layer);
-        //   add = false;
-        // }
         if (action.layerID !== "0") {
           action.cartoLayer.bringToBack();
         }
@@ -566,15 +491,13 @@ const reducer = (state, action) => {
           draft.currentCountry[action.layerID].layer.hide();
         }
       });
-
+    /* when a carto layer is removed */
     case "layer.removeCartoLayers":
       return produce(state, (draft) => {
         if (state.currentMapID !== null && draft.carto_client) {
-          // const prevmap = state.maps[state.currentMapID];
           const layerstoremove = [];
           draft.maps[draft.currentMapID].layers.forEach((layer) => {
             if (layer.carto_layer) {
-              // layer.carto_layer._source = `SELECT * FROM ${layer.carto_tableName}`;
               layerstoremove.push(layer.carto_layer);
             }
           });
@@ -583,17 +506,27 @@ const reducer = (state, action) => {
           }
         }
       });
-
+    /* when the district dropdown is loaded */
+    case "layer.column":
+      return produce(state, (draft) => {
+        draft.column = action.column;
+      });
+    /* when a district is selected from the dropdown */
     case "dropdown.selection":
       return produce(state, (draft) => {
         draft.selectedDistName = action.distName;
       });
-
+    /* when a new map is loaded, fetches all district options */
+    case "dropdown.options":
+      return produce(state, (draft) => {
+        draft.allDistricts = action.allDistricts;
+      });
+    /* saves the district highlight layer from dropdown selection */
     case "dropdown.highlight":
       return produce(state, (draft) => {
         draft.highlightLayer = action.highlightLayer;
       });
-
+    /* saves the feature clicked pixel or admin boundary highlight layer */
     case "boundary.highlight":
       return produce(state, (draft) => {
         if (draft.highlightBoundary) {
@@ -602,32 +535,32 @@ const reducer = (state, action) => {
         draft.highlightBoundary = action.highlightBoundary;
         draft.leafletMap.addLayer(action.highlightBoundary);
       });
-
+    /* saves the feature clicked settlement boundary highlight layer */
     case "settlement.boundary":
       return produce(state, (draft) => {
         draft.settlementBoundary = action.settlementBoundary;
       });
-
+    /* when the show settlements layer checkbox is manipulated */
     case "show.settlements":
       return produce(state, (draft) => {
         draft.showSettlements = action.showSettlements;
       });
-
+    /* when the disclaimer for the settlements layer is agreed to */
     case "allow.settlements":
       return produce(state, (draft) => {
         draft.allowSettlements = action.allowSettlements;
       });
-
+    /* CHECK IF NEEDED */
     case "settlement.popup":
       return produce(state, (draft) => {
         draft.settlementPopup = action.settlementPopup;
         draft.settlementHighlight = action.settlementHighlight;
       });
+    /* when the user uploads a CSV file */
     case "user.upload":
       return produce(state, (draft) => {
         draft.userData = action.userData;
       });
-
     default:
       return state;
   }
@@ -638,7 +571,6 @@ const reducer = (state, action) => {
 //the reducer, to any component (represented by props.children below)
 //that is wrapped in this context
 export const MapContext = React.createContext();
-
 export const MapContextProvider = (props) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   return (

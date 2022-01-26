@@ -2,9 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
+import { Container, Typography, Link } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 
 const styles = (theme) => ({
@@ -26,7 +24,6 @@ const styles = (theme) => ({
   },
   title: {
     marginBottom: theme.spacing(5),
-    // fontFamily: "Source Sans Pro",
     fontSize: 15,
   },
 });

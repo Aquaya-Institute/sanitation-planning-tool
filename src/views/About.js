@@ -133,7 +133,6 @@ function About() {
               </Grid>
             </Grid>
             <br></br>
-
             <Divider />
             <br></br>
             <Grid container spacing={3}>

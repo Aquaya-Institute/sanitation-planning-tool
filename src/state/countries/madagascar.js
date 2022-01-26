@@ -1,7 +1,7 @@
 export const madagascar = {
   name: "Madagascar",
   mapID: "madagascar",
-  lat: -18.7669,
+  lat: -21.7669,
   long: 46.8691,
   zoom: 6,
   /* 
