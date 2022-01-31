@@ -13,17 +13,17 @@ const styles = (theme) => ({
     display: "flex",
     alignItems: "center",
     [theme.breakpoints.up("sm")]: {
-      height: "80vh",
+      height: "90vh",
       minHeight: 500,
       maxHeight: 1300,
     },
   },
   container: {
     marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(14),
+    marginBottom: theme.spacing(0),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    // alignItems: "left",
   },
   backdrop: {
     position: "absolute",
@@ -60,13 +60,15 @@ function ProductHeroLayout(props) {
         {children}
         <div className={classes.backdrop} />
         <div className={clsx(classes.background, backgroundClassName)} />
-        <img
-          className={classes.arrowDown}
-          src={arrowIcon}
-          height="50"
-          width="70"
-          alt="Arrow down icon"
-        />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img
+            className={classes.arrowDown}
+            src={arrowIcon}
+            height="50"
+            width="70"
+            alt="Arrow down icon"
+          />
+        </div>
       </Container>
     </section>
   );

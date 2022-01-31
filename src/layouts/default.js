@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   AppBar,
   Toolbar,
-  Typography,
+  // Typography,
   Button,
   Link,
   CssBaseline,
@@ -134,9 +134,14 @@ export default function DefaultLayout(props) {
       <AppBar position="sticky" className={classes.appBar}>
         <Toolbar>
           <Link component={RouterLink} color="inherit" to="/">
-            <Typography variant="h6" className={classes.title}>
+            <img
+              src="/SanPlanLogo_white.png"
+              alt="SanPlan Tool logo"
+              style={{ width: "110px", height: "55px" }}
+            ></img>
+            {/* <Typography variant="h6" className={classes.title}>
               SanPlan
-            </Typography>
+            </Typography> */}
           </Link>
           <div className={classes.grow} />
           <Box>

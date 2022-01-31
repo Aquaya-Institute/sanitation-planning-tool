@@ -29,6 +29,7 @@ const theme = createTheme({
       "Helvetica Neue",
       "sans-serif",
       "Source Sans Pro",
+      "Kefa",
     ].join(","),
   },
   overrides: {

@@ -21,16 +21,17 @@ function Privacy() {
         <br />
         <Paper elevation={0}>
           <Box p={2}>
-            Thank you for visiting [URL]. This is a contractor-operated website
-            funded by the U.S. Agency for International Development (USAID)
-            Bureau for Policy, Planning, and Learning. This site was developed
-            for interactive public use, it is not an official U.S. Government
-            website, and therefore does not necessarily state or reflect the
-            views or opinions of the U.S. Government or USAID. Except as
-            provided below, any data collected, maintained or stored within this
-            site is either in the public domain or owned and controlled by The
-            Aquaya Institute (“Aquaya”), not USAID. Individuals seeking USAID
-            information should visit the agency's official government website at{" "}
+            Thank you for visiting sanplan.app. This is a contractor-operated
+            website funded by the U.S. Agency for International Development
+            (USAID) Bureau for Policy, Planning, and Learning. This site was
+            developed for interactive public use, it is not an official U.S.
+            Government website, and therefore does not necessarily state or
+            reflect the views or opinions of the U.S. Government or USAID.
+            Except as provided below, any data collected, maintained or stored
+            within this site is either in the public domain or owned and
+            controlled by The Aquaya Institute (“Aquaya”), not USAID.
+            Individuals seeking USAID information should visit the agency's
+            official government website at{" "}
             <a href="www.usaid.gov">www.usaid.gov</a>.
           </Box>
           <Box p={2}>
@@ -91,10 +92,10 @@ function Privacy() {
             determined another U.S. Government Agency or Department is in a
             better position to respond to your correspondence, Aquaya may
             forward it to them for response. In aggregate, the information may
-            be used to count the number of people corresponding with us via the
-            contact page or email. Aquaya will not obtain personally
-            identifiable information about you when you visit this site unless
-            you choose to provide such information to it.
+            be used to count the number of people corresponding with us via
+            email. Aquaya will not obtain personally identifiable information
+            about you when you visit this site unless you choose to provide such
+            information to it.
           </Box>
           <Box p={2}>
             <Typography variant="h6">
@@ -243,8 +244,8 @@ function Privacy() {
           <Box p={2}>
             <Typography variant="h6">Contacting Us</Typography>
             <br />
-            If there are any questions regarding this privacy policy, this site
-            or Aquaya, you may contact us using the information below: [TBD]
+            If there are any questions regarding this privacy policy, or this
+            site, you may contact us at support@sanplan.app.
           </Box>
         </Paper>
       </Container>

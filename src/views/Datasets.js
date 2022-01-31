@@ -215,6 +215,8 @@ function Datasets() {
       road: "Rural communities that are on or close to main road. SanPlan considered an area to be ‘rural on-road’ if it is further than 25 minutes travel time to a city, further than 800 meters from a small town/city, and within 1.5 kilometers from a major roadway.",
       mixed:
         "Communities with mixed rural and urban characteristics such as peri-urban areas or small towns. SanPlan considered an area to be ‘rural mixed’ if it is within 25 minutes travel time to a city or within 800 meters to a small town/city.",
+      urban:
+        "Cities estimated to have 50,000 people or larger or areas which are within 10 minutes travel time to the city.",
       note: "This dataset was created with the 'Distance to Roads', 'Distance to Towns', and 'Time to Cities' datasets.",
       year: 2020,
       resolution: "200m",
@@ -323,6 +325,9 @@ function Datasets() {
                 {data[1].remote && (
                   <React.Fragment>
                     <ul>
+                      <li>
+                        <strong>Urban:</strong> {data[1].urban}
+                      </li>
                       <li>
                         <strong>Rural Mixed:</strong> {data[1].mixed}
                       </li>

@@ -33,7 +33,7 @@ function FAQ() {
               about the tool?
             </Typography>
             <br />
-            Please email any issues or comments to admin@URL.org
+            Please email any issues or comments to support@sanplan.app
           </Box>
           <Box p={2}>
             <Typography variant="h6" color="secondary" p={2} component="h2">

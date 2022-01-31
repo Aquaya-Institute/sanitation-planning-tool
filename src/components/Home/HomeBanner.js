@@ -2,14 +2,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography, Grid } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import HomeLayout from "./HomeLayout";
 import backgroundImage from "../../images/latrinebanner.jpg";
-import usaidLogo from "../../images/usaid-rect.png";
+import usaidLogo from "../../images/USAID_funded.png";
 
 const styles = (theme) => ({
   root: {
     fontFamily: "Source Sans Pro",
+    fontWeight: "bold",
+  },
+  title: {
+    fontFamily: "Kefa",
   },
   background: {
     backgroundImage: `url(${backgroundImage})`,
@@ -47,37 +51,14 @@ function ProductHero(props) {
 
       <Typography
         color="inherit"
-        align="center"
+        align="left"
         variant="h2"
-        marked="center"
+        className={classes.root}
         component="h1"
       >
-        The Sanitation Planning Tool <br />
-        (SanPlan)
+        SanPlan: The Sanitation Planning Tool
       </Typography>
-      <div display="flex">
-        <Grid>
-          <Typography
-            color="inherit"
-            align="center"
-            variant="h6"
-            marked="center"
-            component="h2"
-          >
-            Funded By
-          </Typography>
-        </Grid>
-        <Grid>
-          <a href="https://www.usaid.gov/">
-            <img
-              align="left"
-              style={{ height: "85px", width: "215px" }}
-              src={usaidLogo}
-              alt="USAID rectangular logo"
-            />
-          </a>
-        </Grid>
-      </div>
+
       <Typography
         color="inherit"
         variant="h6"
@@ -91,13 +72,23 @@ function ProductHero(props) {
       </Typography>
 
       <Typography
-        variant="body2"
         color="inherit"
-        className={classes.more}
-        component="h4"
+        variant="h6"
+        className={classes.h5}
+        component="h3"
       >
-        <strong>Explore the map tool below.</strong>
+        Explore the map tool below.
       </Typography>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <a href="https://www.usaid.gov/">
+          <img
+            align="left"
+            style={{ height: "85px", width: "215px" }}
+            src={usaidLogo}
+            alt="USAID rectangular logo"
+          />
+        </a>
+      </div>
     </HomeLayout>
   );
 }

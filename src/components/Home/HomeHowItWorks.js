@@ -54,7 +54,7 @@ const styles = (theme) => ({
     maxWidth: 600,
   },
   font: {
-    fontFamily: "Source Sans Pro",
+    ily: "Source Sans Pro",
   },
 });
 

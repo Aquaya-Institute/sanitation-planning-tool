@@ -65,10 +65,10 @@ const MapChart = ({ setTooltipContent }) => {
                     history.push(`/maps/${mapID.toLowerCase()}`);
                   }
                 }}
-                onMouseEnter={() =>{
+                onMouseEnter={() => {
                   if (cur) {
-                  // const {NAME} = cur;
-                  setTooltipContent(`${cur}`);
+                    // const {NAME} = cur;
+                    setTooltipContent(`${cur}`);
                   }
                 }}
                 onMouseLeave={() => {

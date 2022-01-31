@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerContainer: {
     overflow: "auto",
-    align: "center",
+    align: "left",
   },
   item: {
     "& span, & svg": {
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     "& span, & svg": {
       fontSize: 12.5,
       padding: 0,
-      textAlign: "center",
+      textAlign: "left",
     },
     minWidth: "35px",
   },
@@ -159,7 +159,8 @@ export const MapMenu = () => {
           <Divider />
           <Box
             mt={1.5}
-            align="center"
+            ml={1}
+            align="left"
             fontWeight="fontWeightBold"
             key="scalesTitle"
             style={{ borderRight: "1px solid #CFCDC9" }}
@@ -280,7 +281,8 @@ export const MapMenu = () => {
           <Divider />
           <Box
             mt={1.5}
-            align="center"
+            ml={1}
+            align="left"
             fontWeight="fontWeightBold"
             key="themesTitle"
             style={{ borderRight: "1px solid #CFCDC9" }}
@@ -519,7 +521,7 @@ export const MapMenu = () => {
                 width: drawerWidth - 1,
                 minHeight: "3vh",
                 // justifyContent: "center",
-                alignItems: "center",
+                alignItems: "left",
                 borderRight: "1px solid #CFCDC9",
               }}
               onClick={(e, newval) => {
@@ -536,7 +538,7 @@ export const MapMenu = () => {
                 borderRight: "1px solid #CFCDC9",
               }}
             >
-              <Tour key="tour" style={{ justifyContent: "center" }} />
+              <Tour key="tour" style={{ justifyContent: "left" }} />
             </ListItem>
           </List>
         </div>

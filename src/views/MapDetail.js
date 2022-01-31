@@ -13,7 +13,7 @@ document.getElementsByTagName("head")[0].appendChild(link);
 
 function MapDetail() {
   // eslint-disable-next-line no-empty-pattern
-  const [{}, dispatch] = React.useContext(MapContext);
+  const [{ maps }, dispatch] = React.useContext(MapContext);
   let { id } = useParams();
 
   React.useEffect(() => {
@@ -27,7 +27,7 @@ function MapDetail() {
     <Grid container style={{ height: "100%" }}>
       <Helmet>
         <html lang="en" />
-        <title>{id} Map Page</title>
+        <title>{maps[id].name} Map Page</title>
         <meta name={id + " Map"} content={"Interactive map of " + id} />
       </Helmet>
       <Grid item>
