@@ -121,7 +121,7 @@ export const MapMenu = () => {
         // });
 
         return fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${maps[currentMapID].layers["3"].carto_tableName}`
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${maps[currentMapID].layers["3"].carto_tableName}`
         )
           .then((resp) => resp.json())
           .then((response) => {
