@@ -72,6 +72,8 @@ export const DropdownMenu = ({
       selectedDistName,
       highlightLayer,
       currentCountry,
+      allowSettlements,
+      showSettlements,
       // allDistricts,
       // column,
     },
@@ -98,19 +100,33 @@ export const DropdownMenu = ({
 
   function filterPopulatedPlacesByCountry(distName) {
     let query = null;
+    let querySet = null;
     if (distName.length > 0) {
       query = `SELECT * FROM ${
         maps[mapID].layers[currentLayerID].carto_tableName
       } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
+      // if (allowSettlements === true && showSettlements === true) {
+      querySet = `SELECT * FROM ${
+        maps[mapID].layers["4"].carto_tableName
+      } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
+      // }
     } else {
       query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
+      // if (allowSettlements === true && showSettlements === true) {
+      querySet = `SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`;
+      // }
     }
     if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
       currentCountry[currentLayerID].source.setQuery(query);
       currentCountry[currentLayerID].layer.getSource().setQuery(query);
+      // if (allowSettlements === true && showSettlements === true) {
+      currentCountry["4"].source.setQuery(querySet);
+      currentCountry["4"].layer.getSource().setQuery(querySet);
+      // }
       dispatch({
         type: "layer.queryDist",
         queryDist: query,
+        querySet: querySet,
       });
     }
   }
