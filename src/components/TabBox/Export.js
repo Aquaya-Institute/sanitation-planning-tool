@@ -17,7 +17,7 @@ export const Export = () => {
       currentLayerID,
       showSettlements,
       currentCountry,
-      selectedDistName,
+      selectedAdm2Name,
       selectedAdm1Name,
       userData,
       settlementLayerId,
@@ -64,8 +64,8 @@ export const Export = () => {
       if (selectedAdm1Name !== undefined && selectedAdm1Name.length > 0) {
         conditions.push(`[within ${selectedAdm1Name}]`);
       }
-      if (selectedDistName !== undefined && selectedDistName.length > 0) {
-        conditions.push(`[within ${selectedDistName}]`);
+      if (selectedAdm2Name !== undefined && selectedAdm2Name.length > 0) {
+        conditions.push(`[within ${selectedAdm2Name}]`);
       }
       currentCountry[currentLayerID].filters.forEach((filter) => {
         if (filter.type === "range") {
@@ -127,15 +127,15 @@ export const Export = () => {
         .then((resp) => resp.json())
         .then((response) => {
           for (var i = 0; i < response.rows.length; i++) {
-            if (response.rows[i].classes !== undefined) {
-              if (response.rows[i].classes === 1) {
-                response.rows[i].classes = "Rural Remote";
-              } else if (response.rows[i].classes === 2) {
-                response.rows[i].classes = "Rural On-road";
-              } else if (response.rows[i].classes === 3) {
-                response.rows[i].classes = "Rural Mixed";
-              } else if (response.rows[i].classes === 4) {
-                response.rows[i].classes = "Urban";
+            if (response.rows[i].class == undefined) {
+              if (response.rows[i].class === 1) {
+                response.rows[i].class = "Rural Remote";
+              } else if (response.rows[i].class === 2) {
+                response.rows[i].class = "Rural On-road";
+              } else if (response.rows[i].class === 3) {
+                response.rows[i].class = "Rural Mixed";
+              } else if (response.rows[i].class === 4) {
+                response.rows[i].class = "Urban";
               }
             }
             // eslint-disable-next-line no-loop-func
@@ -163,15 +163,15 @@ export const Export = () => {
         .then((resp) => resp.json())
         .then((response) => {
           for (var i = 0; i < response.rows.length; i++) {
-            if (response.rows[i].classes !== undefined) {
-              if (response.rows[i].classes === 1) {
-                response.rows[i].classes = "Rural Remote";
-              } else if (response.rows[i].classes === 2) {
-                response.rows[i].classes = "Rural On-road";
-              } else if (response.rows[i].classes === 3) {
-                response.rows[i].classes = "Rural Mixed";
-              } else if (response.rows[i].classes === 4) {
-                response.rows[i].classes = "Urban";
+            if (response.rows[i].class !== undefined) {
+              if (response.rows[i].class === 1) {
+                response.rows[i].class = "Rural Remote";
+              } else if (response.rows[i].class === 2) {
+                response.rows[i].class = "Rural On-road";
+              } else if (response.rows[i].class === 3) {
+                response.rows[i].class = "Rural Mixed";
+              } else if (response.rows[i].class === 4) {
+                response.rows[i].class = "Urban";
               }
             }
             // eslint-disable-next-line no-loop-func
@@ -191,22 +191,27 @@ export const Export = () => {
       // showLoader2();
       setLoading(true);
       if (layerQuery && mapID) {
-        let queryURL = layerQuery.replace(/\s/g, " ");
+        // let queryURL = layerQuery.replace(/\s/g, " ");
+        let queryURL = currentCountry[settlementLayerId].query.replace(
+          /\s/g,
+          " "
+        );
         return fetch(
-          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${maps[mapID].layers[settlementLayerId].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers[settlementLayerId].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers[settlementLayerId].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers[settlementLayerId].carto_tableName}.cartodb_id`
+          // `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
+          `https://zebra.geodb.host/user/admin/api/v2/sql?q=${queryURL}`
         )
           .then((resp) => resp.json())
           .then((response) => {
             for (var i = 0; i < response.rows.length; i++) {
-              if (response.rows[i].classes !== undefined) {
-                if (response.rows[i].classes === 1) {
-                  response.rows[i].classes = "Rural Remote";
-                } else if (response.rows[i].classes === 2) {
-                  response.rows[i].classes = "Rural On-road";
-                } else if (response.rows[i].classes === 3) {
-                  response.rows[i].classes = "Rural Mixed";
-                } else if (response.rows[i].classes === 4) {
-                  response.rows[i].classes = "Urban";
+              if (response.rows[i].class !== undefined) {
+                if (response.rows[i].class === 1) {
+                  response.rows[i].class = "Rural Remote";
+                } else if (response.rows[i].class === 2) {
+                  response.rows[i].class = "Rural On-road";
+                } else if (response.rows[i].class === 3) {
+                  response.rows[i].class = "Rural Mixed";
+                } else if (response.rows[i].class === 4) {
+                  response.rows[i].class = "Urban";
                 }
               }
               // eslint-disable-next-line no-loop-func
@@ -225,15 +230,15 @@ export const Export = () => {
           .then((resp) => resp.json())
           .then((response) => {
             for (var i = 0; i < response.rows.length; i++) {
-              if (response.rows[i].classes !== undefined) {
-                if (response.rows[i].classes === 1) {
-                  response.rows[i].classes = "Rural Remote";
-                } else if (response.rows[i].classes === 2) {
-                  response.rows[i].classes = "Rural On-road";
-                } else if (response.rows[i].classes === 3) {
-                  response.rows[i].classes = "Rural Mixed";
-                } else if (response.rows[i].classes === 4) {
-                  response.rows[i].classes = "Urban";
+              if (response.rows[i].class !== undefined) {
+                if (response.rows[i].class === 1) {
+                  response.rows[i].class = "Rural Remote";
+                } else if (response.rows[i].class === 2) {
+                  response.rows[i].class = "Rural On-road";
+                } else if (response.rows[i].class === 3) {
+                  response.rows[i].class = "Rural Mixed";
+                } else if (response.rows[i].class === 4) {
+                  response.rows[i].class = "Urban";
                 }
               }
               // eslint-disable-next-line no-loop-func
@@ -263,15 +268,15 @@ export const Export = () => {
         )
           .then((resp) => resp.json())
           .then((response) => {
-            if (response.rows[0].classes !== undefined) {
-              if (response.rows[0].classes === 1) {
-                response.rows[0].classes = "Rural Remote";
-              } else if (response.rows[0].classes === 2) {
-                response.rows[0].classes = "Rural On-road";
-              } else if (response.rows[0].classes === 3) {
-                response.rows[0].classes = "Rural Mixed";
-              } else if (response.rows[0].classes === 4) {
-                response.rows[0].classes = "Urban";
+            if (response.rows[0].class !== undefined) {
+              if (response.rows[0].class === 1) {
+                response.rows[0].class = "Rural Remote";
+              } else if (response.rows[0].class === 2) {
+                response.rows[0].class = "Rural On-road";
+              } else if (response.rows[0].class === 3) {
+                response.rows[0].class = "Rural Mixed";
+              } else if (response.rows[0].class === 4) {
+                response.rows[0].class = "Urban";
               }
               Object.keys(response.rows[0]).forEach((k) => {
                 response.rows[0][k] = "" + response.rows[0][k];
@@ -292,15 +297,15 @@ export const Export = () => {
         )
           .then((resp) => resp.json())
           .then((response) => {
-            if (response.rows[0].classes !== undefined) {
-              if (response.rows[0].classes === 1) {
-                response.rows[0].classes = "Rural Remote";
-              } else if (response.rows[0].classes === 2) {
-                response.rows[0].classes = "Rural On-road";
-              } else if (response.rows[0].classes === 3) {
-                response.rows[0].classes = "Rural Mixed";
-              } else if (response.rows[0].classes === 4) {
-                response.rows[0].classes = "Urban";
+            if (response.rows[0].class !== undefined) {
+              if (response.rows[0].class === 1) {
+                response.rows[0].class = "Rural Remote";
+              } else if (response.rows[0].class === 2) {
+                response.rows[0].class = "Rural On-road";
+              } else if (response.rows[0].class === 3) {
+                response.rows[0].class = "Rural Mixed";
+              } else if (response.rows[0].class === 4) {
+                response.rows[0].class = "Urban";
               }
               Object.keys(response.rows[0]).forEach((k) => {
                 response.rows[0][k] = "" + response.rows[0][k];
@@ -321,15 +326,15 @@ export const Export = () => {
         )
           .then((resp) => resp.json())
           .then((response) => {
-            if (response.rows[0].classes !== undefined) {
-              if (response.rows[0].classes === 1) {
-                response.rows[0].classes = "Rural Remote";
-              } else if (response.rows[0].classes === 2) {
-                response.rows[0].classes = "Rural On-road";
-              } else if (response.rows[0].classes === 3) {
-                response.rows[0].classes = "Rural Mixed";
-              } else if (response.rows[0].classes === 4) {
-                response.rows[0].classes = "Urban";
+            if (response.rows[0].class !== undefined) {
+              if (response.rows[0].class === 1) {
+                response.rows[0].class = "Rural Remote";
+              } else if (response.rows[0].class === 2) {
+                response.rows[0].class = "Rural On-road";
+              } else if (response.rows[0].class === 3) {
+                response.rows[0].class = "Rural Mixed";
+              } else if (response.rows[0].class === 4) {
+                response.rows[0].class = "Urban";
               }
               Object.keys(response.rows[0]).forEach((k) => {
                 response.rows[0][k] = "" + response.rows[0][k];

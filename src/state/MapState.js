@@ -57,11 +57,12 @@ const initialState = {
   adm2aLayerId: null,
   userData: null,
   queryDist: null,
+  queryCom: null,
   skip: true,
   allDistricts: [],
   allAdm1Names: [],
   allAdm2aNames: [],
-  selectedDistName: [],
+  selectedAdm2Name: [],
   selectedAdm1Name: [],
   selectedAdm2aName: [],
   highlightLayer: null,
@@ -77,6 +78,7 @@ const initialState = {
     {
       source: null,
       style: null,
+      prefix: null,
       layer: null,
       filters: null,
       columns: null,
@@ -90,6 +92,7 @@ const initialState = {
     {
       source: null,
       style: null,
+      prefix: null,
       layer: null,
       filters: null,
       columns: null,
@@ -103,6 +106,7 @@ const initialState = {
     {
       source: null,
       style: null,
+      prefix: null,
       layer: null,
       filters: null,
       columns: null,
@@ -116,6 +120,7 @@ const initialState = {
     {
       source: null,
       style: null,
+      prefix: null,
       layer: null,
       filters: null,
       columns: null,
@@ -129,6 +134,7 @@ const initialState = {
     {
       source: null,
       style: null,
+      prefix: null,
       layer: null,
       filters: null,
       columns: null,
@@ -142,6 +148,7 @@ const initialState = {
     {
       source: null,
       style: null,
+      prefix: null,
       layer: null,
       filters: null,
       columns: null,
@@ -155,6 +162,7 @@ const initialState = {
     {
       source: null,
       style: null,
+      prefix: null,
       layer: null,
       filters: null,
       columns: null,
@@ -175,9 +183,15 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
         if (action.mapID !== null) {
-          draft.settlementLayerId = (
-            draft.maps[action.mapID].boundaries + 3
-          ).toString();
+          if (
+            draft.maps[action.mapID].layers.some((el) =>
+              el.carto_tableName.includes("comms")
+            )
+          ) {
+            draft.settlementLayerId = (
+              draft.maps[action.mapID].boundaries + 3
+            ).toString();
+          }
           draft.adm2LayerId = "3";
           if (draft.maps[action.mapID].boundaries === 2) {
             draft.adm1LayerId = draft.maps[action.mapID].boundaries + 2;
@@ -230,6 +244,7 @@ const reducer = (state, action) => {
         draft.currentCountry[draft.currentLayerID].source =
           action.currentSource;
         draft.currentCountry[draft.currentLayerID].style = action.currentStyle;
+        draft.currentCountry[draft.currentLayerID].prefix = action.prefix;
         draft.currentCountry[draft.currentLayerID].filters =
           action.currentFilters;
         const columns = [];
@@ -325,6 +340,7 @@ const reducer = (state, action) => {
         draft.currentMapID = action.mapID;
         draft.currentCountry[draft.currentLayerID].filters[action.filterIndex] =
           action.filter;
+        const prefix = draft.currentCountry[draft.currentLayerID].prefix;
         switch (
           draft.currentCountry[draft.currentLayerID].filters[action.filterIndex]
             .type
@@ -340,6 +356,23 @@ const reducer = (state, action) => {
               gte: action.filter.value[0],
               lte: action.filter.value[1],
             });
+            if (
+              draft.showSettlements === true &&
+              draft.allowSettlements === true
+            ) {
+              const filter_set = draft.currentCountry[
+                draft.settlementLayerId
+              ].layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()
+                .find(({ _column }) => _column === prefix + filter["_column"]);
+
+              filter_set.setFilters({
+                gte: action.filter.value[0],
+                lte: action.filter.value[1],
+              });
+            }
             if (
               action.filter.value[0] !== action.filter.min ||
               action.filter.value[1] !== action.filter.max
@@ -391,6 +424,25 @@ const reducer = (state, action) => {
               lte: action.filter.scaledValue[1],
             });
             if (
+              draft.showSettlements === true &&
+              draft.allowSettlements === true
+            ) {
+              const filter_set_non = draft.currentCountry[
+                draft.settlementLayerId
+              ].layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()
+                .find(
+                  ({ _column }) => _column === prefix + filter_non["_column"]
+                );
+
+              filter_set_non.setFilters({
+                gte: action.filter.scaledValue[0],
+                lte: action.filter.scaledValue[1],
+              });
+            }
+            if (
               action.filter.value[0] !== action.filter.min ||
               action.filter.value[1] !== action.filter.max
             ) {
@@ -432,6 +484,24 @@ const reducer = (state, action) => {
             filter_c.setFilters({
               in: col_vals_tofilter,
             });
+            if (
+              draft.showSettlements === true &&
+              draft.allowSettlements === true
+            ) {
+              const filter_set_c = draft.currentCountry[
+                draft.settlementLayerId
+              ].layer
+                .getSource()
+                .getFilters()[0] //since this is a filtercollection
+                .getFilters()
+                .find(
+                  ({ _column }) => _column === prefix + filter_c["_column"]
+                );
+
+              filter_set_c.setFilters({
+                in: col_vals_tofilter,
+              });
+            }
             break;
           case "none":
             break;
@@ -444,7 +514,8 @@ const reducer = (state, action) => {
     /* clip settlements layer along with 5x5km layer */
     case "layer.query":
       return produce(state, (draft) => {
-        draft.currentCountry[draft.currentLayerID].query = action.query;
+        draft.currentCountry[action.layerID].query = action.query;
+        // draft.currentCountry[draft.settlementLayerId].query = draft.queryCom;
       });
     /* when a district is selected from the dropdown */
     case "layer.queryDist":
@@ -459,12 +530,26 @@ const reducer = (state, action) => {
           draft.queryDist = null;
         }
       });
+    case "layer.queryCom":
+      return produce(state, (draft) => {
+        // if (action.queryCom.indexOf("WHERE") > 0) {
+        //   var clause = action.queryCom.substr(
+        //     action.queryCom.indexOf("WHERE") + "WHERE".length,
+        //     action.queryCom.length
+        //   );
+        //   draft.queryCom = clause;
+        // } else {
+        //   draft.queryCom = null;
+        // }
+        draft.queryCom = action.queryCom;
+      });
     /* when the reset filters button is pressed */
     case "reset.filters":
       return produce(state, (draft) => {
         // draft.reset = true;
         draft.currentMapID = action.mapID;
         const layer = draft.currentCountry[draft.currentLayerID];
+        const prefix = draft.currentCountry[draft.currentLayerID].prefix;
         draft.currentCountry[draft.currentLayerID].filters.forEach(
           (filter, filterIndex) => {
             if (filter.type === "categorical") {
@@ -488,6 +573,24 @@ const reducer = (state, action) => {
                 cartofilter_c.setFilters({
                   in: col_vals_tofilter,
                 });
+                if (
+                  draft.showSettlements === true &&
+                  draft.allowSettlements === true
+                ) {
+                  var cartofilter_set_c = draft.currentCountry[
+                    draft.settlementLayerId
+                  ].layer
+                    .getSource()
+                    .getFilters()[0]
+                    .getFilters()
+                    .find(
+                      ({ _column }) =>
+                        _column === prefix + cartofilter_c["_column"]
+                    );
+                  cartofilter_set_c.setFilters({
+                    in: col_vals_tofilter,
+                  });
+                }
               }
             } else if (filter.type === "range") {
               if (
@@ -505,6 +608,26 @@ const reducer = (state, action) => {
                   gte: filter.min,
                   lte: filter.max,
                 });
+                if (
+                  draft.showSettlements === true &&
+                  draft.allowSettlements === true
+                ) {
+                  const filter_set = draft.currentCountry[
+                    draft.settlementLayerId
+                  ].layer
+                    .getSource()
+                    .getFilters()[0] //since this is a filtercollection
+                    .getFilters()
+                    .find(
+                      ({ _column }) =>
+                        _column === prefix + cartofilter["_column"]
+                    );
+
+                  filter_set.setFilters({
+                    gte: filter.value[0],
+                    lte: filter.value[1],
+                  });
+                }
               }
             } else if (filter.type === "range_non_linear") {
               if (
@@ -523,6 +646,26 @@ const reducer = (state, action) => {
                   gte: filter.scaledMin,
                   lte: filter.scaledMax,
                 });
+                if (
+                  draft.showSettlements === true &&
+                  draft.allowSettlements === true
+                ) {
+                  const filter_set = draft.currentCountry[
+                    draft.settlementLayerId
+                  ].layer
+                    .getSource()
+                    .getFilters()[0] //since this is a filtercollection
+                    .getFilters()
+                    .find(
+                      ({ _column }) =>
+                        _column === prefix + cartofilter_non["_column"]
+                    );
+
+                  filter_set.setFilters({
+                    gte: filter.scaledMin,
+                    lte: filter.scaledMax,
+                  });
+                }
               }
             }
           }
@@ -544,6 +687,8 @@ const reducer = (state, action) => {
         draft.currentCountry[action.layerID].source = action.cartoSource;
         draft.currentCountry[action.layerID].style =
           draft.maps[draft.currentMapID].layers[action.layerID].carto_style;
+        draft.currentCountry[action.layerID].prefix =
+          draft.maps[draft.currentMapID].layers[action.layerID].prefix;
         draft.currentCountry[action.layerID].filters =
           draft.maps[draft.currentMapID].layers[action.layerID].filters;
         draft.carto_client.addLayer(draft.currentCountry[action.layerID].layer);
@@ -590,7 +735,7 @@ const reducer = (state, action) => {
     /* when a district is selected from the dropdown */
     case "dropdown.selection":
       return produce(state, (draft) => {
-        draft.selectedDistName = action.distName;
+        draft.selectedAdm2Name = action.adm2Name;
       });
     /* when a new map is loaded, fetches all district options */
     case "dropdown.options.adm1":
@@ -630,11 +775,33 @@ const reducer = (state, action) => {
     case "show.settlements":
       return produce(state, (draft) => {
         draft.showSettlements = action.showSettlements;
+        if (
+          draft.allowSettlements === true &&
+          action.showSettlements === true
+        ) {
+          draft.currentCountry[draft.settlementLayerId].layer
+            .show()
+            .bringToFront();
+          // draft.currentCountry[draft.settlementLayerId].layer;
+        } else {
+          draft.currentCountry[draft.settlementLayerId].layer.hide();
+        }
       });
     /* when the disclaimer for the settlements layer is agreed to */
     case "allow.settlements":
       return produce(state, (draft) => {
         draft.allowSettlements = action.allowSettlements;
+        if (
+          action.allowSettlements === true &&
+          draft.showSettlements === true
+        ) {
+          draft.currentCountry[draft.settlementLayerId].layer
+            .show()
+            .bringToFront();
+          // draft.currentCountry[draft.settlementLayerId].layer.bringToFront();
+        } else {
+          draft.currentCountry[draft.settlementLayerId].layer.hide();
+        }
       });
     /* CHECK IF NEEDED */
     case "settlement.popup":

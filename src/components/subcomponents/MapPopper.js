@@ -251,9 +251,9 @@ export const MapPopper = ({
                 )}
                 <Divider />
                 <Box fontWeight="fontWeightBold">
-                  {popupData.data.classes.Name}:{" "}
+                  {popupData.data.class.Name}:{" "}
                 </Box>
-                {popupData.data.classes.Value}
+                {popupData.data.class.Value}
                 {/* {currentLayerID !== "1" && (
                   <> */}
                 <Box fontWeight="fontWeightLight" fontSize={11}>

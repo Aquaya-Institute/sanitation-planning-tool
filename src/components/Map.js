@@ -241,6 +241,7 @@ export const Map = () => {
           dispatch({
             type: "layer.query",
             query: e,
+            layerID: index,
           });
         });
         const _style = new Carto.style.CartoCSS(layer.carto_style);
@@ -322,11 +323,14 @@ export const Map = () => {
           });
         }
 
+        const _prefix = layer.prefix;
+
         dispatch({
           type: "layer.addCartoLayer",
           mapID: _mapID,
           layerID: index,
           cartoLayer: _layer,
+          prefix: _prefix,
           cartoSource: _source,
           cartoStyle: _style,
           cartoFilters: _filters,
@@ -434,58 +438,105 @@ export const Map = () => {
 
   // settlements layer
   useEffect(() => {
+    //   if (allowSettlements === true && mapID) {
+    //     if (showSettlements === true) {
+    //       if (maps[mapID].layers[settlementLayerId] && cartoClient) {
+    //         if (layerQuery) {
+    //           if (settlementBoundary) {
+    //             cartoClient.removeLayer(settlementBoundary);
+    //           }
+    //           let queryURL = layerQuery.replace(/\s/g, " ");
+    //           var settlement_style = null;
+    //           var settlement_source = null;
+    //           var settlementBoundaryset = null;
+    //           settlement_source = new Carto.source.SQL(
+    //             `SELECT ${maps[mapID].layers[settlementLayerId].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers[settlementLayerId].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers[settlementLayerId].carto_tableName}.the_geom)`
+    //           );
+    //           settlement_style = new Carto.style.CartoCSS(
+    //             `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
+    //           );
+    //         } else if (settlementBoundary == null) {
+    //           settlement_source = new Carto.source.SQL(
+    //             `SELECT ${maps[mapID].layers[settlementLayerId].carto_tableName}.* FROM ${maps[mapID].layers[currentLayerID].carto_tableName}, ${maps[mapID].layers[settlementLayerId].carto_tableName} WHERE ST_Intersects(${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom, ${maps[mapID].layers[settlementLayerId].carto_tableName}.the_geom)`
+    //           );
+    //           settlement_style = new Carto.style.CartoCSS(
+    //             `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
+    //           );
+    //         }
+    //         if (settlement_source) {
+    //           settlementBoundaryset = new Carto.layer.Layer(
+    //             settlement_source,
+    //             settlement_style,
+    //             {
+    //               visible: showSettlements === true ? true : false,
+    //               featureClickColumns: [
+    //                 "classes",
+    //                 "dt",
+    //                 "dr",
+    //                 "timec",
+    //                 "pop",
+    //                 "rr",
+    //                 "rrd",
+    //                 "rm",
+    //                 "u",
+    //                 "name_1",
+    //                 "name_2",
+    //               ],
+    //             }
+    //           );
+    //           settlementBoundaryset.on("featureClicked", (featureEvent) => {
+    //             settlementclickRef.current = true;
+    //             var result = null;
+    //             var input = featureEvent.data.cartodb_id;
+    //             fetch(
+    //               `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[settlementLayerId].carto_tableName} where cartodb_id = ${input}`
+    //             )
+    //               .then((resp) => resp.json())
+    //               .then((response) => {
+    //                 var myStyle = {
+    //                   color: "#FFFFFF",
+    //                   fillColor: "#FFFFFF",
+    //                   fillOpacity: 0.3,
+    //                   weight: 1,
+    //                 };
+    //                 result = L.geoJson(
+    //                   JSON.parse(response.rows[0].the_geom),
+    //                   myStyle
+    //                 );
+    //                 settlementHighlight.current = result;
+    //                 dispatch({
+    //                   type: "boundary.highlight",
+    //                   highlightBoundary: result,
+    //                 });
+    //               });
+    //             setPopup([
+    //               maps[mapID].layers[settlementLayerId].carto_tableName,
+    //               featureEvent,
+    //             ]);
+    //             setPopoverOpen(false);
+    //           });
+    //           cartoClient.addLayer(settlementBoundaryset);
+    //           currentLayer.show();
+    //           dispatch({
+    //             type: "settlement.boundary",
+    //             settlementBoundary: settlementBoundaryset,
+    //           });
+    //         }
+    //       }
+    //     }
+    //   }
+    // }, [
     if (allowSettlements === true && mapID) {
       if (showSettlements === true) {
         if (maps[mapID].layers[settlementLayerId] && cartoClient) {
-          if (layerQuery) {
-            if (settlementBoundary) {
-              cartoClient.removeLayer(settlementBoundary);
-            }
-            let queryURL = layerQuery.replace(/\s/g, " ");
-            var settlement_style = null;
-            var settlement_source = null;
-            var settlementBoundaryset = null;
-            settlement_source = new Carto.source.SQL(
-              `SELECT ${maps[mapID].layers[settlementLayerId].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers[settlementLayerId].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers[settlementLayerId].carto_tableName}.the_geom)`
-            );
-            settlement_style = new Carto.style.CartoCSS(
-              `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
-            );
-          } else if (settlementBoundary == null) {
-            settlement_source = new Carto.source.SQL(
-              `SELECT ${maps[mapID].layers[settlementLayerId].carto_tableName}.* FROM ${maps[mapID].layers[currentLayerID].carto_tableName}, ${maps[mapID].layers[settlementLayerId].carto_tableName} WHERE ST_Intersects(${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom, ${maps[mapID].layers[settlementLayerId].carto_tableName}.the_geom)`
-            );
-            settlement_style = new Carto.style.CartoCSS(
-              `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
-            );
-          }
-          if (settlement_source) {
-            settlementBoundaryset = new Carto.layer.Layer(
-              settlement_source,
-              settlement_style,
-              {
-                visible: showSettlements === true ? true : false,
-                featureClickColumns: [
-                  "classes",
-                  "dt",
-                  "dr",
-                  "timecities",
-                  "pop",
-                  "rr",
-                  "rrd",
-                  "rm",
-                  "u",
-                  "name_1",
-                  "name_2",
-                ],
-              }
-            );
-            settlementBoundaryset.on("featureClicked", (featureEvent) => {
+          currentCountry[settlementLayerId].layer.on(
+            "featureClicked",
+            (featureEvent) => {
               settlementclickRef.current = true;
               var result = null;
               var input = featureEvent.data.cartodb_id;
               fetch(
-                `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[settlementLayerId].carto_tableName} where cartodb_id = ${input}`
+                `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[settlementLayerId].carto_tableName} where cartodb_id = ${input}`
               )
                 .then((resp) => resp.json())
                 .then((response) => {
@@ -510,19 +561,18 @@ export const Map = () => {
                 featureEvent,
               ]);
               setPopoverOpen(false);
-            });
-            cartoClient.addLayer(settlementBoundaryset);
-            currentLayer.show();
-            dispatch({
-              type: "settlement.boundary",
-              settlementBoundary: settlementBoundaryset,
-            });
-          }
+            }
+          );
+          // cartoClient.addLayer(settlementBoundaryset);
+          currentLayer.show();
+          // dispatch({
+          //   type: "settlement.boundary",
+          //   settlementBoundary: settlementBoundaryset,
+          // });
         }
       }
     }
   }, [
-    layerQuery,
     allowSettlements,
     showSettlements,
     // currentLayerID,
@@ -548,15 +598,15 @@ export const Map = () => {
       });
       dat.sort();
       var dat_loc = [];
-      if (popup[1].data.classes !== undefined) {
-        if (popup[1].data.classes === 1) {
-          popup[1].data.classes = "Rural Remote";
-        } else if (popup[1].data.classes === 2) {
-          popup[1].data.classes = "Rural On-road";
-        } else if (popup[1].data.classes === 3) {
-          popup[1].data.classes = "Rural Mixed";
-        } else if (popup[1].data.classes === 4) {
-          popup[1].data.classes = "Urban";
+      if (popup[1].data.class !== undefined) {
+        if (popup[1].data.class === 1) {
+          popup[1].data.class = "Rural Remote";
+        } else if (popup[1].data.class === 2) {
+          popup[1].data.class = "Rural On-road";
+        } else if (popup[1].data.class === 3) {
+          popup[1].data.class = "Rural Mixed";
+        } else if (popup[1].data.class === 4) {
+          popup[1].data.class = "Urban";
         }
       }
       Object.entries(popup[1].data)

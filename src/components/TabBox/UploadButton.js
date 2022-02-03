@@ -219,7 +219,9 @@ export const UploadButton = () => {
                                 allowSettlements: !checked,
                               });
                             } else {
-                              settlementBoundary.hide();
+                              if (settlementBoundary) {
+                                settlementBoundary.hide();
+                              }
                             }
                           }}
                           icon={<CheckBoxOutlineBlankIcon fontSize="small" />}

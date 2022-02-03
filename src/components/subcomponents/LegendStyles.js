@@ -2,8 +2,8 @@ export const legendStyles = [
   {
     name_pixel: "Rural Typology",
     name_bounds: "Predominant Rural Typology",
-    style_pixel: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([class], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([class], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Population Practicing Open Defecation",
@@ -14,8 +14,8 @@ export const legendStyles = [
   {
     name_pixel: "Travel Time to Cities",
     name_bounds: "Average Travel Time to Cities",
-    style_pixel: `#layer {polygon-fill: ramp([timecities], (#006d77, #83c5be, #edf6f9, #ffddd2, #e29578), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([timecities], (#006d77, #83c5be, #edf6f9, #ffddd2, #e29578), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([timec], (#006d77, #83c5be, #edf6f9, #ffddd2, #e29578), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([timec], (#006d77, #83c5be, #edf6f9, #ffddd2, #e29578), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Diahrrea Prevalence in Children <5 Years",
@@ -26,14 +26,14 @@ export const legendStyles = [
   {
     name_pixel: "Predicted Annual Cholera Incidence",
     name_bounds: "Average Predicted Annual Cholera Incidence",
-    style_pixel: `#layer {polygon-fill: ramp([cholera], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([cholera], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([chol], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([chol], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Reliance on Unimproved Sanitation",
     name_bounds: "Average Reliance on Unimproved Sanitation",
-    style_pixel: `#layer {polygon-fill: ramp([s_unimp], (#335c67, #fff3b0, #e09f3e, #9e2a2b, #540b0e), quantiles);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([s_unimp], (#335c67, #fff3b0, #e09f3e, #9e2a2b, #540b0e), quantiles);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([s_uimp], (#335c67, #fff3b0, #e09f3e, #9e2a2b, #540b0e), quantiles);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([s_uimp], (#335c67, #fff3b0, #e09f3e, #9e2a2b, #540b0e), quantiles);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Access to Any Improved Sanitation",
@@ -44,20 +44,20 @@ export const legendStyles = [
   {
     name_pixel: "Access to Non-Piped Improved Sanitation",
     name_bounds: "Average Access to Non-Piped Improved Sanitation",
-    style_pixel: `#layer {polygon-fill: ramp([s_imp_othe], (#264653, #2a9d8f, #e9c46a, #f4a261, #e76f51), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([s_imp_othe], (#264653, #2a9d8f, #e9c46a, #f4a261, #e76f51), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([s_io], (#264653, #2a9d8f, #e9c46a, #f4a261, #e76f51), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([s_io], (#264653, #2a9d8f, #e9c46a, #f4a261, #e76f51), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Access to Sewer/Septic Sanitation",
     name_bounds: "Average Access to Sewer/Septic Sanitation",
-    style_pixel: `#layer {polygon-fill: ramp([s_piped], (#feebe2, #fbb4b9, #f768a1, #c51b8a, #7a0177), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([s_piped], (#feebe2, #fbb4b9, #f768a1, #c51b8a, #7a0177), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([s_pipe], (#feebe2, #fbb4b9, #f768a1, #c51b8a, #7a0177), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([s_pipe], (#feebe2, #fbb4b9, #f768a1, #c51b8a, #7a0177), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Reliance on Unimproved Drinking Water",
     nam_bounds: "Average Reliance on Unimproved Drinking Water",
-    style_pixel: `#layer {polygon-fill: ramp([w_unimp], (#003049, #d62828, #f77f00, #fcbf49, #eae2b7), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([w_unimp], (#003049, #d62828, #f77f00, #fcbf49, #eae2b7), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([w_uimp], (#003049, #d62828, #f77f00, #fcbf49, #eae2b7), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([w_uimp], (#003049, #d62828, #f77f00, #fcbf49, #eae2b7), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Access to Any Improved Drinking Water",
@@ -68,32 +68,32 @@ export const legendStyles = [
   {
     name_pixel: "Access to Non-Piped Improved Drinking Water",
     name_bounds: "Average Access to Non-Piped Improved Drinking Water",
-    style_pixel: `#layer {polygon-fill: ramp([w_imp_othe], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([w_imp_othe], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([w_io], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([w_io], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Access to Piped Drinking Water",
     name_bounds: "Average Access to Piped Drinking Water",
-    style_pixel: `#layer {polygon-fill: ramp([w_piped], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([w_piped], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([w_pipe], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([w_pipe], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Reliance on Surface Water",
     name_bounds: "Average Reliance on Surface Water",
-    style_pixel: `#layer {polygon-fill: ramp([w_surface], (#461220, #8c2f39, #b23a48, #fcb9b2, #fed0bb), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([w_surface], (#461220, #8c2f39, #b23a48, #fcb9b2, #fed0bb), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([w_sur], (#461220, #8c2f39, #b23a48, #fcb9b2, #fed0bb), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([w_sur], (#461220, #8c2f39, #b23a48, #fcb9b2, #fed0bb), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Men's Educational Attainment",
     name_bounds: "Average Men's Educational Attainment",
-    style_pixel: `#layer {polygon-fill: ramp([edu_m], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([edu_m], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([edum], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([edum], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Women's Educational Attainment",
     name_bounds: "Average Women's Educational Attainment",
-    style_pixel: `#layer {polygon-fill: ramp([edu_w], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([edu_w], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    style_pixel: `#layer {polygon-fill: ramp([eduw], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([eduw], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name_pixel: "Mortality in Children <5 Years",
