@@ -86,7 +86,7 @@ export const Map = () => {
   const settlementHighlight = useRef();
   const legendStylesObj = legendStyles;
   const currentLayer = currentCountry[currentLayerID].layer;
-  const layerQuery = currentCountry[currentLayerID].query;
+  // const layerQuery = currentCountry[currentLayerID].query;
 
   //click outside
   useEffect(() => {
@@ -238,6 +238,7 @@ export const Map = () => {
           dispatch({
             type: "layer.query",
             query: e,
+            layerID: index,
           });
         });
         const _style = new Carto.style.CartoCSS(layer.carto_style);
@@ -434,89 +435,44 @@ export const Map = () => {
     if (allowSettlements === true && mapID) {
       if (showSettlements === true) {
         if (maps[mapID].layers["4"] && cartoClient) {
-          if (layerQuery) {
-            if (settlementBoundary) {
-              cartoClient.removeLayer(settlementBoundary);
-            }
-            let queryURL = layerQuery.replace(/\s/g, " ");
-            var settlement_style = null;
-            var settlement_source = null;
-            var settlementBoundaryset = null;
-            settlement_source = new Carto.source.SQL(
-              `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
-            );
-            settlement_style = new Carto.style.CartoCSS(
-              `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
-            );
-          } else if (settlementBoundary == null) {
-            settlement_source = new Carto.source.SQL(
-              `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM ${maps[mapID].layers[currentLayerID].carto_tableName}, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
-            );
-            settlement_style = new Carto.style.CartoCSS(
-              `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
-            );
-          }
-          if (settlement_source) {
-            settlementBoundaryset = new Carto.layer.Layer(
-              settlement_source,
-              settlement_style,
-              {
-                visible: showSettlements === true ? true : false,
-                featureClickColumns: [
-                  "classes",
-                  "dt",
-                  "dr",
-                  "timecities",
-                  "pop",
-                  "rr",
-                  "rrd",
-                  "rm",
-                  "u",
-                  "name_1",
-                  "name_2",
-                ],
-              }
-            );
-            settlementBoundaryset.on("featureClicked", (featureEvent) => {
-              settlementclickRef.current = true;
-              var result = null;
-              var input = featureEvent.data.cartodb_id;
-              fetch(
-                `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers["4"].carto_tableName} where cartodb_id = ${input}`
-              )
-                .then((resp) => resp.json())
-                .then((response) => {
-                  var myStyle = {
-                    color: "#FFFFFF",
-                    fillColor: "#FFFFFF",
-                    fillOpacity: 0.3,
-                    weight: 1,
-                  };
-                  result = L.geoJson(
-                    JSON.parse(response.rows[0].the_geom),
-                    myStyle
-                  );
-                  settlementHighlight.current = result;
-                  dispatch({
-                    type: "boundary.highlight",
-                    highlightBoundary: result,
-                  });
+          currentCountry["4"].layer.on("featureClicked", (featureEvent) => {
+            settlementclickRef.current = true;
+            var result = null;
+            var input = featureEvent.data.cartodb_id;
+            fetch(
+              `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers["4"].carto_tableName} where cartodb_id = ${input}`
+            )
+              .then((resp) => resp.json())
+              .then((response) => {
+                var myStyle = {
+                  color: "#FFFFFF",
+                  fillColor: "#FFFFFF",
+                  fillOpacity: 0.3,
+                  weight: 1,
+                };
+                result = L.geoJson(
+                  JSON.parse(response.rows[0].the_geom),
+                  myStyle
+                );
+                settlementHighlight.current = result;
+                dispatch({
+                  type: "boundary.highlight",
+                  highlightBoundary: result,
                 });
-              setPopup([maps[mapID].layers["4"].carto_tableName, featureEvent]);
-              setPopoverOpen(false);
-            });
-            cartoClient.addLayer(settlementBoundaryset);
-            currentLayer.show();
-            dispatch({
-              type: "settlement.boundary",
-              settlementBoundary: settlementBoundaryset,
-            });
-          }
+              });
+            setPopup([maps[mapID].layers["4"].carto_tableName, featureEvent]);
+            setPopoverOpen(false);
+          });
+          // cartoClient.addLayer(settlementBoundaryset);
+          currentLayer.show();
+          // dispatch({
+          //   type: "settlement.boundary",
+          //   settlementBoundary: settlementBoundaryset,
+          // });
         }
       }
     }
   }, [
-    layerQuery,
     allowSettlements,
     showSettlements,
     // currentLayerID,
@@ -654,7 +610,7 @@ export const Map = () => {
 
   return (
     <div style={{ height: "100%", position: "relative" }}>
-      {(mapID === "niger" || mapID === "mali") ? <NoDataAlert />:null}
+      {mapID === "niger" || mapID === "mali" ? <NoDataAlert /> : null}
       <div
         id="map"
         style={{ height: "100%" }}
