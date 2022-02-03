@@ -15,11 +15,11 @@ import "react-app-protect/dist/index.css";
 
 function App() {
   return (
-    <Protect
-      sha512="40042129d59da9aeb1f847a98459e489c383ad1a09b868ce6052645fcd654647484fe1af323c74f7cd5d604b3f1b242618d911176a1635eb89aef9fc7e1076be"
-      blur={true}
-      boxTitle="The site will unlock once the webinar is over. Please check back soon!"
-    >
+//     <Protect
+//       sha512="40042129d59da9aeb1f847a98459e489c383ad1a09b868ce6052645fcd654647484fe1af323c74f7cd5d604b3f1b242618d911176a1635eb89aef9fc7e1076be"
+//       blur={true}
+//       boxTitle="The site will unlock once the webinar is over. Please check back soon!"
+//     >
       <ThemeProvider theme={theme}>
         <MapContextProvider>
           <Router>
@@ -37,7 +37,7 @@ function App() {
           </Router>
         </MapContextProvider>
       </ThemeProvider>
-    </Protect>
+//     </Protect>
   );
 }
 
