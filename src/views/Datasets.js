@@ -306,15 +306,15 @@ function Datasets() {
             xs={12}
             md={12}
             lg={12}
-            id={() => {
-              if (data[1].name.includes("Classification")) {
-                return "class";
-              } else if (data[1].name.includes("Settlement")) {
-                return "settle";
-              } else {
-                return "";
-              }
-            }}
+            // id={() => {
+            //   if (data[1].name.includes("Classification")) {
+            //     return "class";
+            //   } else if (data[1].name.includes("Settlement")) {
+            //     return "settle";
+            //   } else {
+            //     return "";
+            //   }
+            // }}
           >
             <Card className={classes.root} elevation={0}>
               <CardContent>
@@ -338,12 +338,14 @@ function Datasets() {
                         <strong>Rural Remote:</strong> {data[1].remote}
                       </li>
                     </ul>
-                    <img
-                      src="/class-rules.png"
-                      alt="Chart of the decision tree used to delinate areas between the various classifications, modeled after the definitions of the typologies."
-                      style={{ height: "230px", width: "auto" }}
-                      class="center"
-                    ></img>
+                    <center>
+                      <img
+                        src="/class-rules.png"
+                        alt="Chart of the decision tree used to delinate areas between the various classifications, modeled after the definitions of the typologies."
+                        style={{ height: "230px", width: "auto" }}
+                        // class="center"
+                      ></img>
+                    </center>
                     <Link href="https://washmatters.wateraid.org/publications/rethinking-rural-sanitation">
                       Check out the Rethinking Rural Sanitation Guidance
                     </Link>
