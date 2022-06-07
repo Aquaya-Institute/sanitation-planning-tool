@@ -59,70 +59,71 @@ export default function DefaultLayout(props) {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
   const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem
-        component={RouterLink}
-        color="inherit"
-        to="/"
-        onClick={() => {
-          dispatch({
-            type: "map.select",
-            mapID: null,
-          });
-        }}
+    <>
+      <Menu
+        anchorEl={mobileMoreAnchorEl}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        id={mobileMenuId}
+        keepMounted
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={isMobileMenuOpen}
+        onClose={handleMobileMenuClose}
       >
-        Home
-      </MenuItem>
-      <MenuItem
-        component={RouterLink}
-        color="inherit"
-        to="/datasets"
-        onClick={() => {
-          dispatch({
-            type: "map.select",
-            mapID: null,
-          });
-        }}
-      >
-        Datasets Overview
-      </MenuItem>
-      <MenuItem
-        component={RouterLink}
-        color="inherit"
-        to="/about"
-        onClick={() => {
-          dispatch({
-            type: "map.select",
-            mapID: null,
-          });
-        }}
-      >
-        About
-      </MenuItem>
-      <MenuItem
-        component={RouterLink}
-        color="inherit"
-        to="/faq"
-        onClick={() => {
-          dispatch({
-            type: "map.select",
-            mapID: null,
-          });
-        }}
-      >
-        FAQ
-      </MenuItem>
-    </Menu>
+        <MenuItem
+          component={RouterLink}
+          color="inherit"
+          to="/"
+          onClick={() => {
+            dispatch({
+              type: "map.select",
+              mapID: null,
+            });
+          }}
+        >
+          Home
+        </MenuItem>
+        <MenuItem
+          component={RouterLink}
+          color="inherit"
+          to="/datasets"
+          onClick={() => {
+            dispatch({
+              type: "map.select",
+              mapID: null,
+            });
+          }}
+        >
+          Datasets Overview
+        </MenuItem>
+        <MenuItem
+          component={RouterLink}
+          color="inherit"
+          to="/about"
+          onClick={() => {
+            dispatch({
+              type: "map.select",
+              mapID: null,
+            });
+          }}
+        >
+          About
+        </MenuItem>
+        <MenuItem
+          component={RouterLink}
+          color="inherit"
+          to="/faq"
+          onClick={() => {
+            dispatch({
+              type: "map.select",
+              mapID: null,
+            });
+          }}
+        >
+          FAQ
+        </MenuItem>
+      </Menu>
+    </>
   );
 
   return (
@@ -135,7 +136,7 @@ export default function DefaultLayout(props) {
         <Toolbar>
           <Link component={RouterLink} color="inherit" to="/">
             <img
-              src="/SanPlanLogo_white.png"
+              src="/SanPlanLogo_twotone.png"
               alt="SanPlan Tool logo"
               style={{ width: "110px", height: "55px" }}
             ></img>

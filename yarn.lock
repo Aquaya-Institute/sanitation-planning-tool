@@ -9733,6 +9733,11 @@ react-ga4@^1.4.1:
   resolved "https://registry.yarnpkg.com/react-ga4/-/react-ga4-1.4.1.tgz#6ee2a2db115ed235b2f2092bc746b4eeeca9e206"
   integrity sha512-ioBMEIxd4ePw4YtaloTUgqhQGqz5ebDdC4slEpLgy2sLx1LuZBC9iYCwDymTXzcntw6K1dHX183ulP32nNdG7w==
 
+react-google-forms@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-google-forms/-/react-google-forms-1.0.3.tgz#a21d2ad0d6d1cb91dd92bfb5cf2eedf8f6c090e0"
+  integrity sha512-8nvBRl45g6Y1iWUiRc9pRZOFW0E26qMiMtzrrsrpIpmjQiP2vytXbYP36QzJfKEcI31XFzBR/rAI3WH9qgIBwQ==
+
 react-helmet@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/react-helmet/-/react-helmet-6.1.0.tgz#a750d5165cb13cf213e44747502652e794468726"

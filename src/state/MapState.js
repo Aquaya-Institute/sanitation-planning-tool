@@ -60,6 +60,7 @@ const initialState = {
   allowSettlements: false,
   settlementHighlight: null,
   settlementPopup: null,
+  surveyPrompt: false,
   column: null,
   currentCountry: [
     {
@@ -560,6 +561,10 @@ const reducer = (state, action) => {
     case "user.upload":
       return produce(state, (draft) => {
         draft.userData = action.userData;
+      });
+    case "survey.prompt":
+      return produce(state, (draft) => {
+        draft.surveyPrompt = action.surveyPrompt;
       });
     default:
       return state;
