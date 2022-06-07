@@ -2,6 +2,9 @@
   "name": "sanitation-planning-tool",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "14.x"
+  },
   "dependencies": {
     "@carto/carto.js": "4.2.1",
     "@material-ui/core": "^4.12.3",
