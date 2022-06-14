@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useState, useRef } from "react";
 import {
   AppBar,
   Toolbar,
@@ -17,6 +18,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { MapSelector } from "../components/MapSelector";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { MapContext } from "../state/MapState";
+import { Survey } from "../components/subcomponents/Survey";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,8 +53,11 @@ export default function DefaultLayout(props) {
   const classes = useStyles();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const mobileMenuId = "primary-search-account-menu-mobile";
-  const [{}, dispatch] = React.useContext(MapContext);
+  const [{ surveyPrompt }, dispatch] = React.useContext(MapContext);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [url, setUrl] = useState("");
+  const [surveyOpen, setSurveyOpen] = useState(false);
+  const clickRefPop = useRef(null);
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -74,7 +79,17 @@ export default function DefaultLayout(props) {
           component={RouterLink}
           color="inherit"
           to="/"
-          onClick={() => {
+          onClick={(event) => {
+            if (
+              (window.location.pathname !== "") &
+              (window.location.pathname !== "/") &
+              (window.location.pathname !== "/datasets") &
+              (window.location.pathname !== "/faq") &
+              (window.location.pathname !== "/about")
+            ) {
+              setSurveyOpen(true);
+              setUrl(event.target.value);
+            }
             dispatch({
               type: "map.select",
               mapID: null,
@@ -134,7 +149,23 @@ export default function DefaultLayout(props) {
       <CssBaseline />
       <AppBar position="sticky" className={classes.appBar}>
         <Toolbar>
-          <Link component={RouterLink} color="inherit" to="/">
+          <Link
+            component={RouterLink}
+            color="inherit"
+            to="/"
+            onClick={(event) => {
+              if (
+                (window.location.pathname !== "") &
+                (window.location.pathname !== "/") &
+                (window.location.pathname !== "/datasets") &
+                (window.location.pathname !== "/faq") &
+                (window.location.pathname !== "/about")
+              ) {
+                setSurveyOpen(true);
+                setUrl(event.target.value);
+              }
+            }}
+          >
             <img
               src="/SanPlanLogo_twotone.png"
               alt="SanPlan Tool logo"
@@ -167,7 +198,17 @@ export default function DefaultLayout(props) {
                 component={RouterLink}
                 color="inherit"
                 to="/"
-                onClick={() => {
+                onClick={(event) => {
+                  if (
+                    (window.location.pathname !== "") &
+                    (window.location.pathname !== "/") &
+                    (window.location.pathname !== "/datasets") &
+                    (window.location.pathname !== "/faq") &
+                    (window.location.pathname !== "/about")
+                  ) {
+                    setSurveyOpen(true);
+                    setUrl(event.target.value);
+                  }
                   dispatch({
                     type: "map.select",
                     mapID: null,
@@ -236,6 +277,14 @@ export default function DefaultLayout(props) {
           </div>
         </Toolbar>
       </AppBar>
+      {surveyOpen === true && surveyPrompt === false ? (
+        <Survey
+          setSurveyOpen={setSurveyOpen}
+          surveyOpen={surveyOpen}
+          clickRefPop={clickRefPop}
+          url={url}
+        />
+      ) : null}
       <main style={{ flex: 1, display: "flex" }}>
         <Container maxWidth={false} disableGutters={true}>
           {props.children}
