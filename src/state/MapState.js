@@ -19,6 +19,7 @@ import { mali } from "./countries/mali";
 import { kenya } from "./countries/kenya";
 import { nepal } from "./countries/nepal";
 import { dem_rep_congo } from "./countries/dem_rep_congo";
+import { uganda } from "./countries/uganda";
 
 enableMapSet();
 const legendStylesObj = legendStyles;
@@ -45,6 +46,7 @@ const initialState = {
     kenya,
     nepal,
     dem_rep_congo,
+    uganda,
   },
   currentLayerID: "2",
   activeLegend: "0",

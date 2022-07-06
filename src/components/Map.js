@@ -98,12 +98,14 @@ export const Map = () => {
             !clickRefPop.current.contains(event.target)
           ) {
             setPopoverOpen(null);
+            event.stopPropagation();
           } else if (
             clickRefPop.current &&
             clickRefPop.current.contains(event.target)
           ) {
           } else {
             setPopup(null);
+            event.stopPropagation();
             settlementclickRef.current = false;
             if (highlightLayer.current && cartoClient) {
               mapRef.current.removeLayer(highlightLayer.current);
