@@ -1,5 +1,5 @@
 export const s_sudan = {
-  name: "S. Sudan",
+  name: "South Sudan",
   mapID: "s_sudan",
   lat: 6.877,
   long: 31.307,
