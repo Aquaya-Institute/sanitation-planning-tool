@@ -2,6 +2,9 @@
   "name": "sanitation-planning-tool",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "@carto/carto.js": "4.2.1",
     "@material-ui/core": "^4.12.3",
@@ -14,9 +17,12 @@
     "mapbox-gl": "^2.6.1",
     "papaparse": "^5.3.1",
     "react": "^17.0.2",
+    "react-app-protect": "^1.0.8",
     "react-csv": "^2.2.2",
     "react-dom": "^17.0.2",
     "react-export-excel": "^0.5.3",
+    "react-ga4": "^1.4.1",
+    "react-google-forms": "^1.0.3",
     "react-helmet": "^6.1.0",
     "react-joyride": "^2.3.2",
     "react-router-dom": "5.2.0",

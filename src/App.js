@@ -10,12 +10,18 @@ import FAQ from "./views/FAQ";
 import Datasets from "./views/Datasets";
 import Privacy from "./views/Privacy";
 import "./App.css";
+import "react-app-protect/dist/index.css";
+import ReactGA from "react-ga4";
+
+ReactGA.initialize("G-4M9J6LZRDQ");
+ReactGA.send("pageview");
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <MapContextProvider>
         <Router>
+          {/* <RouteChangeTracker /> */}
           <DefaultLayout>
             <Switch>
               <Route path="/maps/:id" component={MapDetail} />

@@ -1,9 +1,9 @@
-export const s_sudan = {
-  name: "South Sudan",
-  mapID: "s_sudan",
-  lat: 6.877,
-  long: 31.307,
-  zoom: 6,
+export const uganda = {
+  name: "Uganda",
+  mapID: "uganda",
+  lat: 1.3733,
+  long: 32.2903,
+  zoom: 7,
   /* 
       you can add as many layers for each indicator. 
       do maintain the same structure for all. 
@@ -11,7 +11,7 @@ export const s_sudan = {
   layers: [
     {
       name: "Country Border",
-      carto_tableName: "ssd_adm0",
+      carto_tableName: "uga_adm0",
       carto_layer: null /* we will insert carto's layer object here */,
       carto_style: `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1.75; line-color: #000000; line-opacity: 1;}`,
       visible: true,
@@ -19,7 +19,7 @@ export const s_sudan = {
     },
     {
       name: "1x1km area",
-      carto_tableName: "ssd_class",
+      carto_tableName: "uga_class",
       carto_source: null,
       carto_layer: null /* we will insert carto's layer object here */,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
@@ -62,7 +62,7 @@ export const s_sudan = {
     },
     {
       name: "5x5km area",
-      carto_tableName: "ssd_multivariable_pixel",
+      carto_tableName: "uga_multivariable_pixel",
       carto_source: null,
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
@@ -106,9 +106,9 @@ export const s_sudan = {
           unit: "%",
           type: "range",
           column_name: "od",
-          min: 12,
-          max: 96,
-          value: [12, 96],
+          min: 0,
+          max: 99,
+          value: [0, 99],
           subcategory: "wash",
         },
         {
@@ -117,8 +117,8 @@ export const s_sudan = {
           type: "range",
           column_name: "timecities",
           min: 0,
-          max: 1440,
-          value: [0, 1440],
+          max: 728,
+          value: [0, 728],
           subcategory: "accessibility",
         },
         {
@@ -126,9 +126,9 @@ export const s_sudan = {
           unit: "%",
           type: "range",
           column_name: "dia",
-          min: 2.5,
-          max: 7.6,
-          value: [2.5, 7.6],
+          min: 2.3,
+          max: 5.2,
+          value: [2.3, 5.2],
           subcategory: "health",
         },
         {
@@ -137,8 +137,8 @@ export const s_sudan = {
           type: "range",
           column_name: "cholera",
           min: 0,
-          max: 14851.8,
-          value: [0, 14851.8],
+          max: 773.9,
+          value: [0, 773.9],
           subcategory: "health",
         },
         {
@@ -147,8 +147,8 @@ export const s_sudan = {
           type: "range",
           column_name: "s_unimp",
           min: 0,
-          max: 75,
-          value: [0, 75],
+          max: 73,
+          value: [0, 73],
           subcategory: "wash",
         },
         {
@@ -157,8 +157,8 @@ export const s_sudan = {
           type: "range",
           column_name: "w_unimp",
           min: 0,
-          max: 83,
-          value: [0, 83],
+          max: 86,
+          value: [0, 86],
           subcategory: "wash",
         },
         {
@@ -166,9 +166,9 @@ export const s_sudan = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_w",
-          min: 0,
-          max: 6,
-          value: [0, 6],
+          min: 1,
+          max: 11,
+          value: [1, 11],
           subcategory: "socioeconomic",
         },
         {
@@ -176,9 +176,9 @@ export const s_sudan = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_m",
-          min: 1,
-          max: 8,
-          value: [1, 8],
+          min: 2,
+          max: 11,
+          value: [2, 11],
           subcategory: "socioeconomic",
         },
         {
@@ -186,9 +186,9 @@ export const s_sudan = {
           unit: "%",
           type: "range",
           column_name: "u5m",
-          min: 3.7,
-          max: 20.1,
-          value: [3.7, 20.1],
+          min: 3.3,
+          max: 11,
+          value: [3.3, 11],
           subcategory: "health",
         },
         {
@@ -197,8 +197,8 @@ export const s_sudan = {
           type: "range",
           column_name: "dr",
           min: 0.1,
-          max: 144.8,
-          value: [0.1, 144.8],
+          max: 65.5,
+          value: [0.1, 65.5],
           subcategory: "accessibility",
         },
         {
@@ -207,8 +207,8 @@ export const s_sudan = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 214.8,
-          value: [0, 214.8],
+          max: 131.6,
+          value: [0, 131.6],
           subcategory: "accessibility",
         },
         {
@@ -220,8 +220,8 @@ export const s_sudan = {
           max: 70, //we want 7 breaks not counting start value of 0.
           value: [0, 70], //slider range will be from 0-70, which we will scale to
           scaledMin: 0,
-          scaledMax: 133234,
-          scaledValue: [0, 133234], //the actual min/max of column
+          scaledMax: 302352,
+          scaledValue: [0, 302352], //the actual min/max of column
           subcategory: "socioeconomic",
           // define 7+1 non linear marks here, note that value goes from 0-70 only
           marks: [
@@ -262,8 +262,8 @@ export const s_sudan = {
             },
             {
               value: 70,
-              scaledValue: 150000,
-              label: "150K",
+              scaledValue: 310000,
+              label: "310K",
             },
           ],
         },
@@ -296,13 +296,13 @@ export const s_sudan = {
           subcategory: "accessibility",
         },
         {
-          name: "State",
+          name: "Region",
           type: "none",
           column_name: "name_1",
           subcategory: "id",
         },
         {
-          name: "County",
+          name: "District",
           type: "none",
           column_name: "name_2",
           subcategory: "id",
@@ -310,8 +310,8 @@ export const s_sudan = {
       ],
     },
     {
-      name: "County",
-      carto_tableName: "ssd_multivariable_dist",
+      name: "District",
+      carto_tableName: "uga_multivariable_dist",
       carto_source: null,
       carto_layer: null,
       carto_style: `#layer {polygon-fill: ramp([classes], (#3d4bc7, #4f9130, #bf4343, #c49755), (1, 2, 3, 4), '=', category);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
@@ -355,9 +355,9 @@ export const s_sudan = {
           unit: "%",
           type: "range",
           column_name: "od",
-          min: 18,
-          max: 87,
-          value: [18, 87],
+          min: 1,
+          max: 73,
+          value: [1, 73],
           subcategory: "wash",
         },
         {
@@ -365,9 +365,9 @@ export const s_sudan = {
           unit: "min.",
           type: "range",
           column_name: "timecities",
-          min: 82,
-          max: 666,
-          value: [82, 666],
+          min: 2,
+          max: 416,
+          value: [2, 416],
           subcategory: "accessibility",
         },
         {
@@ -375,9 +375,9 @@ export const s_sudan = {
           unit: "%",
           type: "range",
           column_name: "dia",
-          min: 3.9,
-          max: 6.5,
-          value: [3.9, 6.5],
+          min: 2.6,
+          max: 4.3,
+          value: [2.6, 4.3],
           subcategory: "health",
         },
         {
@@ -385,9 +385,9 @@ export const s_sudan = {
           unit: "cases/100,000pp",
           type: "range",
           column_name: "cholera",
-          min: 0.1,
-          max: 881.9,
-          value: [0.1, 881.9],
+          min: 0,
+          max: 76.7,
+          value: [0, 76.7],
           subcategory: "health",
         },
         {
@@ -395,9 +395,9 @@ export const s_sudan = {
           unit: "%",
           type: "range",
           column_name: "s_unimp",
-          min: 11,
-          max: 55,
-          value: [11, 55],
+          min: 3,
+          max: 19,
+          value: [3, 19],
           subcategory: "wash",
         },
         {
@@ -405,9 +405,9 @@ export const s_sudan = {
           unit: "%",
           type: "range",
           column_name: "w_unimp",
-          min: 31,
-          max: 62,
-          value: [31, 62],
+          min: 2,
+          max: 33,
+          value: [2, 33],
           subcategory: "wash",
         },
         {
@@ -416,8 +416,8 @@ export const s_sudan = {
           type: "range",
           column_name: "edu_w",
           min: 1,
-          max: 4,
-          value: [1, 4],
+          max: 10,
+          value: [1, 10],
           subcategory: "socioeconomic",
         },
         {
@@ -425,9 +425,9 @@ export const s_sudan = {
           unit: "yrs.",
           type: "range",
           column_name: "edu_m",
-          min: 1,
-          max: 5,
-          value: [1, 5],
+          min: 3,
+          max: 10,
+          value: [3, 10],
           subcategory: "socioeconomic",
         },
         {
@@ -435,9 +435,9 @@ export const s_sudan = {
           unit: "%",
           type: "range",
           column_name: "u5m",
-          min: 5.2,
-          max: 18.5,
-          value: [5.2, 18.5],
+          min: 4.3,
+          max: 8.7,
+          value: [4.3, 8.7],
           subcategory: "health",
         },
         {
@@ -445,9 +445,9 @@ export const s_sudan = {
           unit: "km.",
           type: "range",
           column_name: "dr",
-          min: 2.9,
-          max: 62.8,
-          value: [2.9, 62.8],
+          min: 0.3,
+          max: 45.7,
+          value: [0.3, 45.7],
           subcategory: "accessibility",
         },
         {
@@ -455,9 +455,9 @@ export const s_sudan = {
           unit: "km.",
           type: "range",
           column_name: "dt",
-          min: 6.9,
-          max: 104.8,
-          value: [6.9, 104.8],
+          min: 0.1,
+          max: 64.7,
+          value: [0.1, 64.7],
           subcategory: "accessibility",
         },
         {
@@ -465,9 +465,9 @@ export const s_sudan = {
           unit: "people",
           type: "range",
           column_name: "pop",
-          min: 0,
-          max: 1164295,
-          value: [0, 1164295],
+          min: 36434,
+          max: 2977836,
+          value: [36434, 2977836],
           subcategory: "socioeconomic",
         },
         // {
@@ -549,13 +549,13 @@ export const s_sudan = {
           subcategory: "accessibility",
         },
         {
-          name: "State",
+          name: "Region",
           type: "none",
           column_name: "name_1",
           subcategory: "id",
         },
         {
-          name: "County",
+          name: "District",
           type: "none",
           column_name: "name_2",
           subcategory: "id",
@@ -564,7 +564,7 @@ export const s_sudan = {
     },
     {
       name: "Estimated settlement",
-      carto_tableName: "ssd_multivariable_comms",
+      carto_tableName: "uga_multivariable_comms",
       carto_layer: null /* we will insert carto's layer object here */,
       carto_source: null,
       carto_style: `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`,
@@ -609,8 +609,8 @@ export const s_sudan = {
           type: "range",
           column_name: "timecities",
           min: 0,
-          max: 1170,
-          value: [0, 1170],
+          max: 444,
+          value: [0, 444],
           subcategory: "accessibility",
         },
         {
@@ -619,8 +619,8 @@ export const s_sudan = {
           type: "range",
           column_name: "dr",
           min: 0,
-          max: 101.5,
-          value: [0, 101.5],
+          max: 52.3,
+          value: [0, 52.3],
           subcategory: "accessibility",
         },
         {
@@ -629,8 +629,8 @@ export const s_sudan = {
           type: "range",
           column_name: "dt",
           min: 0,
-          max: 212.1,
-          value: [0, 212.1],
+          max: 61.9,
+          value: [0, 61.9],
           subcategory: "accessibility",
         },
         {
@@ -639,11 +639,11 @@ export const s_sudan = {
           type: "range_non_linear",
           column_name: "pop",
           min: 0,
-          max: 60, //we want 7 breaks not counting start value of 0.
-          value: [0, 60], //slider range will be from 0-70, which we will scale to
+          max: 70, //we want 7 breaks not counting start value of 0.
+          value: [0, 70], //slider range will be from 0-70, which we will scale to
           scaledMin: 0,
-          scaledMax: 301382,
-          scaledValue: [0, 301382], //the actual min/max of column
+          scaledMax: 4600000,
+          scaledValue: [0, 5000000], //the actual min/max of column
           subcategory: "socioeconomic",
           // define 7+1 non linear marks here, note that value goes from 0-70 only
           marks: [
@@ -679,8 +679,13 @@ export const s_sudan = {
             },
             {
               value: 60,
-              scaledValue: 302000,
-              label: "300K",
+              scaledValue: 1000000,
+              label: "1M",
+            },
+            {
+              value: 70,
+              scaledValue: 4600000,
+              label: "4.6M",
             },
           ],
         },
@@ -713,13 +718,13 @@ export const s_sudan = {
           subcategory: "accessibility",
         },
         {
-          name: "State",
+          name: "Region",
           type: "none",
           column_name: "name_1",
           subcategory: "id",
         },
         {
-          name: "County",
+          name: "District",
           type: "none",
           column_name: "name_2",
           subcategory: "id",

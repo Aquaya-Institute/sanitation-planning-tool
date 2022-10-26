@@ -115,7 +115,7 @@ export const Export = () => {
         },
       ]);
       return fetch(
-        `https://zebra.geodb.host/user/admin/api/v2/sql?q=${queryURL}`
+        `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=${queryURL}`
       )
         .then((resp) => resp.json())
         .then((response) => {
@@ -151,7 +151,7 @@ export const Export = () => {
         },
       ]);
       return fetch(
-        `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`
+        `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`
       )
         .then((resp) => resp.json())
         .then((response) => {
@@ -215,7 +215,7 @@ export const Export = () => {
           });
       } else if (mapID && columnNames) {
         return fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`
         )
           .then((resp) => resp.json())
           .then((response) => {
@@ -254,7 +254,7 @@ export const Export = () => {
       for (var i = 0; i < userData.length - 1; i++) {
         let userData_temp = userData[i];
         fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["1"].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers["1"].carto_tableName}.the_geom)`
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["1"].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers["1"].carto_tableName}.the_geom)`
         )
           .then((resp) => resp.json())
           .then((response) => {
@@ -283,7 +283,7 @@ export const Export = () => {
             setLoading(false);
           });
         fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["2"].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers["2"].carto_tableName}.the_geom)`
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["2"].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers["2"].carto_tableName}.the_geom)`
         )
           .then((resp) => resp.json())
           .then((response) => {
@@ -312,7 +312,7 @@ export const Export = () => {
             setLoading(false);
           });
         fetch(
-          `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["3"].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers["3"].carto_tableName}.the_geom)`
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["3"].carto_tableName} WHERE ST_Intersects(ST_SetSRID(ST_Point(${userData[i].Longitude}, ${userData[i].Latitude}), 4326), ${maps[mapID].layers["3"].carto_tableName}.the_geom)`
         )
           .then((resp) => resp.json())
           .then((response) => {

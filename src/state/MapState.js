@@ -19,6 +19,8 @@ import { mali } from "./countries/mali";
 import { kenya } from "./countries/kenya";
 import { nepal } from "./countries/nepal";
 import { dem_rep_congo } from "./countries/dem_rep_congo";
+import { uganda } from "./countries/uganda";
+import { sudan } from "./countries/sudan";
 
 enableMapSet();
 const legendStylesObj = legendStyles;
@@ -45,6 +47,8 @@ const initialState = {
     kenya,
     nepal,
     dem_rep_congo,
+    uganda,
+    sudan,
   },
   currentLayerID: "2",
   activeLegend: "0",
@@ -60,6 +64,7 @@ const initialState = {
   allowSettlements: false,
   settlementHighlight: null,
   settlementPopup: null,
+  surveyPrompt: false,
   column: null,
   currentCountry: [
     {
@@ -680,6 +685,10 @@ const reducer = (state, action) => {
     case "user.upload":
       return produce(state, (draft) => {
         draft.userData = action.userData;
+      });
+    case "survey.prompt":
+      return produce(state, (draft) => {
+        draft.surveyPrompt = action.surveyPrompt;
       });
     default:
       return state;

@@ -98,12 +98,14 @@ export const Map = () => {
             !clickRefPop.current.contains(event.target)
           ) {
             setPopoverOpen(null);
+            event.stopPropagation();
           } else if (
             clickRefPop.current &&
             clickRefPop.current.contains(event.target)
           ) {
           } else {
             setPopup(null);
+            event.stopPropagation();
             settlementclickRef.current = false;
             if (highlightLayer.current && cartoClient) {
               mapRef.current.removeLayer(highlightLayer.current);
@@ -398,7 +400,7 @@ export const Map = () => {
           var result = null;
           var input = featureEvent.data.cartodb_id;
           fetch(
-            `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[currentLayerID].carto_tableName} where cartodb_id = ${input}`
+            `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[currentLayerID].carto_tableName} where cartodb_id = ${input}`
           )
             .then((resp) => resp.json())
             .then((response) => {
@@ -610,7 +612,9 @@ export const Map = () => {
 
   return (
     <div style={{ height: "100%", position: "relative" }}>
-      {mapID === "niger" || mapID === "mali" ? <NoDataAlert /> : null}
+      {mapID === "niger" || mapID === "mali" || mapID === "sudan" ? (
+        <NoDataAlert />
+      ) : null}
       <div
         id="map"
         style={{ height: "100%" }}

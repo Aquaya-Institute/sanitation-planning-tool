@@ -8,11 +8,12 @@ import {
 import { MapContext } from "../../state/MapState";
 import { useContext, useMemo } from "react";
 import { useHistory } from "react-router-dom";
+// import { World Map } from "../subcomponents/World Map.json"
 
 const markers = [];
 const countries = [];
 const geoUrl =
-  "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
+  "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
 
 const MapChart = ({ setTooltipContent }) => {
   const [{ maps }] = useContext(MapContext);
@@ -46,7 +47,7 @@ const MapChart = ({ setTooltipContent }) => {
       <Geographies geography={geoUrl}>
         {({ geographies }) =>
           geographies.map((geo) => {
-            const cur = countries.find((s) => s === geo.properties.NAME);
+            const cur = countries.find((s) => s === geo.properties.name);
             return (
               <Geography
                 key={geo.rsmKey}

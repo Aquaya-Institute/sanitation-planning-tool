@@ -139,7 +139,7 @@ export const DropdownMenu = ({
       if (leafletMap && mapID) {
         if (distName.length > 0) {
           return fetch(
-            `https://zebra.geodb.host/user/admin/api/v2/sql?format=GeoJSON&q=SELECT * FROM ${
+            `https://zebra.geodb.host/cached/user/admin/api/v2/sql?format=GeoJSON&q=SELECT * FROM ${
               maps[mapID].layers["3"].carto_tableName
             } where ${column} IN (${distName
               .map((x) => "'" + x + "'")

@@ -1,5 +1,5 @@
 export const tanzania = {
-  name: "Tanzania",
+  name: "United Republic of Tanzania",
   mapID: "tanzania",
   lat: -6.369,
   long: 34.8888,
