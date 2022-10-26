@@ -184,9 +184,11 @@ export const Export = () => {
       // showLoader2();
       setLoading(true);
       if (layerQuery && mapID) {
-        let queryURL = layerQuery.replace(/\s/g, " ");
+        // let queryURL = layerQuery.replace(/\s/g, " ");
+        let queryURL = currentCountry["4"].query.replace(/\s/g, " ");
         return fetch(
-          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
+          // `https://zebra.geodb.host/user/admin/api/v2/sql?q=SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
+          `https://zebra.geodb.host/user/admin/api/v2/sql?q=${queryURL}`
         )
           .then((resp) => resp.json())
           .then((response) => {

@@ -108,7 +108,8 @@ export const MapMenu = () => {
       if (allDistricts.current === undefined) {
         var column_name = null;
         if (
-          currentCountry["3"].filters.some((el) => el.column_name === "name_3")
+          // currentCountry["3"].filters.some((el) => el.column_name === "name_3")
+          currentCountry["3"].name === "Cambodia"
         ) {
           column_name = "name_3";
         } else {
