@@ -264,7 +264,7 @@ const reducer = (state, action) => {
         draft.currentMapID = action.mapID;
         draft.currentCountry[draft.currentLayerID].filters[action.filterIndex] =
           action.filter;
-        const prefix = draft.currentLayerID === "2" ? "_5km_" : "dist_";
+        const prefix = draft.currentLayerID === "2" ? "column_5_" : "d_";
         switch (
           draft.currentCountry[draft.currentLayerID].filters[action.filterIndex]
             .type
@@ -453,7 +453,7 @@ const reducer = (state, action) => {
         // draft.reset = true;
         draft.currentMapID = action.mapID;
         const layer = draft.currentCountry[draft.currentLayerID];
-        const prefix = draft.currentLayerID === "2" ? "_5km_" : "dist_";
+        const prefix = draft.currentLayerID === "2" ? "column_5_" : "d_";
         draft.currentCountry[draft.currentLayerID].filters.forEach(
           (filter, filterIndex) => {
             if (filter.type === "categorical") {
