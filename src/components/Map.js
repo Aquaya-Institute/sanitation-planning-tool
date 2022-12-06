@@ -636,13 +636,18 @@ export const Map = () => {
 
   const handleChange = (event) => {
     let styleNew = null;
-    if (
-      maps[mapID].layers[currentLayerID].name === "5x5km area" ||
-      maps[mapID].layers[currentLayerID].name === "1x1km area"
-    ) {
-      styleNew = legendStyles[event.target.value].style_pixel;
-    } else {
-      styleNew = legendStyles[event.target.value].style_bounds;
+    var i;
+    for (i = 0; i < legendStylesObj.length; i++) {
+      if (legendStylesObj[i].name === event.target[event.target.value].label) {
+        if (
+          maps[mapID].layers[currentLayerID].name === "5x5km area" ||
+          maps[mapID].layers[currentLayerID].name === "1x1km area"
+        ) {
+          styleNew = legendStyles[i].style_pixel;
+        } else {
+          styleNew = legendStyles[i].style_bounds;
+        }
+      }
     }
 
     dispatch({

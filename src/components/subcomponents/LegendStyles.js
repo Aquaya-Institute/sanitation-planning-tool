@@ -30,19 +30,54 @@ export const legendStyles = [
     style_bounds: `#layer {polygon-fill: ramp([s_unimp], (#335c67, #fff3b0, #e09f3e, #9e2a2b, #540b0e), quantiles);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
+    name: "Access to Any Improved Sanitation",
+    style_pixel: `#layer {polygon-fill: ramp([s_imp], (#006d77, #83c5be, #edf6f9, #ffddd2, #e29578), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([s_imp], (#006d77, #83c5be, #edf6f9, #ffddd2, #e29578), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+  },
+  {
+    name: "Access to Non-Piped Improved Sanitation",
+    style_pixel: `#layer {polygon-fill: ramp([s_imp_othe], (#264653, #2a9d8f, #e9c46a, #f4a261, #e76f51), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([s_imp_othe], (#264653, #2a9d8f, #e9c46a, #f4a261, #e76f51), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+  },
+  {
+    name: "Access to Sewer/Septic Sanitation",
+    style_pixel: `#layer {polygon-fill: ramp([s_piped], (#feebe2, #fbb4b9, #f768a1, #c51b8a, #7a0177), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([s_piped], (#feebe2, #fbb4b9, #f768a1, #c51b8a, #7a0177), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+  },
+  {
     name: "Reliance on Unimproved Drinking Water",
     style_pixel: `#layer {polygon-fill: ramp([w_unimp], (#003049, #d62828, #f77f00, #fcbf49, #eae2b7), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
     style_bounds: `#layer {polygon-fill: ramp([w_unimp], (#003049, #d62828, #f77f00, #fcbf49, #eae2b7), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
-    name: "Women's Educational Attainment",
-    style_pixel: `#layer {polygon-fill: ramp([edu_w], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
-    style_bounds: `#layer {polygon-fill: ramp([edu_w], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+    name: "Access to Any Improved Drinking Water",
+    style_pixel: `#layer {polygon-fill: ramp([w_imp], (#233d4d, #fe7f2d, #fcca46, #a1c181, #619b8a), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([w_imp], (#233d4d, #fe7f2d, #fcca46, #a1c181, #619b8a), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+  },
+  {
+    name: "Access to Non-Piped Improved Drinking Water",
+    style_pixel: `#layer {polygon-fill: ramp([w_imp_othe], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([w_imp_othe], (#5f0f40, #9a031e, #fb8b24, #e36414, #0f4c5c), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+  },
+  {
+    name: "Access to Piped Drinking Water",
+    style_pixel: `#layer {polygon-fill: ramp([w_piped], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([w_piped], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+  },
+  {
+    name: "Reliance on Surface Water",
+    style_pixel: `#layer {polygon-fill: ramp([w_surface], (#461220, #8c2f39, #b23a48, #fcb9b2, #fed0bb), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([w_surface], (#461220, #8c2f39, #b23a48, #fcb9b2, #fed0bb), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name: "Men's Educational Attainment",
     style_pixel: `#layer {polygon-fill: ramp([edu_m], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
     style_bounds: `#layer {polygon-fill: ramp([edu_m], (#132a13, #31572c, #4f772d, #90a955, #ecf39e), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
+  },
+  {
+    name: "Women's Educational Attainment",
+    style_pixel: `#layer {polygon-fill: ramp([edu_w], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), jenks);} #layer::outline {line-width: 0;line-color: #ffffff;line-opacity: 0;}`,
+    style_bounds: `#layer {polygon-fill: ramp([edu_w], (#c9cba3, #ffe1a8, #e26d5c, #723d46, #472d30), jenks);} #layer::outline {line-width: 1;line-color: #000000;line-opacity: 1;}`,
   },
   {
     name: "Mortality in Children <5 Years",

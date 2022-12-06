@@ -132,6 +132,19 @@ const initialState = {
       socioCounter: new Set(null),
       healthCounter: new Set(null),
     },
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
   ],
 };
 
@@ -150,15 +163,29 @@ const reducer = (state, action) => {
             }
           }
           var i;
-          for (i = 0; i < legendStylesObj.length; i++) {
-            if (
-              legendStylesObj[i].style_pixel ===
-                draft.currentCountry[draft.currentLayerID].style ||
-              legendStylesObj[i].style_bounds ===
-                draft.currentCountry[draft.currentLayerID].style
-            ) {
-              draft.activeLegend = i.toString();
-              break;
+          var x;
+          if (draft.currentCountry[draft.currentLayerID].filters !== null) {
+            for (i = 0; i < legendStylesObj.length; i++) {
+              for (
+                x = 0;
+                x < draft.currentCountry[draft.currentLayerID].filters.length;
+                x++
+              ) {
+                if (
+                  legendStylesObj[i].name ===
+                  draft.currentCountry[draft.currentLayerID].filters[x].name
+                ) {
+                  if (
+                    legendStylesObj[i].style_pixel ===
+                      draft.currentCountry[draft.currentLayerID].style ||
+                    legendStylesObj[i].style_bounds ===
+                      draft.currentCountry[draft.currentLayerID].style
+                  ) {
+                    draft.activeLegend = i.toString();
+                    break;
+                  }
+                }
+              }
             }
           }
         }
