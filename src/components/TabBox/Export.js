@@ -18,7 +18,11 @@ export const Export = () => {
       showSettlements,
       currentCountry,
       selectedDistName,
+      selectedAdm1Name,
       userData,
+      settlementLayerId,
+      // adm1LayerId,
+      // adm2LayerId,
     },
   ] = useContext(MapContext);
   const [download, setDownload] = useState(null);
@@ -57,6 +61,9 @@ export const Export = () => {
     } else if (layerQuery && mapID && columnNames) {
       let queryURL = layerQuery.replace(/\s/g, " ");
       var conditions = [];
+      if (selectedAdm1Name.length > 0) {
+        conditions.push(`[within ${selectedAdm1Name}]`);
+      }
       if (selectedDistName.length > 0) {
         conditions.push(`[within ${selectedDistName}]`);
       }
@@ -186,7 +193,7 @@ export const Export = () => {
       if (layerQuery && mapID) {
         let queryURL = layerQuery.replace(/\s/g, " ");
         return fetch(
-          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers["4"].carto_tableName}.cartodb_id`
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${maps[mapID].layers[settlementLayerId].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers[settlementLayerId].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers[settlementLayerId].carto_tableName}.the_geom) GROUP BY ${maps[mapID].layers[settlementLayerId].carto_tableName}.cartodb_id`
         )
           .then((resp) => resp.json())
           .then((response) => {
@@ -213,7 +220,7 @@ export const Export = () => {
           });
       } else if (mapID && columnNames) {
         return fetch(
-          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers["4"].carto_tableName}`
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT * FROM ${maps[mapID].layers[settlementLayerId].carto_tableName}`
         )
           .then((resp) => resp.json())
           .then((response) => {

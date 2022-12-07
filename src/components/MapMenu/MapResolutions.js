@@ -24,10 +24,14 @@ export const MapResolutions = ({
   cat,
   setSelectedMenu,
   tabIndex,
+  // adm1LayerId,
+  // adm2LayerId,
 }) => {
   const [{ maps, currentMapID, currentLayerID }, dispatch] =
     useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
+  // const [adm1LayerId, setAdm1LayerId] = useState(null);
+  // const adm2LayerId = "3";
   const classes = useStyles();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);

@@ -70,7 +70,16 @@ function extractValue(arr, prop) {
 
 export const MapMenu = () => {
   const [
-    { maps, currentMapID, currentLayerID, currentCountry, carto_client },
+    {
+      maps,
+      currentMapID,
+      currentLayerID,
+      currentCountry,
+      carto_client,
+      selectedAdm1Name,
+      adm1LayerId,
+      adm2LayerId,
+    },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState(null);
@@ -78,6 +87,7 @@ export const MapMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMenu, setSelectedMenu] = React.useState(null);
   const allDistricts = useRef();
+  const allAdm1Names = useRef();
   const column = useRef();
   // const [isMounted, setIsMounted] = useState(false);
   const setActive = (event, text) => {
@@ -97,46 +107,78 @@ export const MapMenu = () => {
       mapID: mapID,
     });
   };
+  //Set all Adm 1 Names
+  useMemo(() => {
+    if (
+      carto_client &&
+      currentMapID &&
+      currentCountry[currentLayerID].filters !== null &&
+      adm1LayerId
+    ) {
+      if (allAdm1Names.current === undefined) {
+        return fetch(
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${"name_1"} FROM ${
+            maps[currentMapID].layers[adm1LayerId].carto_tableName
+          }`
+        )
+          .then((resp) => resp.json())
+          .then((response) => {
+            const result = extractValue(response.rows, "name_1");
+            allAdm1Names.current = result;
+          });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [carto_client, currentCountry, currentLayerID, currentMapID]);
 
   //Set all districts
-  useMemo(() => {
+  useEffect(() => {
     if (
       carto_client &&
       currentMapID &&
       currentCountry[currentLayerID].filters !== null
     ) {
+      var column_name = null;
+      if (
+        currentCountry["3"].filters.some((el) => el.column_name === "name_3")
+      ) {
+        column_name = "name_3";
+      } else {
+        column_name = "name_2";
+      }
+      column.current = column_name;
       if (allDistricts.current === undefined) {
-        var column_name = null;
-        if (
-          currentCountry["3"].filters.some((el) => el.column_name === "name_3")
-        ) {
-          column_name = "name_3";
-        } else {
-          column_name = "name_2";
-        }
-        column.current = column_name;
-        // dispatch({
-        //   type: "layer.column",
-        //   column: column_name,
-        // });
-
         return fetch(
           `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${maps[currentMapID].layers["3"].carto_tableName}`
         )
           .then((resp) => resp.json())
           .then((response) => {
             const result = extractValue(response.rows, column_name);
-            // setAllDistricts(result);
-            // dispatch({
-            //   type: "dropdown.options",
-            //   allDistricts: result,
-            // });
+            allDistricts.current = result;
+          });
+      } else if (selectedAdm1Name.length > 0) {
+        return fetch(
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${
+            maps[currentMapID].layers["3"].carto_tableName
+          } WHERE ${"name_1"} IN (${selectedAdm1Name
+            .map((x) => "'" + x + "'")
+            .toString()})`
+        )
+          .then((resp) => resp.json())
+          .then((response) => {
+            const result = extractValue(response.rows, column_name);
             allDistricts.current = result;
           });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [carto_client, currentCountry, currentLayerID, currentMapID]);
+  }, [
+    carto_client,
+    currentCountry,
+    currentLayerID,
+    currentMapID,
+    selectedAdm1Name,
+  ]);
 
   return (
     <React.Fragment key="drawerDiv">
@@ -251,11 +293,7 @@ export const MapMenu = () => {
                   />
                 </ListItemIcon>
                 <ListItemText
-                  primary={
-                    "SELECT " +
-                    maps[mapID].layers["3"].name.toUpperCase() +
-                    "(S)"
-                  }
+                  primary={"SELECT AREA(S)"}
                   className={classes.item}
                 />
                 {selectedMenu === 5 && (
@@ -269,6 +307,7 @@ export const MapMenu = () => {
                       filterMenuOpen={filterMenuOpen}
                       setFilterMenuOpen={setFilterMenuOpen}
                       allDistricts={allDistricts.current}
+                      allAdm1Names={allAdm1Names.current}
                       column={column.current}
                       cat={"drop"}
                       setSelectedMenu={setSelectedMenu}

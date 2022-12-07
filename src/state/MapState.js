@@ -52,11 +52,16 @@ const initialState = {
   },
   currentLayerID: "2",
   activeLegend: "0",
+  settlementLayerId: null,
+  adm1LayerId: null,
+  adm2LayerId: null,
   userData: null,
   queryDist: null,
   skip: true,
   allDistricts: [],
+  allAdm1Names: [],
   selectedDistName: [],
+  selectedAdm1Name: [],
   highlightLayer: null,
   highlightBoundary: null,
   settlementBoundary: null,
@@ -154,6 +159,13 @@ const reducer = (state, action) => {
     case "map.select":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
+        draft.settlementLayerId = (
+          draft.maps[action.mapID].boundaries + 3
+        ).toString();
+        draft.adm2LayerId = "3";
+        if (draft.maps[action.mapID].boundaries > 1) {
+          draft.adm1LayerId = "4";
+        }
         if (action.mapID !== null) {
           var index = 3;
           for (; index >= 0; index--) {
@@ -544,9 +556,19 @@ const reducer = (state, action) => {
         draft.column = action.column;
       });
     /* when a district is selected from the dropdown */
+    case "dropdown.selection.adm1":
+      return produce(state, (draft) => {
+        draft.selectedAdm1Name = action.adm1Name;
+      });
+    /* when a district is selected from the dropdown */
     case "dropdown.selection":
       return produce(state, (draft) => {
         draft.selectedDistName = action.distName;
+      });
+    /* when a new map is loaded, fetches all district options */
+    case "dropdown.options.adm1":
+      return produce(state, (draft) => {
+        draft.allAdm1Names = action.allAdm1Names;
       });
     /* when a new map is loaded, fetches all district options */
     case "dropdown.options":
