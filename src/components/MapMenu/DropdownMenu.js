@@ -378,7 +378,7 @@ export const DropdownMenu = ({
                       setDistName([]);
                       dispatch({
                         type: "dropdown.selection",
-                        adm1Name: [],
+                        distName: [],
                       });
                       filterByAdm2([]);
                       leafletMap.setView(

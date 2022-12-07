@@ -61,10 +61,10 @@ export const Export = () => {
     } else if (layerQuery && mapID && columnNames) {
       let queryURL = layerQuery.replace(/\s/g, " ");
       var conditions = [];
-      if (selectedAdm1Name.length > 0) {
+      if (selectedAdm1Name !== undefined && selectedAdm1Name.length > 0) {
         conditions.push(`[within ${selectedAdm1Name}]`);
       }
-      if (selectedDistName.length > 0) {
+      if (selectedDistName !== undefined && selectedDistName.length > 0) {
         conditions.push(`[within ${selectedDistName}]`);
       }
       currentCountry[currentLayerID].filters.forEach((filter) => {
