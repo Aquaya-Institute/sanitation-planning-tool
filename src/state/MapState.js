@@ -159,14 +159,14 @@ const reducer = (state, action) => {
     case "map.select":
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
-        draft.settlementLayerId = (
-          draft.maps[action.mapID].boundaries + 3
-        ).toString();
-        draft.adm2LayerId = "3";
-        if (draft.maps[action.mapID].boundaries > 1) {
-          draft.adm1LayerId = "4";
-        }
         if (action.mapID !== null) {
+          draft.settlementLayerId = (
+            draft.maps[action.mapID].boundaries + 3
+          ).toString();
+          draft.adm2LayerId = "3";
+          if (draft.maps[action.mapID].boundaries > 1) {
+            draft.adm1LayerId = "4";
+          }
           var index = 3;
           for (; index >= 0; index--) {
             if (draft.maps[action.mapID].layers[index].visible === true) {
@@ -184,8 +184,11 @@ const reducer = (state, action) => {
                 x++
               ) {
                 if (
-                  legendStylesObj[i].name ===
-                  draft.currentCountry[draft.currentLayerID].filters[x].name
+                  legendStylesObj[i].name_pixel ===
+                    draft.currentCountry[draft.currentLayerID].filters[x]
+                      .name ||
+                  legendStylesObj[i].name_bounds ===
+                    draft.currentCountry[draft.currentLayerID].filters[x].name
                 ) {
                   if (
                     legendStylesObj[i].style_pixel ===

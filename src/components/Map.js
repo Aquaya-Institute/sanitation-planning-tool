@@ -642,7 +642,12 @@ export const Map = () => {
     let styleNew = null;
     var i;
     for (i = 0; i < legendStylesObj.length; i++) {
-      if (legendStylesObj[i].name === event.target[event.target.value].label) {
+      if (
+        legendStylesObj[i].name_pixel ===
+          event.target[event.target.value].label ||
+        legendStylesObj[i].name_bounds ===
+          event.target[event.target.value].label
+      ) {
         if (
           maps[mapID].layers[currentLayerID].name === "5x5km area" ||
           maps[mapID].layers[currentLayerID].name === "1x1km area"
