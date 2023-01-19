@@ -434,12 +434,7 @@ export const DropdownMenu = ({
                     renderValue={(selected) => selected.join(", ")}
                     MenuProps={MenuProps}
                     className={classes.formControl}
-                    disabled={
-                      distName.length > 0 ||
-                      adm2aName.length > 0 ||
-                      currentLayerID === "3" ||
-                      currentLayerID === adm2aLayerId
-                    }
+                    disabled={distName.length > 0 || adm2aName.length > 0}
                   >
                     {allAdm1Names.map((name, i) => (
                       <MenuItem key={i} value={name} className={classes.menu}>
