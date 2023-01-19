@@ -78,7 +78,7 @@ export const MapMenu = () => {
       carto_client,
       selectedAdm1Name,
       adm1LayerId,
-      adm2LayerId,
+      adm2aLayerId,
     },
     dispatch,
   ] = useContext(MapContext);
@@ -88,6 +88,7 @@ export const MapMenu = () => {
   const [selectedMenu, setSelectedMenu] = React.useState(null);
   const allDistricts = useRef();
   const allAdm1Names = useRef();
+  const allAdm2aNames = useRef();
   const column = useRef();
   // const [isMounted, setIsMounted] = useState(false);
   const setActive = (event, text) => {
@@ -125,6 +126,50 @@ export const MapMenu = () => {
           .then((response) => {
             const result = extractValue(response.rows, "name_1");
             allAdm1Names.current = result;
+          });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [carto_client, currentCountry, currentLayerID, currentMapID]);
+
+  //Set all Adm 2a Names
+  useMemo(() => {
+    if (
+      carto_client &&
+      currentMapID &&
+      currentCountry[currentLayerID].filters !== null &&
+      adm2aLayerId
+    ) {
+      var column_name = null;
+      if (
+        currentCountry["3"].filters.some((el) => el.column_name === "name_3")
+      ) {
+        column_name = "name_3";
+      } else {
+        column_name = "name_2";
+      }
+      column.current = column_name;
+      if (allAdm2aNames.current === undefined) {
+        return fetch(
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${maps[currentMapID].layers[adm2aLayerId].carto_tableName}`
+        )
+          .then((resp) => resp.json())
+          .then((response) => {
+            const result = extractValue(response.rows, column_name);
+            allAdm2aNames.current = result;
+          });
+      } else if (selectedAdm1Name.length > 0) {
+        return fetch(
+          `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ${column_name} FROM ${
+            maps[currentMapID].layers[adm2aLayerId].carto_tableName
+          } WHERE ${"name_1"} IN (${selectedAdm1Name
+            .map((x) => "'" + x + "'")
+            .toString()})`
+        )
+          .then((resp) => resp.json())
+          .then((response) => {
+            const result = extractValue(response.rows, column_name);
+            allAdm2aNames.current = result;
           });
       }
     }
@@ -308,6 +353,7 @@ export const MapMenu = () => {
                       setFilterMenuOpen={setFilterMenuOpen}
                       allDistricts={allDistricts.current}
                       allAdm1Names={allAdm1Names.current}
+                      allAdm2aNames={allAdm2aNames.current}
                       column={column.current}
                       cat={"drop"}
                       setSelectedMenu={setSelectedMenu}

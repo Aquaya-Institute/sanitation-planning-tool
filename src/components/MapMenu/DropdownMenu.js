@@ -13,6 +13,7 @@ import {
   Checkbox,
   ClickAwayListener,
   TextField,
+  Divider,
 } from "@material-ui/core";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
@@ -60,6 +61,7 @@ export const DropdownMenu = ({
   tabIndex,
   allDistricts,
   allAdm1Names,
+  allAdm2aNames,
   column,
 }) => {
   const [
@@ -72,12 +74,13 @@ export const DropdownMenu = ({
       activeLegend,
       selectedDistName,
       selectedAdm1Name,
+      selectedAdm2aName,
       highlightLayer,
       currentCountry,
       // allDistricts,
       // column,
       adm1LayerId,
-      adm2LayerId,
+      adm2aLayerId,
     },
     dispatch,
   ] = useContext(MapContext);
@@ -86,6 +89,8 @@ export const DropdownMenu = ({
   const [newDistName, setNewDistName] = useState(false);
   const [adm1Name, setAdm1Name] = useState(selectedAdm1Name);
   const [newAdm1Name, setNewAdm1Name] = useState(false);
+  const [adm2aName, setAdm2aName] = useState(selectedAdm2aName);
+  const [newAdm2aName, setNewAdm2aName] = useState(false);
   // const [allDistricts, setAllDistricts] = useState([]);
   // const [column, setColumn] = useState("");
   // const column = useRef();
@@ -158,6 +163,32 @@ export const DropdownMenu = ({
       });
     }
   }
+  function filterByAdm2a(adm2aName) {
+    let query = null;
+    if (adm2aName.length > 0) {
+      var column_name = null;
+      if (currentLayerID === "2") {
+        column_name = "name_3a";
+      } else {
+        column_name = "name_3";
+      }
+      query = `SELECT * FROM ${
+        maps[mapID].layers[currentLayerID].carto_tableName
+      } WHERE ${column_name} IN (${adm2aName
+        .map((x) => "'" + x + "'")
+        .toString()})`;
+    } else {
+      query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
+    }
+    if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
+      currentCountry[currentLayerID].source.setQuery(query);
+      currentCountry[currentLayerID].layer.getSource().setQuery(query);
+      dispatch({
+        type: "layer.queryDist",
+        queryDist: query,
+      });
+    }
+  }
 
   useMemo(() => {
     if (newAdm1Name === true) {
@@ -193,6 +224,46 @@ export const DropdownMenu = ({
             });
         } else if (initialSelect.current === true) {
           filterByAdm1(adm1Name);
+          leafletMap.setView(
+            [maps[mapID].lat, maps[mapID].long],
+            maps[mapID].zoom
+          );
+        }
+      }
+    }
+    if (newAdm2aName === true) {
+      if (highlightLayer) {
+        leafletMap.removeLayer(highlightLayer);
+      }
+      if (leafletMap && mapID) {
+        if (adm2aName.length > 0) {
+          return fetch(
+            `https://zebra.geodb.host/cached/user/admin/api/v2/sql?format=GeoJSON&q=SELECT * FROM ${
+              maps[mapID].layers["4"].carto_tableName
+            } where ${"name_3"} IN (${adm2aName
+              .map((x) => "'" + x + "'")
+              .toString()})`
+          )
+            .then((resp) => resp.json())
+            .then((response) => {
+              var myStyle = {
+                color: "#FFFFFF",
+                fillColor: "#FFFFFF",
+                fillOpacity: 0,
+                weight: 2,
+              };
+              let geojsonLayer = L.geoJSON(response, myStyle);
+              leafletMap.fitBounds(geojsonLayer.getBounds());
+              filterByAdm2a(adm2aName);
+              geojsonLayer.addTo(leafletMap);
+              dispatch({
+                type: "dropdown.highlight",
+                highlightLayer: geojsonLayer,
+              });
+              initialSelect.current = true;
+            });
+        } else if (initialSelect.current === true) {
+          filterByAdm2a(adm2aName);
           leafletMap.setView(
             [maps[mapID].lat, maps[mapID].long],
             maps[mapID].zoom
@@ -240,11 +311,13 @@ export const DropdownMenu = ({
         }
       }
     }
-  }, [distName, currentLayerID, adm1Name]);
+  }, [distName, currentLayerID, adm1Name, adm2aName]);
 
   useMemo(() => {
     if (distName.length > 0 && mapID) {
       filterByAdm2(distName);
+    } else if (adm2aName.length > 0 && mapID) {
+      filterByAdm2a(adm2aName);
     } else if (adm1Name.length > 0 && mapID) {
       filterByAdm1(adm1Name);
     }
@@ -266,6 +339,24 @@ export const DropdownMenu = ({
     dispatch({
       type: "dropdown.selection.adm1",
       adm1Name: event.target.value,
+    });
+  };
+  const handleChangeAdm2a = (event) => {
+    // setDistName(event.target.value);
+    setAdm2aName((prevAdm2a) => {
+      if (prevAdm2a && prevAdm2a === event.target.value) {
+        setNewAdm2aName(false);
+        return prevAdm2a;
+      } else {
+        //user has selected different country
+        setNewAdm2aName(true);
+        setNewAdm1Name(false);
+        return event.target.value;
+      }
+    });
+    dispatch({
+      type: "dropdown.selection.adm2a",
+      adm2aName: event.target.value,
     });
   };
   const handleChange = (event) => {
@@ -319,24 +410,13 @@ export const DropdownMenu = ({
         }}
       >
         {mapID && (
-          <Box p={2}>
-            <Box
-              pt={1}
-              fontStyle="italic"
-              fontWeight="fontWeightBold"
-              fontSize={13.5}
-              variant="subtitle2"
-              style={{ color: "black" }}
-              key="rightBoxSubtitle"
-            >
-              Optionally, select specific areas to explore:
-            </Box>
+          <Box p={1} pb={2}>
             {adm1LayerId && (
               <FormControl
                 className={clsx(classes.formControl, "tour-dropdown")}
                 pl={1}
               >
-                <Box pl={1}>
+                <Box pl={1} pb={1}>
                   <InputLabel pl={1} id="select-areas-mutiple-checkbox-label">
                     Select {maps[mapID].layers[adm1LayerId].name}(s)
                   </InputLabel>
@@ -354,7 +434,12 @@ export const DropdownMenu = ({
                     renderValue={(selected) => selected.join(", ")}
                     MenuProps={MenuProps}
                     className={classes.formControl}
-                    disabled={distName.length > 0}
+                    disabled={
+                      distName.length > 0 ||
+                      adm2aName.length > 0 ||
+                      currentLayerID === "3" ||
+                      currentLayerID === adm2aLayerId
+                    }
                   >
                     {allAdm1Names.map((name, i) => (
                       <MenuItem key={i} value={name} className={classes.menu}>
@@ -381,6 +466,12 @@ export const DropdownMenu = ({
                         distName: [],
                       });
                       filterByAdm2([]);
+                      setAdm2aName([]);
+                      dispatch({
+                        type: "dropdown.selection.adm2a",
+                        adm2aName: [],
+                      });
+                      filterByAdm2a([]);
                       leafletMap.setView(
                         [maps[mapID].lat, maps[mapID].long],
                         maps[mapID].zoom
@@ -394,6 +485,85 @@ export const DropdownMenu = ({
                   </button>
                 </Box>
               </FormControl>
+            )}
+            {adm2aLayerId && (
+              <>
+                <Divider variant="middle" />
+                <Box
+                  pt={1}
+                  fontStyle="italic"
+                  fontWeight="fontWeightBold"
+                  fontSize={13.5}
+                  variant="subtitle2"
+                  style={{ color: "black" }}
+                  key="rightBoxSubtitle"
+                >
+                  Optionally, select only one of the following subareas:
+                </Box>
+                <FormControl
+                  className={clsx(classes.formControl, "tour-dropdown")}
+                  pl={1}
+                >
+                  <Box pl={1}>
+                    <InputLabel pl={1} id="select-areas-mutiple-checkbox-label">
+                      Select {maps[mapID].layers[adm2aLayerId].name}(s)
+                    </InputLabel>
+
+                    <Select
+                      labelId="select-areas-mutiple-checkbox-label"
+                      id="select-areas-mutiple-checkbox"
+                      inputProps={{
+                        "aria-label": "select-areas-mutiple-checkbox",
+                      }}
+                      multiple
+                      value={adm2aName}
+                      onChange={handleChangeAdm2a}
+                      input={<Input autoFocus tabIndex="-1" />}
+                      renderValue={(selected) => selected.join(", ")}
+                      MenuProps={MenuProps}
+                      className={classes.formControl}
+                      disabled={distName.length > 0 || currentLayerID === "3"}
+                    >
+                      {allAdm2aNames.map((name, i) => (
+                        <MenuItem key={i} value={name} className={classes.menu}>
+                          <Checkbox
+                            checked={adm2aName.indexOf(name) > -1}
+                            inputProps={{ "aria-label": "area-name-checkbox" }}
+                          />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <button
+                      tabIndex="0"
+                      onClick={() => {
+                        setAdm2aName([]);
+                        dispatch({
+                          type: "dropdown.selection.adm2a",
+                          adm2aName: [],
+                        });
+                        filterByAdm2a([]);
+                        setDistName([]);
+                        dispatch({
+                          type: "dropdown.selection",
+                          distName: [],
+                        });
+                        filterByAdm2([]);
+                        leafletMap.setView(
+                          [maps[mapID].lat, maps[mapID].long],
+                          maps[mapID].zoom
+                        );
+                        if (highlightLayer) {
+                          leafletMap.removeLayer(highlightLayer);
+                        }
+                        setNewAdm1Name(true);
+                      }}
+                    >
+                      Clear {maps[mapID].layers[adm2aLayerId].name}(s)
+                    </button>
+                  </Box>
+                </FormControl>
+              </>
             )}
             <FormControl
               className={clsx(classes.formControl, "tour-dropdown")}
@@ -415,6 +585,10 @@ export const DropdownMenu = ({
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                   className={classes.formControl}
+                  disabled={
+                    adm2aName.length > 0 ||
+                    currentLayerID === adm2aLayerId.toString()
+                  }
                 >
                   {allDistricts.map((name, i) => (
                     <MenuItem key={i} value={name} className={classes.menu}>

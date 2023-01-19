@@ -54,14 +54,16 @@ const initialState = {
   activeLegend: "0",
   settlementLayerId: null,
   adm1LayerId: null,
-  adm2LayerId: null,
+  adm2aLayerId: null,
   userData: null,
   queryDist: null,
   skip: true,
   allDistricts: [],
   allAdm1Names: [],
+  allAdm2aNames: [],
   selectedDistName: [],
   selectedAdm1Name: [],
+  selectedAdm2aName: [],
   highlightLayer: null,
   highlightBoundary: null,
   settlementBoundary: null,
@@ -72,6 +74,19 @@ const initialState = {
   surveyPrompt: false,
   column: null,
   currentCountry: [
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
     {
       source: null,
       style: null,
@@ -164,8 +179,12 @@ const reducer = (state, action) => {
             draft.maps[action.mapID].boundaries + 3
           ).toString();
           draft.adm2LayerId = "3";
-          if (draft.maps[action.mapID].boundaries > 1) {
-            draft.adm1LayerId = "4";
+          if (draft.maps[action.mapID].boundaries === 2) {
+            draft.adm1LayerId = draft.maps[action.mapID].boundaries + 2;
+          }
+          if (draft.maps[action.mapID].boundaries > 2) {
+            draft.adm1LayerId = draft.maps[action.mapID].boundaries + 2;
+            draft.adm2aLayerId = draft.maps[action.mapID].boundaries + 1;
           }
           var index = 3;
           for (; index >= 0; index--) {
@@ -564,6 +583,11 @@ const reducer = (state, action) => {
         draft.selectedAdm1Name = action.adm1Name;
       });
     /* when a district is selected from the dropdown */
+    case "dropdown.selection.adm2a":
+      return produce(state, (draft) => {
+        draft.selectedAdm2aName = action.adm2aName;
+      });
+    /* when a district is selected from the dropdown */
     case "dropdown.selection":
       return produce(state, (draft) => {
         draft.selectedDistName = action.distName;
@@ -572,6 +596,11 @@ const reducer = (state, action) => {
     case "dropdown.options.adm1":
       return produce(state, (draft) => {
         draft.allAdm1Names = action.allAdm1Names;
+      });
+    /* when a new map is loaded, fetches all district options */
+    case "dropdown.options.adm2a":
+      return produce(state, (draft) => {
+        draft.allAdm2aNames = action.allAdm2aNames;
       });
     /* when a new map is loaded, fetches all district options */
     case "dropdown.options":
