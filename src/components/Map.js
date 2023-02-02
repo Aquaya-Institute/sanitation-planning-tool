@@ -160,7 +160,7 @@ export const Map = () => {
         username: process.env.REACT_APP_CARTO_USERNAME,
         serverUrl: process.env.REACT_APP_CARTO_SERVERURL,
       });
-      mapRef.current = L.map("map", { minZoom: 5.75, maxZoom: 18 }).setView(
+      mapRef.current = L.map("map", { minZoom: 5.3, maxZoom: 18 }).setView(
         [maps[mapID].lat, maps[mapID].long],
         maps[mapID].zoom
       );
