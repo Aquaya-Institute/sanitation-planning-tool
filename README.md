@@ -16,3 +16,7 @@ Do this first time only. This installs all the dependencies. \
 
 Run this to start the dev server. It will open a browser tab and reload as you edit files. \
 `yarn start`
+
+## RESOURCES
+ - An Operation Manual is available within the repository: SanPlan Operating Manual.pdf
+ - An introductory webinar, including a tutorial and discussion, is available at https://aquaya.org/sanplan-the-sanitation-planning-tool/
