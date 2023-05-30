@@ -4,7 +4,7 @@ import Carto from "@carto/carto.js";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { makeStyles } from "@material-ui/core/styles";
-import "../App.css";
+import "../theme/App.css";
 import { legendStyles } from "./subcomponents/LegendStyles";
 import { MapPopper } from "./subcomponents/MapPopper";
 import { Legend } from "./subcomponents/Legend";
