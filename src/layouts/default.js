@@ -15,7 +15,7 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
-import { MapSelector } from "../components/MapSelector";
+import { MapSelector } from "../components/subcomponents/MapSelector";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { MapContext } from "../state/MapState";
 import { Survey } from "../components/subcomponents/Survey";

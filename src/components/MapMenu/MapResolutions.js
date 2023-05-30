@@ -24,10 +24,14 @@ export const MapResolutions = ({
   cat,
   setSelectedMenu,
   tabIndex,
+  // adm1LayerId,
+  // adm2LayerId,
 }) => {
   const [{ maps, currentMapID, currentLayerID }, dispatch] =
     useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
+  // const [adm1LayerId, setAdm1LayerId] = useState(null);
+  // const adm2LayerId = "3";
   const classes = useStyles();
   const [setMenuTileColor] = useState(false);
   const clickRefMenu = useRef(null);
@@ -164,6 +168,60 @@ export const MapResolutions = ({
                     key="area-layer-radio"
                     inputprops={{ "aria-label": "area-layer-radio" }}
                   />
+                  {maps[mapID].boundaries === 2 && (
+                    <FormControlLabel
+                      value="4"
+                      control={<Radio />}
+                      label={
+                        maps[mapID].layers["4"].name === "County"
+                          ? "Counties"
+                          : maps[mapID].layers["4"].name === "Locality"
+                          ? "Localities"
+                          : maps[mapID].layers["4"].name + "s"
+                      }
+                      classes={{
+                        label: classes.checkboxLabel,
+                      }}
+                      key="area2-layer-radio"
+                      inputprops={{ "aria-label": "area2-layer-radio" }}
+                    />
+                  )}
+                  {maps[mapID].boundaries > 2 && (
+                    <>
+                      <FormControlLabel
+                        value="4"
+                        control={<Radio />}
+                        label={
+                          maps[mapID].layers["4"].name === "County"
+                            ? "Counties"
+                            : maps[mapID].layers["4"].name === "Locality"
+                            ? "Localities"
+                            : maps[mapID].layers["4"].name + "s"
+                        }
+                        classes={{
+                          label: classes.checkboxLabel,
+                        }}
+                        key="area2-layer-radio"
+                        inputprops={{ "aria-label": "area2-layer-radio" }}
+                      />
+                      <FormControlLabel
+                        value="5"
+                        control={<Radio />}
+                        label={
+                          maps[mapID].layers["5"].name === "County"
+                            ? "Counties"
+                            : maps[mapID].layers["5"].name === "Locality"
+                            ? "Localities"
+                            : maps[mapID].layers["5"].name + "s"
+                        }
+                        classes={{
+                          label: classes.checkboxLabel,
+                        }}
+                        key="area3-layer-radio"
+                        inputprops={{ "aria-label": "area3-layer-radio" }}
+                      />
+                    </>
+                  )}
                 </RadioGroup>
               </Box>
             )}

@@ -52,11 +52,18 @@ const initialState = {
   },
   currentLayerID: "2",
   activeLegend: "0",
+  settlementLayerId: null,
+  adm1LayerId: null,
+  adm2aLayerId: null,
   userData: null,
   queryDist: null,
   skip: true,
   allDistricts: [],
+  allAdm1Names: [],
+  allAdm2aNames: [],
   selectedDistName: [],
+  selectedAdm1Name: [],
+  selectedAdm2aName: [],
   highlightLayer: null,
   highlightBoundary: null,
   settlementBoundary: null,
@@ -132,6 +139,32 @@ const initialState = {
       socioCounter: new Set(null),
       healthCounter: new Set(null),
     },
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
+    {
+      source: null,
+      style: null,
+      layer: null,
+      filters: null,
+      columns: null,
+      query: null,
+      legendID: "0",
+      accessCounter: new Set(null),
+      washCounter: new Set(null),
+      socioCounter: new Set(null),
+      healthCounter: new Set(null),
+    },
   ],
 };
 
@@ -142,6 +175,17 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         draft.currentMapID = action.mapID;
         if (action.mapID !== null) {
+          draft.settlementLayerId = (
+            draft.maps[action.mapID].boundaries + 3
+          ).toString();
+          draft.adm2LayerId = "3";
+          if (draft.maps[action.mapID].boundaries === 2) {
+            draft.adm1LayerId = draft.maps[action.mapID].boundaries + 2;
+          }
+          if (draft.maps[action.mapID].boundaries > 2) {
+            draft.adm1LayerId = draft.maps[action.mapID].boundaries + 2;
+            draft.adm2aLayerId = draft.maps[action.mapID].boundaries + 1;
+          }
           var index = 3;
           for (; index >= 0; index--) {
             if (draft.maps[action.mapID].layers[index].visible === true) {
@@ -150,15 +194,32 @@ const reducer = (state, action) => {
             }
           }
           var i;
-          for (i = 0; i < legendStylesObj.length; i++) {
-            if (
-              legendStylesObj[i].style_pixel ===
-                draft.currentCountry[draft.currentLayerID].style ||
-              legendStylesObj[i].style_bounds ===
-                draft.currentCountry[draft.currentLayerID].style
-            ) {
-              draft.activeLegend = i.toString();
-              break;
+          var x;
+          if (draft.currentCountry[draft.currentLayerID].filters !== null) {
+            for (i = 0; i < legendStylesObj.length; i++) {
+              for (
+                x = 0;
+                x < draft.currentCountry[draft.currentLayerID].filters.length;
+                x++
+              ) {
+                if (
+                  legendStylesObj[i].name_pixel ===
+                    draft.currentCountry[draft.currentLayerID].filters[x]
+                      .name ||
+                  legendStylesObj[i].name_bounds ===
+                    draft.currentCountry[draft.currentLayerID].filters[x].name
+                ) {
+                  if (
+                    legendStylesObj[i].style_pixel ===
+                      draft.currentCountry[draft.currentLayerID].style ||
+                    legendStylesObj[i].style_bounds ===
+                      draft.currentCountry[draft.currentLayerID].style
+                  ) {
+                    draft.activeLegend = i.toString();
+                    break;
+                  }
+                }
+              }
             }
           }
         }
@@ -517,9 +578,29 @@ const reducer = (state, action) => {
         draft.column = action.column;
       });
     /* when a district is selected from the dropdown */
+    case "dropdown.selection.adm1":
+      return produce(state, (draft) => {
+        draft.selectedAdm1Name = action.adm1Name;
+      });
+    /* when a district is selected from the dropdown */
+    case "dropdown.selection.adm2a":
+      return produce(state, (draft) => {
+        draft.selectedAdm2aName = action.adm2aName;
+      });
+    /* when a district is selected from the dropdown */
     case "dropdown.selection":
       return produce(state, (draft) => {
         draft.selectedDistName = action.distName;
+      });
+    /* when a new map is loaded, fetches all district options */
+    case "dropdown.options.adm1":
+      return produce(state, (draft) => {
+        draft.allAdm1Names = action.allAdm1Names;
+      });
+    /* when a new map is loaded, fetches all district options */
+    case "dropdown.options.adm2a":
+      return produce(state, (draft) => {
+        draft.allAdm2aNames = action.allAdm2aNames;
       });
     /* when a new map is loaded, fetches all district options */
     case "dropdown.options":

@@ -47,6 +47,7 @@ export const UploadButton = () => {
       settlementBoundary,
       showSettlements,
       allowSettlements,
+      settlementLayerId,
     },
     dispatch,
   ] = useContext(MapContext);
@@ -99,7 +100,7 @@ export const UploadButton = () => {
     <div id="upload-div" style={{ width: "100%" }}>
       {mapID && (
         <React.Fragment>
-          {maps[mapID].layers["4"] && (
+          {maps[mapID].layers[settlementLayerId] && (
             <React.Fragment>
               <Box
                 pt={1}

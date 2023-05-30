@@ -4,7 +4,7 @@ import Carto from "@carto/carto.js";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { makeStyles } from "@material-ui/core/styles";
-import "../App.css";
+import "../theme/App.css";
 import { legendStyles } from "./subcomponents/LegendStyles";
 import { MapPopper } from "./subcomponents/MapPopper";
 import { Legend } from "./subcomponents/Legend";
@@ -35,6 +35,7 @@ export const Map = () => {
       settlementBoundary,
       currentCountry,
       allowSettlements,
+      settlementLayerId,
     },
     dispatch,
   ] = useContext(MapContext);
@@ -159,7 +160,7 @@ export const Map = () => {
         username: process.env.REACT_APP_CARTO_USERNAME,
         serverUrl: process.env.REACT_APP_CARTO_SERVERURL,
       });
-      mapRef.current = L.map("map", { minZoom: 5.75, maxZoom: 18 }).setView(
+      mapRef.current = L.map("map", { minZoom: 5.3, maxZoom: 18 }).setView(
         [maps[mapID].lat, maps[mapID].long],
         maps[mapID].zoom
       );
@@ -435,7 +436,7 @@ export const Map = () => {
   useEffect(() => {
     if (allowSettlements === true && mapID) {
       if (showSettlements === true) {
-        if (maps[mapID].layers["4"] && cartoClient) {
+        if (maps[mapID].layers[settlementLayerId] && cartoClient) {
           if (layerQuery) {
             if (settlementBoundary) {
               cartoClient.removeLayer(settlementBoundary);
@@ -445,14 +446,14 @@ export const Map = () => {
             var settlement_source = null;
             var settlementBoundaryset = null;
             settlement_source = new Carto.source.SQL(
-              `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
+              `SELECT ${maps[mapID].layers[settlementLayerId].carto_tableName}.* FROM (${queryURL}) AS foo, ${maps[mapID].layers[settlementLayerId].carto_tableName} WHERE ST_Intersects(foo.the_geom, ${maps[mapID].layers[settlementLayerId].carto_tableName}.the_geom)`
             );
             settlement_style = new Carto.style.CartoCSS(
               `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
             );
           } else if (settlementBoundary == null) {
             settlement_source = new Carto.source.SQL(
-              `SELECT ${maps[mapID].layers["4"].carto_tableName}.* FROM ${maps[mapID].layers[currentLayerID].carto_tableName}, ${maps[mapID].layers["4"].carto_tableName} WHERE ST_Intersects(${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom, ${maps[mapID].layers["4"].carto_tableName}.the_geom)`
+              `SELECT ${maps[mapID].layers[settlementLayerId].carto_tableName}.* FROM ${maps[mapID].layers[currentLayerID].carto_tableName}, ${maps[mapID].layers[settlementLayerId].carto_tableName} WHERE ST_Intersects(${maps[mapID].layers[currentLayerID].carto_tableName}.the_geom, ${maps[mapID].layers[settlementLayerId].carto_tableName}.the_geom)`
             );
             settlement_style = new Carto.style.CartoCSS(
               `#layer {polygon-fill: #826dba; polygon-opacity: 0;} #layer::outline {line-width: 1; line-color: #000000; line-opacity: 1;}`
@@ -484,7 +485,7 @@ export const Map = () => {
               var result = null;
               var input = featureEvent.data.cartodb_id;
               fetch(
-                `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers["4"].carto_tableName} where cartodb_id = ${input}`
+                `https://zebra.geodb.host/cached/user/admin/api/v2/sql?q=SELECT ST_AsGeoJSON(the_geom) as the_geom FROM ${maps[mapID].layers[settlementLayerId].carto_tableName} where cartodb_id = ${input}`
               )
                 .then((resp) => resp.json())
                 .then((response) => {
@@ -504,7 +505,10 @@ export const Map = () => {
                     highlightBoundary: result,
                   });
                 });
-              setPopup([maps[mapID].layers["4"].carto_tableName, featureEvent]);
+              setPopup([
+                maps[mapID].layers[settlementLayerId].carto_tableName,
+                featureEvent,
+              ]);
               setPopoverOpen(false);
             });
             cartoClient.addLayer(settlementBoundaryset);
@@ -530,7 +534,7 @@ export const Map = () => {
       var dat = [];
       var layerID = null;
       if (popup[0].includes("comms")) {
-        layerID = "4";
+        layerID = settlementLayerId;
       } else {
         layerID = currentLayerID;
       }
@@ -636,13 +640,23 @@ export const Map = () => {
 
   const handleChange = (event) => {
     let styleNew = null;
-    if (
-      maps[mapID].layers[currentLayerID].name === "5x5km area" ||
-      maps[mapID].layers[currentLayerID].name === "1x1km area"
-    ) {
-      styleNew = legendStyles[event.target.value].style_pixel;
-    } else {
-      styleNew = legendStyles[event.target.value].style_bounds;
+    var i;
+    for (i = 0; i < legendStylesObj.length; i++) {
+      if (
+        legendStylesObj[i].name_pixel ===
+          event.target[event.target.value].label ||
+        legendStylesObj[i].name_bounds ===
+          event.target[event.target.value].label
+      ) {
+        if (
+          maps[mapID].layers[currentLayerID].name === "5x5km area" ||
+          maps[mapID].layers[currentLayerID].name === "1x1km area"
+        ) {
+          styleNew = legendStyles[i].style_pixel;
+        } else {
+          styleNew = legendStyles[i].style_bounds;
+        }
+      }
     }
 
     dispatch({

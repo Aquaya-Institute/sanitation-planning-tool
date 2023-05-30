@@ -181,11 +181,16 @@ export const MapPopper = ({
                 <Box fontWeight="fontWeightBold">
                   {popupData.data.name_1.Name}:
                 </Box>{" "}
-                {popupData.data.name_1.Value} <br />
-                <Box fontWeight="fontWeightBold">
-                  {popupData.data.name_2.Name}:
-                </Box>{" "}
-                {popupData.data.name_2.Value}
+                {popupData.data.name_1.Value}
+                {popupData.data.name_2 !== undefined && (
+                  <span>
+                    <br />
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data.name_2.Name}:
+                    </Box>{" "}
+                    {popupData.data.name_2.Value}
+                  </span>
+                )}
                 {popupData.data.name_3 !== undefined && (
                   <span>
                     <br />
@@ -225,11 +230,16 @@ export const MapPopper = ({
                 <Box fontWeight="fontWeightBold">
                   {popupData.data.name_1.Name}:
                 </Box>{" "}
-                {popupData.data.name_1.Value} <br />
-                <Box fontWeight="fontWeightBold">
-                  {popupData.data.name_2.Name}:
-                </Box>{" "}
-                {popupData.data.name_2.Value}
+                {popupData.data.name_1.Value}
+                {popupData.data.name_2 !== undefined && (
+                  <span>
+                    <br />
+                    <Box fontWeight="fontWeightBold">
+                      {popupData.data.name_2.Name}:
+                    </Box>{" "}
+                    {popupData.data.name_2.Value}
+                  </span>
+                )}
                 {popupData.data.name_3 !== undefined && (
                   <span>
                     <br />
@@ -326,8 +336,13 @@ export const MapPopper = ({
                   {popupData.latLng.lng.toFixed(5).toString()}
                   <br />
                   {popupData.data.name_1.Name}: {popupData.data.name_1.Value}{" "}
-                  <br />
-                  {popupData.data.name_2.Name}: {popupData.data.name_2.Value}
+                  {popupData.data.name_2 !== undefined && (
+                    <span>
+                      <br />
+                      {popupData.data.name_2.Name}:{" "}
+                      {popupData.data.name_2.Value}
+                    </span>
+                  )}
                   {popupData.data.name_3 !== undefined && (
                     <span>
                       <br />
@@ -467,11 +482,19 @@ export const MapPopper = ({
                     >
                       DOWNLOAD TABLE
                     </CSVLink>
-                  ) : (
+                  ) : popupData.data.name_3 !== undefined ? (
                     <CSVLink
                       className={classes.download}
                       data={downloadData}
                       filename={"SPT_" + popupData.data.name_2.Value + ".csv"}
+                    >
+                      DOWNLOAD TABLE
+                    </CSVLink>
+                  ) : (
+                    <CSVLink
+                      className={classes.download}
+                      data={downloadData}
+                      filename={"SPT_" + popupData.data.name_1.Value + ".csv"}
                     >
                       DOWNLOAD TABLE
                     </CSVLink>

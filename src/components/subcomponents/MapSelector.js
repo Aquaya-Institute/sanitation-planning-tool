@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MapContext } from "../state/MapState";
+import { MapContext } from "../../state/MapState";
 import Select from "@material-ui/core/Select";
 import { useHistory } from "react-router-dom";
 import { useState, useRef } from "react";
