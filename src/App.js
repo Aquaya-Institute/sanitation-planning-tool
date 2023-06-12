@@ -9,8 +9,7 @@ import About from "./views/About";
 import FAQ from "./views/FAQ";
 import Datasets from "./views/Datasets";
 import Privacy from "./views/Privacy";
-import "./App.css";
-import "react-app-protect/dist/index.css";
+import "./theme/App.css";
 import ReactGA from "react-ga4";
 
 ReactGA.initialize("G-4M9J6LZRDQ");

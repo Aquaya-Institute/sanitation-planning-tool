@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Link } from "react-router-dom";
 import HomeBanner from "../components/Home/HomeBanner";
 import HomeMap from "../components/Home/HomeMap";
 import HomeRelatedResearch from "../components/Home/HomeRelatedResearch";
-import { MapSelector } from "../components/MapSelector";
+import { MapSelector } from "../components/subcomponents/MapSelector";
 // import HomeHowItWorks from "../components/Home/HomeHowItWorks";
 import HomeFooter from "../components/Home/HomeFooter";
 import ReactTooltip from "react-tooltip";

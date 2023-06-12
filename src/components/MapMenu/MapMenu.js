@@ -79,6 +79,7 @@ export const MapMenu = () => {
       selectedAdm1Name,
       adm1LayerId,
       adm2aLayerId,
+      adm2LayerId,
     },
     dispatch,
   ] = useContext(MapContext);
@@ -142,11 +143,13 @@ export const MapMenu = () => {
     ) {
       var column_name = null;
       if (
-        currentCountry["3"].filters.some((el) => el.column_name === "name_3")
+        currentCountry[adm2aLayerId].filters.some(
+          (el) => el.column_name === "name_3"
+        )
       ) {
         column_name = "name_3";
       } else {
-        column_name = "name_2";
+        column_name = "name_2a";
       }
       column.current = column_name;
       if (allAdm2aNames.current === undefined) {
@@ -181,11 +184,14 @@ export const MapMenu = () => {
     if (
       carto_client &&
       currentMapID &&
-      currentCountry[currentLayerID].filters !== null
+      currentCountry[currentLayerID].filters !== null &&
+      adm2LayerId
     ) {
       var column_name = null;
       if (
-        currentCountry["3"].filters.some((el) => el.column_name === "name_3")
+        currentCountry[adm2LayerId].filters.some(
+          (el) => el.column_name === "name_3"
+        )
       ) {
         column_name = "name_3";
       } else {

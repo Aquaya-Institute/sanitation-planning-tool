@@ -72,7 +72,7 @@ export const DropdownMenu = ({
       // carto_client,
       leafletMap,
       activeLegend,
-      selectedDistName,
+      selectedAdm2Name,
       selectedAdm1Name,
       selectedAdm2aName,
       highlightLayer,
@@ -80,13 +80,17 @@ export const DropdownMenu = ({
       // allDistricts,
       // column,
       adm1LayerId,
+      adm2LayerId,
       adm2aLayerId,
+      allowSettlements,
+      showSettlements,
+      settlementLayerId,
     },
     dispatch,
   ] = useContext(MapContext);
   const [mapID, setMapID] = useState(currentMapID);
-  const [distName, setDistName] = useState(selectedDistName);
-  const [newDistName, setNewDistName] = useState(false);
+  const [adm2Name, setAdm2Name] = useState(selectedAdm2Name);
+  const [newAdm2Name, setNewAdm2Name] = useState(false);
   const [adm1Name, setAdm1Name] = useState(selectedAdm1Name);
   const [newAdm1Name, setNewAdm1Name] = useState(false);
   const [adm2aName, setAdm2aName] = useState(selectedAdm2aName);
@@ -126,67 +130,145 @@ export const DropdownMenu = ({
   // }, [adm1Name]);
 
   function filterByAdm1(adm1Name) {
-    let query = null;
+    let query1 = null;
+    let query2 = null;
+    let query2a = null;
+    let queryCom = null;
+    let queryPix = null;
     if (adm1Name.length > 0) {
-      query = `SELECT * FROM ${
-        maps[mapID].layers[currentLayerID].carto_tableName
+      query1 = `SELECT * FROM ${
+        maps[mapID].layers[adm1LayerId].carto_tableName
       } WHERE ${"name_1"} IN (${adm1Name
         .map((x) => "'" + x + "'")
         .toString()})`;
+      query2 = `SELECT * FROM ${
+        maps[mapID].layers[adm2LayerId].carto_tableName
+      } WHERE ${"name_1"} IN (${adm1Name
+        .map((x) => "'" + x + "'")
+        .toString()})`;
+      queryPix = `SELECT * FROM ${
+        maps[mapID].layers["2"].carto_tableName
+      } WHERE ${"name_1"} IN (${adm1Name
+        .map((x) => "'" + x + "'")
+        .toString()})`;
+      if (settlementLayerId) {
+        queryCom = `SELECT * FROM ${
+          maps[mapID].layers[settlementLayerId].carto_tableName
+        } WHERE ${"name_1"} IN (${adm1Name
+          .map((x) => "'" + x + "'")
+          .toString()})`;
+      }
+      if (adm2aLayerId) {
+        query2a = `SELECT * FROM ${
+          maps[mapID].layers[adm2aLayerId].carto_tableName
+        } WHERE ${"name_1"} IN (${adm1Name
+          .map((x) => "'" + x + "'")
+          .toString()})`;
+      }
     } else {
-      query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
+      query1 = `SELECT * FROM ${maps[mapID].layers[adm1LayerId].carto_tableName}`;
+      query2 = `SELECT * FROM ${maps[mapID].layers[adm2LayerId].carto_tableName}`;
+      queryPix = `SELECT * FROM ${maps[mapID].layers["2"].carto_tableName}`;
+      if (settlementLayerId) {
+        queryCom = `SELECT * FROM ${maps[mapID].layers[settlementLayerId].carto_tableName}`;
+      }
+      if (adm2aLayerId) {
+        queryCom = `SELECT * FROM ${maps[mapID].layers[adm2aLayerId].carto_tableName}`;
+      }
     }
     if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
-      currentCountry[currentLayerID].source.setQuery(query);
-      currentCountry[currentLayerID].layer.getSource().setQuery(query);
-      dispatch({
-        type: "layer.queryDist",
-        queryDist: query,
-      });
+      currentCountry[adm1LayerId].source.setQuery(query1);
+      currentCountry[adm1LayerId].layer.getSource().setQuery(query1);
+      currentCountry[adm2LayerId].source.setQuery(query2);
+      currentCountry[adm2LayerId].layer.getSource().setQuery(query2);
+      currentCountry["2"].source.setQuery(queryPix);
+      currentCountry["2"].layer.getSource().setQuery(queryPix);
+      if (settlementLayerId) {
+        currentCountry[settlementLayerId].source.setQuery(queryCom);
+        currentCountry[settlementLayerId].layer.getSource().setQuery(queryCom);
+      }
+      if (adm2aLayerId) {
+        currentCountry[adm2aLayerId].source.setQuery(query2a);
+        currentCountry[adm2aLayerId].layer.getSource().setQuery(query2a);
+      }
     }
   }
-  function filterByAdm2(distName) {
-    let query = null;
-    if (distName.length > 0) {
-      query = `SELECT * FROM ${
-        maps[mapID].layers[currentLayerID].carto_tableName
-      } WHERE ${column} IN (${distName.map((x) => "'" + x + "'").toString()})`;
+  function filterByAdm2(adm2Name) {
+    let query2 = null;
+    let queryCom = null;
+    let queryPix = null;
+    if (adm2Name.length > 0) {
+      query2 = `SELECT * FROM ${
+        maps[mapID].layers[adm2LayerId].carto_tableName
+      } WHERE ${column} IN (${adm2Name.map((x) => "'" + x + "'").toString()})`;
+      queryPix = `SELECT * FROM ${
+        maps[mapID].layers["2"].carto_tableName
+      } WHERE ${column} IN (${adm2Name.map((x) => "'" + x + "'").toString()})`;
+      if (settlementLayerId) {
+        queryCom = `SELECT * FROM ${
+          maps[mapID].layers[settlementLayerId].carto_tableName
+        } WHERE ${column} IN (${adm2Name
+          .map((x) => "'" + x + "'")
+          .toString()})`;
+      }
     } else {
-      query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
+      query2 = `SELECT * FROM ${maps[mapID].layers[adm2LayerId].carto_tableName}`;
+      queryPix = `SELECT * FROM ${maps[mapID].layers["2"].carto_tableName}`;
+      if (settlementLayerId) {
+        queryCom = `SELECT * FROM ${maps[mapID].layers[settlementLayerId].carto_tableName}`;
+      }
     }
     if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
-      currentCountry[currentLayerID].source.setQuery(query);
-      currentCountry[currentLayerID].layer.getSource().setQuery(query);
-      dispatch({
-        type: "layer.queryDist",
-        queryDist: query,
-      });
+      currentCountry[adm2LayerId].source.setQuery(query2);
+      currentCountry[adm2LayerId].layer.getSource().setQuery(query2);
+      currentCountry["2"].source.setQuery(queryPix);
+      currentCountry["2"].layer.getSource().setQuery(queryPix);
+      if (settlementLayerId) {
+        currentCountry[settlementLayerId].source.setQuery(queryCom);
+        currentCountry[settlementLayerId].layer.getSource().setQuery(queryCom);
+      }
     }
   }
   function filterByAdm2a(adm2aName) {
-    let query = null;
-    if (adm2aName.length > 0) {
-      var column_name = null;
-      if (currentLayerID === "2") {
-        column_name = "name_3a";
-      } else {
-        column_name = "name_3";
-      }
-      query = `SELECT * FROM ${
-        maps[mapID].layers[currentLayerID].carto_tableName
-      } WHERE ${column_name} IN (${adm2aName
-        .map((x) => "'" + x + "'")
-        .toString()})`;
+    let query2a = null;
+    let queryCom = null;
+    let queryPix = null;
+    var column_name = null;
+    if (currentLayerID === "2") {
+      column_name = "name_3a";
     } else {
-      query = `SELECT * FROM ${maps[mapID].layers[currentLayerID].carto_tableName}`;
+      column_name = "name_3";
+    }
+    if (adm2aName.length > 0) {
+      query2a = `SELECT * FROM ${
+        maps[mapID].layers[adm2aLayerId].carto_tableName
+      } WHERE ${column} IN (${adm2aName.map((x) => "'" + x + "'").toString()})`;
+      queryPix = `SELECT * FROM ${
+        maps[mapID].layers["2"].carto_tableName
+      } WHERE ${column} IN (${adm2aName.map((x) => "'" + x + "'").toString()})`;
+      if (settlementLayerId) {
+        queryCom = `SELECT * FROM ${
+          maps[mapID].layers[settlementLayerId].carto_tableName
+        } WHERE ${column} IN (${adm2aName
+          .map((x) => "'" + x + "'")
+          .toString()})`;
+      }
+    } else {
+      query2a = `SELECT * FROM ${maps[mapID].layers[adm2aLayerId].carto_tableName}`;
+      queryPix = `SELECT * FROM ${maps[mapID].layers["2"].carto_tableName}`;
+      if (settlementLayerId) {
+        queryCom = `SELECT * FROM ${maps[mapID].layers[settlementLayerId].carto_tableName}`;
+      }
     }
     if (currentCountry[currentLayerID].source && currentLayerID !== "1") {
-      currentCountry[currentLayerID].source.setQuery(query);
-      currentCountry[currentLayerID].layer.getSource().setQuery(query);
-      dispatch({
-        type: "layer.queryDist",
-        queryDist: query,
-      });
+      currentCountry[adm2aLayerId].source.setQuery(query2a);
+      currentCountry[adm2aLayerId].layer.getSource().setQuery(query2a);
+      currentCountry["2"].source.setQuery(queryPix);
+      currentCountry["2"].layer.getSource().setQuery(queryPix);
+      if (settlementLayerId) {
+        currentCountry[settlementLayerId].source.setQuery(queryCom);
+        currentCountry[settlementLayerId].layer.getSource().setQuery(queryCom);
+      }
     }
   }
 
@@ -199,7 +281,7 @@ export const DropdownMenu = ({
         if (adm1Name.length > 0) {
           return fetch(
             `https://zebra.geodb.host/cached/user/admin/api/v2/sql?format=GeoJSON&q=SELECT * FROM ${
-              maps[mapID].layers["3"].carto_tableName
+              maps[mapID].layers[adm1LayerId].carto_tableName
             } where ${"name_1"} IN (${adm1Name
               .map((x) => "'" + x + "'")
               .toString()})`
@@ -239,7 +321,7 @@ export const DropdownMenu = ({
         if (adm2aName.length > 0) {
           return fetch(
             `https://zebra.geodb.host/cached/user/admin/api/v2/sql?format=GeoJSON&q=SELECT * FROM ${
-              maps[mapID].layers["4"].carto_tableName
+              maps[mapID].layers[adm2aLayerId].carto_tableName
             } where ${"name_3"} IN (${adm2aName
               .map((x) => "'" + x + "'")
               .toString()})`
@@ -271,16 +353,16 @@ export const DropdownMenu = ({
         }
       }
     }
-    if (newDistName === true) {
+    if (newAdm2Name === true) {
       if (highlightLayer) {
         leafletMap.removeLayer(highlightLayer);
       }
       if (leafletMap && mapID) {
-        if (distName.length > 0) {
+        if (adm2Name.length > 0) {
           return fetch(
             `https://zebra.geodb.host/cached/user/admin/api/v2/sql?format=GeoJSON&q=SELECT * FROM ${
-              maps[mapID].layers["3"].carto_tableName
-            } where ${column} IN (${distName
+              maps[mapID].layers[adm2LayerId].carto_tableName
+            } where ${column} IN (${adm2Name
               .map((x) => "'" + x + "'")
               .toString()})`
           )
@@ -294,7 +376,7 @@ export const DropdownMenu = ({
               };
               let geojsonLayer = L.geoJSON(response, myStyle);
               leafletMap.fitBounds(geojsonLayer.getBounds());
-              filterByAdm2(distName);
+              filterByAdm2(adm2Name);
               geojsonLayer.addTo(leafletMap);
               dispatch({
                 type: "dropdown.highlight",
@@ -303,7 +385,7 @@ export const DropdownMenu = ({
               initialSelect.current = true;
             });
         } else if (initialSelect.current === true) {
-          filterByAdm2(distName);
+          filterByAdm2(adm2Name);
           leafletMap.setView(
             [maps[mapID].lat, maps[mapID].long],
             maps[mapID].zoom
@@ -311,11 +393,11 @@ export const DropdownMenu = ({
         }
       }
     }
-  }, [distName, currentLayerID, adm1Name, adm2aName]);
+  }, [adm2Name, currentLayerID, adm1Name, adm2aName]);
 
   useMemo(() => {
-    if (distName.length > 0 && mapID) {
-      filterByAdm2(distName);
+    if (adm2Name.length > 0 && mapID) {
+      filterByAdm2(adm2Name);
     } else if (adm2aName.length > 0 && mapID) {
       filterByAdm2a(adm2aName);
     } else if (adm1Name.length > 0 && mapID) {
@@ -325,7 +407,7 @@ export const DropdownMenu = ({
   }, [activeLegend]);
 
   const handleChangeAdm1 = (event) => {
-    // setDistName(event.target.value);
+    // setAdm2Name(event.target.value);
     setAdm1Name((prevAdm1) => {
       if (prevAdm1 && prevAdm1 === event.target.value) {
         setNewAdm1Name(false);
@@ -342,7 +424,7 @@ export const DropdownMenu = ({
     });
   };
   const handleChangeAdm2a = (event) => {
-    // setDistName(event.target.value);
+    // setAdm2Name(event.target.value);
     setAdm2aName((prevAdm2a) => {
       if (prevAdm2a && prevAdm2a === event.target.value) {
         setNewAdm2aName(false);
@@ -360,21 +442,21 @@ export const DropdownMenu = ({
     });
   };
   const handleChange = (event) => {
-    // setDistName(event.target.value);
-    setDistName((prevDists) => {
+    // setAdm2Name(event.target.value);
+    setAdm2Name((prevDists) => {
       if (prevDists && prevDists === event.target.value) {
-        setNewDistName(false);
+        setNewAdm2Name(false);
         return prevDists;
       } else {
         //user has selected different country
-        setNewDistName(true);
+        setNewAdm2Name(true);
         setNewAdm1Name(false);
         return event.target.value;
       }
     });
     dispatch({
       type: "dropdown.selection",
-      distName: event.target.value,
+      adm2Name: event.target.value,
     });
   };
 
@@ -434,7 +516,7 @@ export const DropdownMenu = ({
                     renderValue={(selected) => selected.join(", ")}
                     MenuProps={MenuProps}
                     className={classes.formControl}
-                    disabled={distName.length > 0 || adm2aName.length > 0}
+                    disabled={adm2Name.length > 0 || adm2aName.length > 0}
                   >
                     {allAdm1Names.map((name, i) => (
                       <MenuItem key={i} value={name} className={classes.menu}>
@@ -455,10 +537,10 @@ export const DropdownMenu = ({
                         adm1Name: [],
                       });
                       filterByAdm1([]);
-                      setDistName([]);
+                      setAdm2Name([]);
                       dispatch({
                         type: "dropdown.selection",
-                        distName: [],
+                        adm2Name: [],
                       });
                       filterByAdm2([]);
                       setAdm2aName([]);
@@ -517,7 +599,12 @@ export const DropdownMenu = ({
                       renderValue={(selected) => selected.join(", ")}
                       MenuProps={MenuProps}
                       className={classes.formControl}
-                      disabled={distName.length > 0 || currentLayerID === "3"}
+                      disabled={
+                        (adm2LayerId &&
+                          currentLayerID === adm2LayerId.toString()) ||
+                        (adm1LayerId &&
+                          currentLayerID === adm1LayerId.toString())
+                      }
                     >
                       {allAdm2aNames.map((name, i) => (
                         <MenuItem key={i} value={name} className={classes.menu}>
@@ -538,10 +625,10 @@ export const DropdownMenu = ({
                           adm2aName: [],
                         });
                         filterByAdm2a([]);
-                        setDistName([]);
+                        setAdm2Name([]);
                         dispatch({
                           type: "dropdown.selection",
-                          distName: [],
+                          adm2Name: [],
                         });
                         filterByAdm2([]);
                         leafletMap.setView(
@@ -566,7 +653,7 @@ export const DropdownMenu = ({
             >
               <Box pl={1}>
                 <InputLabel pl={1} id="select-areas-mutiple-checkbox-label">
-                  Select {maps[mapID].layers["3"].name}(s)
+                  Select {maps[mapID].layers[adm2LayerId].name}(s)
                 </InputLabel>
 
                 <Select
@@ -574,21 +661,22 @@ export const DropdownMenu = ({
                   id="select-areas-mutiple-checkbox"
                   inputProps={{ "aria-label": "select-areas-mutiple-checkbox" }}
                   multiple
-                  value={distName}
+                  value={adm2Name}
                   onChange={handleChange}
                   input={<Input autoFocus tabIndex="-1" />}
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                   className={classes.formControl}
                   disabled={
-                    adm2aName.length > 0 ||
-                    currentLayerID === adm2aLayerId.toString()
+                    (adm2aLayerId &&
+                      currentLayerID === adm2aLayerId.toString()) ||
+                    (adm1LayerId && currentLayerID === adm1LayerId.toString())
                   }
                 >
                   {allDistricts.map((name, i) => (
                     <MenuItem key={i} value={name} className={classes.menu}>
                       <Checkbox
-                        checked={distName.indexOf(name) > -1}
+                        checked={adm2Name.indexOf(name) > -1}
                         inputProps={{ "aria-label": "area-name-checkbox" }}
                       />
                       <ListItemText primary={name} />
@@ -598,10 +686,10 @@ export const DropdownMenu = ({
                 <button
                   tabIndex="0"
                   onClick={() => {
-                    setDistName([]);
+                    setAdm2Name([]);
                     dispatch({
                       type: "dropdown.selection",
-                      distName: [],
+                      adm2Name: [],
                     });
                     filterByAdm2([]);
                     leafletMap.setView(
@@ -614,7 +702,7 @@ export const DropdownMenu = ({
                     setNewAdm1Name(true);
                   }}
                 >
-                  Clear {maps[mapID].layers["3"].name}(s)
+                  Clear {maps[mapID].layers[adm2LayerId].name}(s)
                 </button>
               </Box>
             </FormControl>
