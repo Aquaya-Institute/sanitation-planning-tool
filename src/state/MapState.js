@@ -72,7 +72,7 @@ const initialState = {
   allowSettlements: false,
   settlementHighlight: null,
   settlementPopup: null,
-  surveyPrompt: false,
+  // surveyPrompt: false,
   column: null,
   currentCountry: [
     {
@@ -814,10 +814,10 @@ const reducer = (state, action) => {
       return produce(state, (draft) => {
         draft.userData = action.userData;
       });
-    case "survey.prompt":
-      return produce(state, (draft) => {
-        draft.surveyPrompt = action.surveyPrompt;
-      });
+    // case "survey.prompt":
+    //   return produce(state, (draft) => {
+    //     draft.surveyPrompt = action.surveyPrompt;
+    //   });
     default:
       return state;
   }

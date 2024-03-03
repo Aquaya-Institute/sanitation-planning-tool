@@ -18,7 +18,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { MapSelector } from "../components/subcomponents/MapSelector";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { MapContext } from "../state/MapState";
-import { Survey } from "../components/subcomponents/Survey";
+// import { Survey } from "../components/subcomponents/Survey";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,10 +53,10 @@ export default function DefaultLayout(props) {
   const classes = useStyles();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const mobileMenuId = "primary-search-account-menu-mobile";
-  const [{ surveyPrompt }, dispatch] = React.useContext(MapContext);
+  const [dispatch] = React.useContext(MapContext);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [url, setUrl] = useState("");
-  const [surveyOpen, setSurveyOpen] = useState(false);
+  // const [surveyOpen, setSurveyOpen] = useState(false);
   const clickRefPop = useRef(null);
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -87,7 +87,7 @@ export default function DefaultLayout(props) {
               (window.location.pathname !== "/faq") &
               (window.location.pathname !== "/about")
             ) {
-              setSurveyOpen(true);
+              // setSurveyOpen(true);
               setUrl(event.target.value);
             }
             dispatch({
@@ -161,7 +161,7 @@ export default function DefaultLayout(props) {
                 (window.location.pathname !== "/faq") &
                 (window.location.pathname !== "/about")
               ) {
-                setSurveyOpen(true);
+                // setSurveyOpen(true);
                 setUrl(event.target.value);
               }
             }}
@@ -206,7 +206,7 @@ export default function DefaultLayout(props) {
                     (window.location.pathname !== "/faq") &
                     (window.location.pathname !== "/about")
                   ) {
-                    setSurveyOpen(true);
+                    // setSurveyOpen(true);
                     setUrl(event.target.value);
                   }
                   dispatch({
@@ -277,14 +277,14 @@ export default function DefaultLayout(props) {
           </div>
         </Toolbar>
       </AppBar>
-      {surveyOpen === true && surveyPrompt === false ? (
+      {/* {surveyOpen === true && surveyPrompt === false ? (
         <Survey
           setSurveyOpen={setSurveyOpen}
           surveyOpen={surveyOpen}
           clickRefPop={clickRefPop}
           url={url}
         />
-      ) : null}
+      ) : null} */}
       <main style={{ flex: 1, display: "flex" }}>
         <Container maxWidth={false} disableGutters={true}>
           {props.children}

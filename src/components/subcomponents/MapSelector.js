@@ -7,8 +7,7 @@ import { useState, useRef } from "react";
 // import { useSearchParams } from "react-router-dom";
 
 export const MapSelector = ({ inputProps }) => {
-  const [{ maps, currentMapID, surveyPrompt }, dispatch] =
-    React.useContext(MapContext);
+  const [{ maps, currentMapID }, dispatch] = React.useContext(MapContext);
   const [mapID, setMapID] = React.useState(undefined);
   const history = useHistory();
   // const initialMap = useRef(false);

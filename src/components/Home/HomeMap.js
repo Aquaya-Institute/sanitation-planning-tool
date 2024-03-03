@@ -12,8 +12,7 @@ import { useHistory } from "react-router-dom";
 
 const markers = [];
 const countries = [];
-const geoUrl =
-  "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
+const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 const MapChart = ({ setTooltipContent }) => {
   const [{ maps }] = useContext(MapContext);
